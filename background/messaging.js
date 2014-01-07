@@ -80,8 +80,8 @@ chrome.runtime.onMessage.addListener(
                 }
             } else if (req.method === 'fancybox') {
                 // inject functionality for showing a fancybox overlay into the current tab and forward the request to it (request contains url to display)
-                chrome.tabs.insertCSS(tabID, {file: 'media/lib/fancybox/jquery.fancybox.css'}, function() {
-                    chrome.tabs.executeScript(tabID, {file: 'media/lib/fancybox/jquery.fancybox.pack.js'}, function() {
+                chrome.tabs.insertCSS(tabID, {file: 'libs/fancybox/jquery.fancybox.css'}, function() {
+                    chrome.tabs.executeScript(tabID, {file: 'libs/fancybox/jquery.fancybox.pack.js'}, function() {
                         chrome.tabs.sendMessage(tabID, req);
                     });
                 });

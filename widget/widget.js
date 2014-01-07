@@ -117,7 +117,7 @@ EEXCESS.results = (function() {
     var _rating = function(element, uri, score) {
         element.raty({
             score: score,
-            path: '../media/lib/rating/img',
+            path: '../libs/rating/img',
             number: 2,
             width: false,
             iconRange: [
