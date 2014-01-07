@@ -411,6 +411,7 @@ EEXCESS.callBG = function(message, callback) {
     if (typeof callback !== 'undefined') {
         chrome.runtime.sendMessage(EEXCESS.extID, message, callback);
     } else {
+        console.log(message);
         chrome.runtime.sendMessage(EEXCESS.extID, message);
     }
 };
@@ -491,6 +492,7 @@ EEXCESS.topKcorpus = function(corpus, k) {
 EEXCESS.triggerQuery = function(textElements) {
     EEXCESS.callBG({method: {parent: 'corpus', func: 'getCorpus'}, data: textElements}, function(result) {
         var query = EEXCESS.topKcorpus(result, 3);
+        console.log(query);
         EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
     });
 };
@@ -532,6 +534,7 @@ EEXCESS.initiateQuery = function() {
 
 $(document).mouseup(function() {
     var text = window.getSelection().toString();
+    console.log(text);
     if (text !== '') {
         var elements = [];
         elements.push({text: text});

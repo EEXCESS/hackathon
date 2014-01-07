@@ -7,8 +7,8 @@
 		this.gravity = 0.05;
 		this.linkDistance = 20;
 		
-		this.HTMLObject = '#' + EEXCESS.contentEL;
-		var svg= d3.select(this.HTMLObject).append("svg")
+		//this.HTMLObject = '#' + EEXCESS.contentEL;
+		var svg= d3.select('#content').append("svg")
 			.attr("width", this.width)
 			.attr("height", this.height);
 	
