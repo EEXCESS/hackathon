@@ -33,7 +33,7 @@ function requestPlugin(dataCallbackFct) {
     var facets = ppEEXCESSFacetInfo(data);
     console.log(facets);
     //var results = ppEEXCESSResultInfo(data);
-    dataCallbackFct(facets, data);
+    dataCallbackFct(facets, data.results);
 }
 /*
  input: terms is [{term: Loom, weight: 0.9},{term: weaving, weight: 0.6}, ...]
@@ -158,7 +158,6 @@ function ppEEXCESSFacetInfo(data) {
     var processedData = [];
     var facets = [];
 
-    var provider = data.provider;
     for(var i = 0; i < data.results.length; i++) {
         var itemFacets = data.results[i].facets;
         for(var key in itemFacets) {
