@@ -2,7 +2,7 @@
     "name": "EEXCESS",
     "version": "0.28",
     "background": {
-        "page": "background.html"
+        "page": "background/background.html"
     },
     "browser_action":
             {

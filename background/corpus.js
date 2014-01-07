@@ -9,7 +9,7 @@ var EEXCESS = EEXCESS || {};
 EEXCESS.corpus = (function() {
     return {
         getCorpus: function(tabID, data, callback) {
-            var worker = new Worker('background/corpus_webWorker.js');
+            var worker = new Worker('corpus_webWorker.js');
             worker.addEventListener('message', function(e) {
                 // send corpus back to content script
                 callback(e.data);
