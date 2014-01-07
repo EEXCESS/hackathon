@@ -69,8 +69,9 @@ EEXCESS.euCall = function(query, start, success, error) {
 
 EEXCESS.frCall = function(query, start, success, error) {
     console.log('query: ' + query + ' start:' + start);
-    var xhr = $.ajax('http://129.27.33.178:9090/api/v1/recommend');
+    var xhr = $.ajax('http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend');
     xhr.done(function(data) {
+        data = JSON.parse(data);
         console.log(data);
         success(data);
     });
