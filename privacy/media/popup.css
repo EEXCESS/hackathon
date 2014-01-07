@@ -1,0 +1,116 @@
+#recommend {
+
+  height: 365px !important;
+  overflow-x: hidden;
+}
+.container{
+  width: 650px !important;
+  margin-bottom: 20px;
+  
+}
+.recommendation{
+  display: inline !important;
+  padding-left: 10px;
+}
+
+::-webkit-scrollbar {
+      width: 15px;
+}
+::-webkit-scrollbar-track {
+      background-color: #FFFFFF;
+       border: solid 0 transparent;
+	border-right-width: 5px;
+	-webkit-border-radius: 5px;
+	-webkit-border-top-right-radius: 5px 5px;
+	-webkit-border-bottom-right-radius: 5px 5px;
+} /* the new scrollbar will have a flat appearance with the set background color */
+::-webkit-scrollbar-thumb {
+      background-color: rgb(220, 199, 161);
+      border: solid 0 transparent;
+	border-right-width: 4px;
+	-webkit-border-radius: 5px;
+	-webkit-border-top-right-radius: 9px 5px;
+	-webkit-border-bottom-right-radius: 9px 5px;
+	
+} /* this will style the thumb, ignoring the track */
+::-webkit-scrollbar-button {
+      background-color:rgba(0, 0, 0, 0);
+  
+} /* optionally, you can style the top and the bottom buttons (left and right for horizontal bars) */
+::-webkit-scrollbar-corner {
+      background-color: black;
+
+}
+
+.footer_popup{
+	padding-top: 20 px;
+
+}
+.logo{
+  position:absolute;
+  top:0;
+  left:0;
+  padding:5px;
+}
+.header{
+position:relative;
+  min-height: 125px;
+  padding: 5px;
+}
+.buttons{
+  position:absolute;
+  top:0;
+  right:0;
+  padding:5px;
+}
+.btn{
+  margin:5px;
+}
+.username{
+  position:absolute;
+  bottom:20;
+  right:0;
+  padding: 5px;
+  margin-right:30px;
+}
+
+ul {
+  width: 520px;
+}
+
+.env{
+  position:absolute;
+  bottom:0;
+  left:0;	
+}
+.icon{
+	margin: 2px 2px 2px 12px;
+}
+
+.display_env{
+  position:absolute;
+  bottom:0;
+  right:0;
+  padding: 5px;
+  margin-right:30px;
+}
+
+
+.footer_popup-left{
+  text-align:left;
+}
+
+/*
+#mendeley_btn {
+    background-image: url("mendeley.png") !important; 
+    /*background-color: transparent !important; // make the button transparent 
+    background-repeat: no-repeat !important;  // make the background image appear only once 
+    background-position: 0px 0px !important;  // equivalent to 'top left' 
+    /*border: none !important;           // assuming we don't want any borders 
+    //cursor: pointer !important;        // make the cursor like hovering over an <a> element 
+    height: 16px !important;           // make this the size of your image 
+    padding-right: 16px !important;     // make text start to the right of the image 
+    vertical-align: left !important; // align the text vertically centered 
+
+}*/
+

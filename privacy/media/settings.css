@@ -1,0 +1,48 @@
+.privacyToggleLeft{
+	background-color: #fff !important;
+}
+.privacyToggle{
+	border-color: #fff !important;
+}
+.email{
+	display: inline;
+}
+.gender{
+	display: inline;
+}
+.title{
+	display: inline;
+}
+.submitSetting{
+	display: inline-block;
+	position: absolute;
+	top: 35px;
+	right: 120px;
+}
+
+.toggle{
+	
+	//float: none;
+	//height:15px;
+	margin-bottom:2em;
+	
+}
+
+#list_settings .switch{
+	display: block;
+	
+	float:right;
+	
+	
+}
+
+
+.slider-tip {
+    opacity:1;
+    bottom:120%;
+    left: -95px;
+    margin-left: -10m;
+}
+h4{
+    font-size: 120%;
+}

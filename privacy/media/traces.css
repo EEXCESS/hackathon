@@ -1,0 +1,83 @@
+#nbTraces{
+	display: inline;
+	position: absolute;
+}
+
+.timebar{
+	background: rgb(255,80,80); 
+	width: 10px; 
+	height: 140px; 
+	position:absolute; 
+	top: 8px; 
+	left: 8px;
+}
+
+.siteContext{
+	display:inline-block;
+	width:600px;
+}
+.traces{
+	display: inline-block;
+	position: relative;
+	top: -14px;
+	left: 15px;
+}
+.host{
+	position: relative;
+	top:-20px;
+	left:60px;
+}
+
+.historyBegin{
+	display: inline-block;
+	width: 180px;
+	margin-left:15px;
+}
+.historyEnd{
+	display: inline-block;
+	width: 180px;
+	margin-left:15px;
+}
+.delay{
+	width: 180px;
+}
+.tempImg1{
+	width:45px;
+	padding:2;
+}
+.tempImg2{
+	width:45px;
+	padding:2;
+	
+}
+
+
+.userInformations{
+	display: inline-block;
+	float: right;
+}
+.userGravatar{
+	width:35px !important;
+	margin-right: 20px
+}
+
+.json{
+	padding: 2px 42px 0px 25px !important;
+}
+.collapser {
+display: inline;
+margin-right: 10px;
+}
+.demo-samples{
+	background: #1D904F;
+}
+.headerTraces{
+	background: #FFF !important;
+}
+
+.nav-tabs{
+	padding-left: 15px !important;
+}
+.env{
+	padding-top: 50px;
+}

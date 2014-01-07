@@ -1,0 +1,53 @@
+<html>
+	<head>
+	<meta charset = "utf-8">
+		  <!-- Loading Bootstrap -->
+   		 <link href="../libs/flat_ui/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+	 	   <!-- Loading Flat UI -->
+	    <link href="../libs/flat_ui/css/flat-ui.css" rel="stylesheet">
+		<link href="media/sign_up.css" rel="stylesheet">
+		<script type="text/javascript" src="js/sign_up.js"></script>
+		<script type="text/javascript" src="../libs/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="../libs/md5.js"></script>  
+	</head>
+	<body>
+	<div class="container">
+		<p><img src="media/logo.jpg" /></p>
+		<button class="btn btn-primary mendeleyConnect"><img class="logoMendeley" src="http://mendeley.com/favicon.ico"></img>Sign In via Mendeley</button>
+		<div class="row">
+		<div class="span5">
+		<div class="todo mrm">
+		<div class="todo-search">
+		<form name="login" style="text-align: center;"><h2 style="text-align: center;">Sign In:</h4></br>
+			<ul>
+			<li><input value="Username/Email" type="text" name="idSignin" id="idSignin"></li>
+			<li><input type="text" value="Password" name="passwordSignin" id="passwordSignin"></li>
+			<li><input id="sign_in" type="button" value="Sign in" class="btn btn-primary"></br><p id="successLogin"></p></li>
+			
+			</ul>
+		</form>		
+		</div>
+		</div>
+		</div>
+		<div class="span5 offset2">
+		<div class="todo mrm">
+		<div class="todo-search">
+		<form name="register" style="text-align: center"><h2>Sign Up:</h2></br>
+			<ul>
+			<li><input value="Username" type="text" name="fullName" id="fullName"></li>
+			<li><input value="Email" type="text" name="emailSignup" id="emailSignup"></li>
+			<li><input value="Password" type="text" name="passwordSignup" id="passwordSignup"></li>
+			<li><input id="sign_up" type="button" value="Sign up" class="btn btn-primary"></br><p id="successSignup"></p></li>
+			
+			</ul>
+		</form>	
+		</div>
+		</div>
+		</div>
+		</div>
+		</div>
+			
+		<p class="footer"><a target="_blank" href="http://www.eexcess.eu/">More about the EEXCESS project</a></p>
+	</body>
+</html>

@@ -1,0 +1,154 @@
+.gravatarProfile{
+	display: inline-block;
+	position: absolute;
+	top:0;
+	right:0;
+	padding:18;
+}
+
+.emailChange{
+	padding:10px;
+}
+.emailChange input{
+	margin-top:10px;
+	margin-right:25px;
+}
+.stateEmail{
+	margin-top:10px;
+	margin-left:30px;
+}
+
+.titleChange{
+	padding:10px;
+}
+.titleChange select{
+	margin-top:10px;
+	margin-right:25px;
+}
+.stateTitle{
+	margin-top:10px;
+	margin-left:30px;
+}
+
+.lastnameChange{
+	padding:10px;
+}
+.lastnameChange input{
+	margin-top:10px;
+	margin-right:25px;
+}
+.stateLastname{
+	margin-top:10px;
+	margin-left:30px;
+}
+
+.firstnameChange{
+	padding:10px;
+}
+.firstnameChange input{
+	margin-top:10px;
+	margin-right:25px;
+}
+.stateFirstname{
+	margin-top:10px;
+	margin-left:30px;
+}
+
+.genderChange{
+	padding:10px;
+}
+.genderChange select{
+	margin-top:10px;
+	margin-right:25px;
+}
+.stateGender{
+	margin-top:10px;
+	margin-left:30px;
+}
+
+.birthdateChange{
+	padding:10px;
+}
+.birthdateChange select{
+	margin-top:10px;
+	margin-right:25px;
+}
+.stateBirthdate{
+	margin-top:10px;
+	margin-left:30px;
+}
+
+.addressChange{
+	padding:10px;
+}
+.addressChange input{
+	margin-top:10px;
+	margin-right:25px;
+}
+.stateAddress{
+	margin-top:10px;
+	margin-left:30px;
+}
+.inputStreet{
+	width: 500px;
+}
+.inputPostalcode{
+	width: 500px;
+}
+.inputCity{
+	width: 500px;
+}
+.inputCountry{
+	width: 500px;
+}
+
+.imgTag{
+  width: 10px;
+  margin-right: 5px;
+  margin-left: -8px;
+  background-color: #fff;
+  border-radius:3px;
+  padding:2px;
+}
+.tagsinput-remove-link {
+  width: auto;
+}
+.tagsinput{
+  height: 35% !important;
+}
+#nothing_tag{
+  margin-left:5px;
+  border-radius: 3px;
+  padding: 5px;
+  border: 2px #d6dbdf solid !important;
+}
+#work_tag{
+  margin-left:5px;
+  border-radius: 3px;
+  padding: 5px;
+  border: 2px #d6dbdf solid !important;
+}
+#home_tag{
+  margin-left:5px;
+  border-radius: 3px;
+  padding: 5px;
+  border: 2px #d6dbdf solid !important;
+}
+#all_tag{
+  margin-left:5px;
+  border-radius: 3px;
+  padding: 5px;
+  border: 2px #d6dbdf solid !important;
+}
+#nothing_tag{
+  width: 80px !important;
+}
+#home_tag{
+  width: 80px !important;
+}
+#work_tag{
+  width: 80px !important;
+}
+#all_tag{
+  width: 80px !important;
+}
