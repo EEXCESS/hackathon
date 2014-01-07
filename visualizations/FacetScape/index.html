@@ -14,26 +14,7 @@
 </head>
 <body>
 <div id="facetScape"></div>
-<script>
 
-
-      var onReceiveData = function(processedData, items) {
-          var term = "Loom";
-          var width = 900;
-          var height = 900;
-          var scape = facetScape(d3.select("body").select("div#facetScape"), width, height, processedData, items, term);
-      }
-
-      // call EEXCESS plugin
-      requestPlugin(onReceiveData);
-
-//    requestFRecommender([{'text': 'Ding', 'weight': 0.9}], null);
-//    var term = "Loom";
-//    var onReceiveData = function(processedData, items) {
-//        var scape = facetScape(d3.select("body").select("div#facetScape"), width, height, processedData, items, term);
-//    }
-//    requestEuropeana(term, onReceiveData);
-
-</script>
+    <script type="text/javascript" src="starter.js"></script>
 </body>
 </html>
