@@ -1,0 +1,44 @@
+{
+    "name": "EEXCESS",
+    "version": "0.28",
+    "background": {
+        "page": "background.html"
+    },
+    "browser_action":
+            {
+                "default_icon": {
+                    "19": "media/icons/19.png",
+                    "38": "media/icons/38.png"
+                },
+                "default_title": "EEXCESS"
+            },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "exclude_matches": ["https://www.google.de/webhp?sourceid=chrome*"],
+            "run_at":"document_end",
+            "js": [
+                "media/lib/jquery-1.10.1.min.js",
+                "content.js"
+            ],
+            "css": ["media/eexcess.css", "media/lib/annotate/annotator.min.css"]
+        }
+    ],
+    "web_accessible_resources": [
+        "media/*",
+        "widget/*",
+        "options/*"
+    ],
+    "manifest_version": 2,
+    "permissions": [
+        "tabs",
+        "<all_urls>",
+        "geolocation",
+        "history",
+        "background"
+    ],
+    "options_page": "options/options.html",
+    "icons": {"16": "media/icons/16.png",
+        "48": "media/icons/48.png",
+        "128": "media/icons/128.png"}
+}
