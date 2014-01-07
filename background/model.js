@@ -447,6 +447,10 @@ EEXCESS.model = (function() {
          */
         getTaskActive: function(tabID, data, callback) {
             callback(task.id !== -1);
+        },
+        
+        getResults: function(tabID, data, callback) {
+            callback(results.query, results.data);
         }
 
     };
