@@ -16,7 +16,7 @@ EEXCESS.apiKeyEuropeana = 'HT6JwVWha';
 EEXCESS.euCall = function(query, start, success, error) {
     var x = [];
     console.log(typeof x);
-        var _facets = function(item) {
+    var _facets = function(item) {
         var facet_list = {};
         var facets = [
             'type',
@@ -33,8 +33,8 @@ EEXCESS.euCall = function(query, start, success, error) {
         for (var i = 0, len = facets.length; i < len; i++) {
             var key = facets[i];
             if (typeof item[key] !== "undefined") {
-                if(typeof item[key] === "object") {
-                facet_list[key] = item[key][0];
+                if (typeof item[key] === "object") {
+                    facet_list[key] = item[key][0];
                 } else {
                     facet_list[key] = item[key];
                 }
@@ -50,12 +50,14 @@ EEXCESS.euCall = function(query, start, success, error) {
             + '&rows=96&profile=standard');
     xhr.done(function(data) {
         console.log(data);
-        $.map(data.items, function(n,i) {
-            n.uri = n.guid;
-        });
-        data.results = data.items;
-        for(var i=0,len = data.results.length;i<len;i++) {
-            data.results[i].facets = _facets(data.results[i]);
+        if (data.totalResults !== 0) {
+            $.map(data.items, function(n, i) {
+                n.uri = n.guid;
+            });
+            data.results = data.items;
+            for (var i = 0, len = data.results.length; i < len; i++) {
+                data.results[i].facets = _facets(data.results[i]);
+            }
         }
         console.log(data);
         success(data);
