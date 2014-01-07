@@ -25,15 +25,14 @@ function requestEuropeana(term, dataCallbackFct) {
 
 function requestPlugin(dataCallbackFct) {
 
-    var data, queryTerms;
     chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'getResults'},data: null}, function(query, results) {
-        queryTerms = query;
-        data = results;
+        var queryTerms = query;
+        var data = results;
+        var facets = ppEEXCESSFacetInfo(data);
+        var results = ppEEXCESSResultInfo(data);
+        console.log(data);
+        dataCallbackFct(facets, data.results);
     });
-    var facets = ppEEXCESSFacetInfo(data);
-    console.log(facets);
-    //var results = ppEEXCESSResultInfo(data);
-    dataCallbackFct(facets, data.results);
 }
 /*
  input: terms is [{term: Loom, weight: 0.9},{term: weaving, weight: 0.6}, ...]
@@ -157,7 +156,7 @@ function preprocessEuropeana(data) {
 function ppEEXCESSFacetInfo(data) {
     var processedData = [];
     var facets = [];
-
+    console.log(data);
     for(var i = 0; i < data.results.length; i++) {
         var itemFacets = data.results[i].facets;
         for(var key in itemFacets) {
@@ -216,6 +215,18 @@ function ppEEXCESSFacetInfo(data) {
 //    }
 //    delete facets;
 //    return processedData;
+}
+function ppEEXCESSResultInfo(data) {
+    var results = [];
+    for(var i = 0; i < data.results.length; i++) {
+        var resultItem = data.results[i];
+        var facets = data.results[i]['facets'];
+        for(var facetType in facets) {
+            resultItem[facetType] = facets[facetType];
+        }
+        results.push(resultItem);
+    }
+    return results;
 }
 
 function getCanonicalString(str) {
