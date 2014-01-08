@@ -411,7 +411,6 @@ EEXCESS.callBG = function(message, callback) {
     if (typeof callback !== 'undefined') {
         chrome.runtime.sendMessage(EEXCESS.extID, message, callback);
     } else {
-        console.log(message);
         chrome.runtime.sendMessage(EEXCESS.extID, message);
     }
 };
@@ -492,7 +491,6 @@ EEXCESS.topKcorpus = function(corpus, k) {
 EEXCESS.triggerQuery = function(textElements) {
     EEXCESS.callBG({method: {parent: 'corpus', func: 'getCorpus'}, data: textElements}, function(result) {
         var query = EEXCESS.topKcorpus(result, 3);
-        console.log(query);
         EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
     });
 };

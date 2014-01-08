@@ -44,13 +44,13 @@ EEXCESS.model = (function() {
     var _updateRatings = function(items) {
         var offset = results.data.results.length - items.length;
         for (var i = 0, len = items.length; i < len; i++) {
-            EEXCESS.annotation.getRating(items[i].guid, {query: results.query}, function(score) {
+            EEXCESS.annotation.getRating(items[i].uri, {query: results.query}, function(score) {
                 results.data.results[this.pos].rating = score;
                 EEXCESS.sendMsgAll({
                     method: {parent: params.tab, func: 'rating'},
                     data: {uri: this.uri, score: score}
                 });
-            }.bind({pos: i + offset, uri: items[i].guid}));
+            }.bind({pos: i + offset, uri: items[i].uri}));
         }
     };
     return {
@@ -91,7 +91,7 @@ EEXCESS.model = (function() {
             results.query = data;
             params.tab = 'results';
             results.scroll = 0;
-            console.log('incoming: ' + tabID + ' data:' + data );
+            console.log('incoming: ' + tabID + ' data:' + data);
             //EEXCESS.logging.logQuery(tabID, data);
             var success = function(data) { // success callback
                 // TODO: search may return no results (although successful)
@@ -101,23 +101,23 @@ EEXCESS.model = (function() {
                     method: 'update',
                     data: {params: params, results: results, task: task}
                 });
-                if(data.itemsCount !== 0) {
-                // update results with ratings
-                _updateRatings(data.results);
-                // create context
-                var context = {query: results.query};
-                if (task.id !== -1) {
-                    context.task_id = task.id;
-                }
-                // log results
-                EEXCESS.logging.logRecommendations(data.results, context);
+                if (data.totalResults !== 0) {
+                    // update results with ratings
+                    _updateRatings(data.results);
+                    // create context
+                    var context = {query: results.query};
+                    if (task.id !== -1) {
+                        context.task_id = task.id;
+                    }
+                    // log results
+                    EEXCESS.logging.logRecommendations(data.results, context);
                 }
             };
             var error = function(error) { // error callback
                 EEXCESS.sendMessage(tabID, {method: 'error', data: error});
             };
             // call europeana (resultlist should start with first item)
-            EEXCESS.frCall(data, 1, success, error);
+            EEXCESS.euCall(data, 1, success, error);
         },
         /**
          * Obtains more results for the current query from europeana.
@@ -145,12 +145,12 @@ EEXCESS.model = (function() {
                     context.task_id = task.id;
                 }
                 // log results
-                EEXCESS.logging.logRecommendations(data.items, context);
+                EEXCESS.logging.logRecommendations(data.results, context);
             };
             var error = function(error) {
                 EEXCESS.sendMessage(tabID, {method: 'error', data: error});
             };
-            EEXCESS.frCall(results.query, data, success, error);
+            EEXCESS.euCall(results.query, data, success, error);
         },
         /**
          * Sends the current model state to the specified callback
@@ -342,17 +342,17 @@ EEXCESS.model = (function() {
             EEXCESS.sendMsgOthers(tabID, {
                 method: {parent: params.tab, func: 'startTask'}
             });
-            EEXCESS.sendMsgAll({method:'taskStarted'});
+            EEXCESS.sendMsgAll({method: 'taskStarted'});
             // log start
             var tmp_task = {
                 name: task.selected,
-                individual:task.individual,
+                individual: task.individual,
                 topics: task.topics,
                 start: task.start,
                 expertise_level: task.expertise_level,
                 recommendations_desirable: task.recommendations_desirable
             };
-            if(task.name === 'other') {
+            if (task.name === 'other') {
                 tmp_task.individual = task.individual;
             }
             EEXCESS.logging.tasks.startTask(tmp_task, function(task_id) {
@@ -397,7 +397,7 @@ EEXCESS.model = (function() {
                 context.task_id = task.id;
             }
             EEXCESS.annotation.rating(data.uri, data.score, context, true);
-            results.data.items[data.pos].rating = data.score;
+            results.data.results[data.pos].rating = data.score;
             EEXCESS.sendMsgOthers(tabID, {
                 method: {parent: params.tab, func: 'rating'},
                 data: data
@@ -449,9 +449,9 @@ EEXCESS.model = (function() {
         getTaskActive: function(tabID, data, callback) {
             callback(task.id !== -1);
         },
-        
         getResults: function(tabID, data, callback) {
-            callback(results.query, results.data);
+            console.log(results);
+            callback({query:results.query,results:results.data});
         }
 
     };

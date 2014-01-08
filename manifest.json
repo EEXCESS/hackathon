@@ -28,7 +28,8 @@
         "media/*",
         "widget/*",
         "options/*",
-        "libs/*"
+        "libs/*",
+        "visualizations/*"
     ],
     "manifest_version": 2,
     "permissions": [

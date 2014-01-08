@@ -25,12 +25,13 @@ function requestEuropeana(term, dataCallbackFct) {
 
 function requestPlugin(dataCallbackFct) {
     console.log("requesting data...");
-    chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'getResults'},data: null}, function(query, results) {
-        var queryTerms = query;
-        var data = results;
+    chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
+        var queryTerms = reqResult.query;
+        var data = reqResult.results;
+        console.log(data);
+        console.log(queryTerms);
         var facets = ppEEXCESSFacetInfo(data);
         var results = ppEEXCESSResultInfo(data);
-        console.log(data);
         dataCallbackFct(facets, data.results);
     });
 }

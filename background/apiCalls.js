@@ -55,6 +55,7 @@ EEXCESS.euCall = function(query, start, success, error) {
                 n.uri = n.guid;
             });
             data.results = data.items;
+            delete data.items;
             for (var i = 0, len = data.results.length; i < len; i++) {
                 data.results[i].facets = _facets(data.results[i]);
             }
