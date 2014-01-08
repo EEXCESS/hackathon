@@ -148,7 +148,7 @@ EEXCESS.results = (function() {
             for (var i = 0, len = items.length; i < len; i++) {
                 var item = items[i];
                 var img = item.previewImage;
-                if (typeof img === 'undefined') {
+                if (typeof img === 'undefined' || img === '') {
                     img = 'no-img.png';
                 }
                 var title = item.title;
@@ -216,7 +216,7 @@ EEXCESS.results = (function() {
 
                 // description
                 if (typeof item.description !== 'undefined' && item.description !== '') {
-                    resCt.append($('<p>' + item.description + '</p>'));
+                    resCt.append($('<p class="result_description">' + item.description + '</p>'));
                 }
                 resCt.append($('<p style="clear:both;"></p>'));
 
