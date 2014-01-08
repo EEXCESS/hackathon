@@ -1,9 +1,18 @@
 var onReceiveData = function(queryTerms, processedData, items) {
     var term = "Loom";
-    var width = 900;
-    var height = 900;
+    var width = $(window).width();//900;
+    var height = $(window).height();//900;
+
     var scape = facetScape(d3.select("body").select("div#facetScape"), width, height, processedData, items, queryTerms);
 }
 
-// call EEXCESS plugin
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if (request.method === 'newSearchTriggered') {
+            //requestPlugin(onReceiveData);
+        }
+    }
+);
+
+// get Data from Plugin
 requestPlugin(onReceiveData);

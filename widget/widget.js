@@ -147,7 +147,7 @@ EEXCESS.results = (function() {
             var offset = $('#eexcess_resultList li').length;
             for (var i = 0, len = items.length; i < len; i++) {
                 var item = items[i];
-                var img = item.edmPreview;
+                var img = item.previewImage;
                 if (typeof img === 'undefined') {
                     img = 'no-img.png';
                 }

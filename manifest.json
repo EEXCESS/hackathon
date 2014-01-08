@@ -24,6 +24,7 @@
             "css": ["media/eexcess.css"]
         }
     ],
+    
     "web_accessible_resources": [
         "media/*",
         "widget/*",
