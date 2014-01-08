@@ -63,6 +63,7 @@ EEXCESS.euCall = function(weightedTerms, start, success, error) {
                 n.uri = n.guid;
                 n.previewImage = n.edmPreview;
                 delete n.edmPreview;
+                n.partner = 'europeana';
             });
             data.results = data.items;
             delete data.items;
