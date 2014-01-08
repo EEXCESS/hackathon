@@ -24,15 +24,15 @@ function requestEuropeana(term, dataCallbackFct) {
 }
 
 function requestPlugin(dataCallbackFct) {
-    console.log("requesting data...");
     chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
         var queryTerms = reqResult.query;
         var data = reqResult.results;
-        console.log(data);
-        console.log(queryTerms);
         var facets = ppEEXCESSFacetInfo(data);
         var results = ppEEXCESSResultInfo(data);
-        dataCallbackFct(facets, data.results);
+        console.log(queryTerms);
+        console.log(facets);
+        console.log(results);
+        dataCallbackFct(queryTerms, facets, results);
     });
 }
 /*
@@ -168,7 +168,6 @@ function ppEEXCESSFacetInfo(data) {
             facets[key][tag] = (typeof facets[key][tag] == "undefined" ? 1 : ++facets[key][tag]);
         }
     }
-
     for(var facet in facets) {
         if(typeof facets[facet] != "undefined") {
             var tags = [];

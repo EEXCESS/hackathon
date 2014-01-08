@@ -549,6 +549,8 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         for(var i = 0; i < facetData.length; i++) {
             cloudLayout(facetData[i]);
         }
+        console.log(facetData);
+        console.log(resultItems);
         drawVoronoi();
         drawTagCloud();
         FSResultLayout();
@@ -651,12 +653,12 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         var resultHeader = resultList.append("div").attr("id", "RS_Header");
         var resultHeaderSearch = resultHeader.append("div").attr("id", "RS_Header_Search");
         resultHeaderSearch.append("input").attr("id", "RS_Query").attr("type", "text").attr("name", "query").attr("value",searchTerm);
-        var select = resultHeaderSearch.append("select").attr("id", "RS_provider_selection").attr("name", "provider");
-        select.append("option").attr("value", "europeana").text("Europeana");
-        select.append("option").attr("value", "recommender").text("FRecommender");
-        $( "#RS_provider_selection" ).on('change', function() {
-            provider = $(this).val();
-        });
+//        var select = resultHeaderSearch.append("select").attr("id", "RS_provider_selection").attr("name", "provider");
+//        select.append("option").attr("value", "europeana").text("Europeana");
+//        select.append("option").attr("value", "recommender").text("FRecommender");
+//        $( "#RS_provider_selection" ).on('change', function() {
+//            provider = $(this).val();
+//        });
 
         resultHeaderSearch.append("input").attr("id", "RS_SubmitButtonId").attr("class","RS_SubmitButton").attr("type", "submit").attr("value", STR_BTN_SEARCH);
 
@@ -988,7 +990,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                 if(facet !== "filter") {
                     var booleanOR = false;
                     for(var i = 0; i < tagSelection[facet].length; i++) {
-                        booleanOR |= hasAttribute(d, facet, tagSelection[facet][i]);
+                        booleanOR |= hasAttribute(d, facet, tagSelection[facet][i]);;
                     }
                     booleanAND = booleanAND && booleanOR;
                 }
@@ -1005,13 +1007,13 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         if(item.hasOwnProperty(facetName)) {
             if(item[facetName] instanceof Array) {
                 for(var i = 0; i < item[facetName].length; i++) {
-                    if(getCanonicalString(item[facetName][i]) == tag) {
+                    if(getCanonicalString(item[facetName][i]) == getCanonicalString(tag)) {
                         return true;
                     }
                 }
                 return false;
             } else {
-                if(getCanonicalString(item[facetName]) == tag) {
+                if(getCanonicalString(item[facetName]) == getCanonicalString(tag)) {
                     return true;
                 } else {
                     return false;
@@ -1033,13 +1035,13 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                         if(selectedResults[i][key] instanceof Array) {
                             for(var tt = 0; tt < selectedResults[i][key].length; tt++) {
                                 var canonTag = getCanonicalString(selectedResults[i][key][tt]);
-                                if(canonTag == facetData[f].tags[t].word){
+                                if(canonTag == getCanonicalString(facetData[f].tags[t].word)){
                                     facetData[f].tags[t].frequency++;
                                 }
                             }
                         } else {
                             var canonTag = getCanonicalString(selectedResults[i][key]);
-                            if(canonTag == facetData[f].tags[t].word){
+                            if(canonTag == getCanonicalString(facetData[f].tags[t].word)){
                                 facetData[f].tags[t].frequency++;
                             }
                         }
