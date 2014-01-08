@@ -11,9 +11,36 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width">
         <script type="text/javascript" src="../../libs/jquery-1.10.1.min.js"></script>
         <script type="text/javascript" src="../../libs/d3.v3.js"></script>
+		<style>
+			rect {
+
+				fill:none;
+				stroke: #999;
+			  /*
+			  fill: none;
+			  */
+			  pointer-events: all;
+			}
+			/*
+			.node {
+			  fill: #000;
+			}
+
+			.link {
+			  stroke: #999;
+			}
+			*/
+		</style>
     </head>
     <body>
-        <div id="content"></div>
-        <script type="text/javascript" src="graph-visualisiation.js"></script>
+        <div id="graphContent">
+		hello world
+		</div>
+		
+        <script type="text/javascript" src="test.js"></script>
+		<script src="option.js" lang="javascript"></script>
+		<script src="showgraph.js" lang="javascript"></script>
+		<script src="buildgraph.js" lang="javascript"></script>
+		<script src="actiongraph.js" lang="javascript"></script>
     </body>
 </html>
