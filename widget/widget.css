@@ -205,6 +205,12 @@ select {
     margin-right: 10px;
 }
 
+.partner_icon {
+    margin-right: 10px;
+    width:16px;
+    height:16px;
+}
+
 .eexcess_raty {
     margin:0;
     margin-top: 2px;

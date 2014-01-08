@@ -19,10 +19,10 @@ EEXCESS.results = (function() {
     var _facets = function(item) {
         var facetString = '';
         var counter = 0;
-        
-        for(var key in item.facets) {
+
+        for (var key in item.facets) {
             counter++;
-            if(counter > 1) {
+            if (counter > 1) {
                 facetString += ' | ';
             }
             facetString += key + ': ' + item.facets[key];
@@ -159,8 +159,8 @@ EEXCESS.results = (function() {
                 var li = $('<li data-pos="' + pos + '"></li>');
 
                 list.append(li);
-                
-                                // rating
+
+                // rating
                 var raty = $('<div class="eexcess_raty"  data-uri="' + item.uri + '" data-pos="' + pos + '"></div');
                 _rating(raty, item.uri, item.rating);
                 li.append(raty);
@@ -182,6 +182,12 @@ EEXCESS.results = (function() {
 //                            evt.preventDefault();
 //                            EEXCESS.callBG({method: 'useResource', data: this});
 //                        }.bind(item.link)));
+
+                // partner icon
+                item.facets.partner = 'econbiz';
+                if (typeof item.facets.partner !== 'undefined') {
+                    containerL.append($('<img src="../media/icons/' + item.facets.partner + '-favicon.ico" class="partner_icon" />'));
+                }
 
                 // show link
                 var linkCopy = $('<a href="" title="show URL of the resource"><img src="../media/icons/link.png" /></a>');
@@ -210,7 +216,7 @@ EEXCESS.results = (function() {
 //                }
 
                 // description
-                if(typeof item.description !== 'undefined' && item.description !== '') {
+                if (typeof item.description !== 'undefined' && item.description !== '') {
                     resCt.append($('<p>' + item.description + '</p>'));
                 }
                 resCt.append($('<p style="clear:both;"></p>'));
@@ -617,10 +623,10 @@ EEXCESS.scroll = function(value) {
 EEXCESS.update = function(widget) {
     $('#eexcess_tab').find('a').removeAttr('class');
     $('#eexcess_' + widget.params.tab).attr('class', 'selected');
-    if(widget.results.query === 'search text...') {
+    if (widget.results.query === 'search text...') {
         $('#eexcess_query').attr('placeholder', widget.results.query);
     } else {
-    $('#eexcess_query').val(widget.results.query);
+        $('#eexcess_query').val(widget.results.query);
     }
 //    $('#eexcess_query').val('');
 //    $('#eexcess_query').attr('placeholder', widget.results.query);
@@ -632,7 +638,7 @@ EEXCESS.update = function(widget) {
         case 'options':
             $('#eexcess_content').empty();
             $('#eexcess_content').append($('<iframe src="/privacy/options.html" style="display: inline; width: 100%; height: 100%;"></iframe>'));
-        	break;
+            break;
         case 'task':
             EEXCESS.task.init(widget.task);
             break;
@@ -658,6 +664,12 @@ EEXCESS.init = function(widget) {
         $('#eexcess_content').append($('<div id="eexcess_loading"><img id="eexcess_loading" src="../media/loading.gif" /></div>'));
         EEXCESS.callBG({method: {parent: 'model', func: 'changeTab'}, data: $(this).data('name')});
     });
+    
+    $('#eexcess_tab a.fancybox_link').click(function(evt) {
+        evt.preventDefault();
+        //console.log();
+        EEXCESS.callBG({method: 'fancybox', data: 'chrome-extension://'+EEXCESS.extID + '/' +$(evt.target).attr('href')});
+    });
 
     var form = $('#eexcess_searchForm');
     form.submit(function() {
@@ -666,7 +678,7 @@ EEXCESS.init = function(widget) {
         $('#eexcess_content').scrollTop(0);
         $('#eexcess_content').append($('<div id="eexcess_loading"><img id="eexcess_loading" src="../media/loading.gif" /></div>'));
         var query = $('#eexcess_query').val();
-        EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: [{weight:1,text:query}]});
+        EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: [{weight: 1, text: query}]});
         return false;
     });
     EEXCESS.update(widget);
