@@ -468,19 +468,42 @@ EEXCESS.sortTokens = function(corpus, sortFunc) {
 };
 
 EEXCESS.topKcorpus = function(corpus, k) {
-    var topK = '';
-    // sort corpus by word occurences
+//    var topK = '';
+//    // sort corpus by word occurences
+//    var sorted = EEXCESS.sortTokens(corpus, function(t1, t2) {
+//        return t2.value['c'] - t1.value['c'];
+//    });
+//    // first word
+//    if (typeof sorted[0] !== 'undefined') {
+//        topK = sorted[0].key;
+//    }
+//    // add k more words
+//    for (var i = 1; i < k; i++) {
+//        if (typeof sorted[i] !== 'undefined') {
+//            topK += ' ' + sorted[i].key;
+//        } else {
+//            break;
+//        }
+//    }
+    topK = [];
+    var divisor = 1;
     var sorted = EEXCESS.sortTokens(corpus, function(t1, t2) {
         return t2.value['c'] - t1.value['c'];
     });
     // first word
     if (typeof sorted[0] !== 'undefined') {
-        topK = sorted[0].key;
+        divisor = sorted[0].value['c'];
+        topK.push({
+            "weight":1,
+            "text":sorted[0].key
+        });
     }
-    // add k more words
-    for (var i = 1; i < k; i++) {
-        if (typeof sorted[i] !== 'undefined') {
-            topK += ' ' + sorted[i].key;
+    for(var i=1; i < k; i++) {
+        if(typeof sorted[i] !== 'undefined') {
+            topK.push({
+                "weight":(sorted[i].value['c'] / divisor),
+                "text":sorted[i].key
+            });
         } else {
             break;
         }
@@ -490,7 +513,8 @@ EEXCESS.topKcorpus = function(corpus, k) {
 
 EEXCESS.triggerQuery = function(textElements) {
     EEXCESS.callBG({method: {parent: 'corpus', func: 'getCorpus'}, data: textElements}, function(result) {
-        var query = EEXCESS.topKcorpus(result, 3);
+        var query = EEXCESS.topKcorpus(result, 10);
+        console.log(query);
         EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
     });
 };

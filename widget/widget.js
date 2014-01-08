@@ -656,7 +656,7 @@ EEXCESS.init = function(widget) {
         $('#eexcess_content').scrollTop(0);
         $('#eexcess_content').append($('<div id="eexcess_loading"><img id="eexcess_loading" src="../media/loading.gif" /></div>'));
         var query = $('#eexcess_query').val();
-        EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
+        EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: [{weight:1,text:query}]});
         return false;
     });
     EEXCESS.update(widget);

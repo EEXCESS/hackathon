@@ -17,6 +17,7 @@ EEXCESS.model = (function() {
     var results = {
         query: 'search text...',
         data: null,
+        weightedTerms:null,
         scroll: 0
     };
     // Represents the current task
@@ -44,13 +45,15 @@ EEXCESS.model = (function() {
     var _updateRatings = function(items) {
         var offset = results.data.results.length - items.length;
         for (var i = 0, len = items.length; i < len; i++) {
-            EEXCESS.annotation.getRating(items[i].uri, {query: results.query}, function(score) {
-                results.data.results[this.pos].rating = score;
-                EEXCESS.sendMsgAll({
-                    method: {parent: params.tab, func: 'rating'},
-                    data: {uri: this.uri, score: score}
-                });
-            }.bind({pos: i + offset, uri: items[i].uri}));
+            if (typeof items[i].uri !== 'undefined') {
+                EEXCESS.annotation.getRating(items[i].uri, {query: results.query}, function(score) {
+                    results.data.results[this.pos].rating = score;
+                    EEXCESS.sendMsgAll({
+                        method: {parent: params.tab, func: 'rating'},
+                        data: {uri: this.uri, score: score}
+                    });
+                }.bind({pos: i + offset, uri: items[i].uri}));
+            }
         }
     };
     return {
@@ -88,10 +91,13 @@ EEXCESS.model = (function() {
          * @param {String} data The query term 
          */
         query: function(tabID, data) {
-            results.query = data;
+            results.weightedTerms = data;
+            results.query = '';
+            for(var i=0,len=data.length; i<len;i++) {
+                results.query += data[i].text + ' ';
+            }
             params.tab = 'results';
             results.scroll = 0;
-            console.log('incoming: ' + tabID + ' data:' + data);
             //EEXCESS.logging.logQuery(tabID, data);
             var success = function(data) { // success callback
                 // TODO: search may return no results (although successful)
@@ -112,6 +118,10 @@ EEXCESS.model = (function() {
                     // log results
                     EEXCESS.logging.logRecommendations(data.results, context);
                 }
+                EEXCESS.sendMsgAll({
+                    method: 'updateGraph',
+                    data: {query: results.query, results: results.data}
+                });
             };
             var error = function(error) { // error callback
                 EEXCESS.sendMessage(tabID, {method: 'error', data: error});
@@ -150,7 +160,7 @@ EEXCESS.model = (function() {
             var error = function(error) {
                 EEXCESS.sendMessage(tabID, {method: 'error', data: error});
             };
-            EEXCESS.euCall(results.query, data, success, error);
+            EEXCESS.euCall(results.weightedTerms, data, success, error);
         },
         /**
          * Sends the current model state to the specified callback
@@ -450,8 +460,7 @@ EEXCESS.model = (function() {
             callback(task.id !== -1);
         },
         getResults: function(tabID, data, callback) {
-            console.log(results);
-            callback({query:results.query,results:results.data});
+            callback({query: results.query, results: results.data});
         }
 
     };
