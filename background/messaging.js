@@ -88,6 +88,8 @@ chrome.runtime.onMessage.addListener(
             } else if (req.method === 'useResource') {
                 // forward message from eexcess widget to current page for adding a recommended resource to the tags of an annotation
                 chrome.tabs.sendMessage(tabID, req);
+            } else if (req.method === 'privacySettings') {
+                chrome.tabs.sendMessage(tabID, req);
             }
             else {
                 // call function as specfied by the request
