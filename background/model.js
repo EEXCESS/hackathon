@@ -94,7 +94,10 @@ EEXCESS.model = (function() {
             results.weightedTerms = data;
             results.query = '';
             for(var i=0,len=data.length; i<len;i++) {
-                results.query += data[i].text + ' ';
+                results.query += data[i].text;
+                if(i < len-1) {
+                    results.query += ' ';
+                }
             }
             params.tab = 'results';
             results.scroll = 0;
