@@ -23,9 +23,13 @@ function requestEuropeana(term, dataCallbackFct) {
     xhr.send();
 }
 
-function requestPlugin(dataCallbackFct) {
+function requestPlugin(dataCallbackFct, action) {
+
         chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
-        if(reqResult != "undefined") {
+        var responseData = reqResult.results;
+        if((typeof responseData == "undefined") || responseData == null) {
+            d3.select("#facetScape").text("no data available");
+        } else {
             var queryTerms = reqResult.query;
             var data = reqResult.results;
             console.log(data);
@@ -35,8 +39,6 @@ function requestPlugin(dataCallbackFct) {
             console.log(facets);
             console.log(results);
             dataCallbackFct(queryTerms, facets, results);
-        } else {
-            d3.select("#facetScape").text("no data available");
         }
     });
 }

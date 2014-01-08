@@ -688,7 +688,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         $('#RS_Keyword_SubmitButtonId').click(function(e) {
             evaluateKeywordFilter($('#RS_Keyword_Query')[0].value);
         });
-        var resultHeaderFilterTags = resultList.append("div").attr("id", "RS_Header_Filter_Tags");
+        var resultHeaderFilterTags = resultList.append("div").attr("id", "RS_Header_Filter_Tags").style("width", svgWidth+"px");
         //var headerHeight =  parseInt(resultHeader.style("height")) + parseInt(resultHeaderFilterTags.style("height"));
     }
 
@@ -726,8 +726,9 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         var secDesc = singleResultNode.append("div").attr("id", "RS_QueryResultItem_AsynchDesc");
         //var l = secDesc.append("div").attr("id", "RS_QueryResultItem_Loader");
         //var d = secDesc.append("div").attr("id", "RS_QueryResultItem_Description1");
-        var providerIcon = secDesc.append("div").attr("id", "RS_QueryResultItem_Provider");
-        var img = providerIcon.append("img").attr("src", function(d,i) { return "../../media/icons/"+ ((typeof d.partner != "undefined") ? d.partner : "europeana") + "-favicon.ico";});
+        var providerIcon = secDesc.append("div").attr("id", "RS_QueryResultItem_Provider").style("background-image", function(d,i) { return "url(../../media/icons/"+ ((typeof d.facets.partner != "undefined") ? d.facets.partner : "europeana") + "-favicon.ico)";})
+            .style("background-size", "15px 15px").style("margin-left", "60px").style("left", "40px");
+        //var img = providerIcon.append("img").attr("src", function(d,i) { return "url(../../media/icons/"+ ((typeof d.facets.partner != "undefined") ? d.facets.partner : "europeana") + "-favicon.ico)";});
 //        providerIcon.text(function(d,i) {
 //            if(d.provider == "mendeley") {
 //                return "mendeley";
@@ -746,7 +747,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
 
         singleResultNode.append("p").attr("id", "RS_QueryResultItem_Description2")
             .text(function(d,i) {
-                return (d.hasOwnProperty("country")) ? d.country : "no Country";
+                return (d.hasOwnProperty("country")) ? d.country : "";
             });
     }
 
@@ -1234,7 +1235,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     }
 
     function search(term) {
-        //chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'query'}, data: [{weight:1,text:term}]});
+        chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'query'}, data: [{weight:1,text:term}]});
         var queryTerm = term;
         var onReceiveData = function(processedData, items) {
             d3.select("div#RS_Panel").remove();
@@ -1243,7 +1244,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
             facetScape(root, svgWidth, height, processedData, items, queryTerm);
         }
         //requestEuropeana(term,onReceiveData);
-        requestPlugin(onReceiveData);
+        requestPlugin(onReceiveData, "refresh");
     }
 
     return facetScapeObject;
