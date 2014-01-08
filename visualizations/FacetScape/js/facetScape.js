@@ -714,7 +714,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         var resultNodes = results.selectAll("div").data(selectedResults);
 
         var singleResultNode = resultNodes.enter().append("div").attr("id", "RS_QueryResultItem");
-        singleResultNode.append("img").attr("id", "RS_QueryResultItem_Thumbnail").attr("src", function(d,i) { return (d.hasOwnProperty("edmPreview")) ? d.edmPreview[0] : ""; });
+        singleResultNode.append("img").attr("id", "RS_QueryResultItem_Thumbnail").attr("src", function(d,i) { return (d.hasOwnProperty("previewImage")) ? d.previewImage : ""; });
         singleResultNode.append("a").attr("id", "RS_QueryResultItem_Title")
             .attr("href", function(d, i) { return d.uri/*d.guid*/;})
             .attr("target", "_blank")
