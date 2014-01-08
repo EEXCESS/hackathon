@@ -549,8 +549,8 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         for(var i = 0; i < facetData.length; i++) {
             cloudLayout(facetData[i]);
         }
-        console.log(facetData);
-        console.log(resultItems);
+//        console.log(facetData);
+//        console.log(resultItems);
         drawVoronoi();
         drawTagCloud();
         FSResultLayout();
@@ -652,7 +652,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         var resultList = root.append("div").attr("id","RS_Panel").style("width", svgWidth+"px");
         var resultHeader = resultList.append("div").attr("id", "RS_Header");
         var resultHeaderSearch = resultHeader.append("div").attr("id", "RS_Header_Search");
-        resultHeaderSearch.append("input").attr("id", "RS_Query").attr("type", "text").attr("name", "query").attr("value",searchTerm);
+        resultHeaderSearch.append("input").attr("id", "RS_Query").attr("type", "text").attr("name", "query").attr("value",searchTerm).attr("disabled", "");
 //        var select = resultHeaderSearch.append("select").attr("id", "RS_provider_selection").attr("name", "provider");
 //        select.append("option").attr("value", "europeana").text("Europeana");
 //        select.append("option").attr("value", "recommender").text("FRecommender");
@@ -660,22 +660,22 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
 //            provider = $(this).val();
 //        });
 
-        resultHeaderSearch.append("input").attr("id", "RS_SubmitButtonId").attr("class","RS_SubmitButton").attr("type", "submit").attr("value", STR_BTN_SEARCH);
+//        resultHeaderSearch.append("input").attr("id", "RS_SubmitButtonId").attr("class","RS_SubmitButton").attr("type", "submit").attr("value", STR_BTN_SEARCH);
 
-        $('#RS_Query').change(function() {
-            search($(this).val());
-        });
-        $('#RS_Query').keypress(function(e){
-            if (e.which == 13) {
-                search(e.currentTarget.value);
-            }
-        });
-        $('#RS_SubmitButtonId').click(function(e) {
-            search($('#RS_Query')[0].value);
-        });
-        resultHeader.append("div").attr("id", "RS_Header_FlowArrow_Right").append("div");
-        resultHeader.append("div").attr("id", "RS_Header_Text").text(STR_QUERY_RESULTS+":");
-        resultHeader.append("div").attr("id", "RS_Header_FlowArrow_Left").append("div");
+//        $('#RS_Query').change(function() {
+//            search($(this).val());
+//        });
+//        $('#RS_Query').keypress(function(e){
+//            if (e.which == 13) {
+//                search(e.currentTarget.value);
+//            }
+//        });
+//        $('#RS_SubmitButtonId').click(function(e) {
+//            search($('#RS_Query')[0].value);
+//        });
+//        resultHeader.append("div").attr("id", "RS_Header_FlowArrow_Right").append("div");
+        resultHeader.append("div").attr("id", "RS_Header_Text").text(STR_QUERY_RESULTS+":").style("padding-left", svgWidth/2 -200 + "px");
+//        resultHeader.append("div").attr("id", "RS_Header_FlowArrow_Left").append("div");
 
         var resultHeaderFilter = resultHeader.append("div").attr("id", "RS_Header_Filter");
         resultHeaderFilter.append("input").attr("id", "RS_Keyword_Query").attr("type", "text").attr("name", "keywordQuery").attr("value","");
@@ -726,8 +726,8 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         var secDesc = singleResultNode.append("div").attr("id", "RS_QueryResultItem_AsynchDesc");
         //var l = secDesc.append("div").attr("id", "RS_QueryResultItem_Loader");
         //var d = secDesc.append("div").attr("id", "RS_QueryResultItem_Description1");
-        var providerIcon = secDesc.append("div").attr("id", "RS_QueryResultItem_Provider").style("background-image", function(d,i) { return "url(../../media/icons/"+ ((typeof d.facets.partner != "undefined") ? d.facets.partner : "europeana") + "-favicon.ico)";})
-            .style("background-size", "15px 15px").style("margin-left", "60px").style("left", "40px");
+        //var providerIcon = secDesc.append("div").attr("id", "RS_QueryResultItem_Provider").style("background-image", function(d,i) { return "url(../../media/icons/"+ ((typeof d.facets.partner != "undefined") ? d.facets.partner : "europeana") + "-favicon.ico)";})
+        //    .style("background-size", "15px 15px").style("margin-left", "60px").style("left", "40px");
         //var img = providerIcon.append("img").attr("src", function(d,i) { return "url(../../media/icons/"+ ((typeof d.facets.partner != "undefined") ? d.facets.partner : "europeana") + "-favicon.ico)";});
 //        providerIcon.text(function(d,i) {
 //            if(d.provider == "mendeley") {
@@ -747,7 +747,9 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
 
         singleResultNode.append("p").attr("id", "RS_QueryResultItem_Description2")
             .text(function(d,i) {
-                return (d.hasOwnProperty("country")) ? d.country : "";
+                var str = "";
+                str += ((d.hasOwnProperty("language") && d.language != "") ? (d.language + ", ") : "") + ((d.hasOwnProperty("type") && d.type != "") ? (d.type + ", ") : "") + ((d.hasOwnProperty("year") && d.year != "") ? d.year : "");
+                return str;
             });
     }
 

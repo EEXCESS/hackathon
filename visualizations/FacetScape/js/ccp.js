@@ -32,12 +32,12 @@ function requestPlugin(dataCallbackFct, action) {
         } else {
             var queryTerms = reqResult.query;
             var data = reqResult.results;
-            console.log(data);
+//            console.log(data);
             var facets = ppEEXCESSFacetInfo(data);
             var results = ppEEXCESSResultInfo(data);
-            console.log(queryTerms);
-            console.log(facets);
-            console.log(results);
+//            console.log(queryTerms);
+//            console.log(facets);
+//            console.log(results);
             dataCallbackFct(queryTerms, facets, results);
         }
     });
