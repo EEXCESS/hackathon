@@ -564,7 +564,7 @@ $(document).mouseup(function() {
     }
 });
 
-
+console.log(window);
 /*
  * privacy initialization stuff
  */

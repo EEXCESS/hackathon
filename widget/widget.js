@@ -664,7 +664,7 @@ EEXCESS.init = function(widget) {
     $('#eexcess_tab a.fancybox_link').click(function(evt) {
         evt.preventDefault();
         //console.log();
-        EEXCESS.callBG({method: 'fancybox', data: 'chrome-extension://'+EEXCESS.extID + '/' +$(evt.target).attr('href')});
+        EEXCESS.callBG({method: 'fancybox', data: 'chrome-extension://'+EEXCESS.extID + '/' +$(evt.target).parent('a').attr('href')});
     });
 
     var form = $('#eexcess_searchForm');
