@@ -714,7 +714,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         var resultNodes = results.selectAll("div").data(selectedResults);
 
         var singleResultNode = resultNodes.enter().append("div").attr("id", "RS_QueryResultItem");
-        singleResultNode.append("img").attr("id", "RS_QueryResultItem_Thumbnail").attr("src", function(d,i) { return (d.hasOwnProperty("edmPreview")) ? d.edmPreview[0] : ""; });
+        singleResultNode.append("img").attr("id", "RS_QueryResultItem_Thumbnail").attr("src", function(d,i) { return (d.hasOwnProperty("previewImage")) ? d.previewImage : ""; });
         singleResultNode.append("a").attr("id", "RS_QueryResultItem_Title")
             .attr("href", function(d, i) { return d.uri/*d.guid*/;})
             .attr("target", "_blank")
@@ -724,12 +724,25 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
             });
 
         var secDesc = singleResultNode.append("div").attr("id", "RS_QueryResultItem_AsynchDesc");
-        var l = secDesc.append("div").attr("id", "RS_QueryResultItem_Loader");
-        var d = secDesc.append("div").attr("id", "RS_QueryResultItem_Description1");
-        d.text(function(d,i) {
-            //TODO: load additional info for each result
-                //loadDetailedInfo(d.link, d3.select(this.parentNode), loadDescriptionCallback);
-            });
+        //var l = secDesc.append("div").attr("id", "RS_QueryResultItem_Loader");
+        //var d = secDesc.append("div").attr("id", "RS_QueryResultItem_Description1");
+        var providerIcon = secDesc.append("div").attr("id", "RS_QueryResultItem_Provider");
+        var img = providerIcon.append("img").attr("src", function(d,i) { return "../../media/icons/"+ ((typeof d.partner != "undefined") ? d.partner : "europeana") + "-favicon.ico";});
+//        providerIcon.text(function(d,i) {
+//            if(d.provider == "mendeley") {
+//                return "mendeley";
+//            }
+//            if(d.provider == "econbiz") {
+//                return "econbiz";
+//            }
+//            if(d.provider == "europeana") {
+//                return "europeana";
+//            }
+//        })
+//        d.text(function(d,i) {
+//            //TODO: load additional info for each result
+//                //loadDetailedInfo(d.link, d3.select(this.parentNode), loadDescriptionCallback);
+//            });
 
         singleResultNode.append("p").attr("id", "RS_QueryResultItem_Description2")
             .text(function(d,i) {
@@ -1221,6 +1234,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     }
 
     function search(term) {
+        //chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'query'}, data: [{weight:1,text:term}]});
         var queryTerm = term;
         var onReceiveData = function(processedData, items) {
             d3.select("div#RS_Panel").remove();

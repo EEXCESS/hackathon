@@ -229,6 +229,10 @@ text.shadow {
     padding:0px;
     margin-left:60px;
 }
+#RS_QueryResultItem_Provider {
+    width:15px;
+    height:15px;
+}
 #RS_QueryResultItem_Description2 {
     width:95%;
     font-size: 12px;
