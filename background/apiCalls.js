@@ -94,9 +94,10 @@ EEXCESS.frCall = function(weightedTerms, start, success, error) {
         url: 'http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend',
         data: JSON.stringify(profile),
         type: 'POST',
-        contentType: 'application/json'
+        contentType: 'application/json',
+        dataType: 'json'
     });
-    xhr.done(function(data) {
+    xhr.done(function(data) {     
         console.log(data);
         success(data);
     });
