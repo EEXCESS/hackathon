@@ -28,10 +28,11 @@ function requestPlugin(dataCallbackFct) {
     chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'getResults'},data: null}, function(query, results) {
         var queryTerms = query;
         var data = results;
+        console.log(results);
         var facets = ppEEXCESSFacetInfo(data);
         var results = ppEEXCESSResultInfo(data);
         console.log(data);
-        dataCallbackFct(facets, data.results);
+        dataCallbackFct(queryTerms, facets, results);
     });
 }
 /*

@@ -1,4 +1,4 @@
-var onReceiveData = function(processedData, items) {
+var onReceiveData = function(queryTerms, processedData, items) {
     var term = "Loom";
     var width = 900;
     var height = 900;
