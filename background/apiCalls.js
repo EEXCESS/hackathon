@@ -13,7 +13,15 @@ EEXCESS.apiKeyEuropeana = 'HT6JwVWha';
  * @param {querySuccess} success callback on success
  * @param {queryError} error callback on error
  */
-EEXCESS.euCall = function(query, start, success, error) {
+EEXCESS.euCall = function(weightedTerms, start, success, error) {
+    var query = '';
+    for(i = 0; i < 3; i++) {
+        if(typeof weightedTerms[i] !== 'undefined') {
+            query += weightedTerms[i].text + ' ';
+        } else {
+            break;
+        }
+    }
     var x = [];
     console.log(typeof x);
     var _facets = function(item) {
@@ -68,15 +76,34 @@ EEXCESS.euCall = function(query, start, success, error) {
     });
 };
 
-EEXCESS.frCall = function(query, start, success, error) {
-    console.log('query: ' + query + ' start:' + start);
-    var xhr = $.ajax('http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend');
+EEXCESS.frCall = function(weightedTerms, start, success, error) {
+    console.log('start:' + start + 'query: ');
+    console.log(weightedTerms);
+    var profile = {
+        "eexcess-user-profile": {
+            "interests": {
+                "interest": []
+            },
+            "context-list": {
+                "context": weightedTerms
+            }
+        }
+    };
+    console.log(profile);
+    var xhr = $.ajax({
+        url: 'http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend',
+        data: JSON.stringify(profile),
+        type: 'POST',
+        contentType: 'application/json'
+    });
     xhr.done(function(data) {
-        data = JSON.parse(data);
         console.log(data);
         success(data);
     });
-    xhr.fail(function(textStatus) {
+    xhr.fail(function( jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR);
+        console.log(textStatus);
+        console.log(errorThrown);
         error(textStatus.statusText);
     });
 };
