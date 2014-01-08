@@ -61,6 +61,8 @@ EEXCESS.euCall = function(weightedTerms, start, success, error) {
         if (data.totalResults !== 0) {
             $.map(data.items, function(n, i) {
                 n.uri = n.guid;
+                n.previewImage = n.edmPreview;
+                delete n.edmPreview;
             });
             data.results = data.items;
             delete data.items;
@@ -105,6 +107,6 @@ EEXCESS.frCall = function(weightedTerms, start, success, error) {
         console.log(jqXHR);
         console.log(textStatus);
         console.log(errorThrown);
-        error(textStatus.statusText);
+        error(textStatus);
     });
 };
