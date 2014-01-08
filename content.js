@@ -566,6 +566,6 @@ $(document).mouseup(function() {
 
 
 /*
- * Add iframe to show the privcy settings 
+ * privacy initialization stuff
  */
 //$('<div><iframe id="eexcess_privacy_" src="chrome-extension://' + EEXCESS.extID + '/privacy/privacySandbox.html"></iframe>').appendTo('body');
