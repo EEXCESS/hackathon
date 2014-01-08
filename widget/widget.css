@@ -223,3 +223,15 @@ select {
     z-index: 99;
 }
 
+#eexcess_privacy {
+	font-size:0.7em;
+	position: absolute;
+	bottom: 5px;
+	left: 5px; 
+}
+#eexcess_privacy img {
+	vertical-align:middle;
+}
+#eexcess_privacy a {
+	 text-decoration:none;
+}
