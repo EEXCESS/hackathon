@@ -127,7 +127,7 @@ EEXCESS.model = (function() {
                 EEXCESS.sendMessage(tabID, {method: 'error', data: error});
             };
             // call europeana (resultlist should start with first item)
-            EEXCESS.euCall(data, 1, success, error);
+            EEXCESS.frCall(data, 1, success, error);
         },
         /**
          * Obtains more results for the current query from europeana.
@@ -160,7 +160,7 @@ EEXCESS.model = (function() {
             var error = function(error) {
                 EEXCESS.sendMessage(tabID, {method: 'error', data: error});
             };
-            EEXCESS.euCall(results.weightedTerms, data, success, error);
+            EEXCESS.frCall(results.weightedTerms, data, success, error);
         },
         /**
          * Sends the current model state to the specified callback

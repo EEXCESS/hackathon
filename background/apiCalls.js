@@ -92,7 +92,7 @@ EEXCESS.frCall = function(weightedTerms, start, success, error) {
     console.log(profile);
     var xhr = $.ajax({
         url: 'http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend',
-        data: profile,
+        data: JSON.stringify(profile),
         type: 'POST',
         contentType: 'application/json'
     });
