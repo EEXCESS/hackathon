@@ -87,6 +87,10 @@ chrome.runtime.onMessage.addListener(
                     // change widget's visibility
                     EEXCESS.handleWidgetVisibility(request.data);
                     break;
+                case 'privacy':
+                    // change widget's visibility
+                    EEXCESS.handlePrivacyBoxVisibility(request.data);
+                    break;
                 case 'fancybox':
                     // open fancybox preview of the url provided in request.data
                     $('<a href="' + request.data + '"></a>').fancybox({
@@ -568,4 +572,15 @@ $(document).mouseup(function() {
 /*
  * privacy initialization stuff
  */
-//$('<div><iframe id="eexcess_privacy_" src="chrome-extension://' + EEXCESS.extID + '/privacy/privacySandbox.html"></iframe>').appendTo('body');
+
+EEXCESS.handlePrivacyBoxVisibility = function(visible) {
+    if (EEXCESS.privacyVisible !== visible) {
+        if (visible) {
+            $('#eexcess_privacy').show();
+        } else {
+            $('#eexcess_privacy').hide();
+        }
+        EEXCESS.privacyVisible = visible;
+    }
+};
+$('<div style="display:none; position:fixed; bottom: 10px; right: 350px; width: 900px; height: 400px;" id="eexcess_privacy"><iframe style="width:870px; height: 100%" id="eexcess_privacy_frame" src="chrome-extension://' + EEXCESS.extID + '/privacy/privacySandbox.html"></iframe></div>').appendTo('body');
