@@ -69,6 +69,7 @@ EEXCESS.handleWidgetVisibility = function(visible) {
  * visibility handler as callback, to determine the current state of 
  * visibility in the background's model.
  */
+
 $('<iframe id="eexcess_widget" src="chrome-extension://' + EEXCESS.extID + '/widget/widget.html"></iframe>').appendTo('body');
 chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'model', func: 'visibility'}}, EEXCESS.handleWidgetVisibility);
 
@@ -562,3 +563,9 @@ $(document).mouseup(function() {
         EEXCESS.triggerQuery(elements);
     }
 });
+
+
+/*
+ * Add iframe to show the privcy settings 
+ */
+//$('<div><iframe id="eexcess_privacy_" src="chrome-extension://' + EEXCESS.extID + '/privacy/privacySandbox.html"></iframe>').appendTo('body');
