@@ -17,44 +17,17 @@ EEXCESS.results = (function() {
      * "type: IMAGE | year: 2013 | ...")
      */
     var _facets = function(item) {
-        var facet_list = '';
+        var facetString = '';
         var counter = 0;
-        var facets = [
-            'type',
-            'subject',
-            'year',
-            'language',
-            'provider',
-            'contributor',
-            'data_provider',
-            'rights',
-            'ugc',
-            'usertags'
-        ];
-        for (var i = 0, len = facets.length; i < len; i++) {
-            var key = facets[i];
-            if (typeof item[key] !== "undefined") {
-                // facet is present in item
-                counter++;
-                if (counter > 1) {
-                    // add "|" between two facets
-                    facet_list += " | ";
-                }
-                facet_list += key + ": ";
-                if (typeof item[key] === "Object") {
-                    // item may have several facet types, e.g. several languages
-                    $(item[key]).each(function(index, el) {
-                        if (index > 0) {
-                            el = ", " + el;
-                        }
-                        facet_list += el;
-                    });
-                } else {
-                    facet_list += item[key];
-                }
+        
+        for(var key in item.facets) {
+            counter++;
+            if(counter > 1) {
+                facetString += ' | ';
             }
+            facetString += key + ': ' + item.facets[key];
         }
-        return facet_list;
+        return facetString;
     };
     /**
      * Constructs a DOM-Element for a link, adds thumbnail functionality and 
@@ -156,7 +129,7 @@ EEXCESS.results = (function() {
             }
             var list = $('<ul id="eexcess_resultList" data-total="' + data.totalResults + '"></ul>');
             $('#eexcess_content').append(list);
-            EEXCESS.results.moreResults(data.items, list);
+            EEXCESS.results.moreResults(data.results, list);
         },
         /**
          * Appends the results of a search to the ones, currently shown in the
@@ -188,17 +161,17 @@ EEXCESS.results = (function() {
                 list.append(li);
                 
                                 // rating
-                var raty = $('<div class="eexcess_raty"  data-uri="' + item.guid + '" data-pos="' + pos + '"></div');
-                _rating(raty, item.guid, item.rating);
+                var raty = $('<div class="eexcess_raty"  data-uri="' + item.uri + '" data-pos="' + pos + '"></div');
+                _rating(raty, item.uri, item.rating);
                 li.append(raty);
 
                 var containerL = $('<div class="resCtL"></div');
                 li.append(containerL);
-                containerL.append(_link(item.guid, img, '<img class="eexcess_previewIMG" src="' + img + '" />'));
+                containerL.append(_link(item.uri, img, '<img class="eexcess_previewIMG" src="' + img + '" />'));
 
                 // contents
                 var resCt = $('<div class="eexcess_resContainer"></div>');
-                resCt.append(_link(item.guid, img, title));
+                resCt.append(_link(item.uri, img, title));
                 li.append(resCt);
 
 

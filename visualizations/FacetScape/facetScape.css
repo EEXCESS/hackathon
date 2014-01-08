@@ -1,0 +1,239 @@
+.VoronoiPolygon {
+    stroke: #000000;
+    stroke-width: 1px;
+    fill: #ff0000;/*#89BFD6;*/
+}
+
+.VoronoiCentroid {
+    stroke: #42658A;
+    stroke-width: 2px;
+    fill: #000000;
+}
+.VoronoiFacetName {
+    font-family: Arial;
+    font-size: 20px;
+    font-weight: bold;
+    text-anchor:middle;
+    letter-spacing: 3;
+    opacity: .2;
+    fill: #1F914F/*#42658A*/;
+}
+.VoronoiFacetCloud {
+    font-family: Arial;
+}
+
+text.shadow {
+    fill: white;
+    stroke: #111111;
+    stroke-width: 1.0px;
+    opacity: 0.9;
+}
+
+.spareArea {
+    fill: #494949;
+    stroke: #494949;
+    stroke-width: 2px;
+}
+.spareArea_highlighted {
+    stroke: #FFFF00;
+    stroke-width: 4px;
+}
+.spareArea_text {
+    font-family:Arial;
+    font-size: 16px;
+    fill: #CCCCCC;
+    font-weight:bold;
+    text-anchor:middle;
+}
+
+#tag {
+    position: absolute;
+    font-family: Verdana;
+    font-weight:normal;
+}
+
+#tag_freq {
+    alignment-baseline: central;
+}
+
+#tag_Quantity_bg {
+    fill: #FFCE47;
+    stroke: #AADDE3;
+    stroke-width: 1;
+}
+
+#tag_Quantity_text {
+    font-weight: bold;
+    font-size: 8px;
+    text-anchor: middle
+}
+
+#facet_Header_group {
+
+}
+
+#facet_Header {
+    position: absolute;
+    font-family: Arial;
+    font-size: 20px;
+    font-weight: bold;
+    text-anchor: middle;
+    color: #494949;
+    letter-spacing: 3;
+    opacity: .9;
+    fill: #FFFFFF;
+    alignment-baseline: central;
+    cursor: all-scroll;
+}
+
+#facet_Header_bg {
+    fill: #494949;/*#DCECF2;*/
+}
+
+#facet_Header_selectionBar {
+    fill: #1F914F;/*#89BFD6;*/
+}
+
+#RS_Panel {
+    float:left;
+    background-color: #FFFFFF;
+    /*border: 1px solid #AAAAAA;*/
+}
+.RS_SubmitButton {
+    /*background: url(img/europeana_s.jpg) -20px -12px no-repeat;*/
+    background-color: #494949;
+    color:#ffffff;
+    font-weight:bold;
+    width:110px;
+    height:22px;
+    cursor:pointer;
+    border: solid #CCCCCC 1px;
+    text-align:center;
+}
+.RS_Keyword_SubmitButton {
+    background-color: #494949;
+    color:#ffffff;
+    font-weight:bold;
+    height:22px;
+    border: solid #CCCCCC 1px;
+}
+#RS_Header {
+    background-color: #1F914F;
+    text-align: center;
+}
+#RS_Header_Search {
+    float:left;
+}
+#RS_Header_Text {
+    color: #ffffff;
+    font-family:Arial;
+    padding-top: 3px;
+    float:left;
+    text-align:right;
+}
+#RS_Header_Filter {
+    text-align:right;
+}
+#RS_Header_Filter_Tags {
+    width:900px;
+    color:#ffffff;
+    padding-top:4px;
+    background-color: #1F914F;
+    text-align: center;
+    vertical-align:middle;
+}
+#RS_Header_Filter_Tag, #RS_Header_Filter_Tag_hover {
+    margin:3px;
+    padding:3px;
+    background-color: #494949;
+    border: solid #CCCCCC 1px;
+    text-align:center;
+    font-family:Verdana;
+    text-decoration:none;
+    font-size:12px;
+    color: #000000;
+    float: left;
+    cursor:pointer;
+}
+#RS_Header_Filter_Tag_hover {
+    background-color: #DBBB07;
+    text-decoration: line-through;
+}
+#RS_Header_FlowArrow_Right {
+    background-image: url('img/arrow_right.png');
+    background-repeat: no-repeat;
+    background-position:center;
+    width:140px;
+    height:20px;
+    padding-top:3px;
+    float:left;
+}
+
+#RS_Header_FlowArrow_Left {
+    background-image: url('img/arrow_left.png');
+    background-repeat: no-repeat;
+    background-position:center;
+    width:100px;
+    height:20px;
+    padding-top:3px;
+    float:left;
+}
+
+#RS_Selections {
+    width: 100px;
+    height: 30px;
+    background-color: #FF87AC;
+}
+#RS_Query {
+
+}
+#RS_ResultList {
+    overflow: auto;
+    height:100%;
+    border:solid #494949 1px;
+}
+#RS_QueryResultItem {
+    float:left;
+    width: 99.7%;
+    border: 1px solid #EEEEEE;
+}
+#RS_QueryResultItem_Thumbnail {
+    float:left;
+    width: 50px;
+    height: 40px;
+    margin: 5px;
+}
+#RS_QueryResultItem_Title {
+    width:95%;
+    font-family: Arial;
+    color: #6666EE;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 0px;
+    margin: 0px;
+    margin-top: 3px;
+    vertical-align: top;
+}
+#RS_QueryResultItem_Description1 {
+    width:95%;
+    font-size: 14px;
+    color: #555555;
+    vertical-align: top;
+    padding: 0px;
+    margin: -3px;
+    position:relative;
+}
+#RS_QueryResultItem_Loader {
+    background-image: url(img/loader.gif);
+    width:67px;height:10px;
+    padding:0px;
+    margin-left:60px;
+}
+#RS_QueryResultItem_Description2 {
+    width:95%;
+    font-size: 12px;
+    color: #888888;
+    vertical-align: top;
+    padding: 0px;
+    margin: 0px;
+}

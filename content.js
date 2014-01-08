@@ -532,6 +532,7 @@ EEXCESS.initiateQuery = function() {
 
 $(document).mouseup(function() {
     var text = window.getSelection().toString();
+    console.log(text);
     if (text !== '') {
         var elements = [];
         elements.push({text: text});
