@@ -28,6 +28,7 @@
         "media/*",
         "widget/*",
         "options/*",
+        "privacy/*",
         "libs/*",
         "visualizations/*"
     ],

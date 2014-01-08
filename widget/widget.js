@@ -238,6 +238,7 @@ EEXCESS.results = (function() {
     };
 })();
 
+
 /**
  * Encapsulates functionality for configuring, starting and stopping tasks
  * @namespace EEXCESS.task
@@ -623,6 +624,10 @@ EEXCESS.update = function(widget) {
         case 'results':
             EEXCESS.results.showResults(widget.results.data);
             break;
+        case 'options':
+            $('#eexcess_content').empty();
+            $('#eexcess_content').append($('<iframe src="/privacy/options.html" style="display: inline; width: 100%; height: 100%;"></iframe>'));
+        	break;
         case 'task':
             EEXCESS.task.init(widget.task);
             break;
