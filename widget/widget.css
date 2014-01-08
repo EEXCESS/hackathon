@@ -67,7 +67,7 @@ fieldset {
  right: 0;
  list-style:none;
  margin:0;
- padding:0;
+ padding: 6px;
 }
 
 #eexcess_tab  li {
