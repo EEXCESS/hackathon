@@ -25,7 +25,7 @@ EEXCESS.euCall = function(weightedTerms, start, success, error) {
     var x = [];
     console.log(typeof x);
     var _facets = function(item) {
-        var facet_list = {};
+        var facet_list = {partner:'europeana'};
         var facets = [
             'type',
             'subject',
@@ -63,7 +63,6 @@ EEXCESS.euCall = function(weightedTerms, start, success, error) {
                 n.uri = n.guid;
                 n.previewImage = n.edmPreview;
                 delete n.edmPreview;
-                n.partner = 'europeana';
             });
             data.results = data.items;
             delete data.items;

@@ -184,8 +184,8 @@ EEXCESS.results = (function() {
 //                        }.bind(item.link)));
 
                 // partner icon
-                if (typeof item.partner !== 'undefined') {
-                    containerL.append($('<img src="../media/icons/' + item.partner + '-favicon.ico" class="partner_icon" />'));
+                if (typeof item.facets.partner !== 'undefined') {
+                    containerL.append($('<img src="../media/icons/' + item.facets.partner + '-favicon.ico" class="partner_icon" />'));
                 }
 
                 // show link
