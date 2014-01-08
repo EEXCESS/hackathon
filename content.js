@@ -568,7 +568,6 @@ $(document).mouseup(function() {
     }
 });
 
-
 /*
  * privacy initialization stuff
  */
