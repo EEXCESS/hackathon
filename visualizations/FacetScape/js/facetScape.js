@@ -716,10 +716,10 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         var singleResultNode = resultNodes.enter().append("div").attr("id", "RS_QueryResultItem");
         singleResultNode.append("img").attr("id", "RS_QueryResultItem_Thumbnail").attr("src", function(d,i) { return (d.hasOwnProperty("edmPreview")) ? d.edmPreview[0] : ""; });
         singleResultNode.append("a").attr("id", "RS_QueryResultItem_Title")
-            .attr("href", function(d, i) { return d.guid;})
+            .attr("href", function(d, i) { return d.uri/*d.guid*/;})
             .attr("target", "_blank")
             .text(function(d,i) {
-                var title = (d.hasOwnProperty("title")) ? d.title[0] : "no title";
+                var title = (d.hasOwnProperty("title")) ? d.title : "no title";
                 return (title.length > 80) ? title.substring(0, 80) + "..." : title;
             });
 
@@ -727,7 +727,8 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         var l = secDesc.append("div").attr("id", "RS_QueryResultItem_Loader");
         var d = secDesc.append("div").attr("id", "RS_QueryResultItem_Description1");
         d.text(function(d,i) {
-                loadDetailedInfo(d.link, d3.select(this.parentNode), loadDescriptionCallback);
+            //TODO: load additional info for each result
+                //loadDetailedInfo(d.link, d3.select(this.parentNode), loadDescriptionCallback);
             });
 
         singleResultNode.append("p").attr("id", "RS_QueryResultItem_Description2")

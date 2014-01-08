@@ -27,6 +27,7 @@ function requestPlugin(dataCallbackFct) {
     chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
         var queryTerms = reqResult.query;
         var data = reqResult.results;
+        console.log(data);
         var facets = ppEEXCESSFacetInfo(data);
         var results = ppEEXCESSResultInfo(data);
         console.log(queryTerms);
@@ -156,8 +157,7 @@ function preprocessEuropeana(data) {
 
 function ppEEXCESSFacetInfo(data) {
     var processedData = [];
-    var facets = [];
-    console.log(data);
+    var facets = {};
     for(var i = 0; i < data.results.length; i++) {
         var itemFacets = data.results[i].facets;
         for(var key in itemFacets) {
