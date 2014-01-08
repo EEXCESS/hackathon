@@ -119,7 +119,7 @@ EEXCESS.model = (function() {
                     EEXCESS.logging.logRecommendations(data.results, context);
                 }
                 EEXCESS.sendMsgAll({
-                    method: 'updateGraph',
+                    method: 'newSearchTriggered',
                     data: {query: results.query, results: results.data}
                 });
             };
