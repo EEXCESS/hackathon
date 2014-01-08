@@ -666,6 +666,12 @@ EEXCESS.init = function(widget) {
         EEXCESS.callBG({method: 'fancybox', data: 'chrome-extension://'+EEXCESS.extID + '/' +$(evt.target).parent('a').attr('href')});
     });
 
+    
+    $('#eexcess_privacy').click(function(evt) {
+        evt.preventDefault();
+        //console.log();
+        EEXCESS.callBG({method: 'privacySandbox', data: 'chrome-extension://'+EEXCESS.extID + '/' +$(evt.target).parent('a').attr('href')});
+    });
     var form = $('#eexcess_searchForm');
     form.submit(function() {
         $('#eexcess_content').empty();

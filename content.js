@@ -87,7 +87,7 @@ chrome.runtime.onMessage.addListener(
                     // change widget's visibility
                     EEXCESS.handleWidgetVisibility(request.data);
                     break;
-                case 'privacy':
+                case 'privacySandbox':
                     // change widget's visibility
                     EEXCESS.handlePrivacyBoxVisibility(request.data);
                     break;
@@ -572,7 +572,8 @@ $(document).mouseup(function() {
  * privacy initialization stuff
  */
 
-EEXCESS.handlePrivacyBoxVisibility = function(visible) {
+EEXCESS.handlePrivacyBoxVisibility = function() {
+	var visible = $('#eexcess_privacy').is(':visible');
     if (EEXCESS.privacyVisible !== visible) {
         if (visible) {
             $('#eexcess_privacy').show();
