@@ -513,7 +513,7 @@ EEXCESS.topKcorpus = function(corpus, k) {
 
 EEXCESS.triggerQuery = function(textElements) {
     EEXCESS.callBG({method: {parent: 'corpus', func: 'getCorpus'}, data: textElements}, function(result) {
-        var query = EEXCESS.topKcorpus(result, 10);
+        var query = EEXCESS.topKcorpus(result, 1);
         EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
     });
 };

@@ -123,7 +123,7 @@ EEXCESS.results = (function() {
          */
         showResults: function(data) {
             $('#eexcess_content').empty();
-            if (data === null || data.totalResults === 0) {
+            if (data === null || data.totalResults === '0') {
                 $('#eexcess_content').append($('<p>no results</p>'));
                 return;
             }
@@ -200,13 +200,18 @@ EEXCESS.results = (function() {
                     range.selectNodeContents($('#dialog_url p').get()[0]);
                     selection.removeAllRanges();
                     selection.addRange(range);
-                }.bind(item.guid));
+                }.bind(item.uri));
                 containerL.append(linkCopy);
 
-                // facets
-                var facets = _facets(item);
-                if (facets !== '') {
-                    resCt.append($('<p style="margin:0;padding:0;font-size:0.9em;">' + facets + '</p>'));
+//                // facets
+//                var facets = _facets(item);
+//                if (facets !== '') {
+//                    resCt.append($('<p style="margin:0;padding:0;font-size:0.9em;">' + facets + '</p>'));
+//                }
+
+                // description
+                if(typeof item.description !== 'undefined' && item.description !== '') {
+                    resCt.append($('<p>' + item.description + '</p>'));
                 }
                 resCt.append($('<p style="clear:both;"></p>'));
 
@@ -237,6 +242,7 @@ EEXCESS.results = (function() {
 
     };
 })();
+
 
 /**
  * Encapsulates functionality for configuring, starting and stopping tasks
@@ -623,6 +629,10 @@ EEXCESS.update = function(widget) {
         case 'results':
             EEXCESS.results.showResults(widget.results.data);
             break;
+        case 'options':
+            $('#eexcess_content').empty();
+            $('#eexcess_content').append($('<iframe src="/privacy/options.html" style="display: inline; width: 100%; height: 100%;"></iframe>'));
+        	break;
         case 'task':
             EEXCESS.task.init(widget.task);
             break;
