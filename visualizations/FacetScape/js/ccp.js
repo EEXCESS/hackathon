@@ -24,7 +24,7 @@ function requestEuropeana(term, dataCallbackFct) {
 }
 
 function requestPlugin(dataCallbackFct) {
-    chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
+        chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
         var queryTerms = reqResult.query;
         var data = reqResult.results;
         console.log(data);
