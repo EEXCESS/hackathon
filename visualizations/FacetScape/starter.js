@@ -1,7 +1,6 @@
 var onReceiveData = function(queryTerms, processedData, items) {
-    var term = "Loom";
-    var width = $(window).width()-40;//900;
-    var height = $(window).height()-90;
+    var width = $(window).width()-30;
+    var height = 500;
     var scape = facetScape(d3.select("body").select("div#facetScape"), width, height, processedData, items, queryTerms);
 }
 

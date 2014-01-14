@@ -549,8 +549,6 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         for(var i = 0; i < facetData.length; i++) {
             cloudLayout(facetData[i]);
         }
-//        console.log(facetData);
-//        console.log(resultItems);
         drawVoronoi();
         drawTagCloud();
         FSResultLayout();
@@ -652,7 +650,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         var resultList = root.append("div").attr("id","RS_Panel").style("width", svgWidth+"px");
         var resultHeader = resultList.append("div").attr("id", "RS_Header");
         var resultHeaderSearch = resultHeader.append("div").attr("id", "RS_Header_Search");
-        resultHeaderSearch.append("input").attr("id", "RS_Query").attr("type", "text").attr("name", "query").attr("value",searchTerm).attr("disabled", "");
+        resultHeaderSearch.append("input").attr("id", "RS_Query").attr("type", "text").attr("name", "query").attr("value",searchTerm);
 //        var select = resultHeaderSearch.append("select").attr("id", "RS_provider_selection").attr("name", "provider");
 //        select.append("option").attr("value", "europeana").text("Europeana");
 //        select.append("option").attr("value", "recommender").text("FRecommender");
@@ -660,19 +658,19 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
 //            provider = $(this).val();
 //        });
 
-//        resultHeaderSearch.append("input").attr("id", "RS_SubmitButtonId").attr("class","RS_SubmitButton").attr("type", "submit").attr("value", STR_BTN_SEARCH);
+        resultHeaderSearch.append("input").attr("id", "RS_SubmitButtonId").attr("class","RS_SubmitButton").attr("type", "submit").attr("value", STR_BTN_SEARCH);
 
 //        $('#RS_Query').change(function() {
 //            search($(this).val());
 //        });
-//        $('#RS_Query').keypress(function(e){
-//            if (e.which == 13) {
-//                search(e.currentTarget.value);
-//            }
-//        });
-//        $('#RS_SubmitButtonId').click(function(e) {
-//            search($('#RS_Query')[0].value);
-//        });
+        $('#RS_Query').keypress(function(e){
+            if (e.which == 13) {
+                search(e.currentTarget.value);
+            }
+        });
+        $('#RS_SubmitButtonId').click(function(e) {
+            search($('#RS_Query')[0].value);
+        });
 //        resultHeader.append("div").attr("id", "RS_Header_FlowArrow_Right").append("div");
         resultHeader.append("div").attr("id", "RS_Header_Text").text(STR_QUERY_RESULTS+":").style("padding-left", svgWidth/2 -200 + "px");
 //        resultHeader.append("div").attr("id", "RS_Header_FlowArrow_Left").append("div");
@@ -693,7 +691,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     }
 
     function FSResultLayout() {
-        root.append("div").attr("id", "RS_ResultList").style("height", height-svgHeight+"px").style("width", svgWidth+"px");
+        root.append("div").attr("id", "RS_ResultList").style("max-Height", 200+"px").style("width", svgWidth+"px");
         refreshResultList();
     }
 
@@ -726,9 +724,9 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         var secDesc = singleResultNode.append("div").attr("id", "RS_QueryResultItem_AsynchDesc");
         //var l = secDesc.append("div").attr("id", "RS_QueryResultItem_Loader");
         //var d = secDesc.append("div").attr("id", "RS_QueryResultItem_Description1");
-        //var providerIcon = secDesc.append("div").attr("id", "RS_QueryResultItem_Provider").style("background-image", function(d,i) { return "url(../../media/icons/"+ ((typeof d.facets.partner != "undefined") ? d.facets.partner : "europeana") + "-favicon.ico)";})
-        //    .style("background-size", "15px 15px").style("margin-left", "60px").style("left", "40px");
-        //var img = providerIcon.append("img").attr("src", function(d,i) { return "url(../../media/icons/"+ ((typeof d.facets.partner != "undefined") ? d.facets.partner : "europeana") + "-favicon.ico)";});
+//        var providerIcon = secDesc.append("div").attr("id", "RS_QueryResultItem_Provider").style("background-image", function(d,i) { return "url(../../../../media/icons/"+ ((typeof d.facets.partner != "undefined") ? d.facets.partner : "europeana") + "-favicon.ico";})
+//            .style("background-size", "15px 15px").style("margin-left", "60px").style("left", "40px");
+        var img = secDesc.append("img").attr("class", "partner_icon").attr("src", function(d,i) { return "url(../../../../media/icons/"+ ((typeof d.facets.partner != "undefined") ? d.facets.partner : "europeana") + "-favicon.ico";});
 //        providerIcon.text(function(d,i) {
 //            if(d.provider == "mendeley") {
 //                return "mendeley";
@@ -1238,12 +1236,11 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
 
     function search(term) {
         chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'query'}, data: [{weight:1,text:term}]});
-        var queryTerm = term;
-        var onReceiveData = function(processedData, items) {
+        var onReceiveData = function(terms, processedData, items) {
             d3.select("div#RS_Panel").remove();
             d3.select("svg#facetScape").remove();
             d3.select("div#RS_ResultList").remove();
-            facetScape(root, svgWidth, height, processedData, items, queryTerm);
+            facetScape(root, svgWidth, height, processedData, items, terms);
         }
         //requestEuropeana(term,onReceiveData);
         requestPlugin(onReceiveData, "refresh");
