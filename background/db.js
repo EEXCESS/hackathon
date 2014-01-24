@@ -15,7 +15,7 @@ EEXCESS.initDB = function() {
     console.log('init DB');
 
     // initialize connection
-    var req = indexedDB.open('eexcess_db', 38);
+    var req = indexedDB.open('eexcess_db', 39);
     console.log('opening');
 
     // update or create db
@@ -43,6 +43,7 @@ EEXCESS.initDB = function() {
         os = EEXCESS.DB.createObjectStore('recommendations', {keyPath: 'recommendation_id', autoIncrement: true});
         os.createIndex('uri', 'uri');
         os.createIndex('timestamp','timestamp');
+        os.createIndex('query','context.query');
 
         // remove existing object store 'tasks' if present
         if (EEXCESS.DB.objectStoreNames.contains('tasks') && clear) {
