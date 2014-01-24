@@ -197,7 +197,7 @@ EEXCESS.logging = (function() {
                                 cursor.continue();
                             }
                         } else {
-                            store.put({uri: recommendations[i].guid, context: context, timestamp:new Date().getTime()}).onsuccess = handleNext;
+                            store.put({uri: recommendations[i].uri, context: context, timestamp:new Date().getTime()}).onsuccess = handleNext;
                             i++;
                         }
                     };
