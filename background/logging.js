@@ -182,7 +182,7 @@ EEXCESS.logging = (function() {
             // handle a single item
             function handleNext() {
                 if (i < recommendations.length) {
-                    var curreq = idx.openCursor(recommendations[i].guid);
+                    var curreq = idx.openCursor(recommendations[i].uri);
                     curreq.onsuccess = function() {
                         var cursor = curreq.result;
                         if (cursor) {
