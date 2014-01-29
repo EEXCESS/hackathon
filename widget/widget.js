@@ -668,6 +668,7 @@ EEXCESS.init = function(widget) {
 
     
     $('#eexcess_privacy').click(function(evt) {
+    	console.log("Click sent");
         evt.preventDefault();
         //console.log();
         EEXCESS.callBG({method: 'privacySandbox', data: 'chrome-extension://'+EEXCESS.extID + '/' +$(evt.target).parent('a').attr('href')});

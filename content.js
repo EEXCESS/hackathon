@@ -85,10 +85,11 @@ chrome.runtime.onMessage.addListener(
                     break;
                 case 'visibility':
                     // change widget's visibility
-                    EEXCESS.handleWidgetVisibility(request.data);
+                    EEXCESS.handleWidgetVisibility();
                     break;
                 case 'privacySandbox':
                     // change widget's visibility
+                	console.log("Message recieved"); 
                     EEXCESS.handlePrivacyBoxVisibility(request.data);
                     break;
                 case 'fancybox':
@@ -571,9 +572,9 @@ $(document).mouseup(function() {
 /*
  * privacy initialization stuff
  */
-
 EEXCESS.handlePrivacyBoxVisibility = function() {
-	var visible = $('#eexcess_privacy').is(':visible');
+	console.log("We get here");
+	var visible = !$('#eexcess_privacy').is(':visible');
     if (EEXCESS.privacyVisible !== visible) {
         if (visible) {
             $('#eexcess_privacy').show();
@@ -583,4 +584,4 @@ EEXCESS.handlePrivacyBoxVisibility = function() {
         EEXCESS.privacyVisible = visible;
     }
 };
-$('<div style="display:none; position:fixed; bottom: 10px; right: 350px; width: 900px; height: 400px;" id="eexcess_privacy"><iframe style="width:870px; height: 100%" id="eexcess_privacy_frame" src="chrome-extension://' + EEXCESS.extID + '/privacy/privacySandbox.html"></iframe></div>').appendTo('body');
+$('<div style="display:none; position:fixed; bottom: 10px; right: 350px; width: 900px; height: 400px;" id="eexcess_privacy"><iframe style="width:870px; height: 100%" id="eexcess_privacy_frame" src="chrome-extension://' + EEXCESS.extID + '/privacy/policy.html"></iframe></div>').appendTo('body');

@@ -27,7 +27,7 @@ EEXCESS.callBG = function(message, callback) {
  */
 chrome.runtime.onMessage.addListener(
         function(request, sender, sendResponse) {
-            if (request.method !== 'visibility' && request.method !== 'fancybox' && request.method !== 'useResource' && request.method !== 'getTextualContext' && request.method !== 'taskStarted' && request.method !== 'taskStopped' && request.method !== 'newSearchTriggered') {
+            if (request.method !== 'privacySandbox' && request.method !== 'visibility' && request.method !== 'fancybox' && request.method !== 'useResource' && request.method !== 'getTextualContext' && request.method !== 'taskStarted' && request.method !== 'taskStopped' && request.method !== 'newSearchTriggered') {
                 if (typeof request.method.parent !== 'undefined') {
                     EEXCESS[request.method.parent][request.method.func](request.data);
                 } else {

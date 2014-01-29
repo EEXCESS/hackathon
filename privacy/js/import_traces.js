@@ -297,7 +297,7 @@ $(document).ready(function () {
 	var pluginUrl = docUrl.split('/')[0]+"//"+docUrl.split('/')[2]+'/'+docUrl.split('/')[3]+'/';
 	
 	$('.tabProfile').live("click",function(){document.location = pluginUrl+"profile.html"});
-	$('.tabSettings').live("click",function(){document.location = pluginUrl+"privacySandbox.html"});
+	$('.tabSettings').live("click",function(){document.location = pluginUrl+"policy.html"});
 	$('.tabPluginSettings').live("click",function(){document.location = pluginUrl+"settings.html"});
 	//********************************
 	if (localStorage["env"] == "work"){
