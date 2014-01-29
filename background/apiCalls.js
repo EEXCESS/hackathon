@@ -1,3 +1,18 @@
+/**
+ * Extend the String object with a 'startsWith' method
+ */
+if (typeof String.prototype.startsWith !== 'function') {
+    /**
+     * Checks, if a string-object starts with the provided term
+     * @global
+     * @param {String} str the term to check
+     * @returns {Boolean} true, if the string starts with the provided term, otherwise false
+     */
+    String.prototype.startsWith = function(str) {
+        return this.slice(0, str.length) === str;
+    };
+}
+
 var EEXCESS = EEXCESS || {};
 /**
  * @memberof EEXCESS
@@ -15,8 +30,8 @@ EEXCESS.apiKeyEuropeana = 'HT6JwVWha';
  */
 EEXCESS.euCall = function(weightedTerms, start, success, error) {
     var query = '';
-    for(i = 0; i < 3; i++) {
-        if(typeof weightedTerms[i] !== 'undefined') {
+    for (i = 0; i < 3; i++) {
+        if (typeof weightedTerms[i] !== 'undefined') {
             query += weightedTerms[i].text + ' ';
         } else {
             break;
@@ -25,7 +40,7 @@ EEXCESS.euCall = function(weightedTerms, start, success, error) {
     var x = [];
     console.log(typeof x);
     var _facets = function(item) {
-        var facet_list = {partner:'europeana'};
+        var facet_list = {partner: 'europeana'};
         var facets = [
             'type',
             'subject',
@@ -99,11 +114,20 @@ EEXCESS.frCall = function(weightedTerms, start, success, error) {
         contentType: 'application/json',
         dataType: 'json'
     });
-    xhr.done(function(data) {     
+    xhr.done(function(data) {
         console.log(data);
+        $.map(data.results, function(n, i) {
+            if (n.uri.startsWith('http://www.europeana')) {
+                n.facets.partner = 'europeana';
+            } else if (n.uri.startsWith('http://www.econbiz')) {
+                n.facets.partner = 'econbiz';
+            } else if (n.uri.startsWith('http://www.mendeley')) {
+                n.facets.partner = 'mendeley';
+            }
+        });
         success(data);
     });
-    xhr.fail(function( jqXHR, textStatus, errorThrown) {
+    xhr.fail(function(jqXHR, textStatus, errorThrown) {
         console.log(jqXHR);
         console.log(textStatus);
         console.log(errorThrown);

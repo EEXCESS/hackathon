@@ -241,3 +241,8 @@ text.shadow {
     padding: 0px;
     margin: 0px;
 }
+
+.partner_icon {
+    width: 16px;
+    height: 16px;
+}

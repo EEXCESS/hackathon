@@ -23,52 +23,33 @@ function requestEuropeana(term, dataCallbackFct) {
     xhr.send();
 }
 
-function requestPlugin(dataCallbackFct) {
-        chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
-        if(reqResult != "undefined") {
-            var queryTerms = reqResult.query;
-            var data = reqResult.results;
-            console.log(data);
+function requestPlugin(dataCallbackFct, action) {
+
+    var updateFacetScape = function(response) {
+        if((typeof response == "undefined") || response == null) {
+            d3.select("#facetScape").text("no data available");
+        } else {
+            var queryTerms = response.query;
+            var data = response.results;
             var facets = ppEEXCESSFacetInfo(data);
             var results = ppEEXCESSResultInfo(data);
-            console.log(queryTerms);
-            console.log(facets);
-            console.log(results);
             dataCallbackFct(queryTerms, facets, results);
-        } else {
-            d3.select("#facetScape").text("no data available");
         }
-    });
-}
-/*
- input: terms is [{term: Loom, weight: 0.9},{term: weaving, weight: 0.6}, ...]
- */
-function requestFRecommender(terms, dataCallbackFct) {
-    var url = "http://federatedRecommender/...";
-    var request = {'eexcess-user-profile':
-                        {
-                            'interests': [],
-                            'context-list': {
-                                'context': []
-                            }
-                        }
-    };
-    for(var i = 0; i < terms.length; i++) {
-        request['eexcess-user-profile']['context-list']['context'].push({'weight': terms[i]['weight'], 'text': terms[i]['text']});
     }
-    console.log(request);
-//    $.ajax({
-//        type: "POST",
-//        url: url,
-//        data: request,
-//        success: receiveData,
-//        dataType: "json"
-//    });
-//
-//    function receiveData(data) {
-//        var results = JSON.parse(data);
-//        dataCallbackFct(results);
-//    }
+
+    if(typeof action == "undefined") {
+        chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
+            updateFacetScape(reqResult);
+        });
+    } else if(action == "refresh") {
+        chrome.runtime.onMessage.addListener(
+            function(request, sender, sendResponse) {
+                if (request.method === 'newSearchTriggered') {
+                    updateFacetScape(request.data);
+                }
+            }
+        );
+    }
 }
 
 function loadDetailedInfo(link, container, fctCallback) {
@@ -176,9 +157,13 @@ function ppEEXCESSFacetInfo(data) {
         if(typeof facets[facet] != "undefined") {
             var tags = [];
             for(var tag in facets[facet]) {
-                tags.push({"word":tag, "frequency": facets[facet][tag]});
+                if(tag != "") {
+                    tags.push({"word":tag, "frequency": facets[facet][tag]});
+                }
             }
-            processedData.push({"name": facet, "type":0, "color": "#D6D0C4", "tags": tags});
+            if(tags.length > 0) {
+                processedData.push({"name": facet, "type":0, "color": "#D6D0C4", "tags": tags});
+            }
         }
     }
     delete facets;

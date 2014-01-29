@@ -101,7 +101,7 @@ EEXCESS.model = (function() {
             }
             params.tab = 'results';
             results.scroll = 0;
-            //EEXCESS.logging.logQuery(tabID, data);
+            EEXCESS.logging.logQuery(tabID, data);
             var success = function(data) { // success callback
                 // TODO: search may return no results (although successful)
                 results.data = data;

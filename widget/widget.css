@@ -1,9 +1,9 @@
 body,html {
     height:100%;
- margin:0;
- padding:0;
- overflow: hidden;
- font-family: Verdana,Arial,sans-serif;
+    margin:0;
+    padding:0;
+    overflow: hidden;
+    font-family: Verdana,Arial,sans-serif;
 }
 
 body {
@@ -19,10 +19,10 @@ body {
 }
 
 #eexcess_widget form{
- margin-top:10px;
- margin-bottom:10px;
- padding:5px;
- text-align:center;
+    margin-top:10px;
+    margin-bottom:10px;
+    padding:5px;
+    text-align:center;
 }
 
 #eexcess_content form{
@@ -52,54 +52,54 @@ body {
 }
 
 fieldset {
- margin:auto;
- border:none;
+    margin:auto;
+    border:none;
 }
 
 #eexcess_logo{
- width:100px;
- float:right;
+    width:100px;
+    float:right;
 }
 
 #eexcess_tab {
- position: absolute;
- top: 0;
- right: 0;
- list-style:none;
- margin:0;
- padding: 6px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    list-style:none;
+    margin:0;
+    padding: 6px;
 }
 
 #eexcess_tab  li {
-	float: left;
-	border-left:none;
-	border-bottom: 0;
-	margin: 0;
+    float: left;
+    border-left:none;
+    border-bottom: 0;
+    margin: 0;
 }
 
 #eexcess_tab li a.selected{
- background-color:white;
- border:1px solid;
- border-bottom:0;
- padding-bottom:0;
- font-size:1.1em;
+    background-color:white;
+    border:1px solid;
+    border-bottom:0;
+    padding-bottom:0;
+    font-size:1.1em;
 }
 
 #eexcess_tab li a {
- margin:0;
- padding:5px;
- text-decoration:none;
- color:#606060;
+    margin:0;
+    padding:5px;
+    text-decoration:none;
+    color:#606060;
 }
 
 #eexcess_content {
- clear:both;
- border-top:1px solid black;
- font-size:0.8em;
+    clear:both;
+    border-top:1px solid black;
+    font-size:0.8em;
 }
 
 #eexcess_results  {
- list-style:none;
+    list-style:none;
 }
 
 #eexcess_close_btn {
@@ -142,7 +142,7 @@ ul.tagit input[type="text"] {
 }
 
 .no-close .ui-dialog-titlebar-close {
-  display: none;
+    display: none;
 }
 
 #expertise_slider {
@@ -223,15 +223,21 @@ select {
     z-index: 99;
 }
 
+.result_description{
+    margin:0;
+    padding:0;
+    font-size:0.8em;
+}
+
 #eexcess_privacy {
-	font-size:0.7em;
-	position: absolute;
-	bottom: 5px;
-	left: 5px; 
+    font-size:0.7em;
+    position: absolute;
+    bottom: 5px;
+    left: 5px; 
 }
 #eexcess_privacy img {
-	vertical-align:middle;
+    vertical-align:middle;
 }
 #eexcess_privacy a {
-	 text-decoration:none;
+    text-decoration:none;
 }
