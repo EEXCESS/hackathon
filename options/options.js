@@ -15,7 +15,7 @@ $('#frserver').change(function () {
     switch($('#frserver option:selected').val()){
     case 'eu':
         console.log("changing rCall to europeana");
-	EEXCESS.settingsRCall = euCall;
+	EEXCESS.frCall = euCall;
 	break;
     case 'fr-devel':
         console.log("changing rCall to fr-devel");
@@ -34,7 +34,7 @@ $('#frserver').change(function () {
 });
 }
 
-//serviceSelector();
+serviceSelector();
 
 
 
