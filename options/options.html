@@ -1,89 +1,97 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title></title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-        <style type="text/css">
-            .block { 
-                display: block; 
-                width: 185px; 
-                color: #444; 
-                outline-color: green;
-            }
-            input {
-                margin-bottom: 10px;
-            }
-            .btn_submit {
-                display:inline;
-                width: 80px;
-            }
-            #user_profile {
-                margin-top: 50px;
-            }
-            #kill_log {
-                position: fixed;
-                right:0px;
-                bottom:0px;
-                margin:5px;
-                color: silver;
-            }
-            #kill_dialog {
-                display: none;
-            }
-            .ui-dialog {
-                font-size: 0.8em;
-            }
-            .hidden {
-                display:none;
-            }
-            #warning {
-                color: red;
-                font-weight: bold;
-            }
-        </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+        <link href="options.css" rel="stylesheet" />
+        <link href="/css/jquery.tzSelect.css" rel="stylesheet" />
+        <title>Options - EEXCESS</title>
+        
     </head>
+
     <body>
-        <a href="#" id="download_iddb">download logfile</a>
-        <p id="progress-nr">0 files to process</p>
-        <div id="prog-container" style="width:300px;height:25px; border:1px solid black;">
-            <div id="progress-bar" style="width:0%;background-color: green;height:25px;">
-            </div>
+        <div id="contents">
+	    <header>
+	    <h1 >EEXCESS</h1>
+	    <h2 > culture hits</h2>
+	    </header>
+
+            <section id="server-settings">
+            <h2>Server settings</h2>
+                <label>Federated Recommender</label>
+                <select id="frserver"></select> 
+            </section>
+
+
+            <section id="user">
+            <h2>Yourself</h2>
+
+    <form id="user_profile">
+      <fieldset>
+        <label style="padding-right:4em" for="sex">Gender</label>
+        <select name="sex" id="sex">
+          <option>female</option>
+          <option>male</option>
+        </select>
+	<div>
+        <label style="padding-right:3em" for="profession" class="block">Profession</label>
+        <input type="text" id="profession" name="profession" class="block" />
+	</div>
+	<div>
+        <label style="padding-right:0.6em" for="education_level" class="block">Education Level</label>
+        <input type="text" id="education_level" name="education_level" class="block" />
+	</div>
+	<div>
+        <label style="padding-right:1.9em" for="birthdate" class="block">Date of Birth</label>
+        <input type="date" id="birthdate" name="birthdate" class="block" />
+	</div>
+        <input id="submit" type="submit" value="save" class="btn_submit" />
+        <input id="cancel" type="reset" value="cancel" class="btn_submit" />
+      </fieldset>
+    </form>
+    <h2 id="save" style="display:none;color:green"></h2>
+
+
+            </section>
+
+	    <section id="database">
+            <h2 class="space">Database</h2>
+
+    <div id="kill_dialog" title="Delete actions from log">
+      <div id="several_tasks" class="hidden">
+        <p>This will remove all your actions from the log since the end of the selected task. If no endtime is present for the selected task, the task itself will be removed as well</p>
+        <label for="task_list">Remove since:</label>
+        <select id="task_list"></select>
+      </div>
+      <p id="single_task" class="hidden">This will remove all your actions from the log</p>
+      <p id="warning" class="hidden"><p>
+        <ul id="remove_list" style="display: none;"></ul>
+    </div>
+    <a href="" id="kill_log">Delete all actions since the last task</a>
+
+
+
+
+	    </section>
+            
+	    
+	    <section id="feedback">
+            <h2 class="space">Feedback</h2>
+            <p><span>Please send suggestions, cooments, bug reports, and success stories to</span> <a href="" target="_blank">us</a>.</p>
+            <p>Your feedback is highly appreciated!</p>
+	    </section>
+
+	    <section =id="about">
+            <h2 class="space">About</h2>
+            <p>EEXCESS is a product of the EU-FP7 <a href="https://github.com/martinsik/php-doc-parser" target="_blank">project EEXCESS</a> -making you aware of cultural and scientific content-.</p>
+	    </section>
+
+
         </div>
-        <div id="kill_dialog" title="Delete actions from log">
-            <div id="several_tasks" class="hidden">
-            <p>This will remove all your actions from the log since the end of the selected task. If no endtime is present for the selected task, the task itself will be removed as well</p>
-            <label for="task_list">Remove since:</label>
-            <select id="task_list"></select>
-            </div>
-            <p id="single_task" class="hidden">This will remove all your actions from the log</p>
-            <p id="warning" class="hidden"><p>
-            <ul id="remove_list" style="display: none;"></ul>
-        </div>
-        <a href="" id="kill_log">Delete all actions since the last task</a>
-                <form id="user_profile">
-                    <fieldset>
-                                        <label for="sex">Sex</label>
-                                        <select name="sex" id="sex">
-                                            <option>female</option>
-                                            <option>male</option>
-                                        </select>
-<!--                        <input type="radio" name="sex" id="female" value="female" /><label for="female" >female</label>
-                        <input type="radio" name="sex" id="male" value="male" /><label for="male">male</label>-->
-                        <label for="profession" class="block">Profession</label>
-                        <input type="text" id="profession" name="profession" class="block" />
-                        <label for="education_level" class="block">Education Level</label>
-                        <input type="text" id="education_level" name="education_level" class="block" />
-                        <label for="birthdate" class="block">Birthdate</label>
-                        <input type="date" id="birthdate" name="birthdate" class="block" />
-                        <input id="submit" type="submit" value="save" class="btn_submit" />
-                        <input id="cancel" type="reset" value="cancel" class="btn_submit" />
-                    </fieldset>
-                </form>
-                <h2 id="save" style="display:none;color:green"></h2>
+
         <script src="../libs/jquery-1.10.1.min.js"></script>
         <script type="text/javascript" src="../libs/jquery-ui.min.js"></script>
         <script src="options.js"></script>
         <script src="demographics.js"></script>
+        
     </body>
 </html>
