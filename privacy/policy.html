@@ -1,25 +1,95 @@
 <html>
 	<head>
-		<link href="/libs/flat_ui/bootstrap/css/bootstrap.css" rel="stylesheet"></link>
-		<link href="/libs/flat_ui/css/flat-ui.css" rel="stylesheet"></link>
+		<link href="/libs/bootstrap/css/bootstrap.css" rel="stylesheet"></link>
+		<link href="/libs/bootstrap/css/bootstrap-theme.css" rel="stylesheet"></link>
 		<link href="media/policy.css" rel="stylesheet"></link>
 	</head>
 	<body>
-		<div id="privacyPolicy_history" class="policyItem">
-			<span class="title">Browsing history</span>	
-			<div class="slider"></div>
-			<div class="available"></div>
-			<div class="disclosed"></div>
-		</div>
-		
-		<div id="privacyPolicy_interests" class="policyItem">
-			<span class="title">Browsing history</span>	
-			<div class="toggle"></div>
-			<div class="available"></div>
-			<div class="disclosed"></div>
-		</div>
+		<div class="container">
+			<div class="page-header">
+				<h2>Privacy policy</h2>
+			</div>
+
+			<div class="panel panel-primary" data-eexcess-policy-field="gender">
+				<div class="panel-heading">
+					<h3 class="panel-title">Gender <span class="badge pull-right setting"></span></h3>
+				</div>
+				<div class="panel-body">
+					<div class="progress" style="width: 20%">
+						<div class="progress-bar progress-bar-success" style="width: 50%">
+						    <span>Off</span>
+						</div>
+						<div class="progress-bar progress-bar-danger disable" style="width: 50%">
+						    <span>On</span>
+						</div>
+					</div>
+					<ul class="nav nav-pills">
+						<li style="width: 30%">
+						 	<span class="label label-default">Available</span>
+							<span>Mister</span>
+						</li>
+						<li style="width: 30%">
+							<span class="label label-default">Disclosed</span>
+							<span>nothing</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+
+
+			<div class="panel panel-primary" data-eexcess-policy-field="history">
+				<div class="panel-heading">
+					<h3 class="panel-title">Browsing history (number of pages) <span class="badge pull-right setting"></span></h3>
+				</div>
+				<div class="panel-body">
+					<div class="progress">
+						<div class="progress-bar progress-bar-success" style="width: 10%">
+						    <span>1</span>
+						</div>
+						<div class="progress-bar progress-bar-warning" style="width: 10%">
+						    <span>2</span>
+						</div>
+						<div class="progress-bar progress-bar-warning" style="width: 10%">
+						    <span>3</span>
+						</div>
+						<div class="progress-bar progress-bar-warning" style="width: 10%">
+						    <span>4</span>
+						</div>
+						<div class="progress-bar progress-bar-warning" style="width: 10%">
+						    <span>5</span>
+						</div>
+						<div class="progress-bar progress-bar-warning" style="width: 10%">
+						    <span>6</span>
+						</div>
+						<div class="progress-bar progress-bar-warning" style="width: 10%">
+						    <span>7</span>
+						</div>
+						<div class="progress-bar progress-bar-warning" style="width: 10%">
+						    <span>8</span>
+						</div>
+						<div class="progress-bar progress-bar-warning" style="width: 10%">
+						    <span>9</span>
+						</div>
+						<div class="progress-bar progress-bar-danger" style="width: 10%">
+						    <span>10</span>
+						</div>
+					</div>
+					<ul class="nav nav-pills">
+						<li style="width: 30%">
+						 	<span class="label label-default">Available</span>
+							<span>10 pages</span>
+						</li>
+						<li style="width: 30%">
+							<span class="label label-default">Disclosed</span>
+							<span>10 pages</span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>		
 		<script src="/libs/flat_ui/js/jquery-1.8.3.min.js"></script>
 		<script src="/libs/flat_ui/js/bootstrap.min.js"></script>
+		<script src="/libs/flat_ui/js/bootstrap-switch.js"></script>
 		<script src="/libs/jquery-ui-1.10.3.custom.min.js"></script>
 		<script src="js/policy.js"></script>
 	</body>

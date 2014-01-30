@@ -1,10 +1,40 @@
+function doProgressClick() {
+	if($(this).siblings().size() <= 1) {
+		$(this).siblings().andSelf().toggleClass("disable");
+	} else {
+		$(this).removeClass("disable");
+		$(this).nextAll().addClass("disable");
+		$(this).prevAll().removeClass("disable");
+	}
+	$(this).closest(".progress").trigger("change");
+}
+
+function doChangeProgress() {
+	var value = 0;
+	if($(this).find(".progress-bar").size() <= 2) {
+		if($(this).find(".progress-bar:eq(0)").hasClass("disable")) {
+			value = 1;
+		} else {
+			value = 0;
+		}
+	} else {
+		value = $(this).find(".progress-bar:not(.disable)").size();
+	}
+	$(this).closest(".panel").find(".setting").html(value);
+	
+	$(this).each(updatePolicy);
+}
+
+function updatePolicy() {
+	var fieldName = $(this).closest(".panel").attr("data-eexcess-policy-field");
+	var value = $(this).closest(".panel").find(".setting").html();
+	console.log("Updating policy setting for '"+fieldName+"' to "+value);
+	
+	localStorage["privacy.policy."+fieldName] = value;
+}
+
 (function($) {
-  $(".slider").slider({
-	min: 1,
-	max: 5,
-	value: 2,
-	orientation: "horizontal",
-	range: "min"
-  }).addSliderSegments(5);
+  $(".progress-bar").click(doProgressClick);
+  $(".progress").live("change",doChangeProgress);
 })(jQuery);
 

@@ -1,47 +1,7 @@
-body {
-	background-color: #1ABC9C;
-	padding: 5px;
+.progress-bar.disable {
+	opacity: 0.4;
 }
 
-.policyItem {
-	position: relative;
-	padding: 5px;
-	background-color: #BDC3C7;
-	-webkit-border-radius: 10px; //for chrome support
-	border-radius: 10px;
-	height: 60px;
-	margin: 5px;
-}
-
-.policyItem .title {
-	position: absolute;
-	top: 5px;
-	left: 5px;
-	width: 200px;
-	font-weight: bold;
-}
-
-.policyItem .slider {
-	position: absolute;
-	top: 5px;
-	left: 205px;
-	width: 200px;
-}
-
-.policyItem .available {
-	position: absolute;
-	bottom: 5px;
-	left: 5px;
-	width: 250px;
-	height: 25px;
-	background: white;
-}
-
-.policyItem .disclosed {
-	position: absolute;
-	bottom: 5px;
-	right: 5px;
-	width: 250px;
-	height: 25px;
-	background: white;
+.progress-bar {
+	cursor: pointer !important;
 }

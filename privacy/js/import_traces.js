@@ -136,7 +136,7 @@ function traces(pluginId,userId) {  //user_id = plugin_id; email = user_id
 	
 	
 	//  Add the datas as a list to traces.html
-	document.getElementById('nbTraces').innerHTML = nbTraces + " traces dans l'historique";
+	$('#nbTraces').html(nbTraces + " traces dans l'historique");
 	if(nbTraces>50) nbTraces = 50;                    // only the first 50 results are displayed
 	
 	for(var i=0;i<nbTraces;i++) {     
@@ -144,9 +144,7 @@ function traces(pluginId,userId) {  //user_id = plugin_id; email = user_id
 		var clone = $('#template').clone(true);
 		
 		clone.attr("id","templateCopy")
-		
 		clone.css("display","inherit");
-		
 		clone.appendTo('#list_trace');
 		
 		var beginDate = parseDate(content["_source"].temporal.begin);

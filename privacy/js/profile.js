@@ -7,11 +7,9 @@ var idUser;
 function initUserInfo(){
 
 	var request ={
-		
 		_id: localStorage["user_id"]
 		
 	};
-	
 	
 	var JSONrequest = JSON.stringify(request);
 	

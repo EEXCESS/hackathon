@@ -584,4 +584,4 @@ EEXCESS.handlePrivacyBoxVisibility = function() {
         EEXCESS.privacyVisible = visible;
     }
 };
-$('<div style="display:none; position:fixed; bottom: 10px; right: 350px; width: 900px; height: 400px;" id="eexcess_privacy"><iframe style="width:870px; height: 100%" id="eexcess_privacy_frame" src="chrome-extension://' + EEXCESS.extID + '/privacy/policy.html"></iframe></div>').appendTo('body');
+$('<div style="display:none; position:fixed; bottom: 10px; right: 350px; width: 60%; height: 70%;" id="eexcess_privacy"><iframe style="width:870px; height: 100%" id="eexcess_privacy_frame" src="chrome-extension://' + EEXCESS.extID + '/privacy/policy.html"></iframe></div>').appendTo('body');
