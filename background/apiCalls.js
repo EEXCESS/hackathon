@@ -14,6 +14,9 @@ if (typeof String.prototype.startsWith !== 'function') {
 }
 
 var EEXCESS = EEXCESS || {};
+
+
+
 /**
  * @memberof EEXCESS
  * @type String
@@ -93,7 +96,7 @@ EEXCESS.euCall = function(weightedTerms, start, success, error) {
     });
 };
 
-EEXCESS.frCall = function(weightedTerms, start, success, error) {
+EEXCESS.frCall_impl = function(weightedTerms, start, success, error) {
     console.log('start:' + start + 'query: ');
     console.log(weightedTerms);
     var profile = {
@@ -134,3 +137,12 @@ EEXCESS.frCall = function(weightedTerms, start, success, error) {
         error(textStatus);
     });
 };
+
+
+/// proxy federated recommender call (frCall)
+/// the proxy is set up depending on choices made in the options page
+/// this sets up the default (when the values are undefined
+if (EEXCESS.frCall == null){
+    EEXCESS.frCall = EEXCESS.frCall_impl;
+    EEXCESS.frUrl  = 'http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
+}
