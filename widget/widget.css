@@ -1,17 +1,3 @@
-body,html {
-    height:100%;
-    margin:0;
-    padding:0;
-    overflow: hidden;
-    font-family: Verdana,Arial,sans-serif;
-}
-
-body {
-    background-image: url('../media/EEXCESS__Logo_RGB.jpg');
-    background-repeat: no-repeat;
-    background-position: 97% 99%;
-    background-size: 120px auto;
-}
 
 #eexcess_content {
     overflow-y: auto;
@@ -62,7 +48,7 @@ fieldset {
 }
 
 #eexcess_tab {
-    position: absolute;
+
     top: 0;
     right: 0;
     list-style:none;
@@ -177,9 +163,10 @@ select {
 }
 
 .resCtL {
-    width: 50px;
+    width: 90px;
     float: left;
 }
+
 
 .eexcess_previewIMG {
     width: 44px;
@@ -193,13 +180,9 @@ select {
     padding-right:5px;
 }
 
-#eexcess_content li {
-}
 
 #eexcess_resultList li {
     padding-top: 2px;
-    background-color: #f9f9f9;
-    border-bottom: 1px dotted black;
     position:relative;
 }
 
@@ -208,9 +191,11 @@ select {
 }
 
 .partner_icon {
-    margin-right: 10px;
+    margin-right: 0px;
     width:16px;
     height:16px;
+    vertical-align:top;
+
 }
 
 .eexcess_raty {
@@ -223,6 +208,10 @@ select {
     z-index: 99;
 }
 
+.eexcess_raty img{
+/*    display:block;*/
+}
+
 .result_description{
     margin:0;
     padding:0;
@@ -231,9 +220,6 @@ select {
 
 #eexcess_privacy {
     font-size:0.7em;
-    position: absolute;
-    bottom: 5px;
-    left: 5px; 
 }
 #eexcess_privacy img {
     vertical-align:middle;

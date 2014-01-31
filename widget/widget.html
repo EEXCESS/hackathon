@@ -5,21 +5,33 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="jquery.tagit.css">
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+        <link rel="stylesheet" href="../eexcess.css">
         <link rel="stylesheet" href="widget.css">
     </head>
     <body>
+
+      <header id="eexcess_main">
         <form id="eexcess_searchForm">
-            <fieldset>
-                <input type="text" id="eexcess_query" size="20" placeholder="search text..." />
-                <input type="submit" id="search_submit" value="search" />
-            </fieldset>
+          <fieldset>
+            <input type="text" id="eexcess_query"  placeholder="search text..." />
+            <input type="submit" id="search_submit" class="eexcess_submit_btn" value="search" />
+          </fieldset>
         </form>
-        <ul id="eexcess_tab">
+
+	
+	<nav>
+          <ul id="eexcess_tab">
             <li><a href="visualizations/FacetScape/index.html" class="fancybox_link"><img src="/media/batchmaster/grid.png" /></a></li>
             <li><a href="visualizations/GraphVisualization/index.html" class="fancybox_link"><img src="/media/batchmaster/map-2.png" /></a></li>
             <li><a href="privacy/profile.html" class="fancybox_link"> <img src="/media/batchmaster/user-4.png" /></a></li>
-        </ul>
-        <div id="eexcess_content"></div>
+          </ul>
+	  
+	</nav>
+      </header>
+
+
+<div id="eexcess_content"></div>
+
         <!--<img src="../media/EEXCESS__Logo_RGB.jpg" id="eexcess_logo" />-->
         <script type="text/javascript" src="../libs/jquery-1.10.1.min.js"></script>
         <script type="text/javascript" src="../libs/rating/jquery.raty.min.js"></script>
@@ -45,8 +57,14 @@
         <div id="dialog_url" style="display:none">
             <p></p>
         </div>
+	<footer>
         <div id="eexcess_privacy">
         	<a href="#"><img src="/media/batchmaster/key.png" /> Change Privacy Settings</a>
         </div>
+        <div id="eexcess_powered_by">
+        	<a href="#">Powered by<img src="/media/EEXCESS__Logo_RGB.jpg" /></a>
+        </div>
+
+	</footer>
     </body>
 </html>
