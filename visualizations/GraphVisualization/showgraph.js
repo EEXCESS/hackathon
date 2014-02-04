@@ -7,7 +7,7 @@ function ShowGraph(){
 	this.optionObject = new Options();
 	
 	this.option = this.optionObject.makeOptions;
-	
+	this.changeOption = this.optionObject.setOptions;
 	
 	this.storeId = "";
 	this.setStore = false;
@@ -30,15 +30,29 @@ function ShowGraph(){
 		//.on("dblclick.zoom", null)
 		.append("g");
 	
+	
+	
 	var visVar = this.option.vis;
 	this.vis.append("rect")
+		.attr("id","plate")
 		.attr("width", visVar.width.value)
-		.attr("height", visVar.height.value)
-		.attr("transform",
+		.attr("height", visVar.height.value);
+					
+	
+	this.ReTransform = function(){
+		d3.select("#plate").attr("transform",
 			"translate("
-				+((-visVar.width.value+svgVar.width.value)/2)+
+				+(-visVar.width.value/2+svgVar.width.value/2)+
 				","
-				+((-visVar.height.value+svgVar.height.value)/2)+")");
+				+(-visVar.height.value/2+svgVar.height.value/2)+
+				")");
+		d3.select("svg")
+			.attr("width", svgVar.width.value)
+			.attr("height", svgVar.height.value);	
+			
+	};
+	this.ReTransform();
+	
 	
 	var forceVar = this.option.force;
 	this.force = d3.layout.force()
@@ -49,7 +63,7 @@ function ShowGraph(){
 		//.on("tick", tick);
 		
 
-	this.changeOption = this.optionObject.setOptions;
+	
 	
 	// rescale g
 	this.redraw = function(){
@@ -140,14 +154,21 @@ function ShowGraph(){
 					return self.functionValues[d.clickEvent]();
 					//return d.clickEvent(d);
 				}
+			}).append("svg:title").text(function(d, i){ 
+				return d.title; 
 			});
 			
-		innerLink.append("text")
+		var textAndTooltipInLink = innerLink.insert("g");
+		
+		textAndTooltipInLink.append("svg:title").text(function(d, i){ 
+				return d.title; 
+			});
+		textAndTooltipInLink.append("text")
 			.attr("class","link-text")
 			.attr("text-anchor", "middle")
 			.attr("dy", ".35em")
 			.attr("y",20)
-			.text(function(d) {return d.text;});	
+			.text(function(d) {return d.text;});
 		///////////////////////////////////////////////////////////
 			
 		this.link.exit().remove();
@@ -180,12 +201,14 @@ function ShowGraph(){
 		graphNode.append("circle")
 			.attr("vector-effect","non-scaling-stroke")
 			.attr("r", 5)
-			.attr("hugaHaga","gggg")
 			.attr("visibility",function(d){return d.attributes.circleOrPoly == "circle"?"visible":"hidden";})
 			.on("click",function(d){
 				if(d.attributes.hasOwnProperty("clickEvent")){
 					return self.functionValues[d.attributes.clickEvent]();
 				}
+			})
+			.append("svg:title").text(function(d, i){ 
+					return d.attributes.title; 
 			});
 		
 		graphNode.append("polygon")
@@ -197,12 +220,19 @@ function ShowGraph(){
 					return self.functionValues[d.attributes.clickEvent]();
 					//return d.attributes.clickEvent(d);
 				}
+			}).append("svg:title").text(function(d, i){ 
+				return d.attributes.title; 
 			});
 		//////////////////////////////////////////////////		  
 			
 			
-			
-		innerNode.append("text")
+		var textAndTooltipInNode = innerNode.insert("g");
+		
+		textAndTooltipInNode.append("svg:title").text(function(d, i){ 
+			return d.attributes.title; 
+		});
+		
+		textAndTooltipInNode.append("text")
 			.attr("class","node-text")
 			.attr("text-anchor", "middle")
 			.attr("dy", ".35em")
@@ -223,11 +253,14 @@ function ShowGraph(){
 		
 		
 	};
+	
+	
 
 	this.serialize = {
 		"option":this.option,
 		"nodeDict":this.nodeDict,
 		"linkDict":this.linkDict		
 	};
+
 	
 };

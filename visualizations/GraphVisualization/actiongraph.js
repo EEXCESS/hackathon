@@ -75,6 +75,8 @@ function ActionGraph(){
 				});
 			}
 		});
+		
+		selfbuild.ReTransform();
 	};
 	
 	function transAndScale(){
