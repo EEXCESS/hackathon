@@ -154,14 +154,21 @@ function ShowGraph(){
 					return self.functionValues[d.clickEvent]();
 					//return d.clickEvent(d);
 				}
+			}).append("svg:title").text(function(d, i){ 
+				return d.title; 
 			});
 			
-		innerLink.append("text")
+		var textAndTooltipInLink = innerLink.insert("g");
+		
+		textAndTooltipInLink.append("svg:title").text(function(d, i){ 
+				return d.title; 
+			});
+		textAndTooltipInLink.append("text")
 			.attr("class","link-text")
 			.attr("text-anchor", "middle")
 			.attr("dy", ".35em")
 			.attr("y",20)
-			.text(function(d) {return d.text;});	
+			.text(function(d) {return d.text;});
 		///////////////////////////////////////////////////////////
 			
 		this.link.exit().remove();
@@ -194,17 +201,15 @@ function ShowGraph(){
 		graphNode.append("circle")
 			.attr("vector-effect","non-scaling-stroke")
 			.attr("r", 5)
-			//.attr("hugaHaga","gggg")
 			.attr("visibility",function(d){return d.attributes.circleOrPoly == "circle"?"visible":"hidden";})
 			.on("click",function(d){
 				if(d.attributes.hasOwnProperty("clickEvent")){
 					return self.functionValues[d.attributes.clickEvent]();
 				}
-			}).append("svg:title")
-				.text(function(d, i){ 
+			})
+			.append("svg:title").text(function(d, i){ 
 					return d.attributes.title; 
-				}
-			);
+			});
 		
 		graphNode.append("polygon")
 			.attr("visibility",function(d){return d.attributes.circleOrPoly == "polygon"?"visible":"hidden";})
@@ -215,16 +220,19 @@ function ShowGraph(){
 					return self.functionValues[d.attributes.clickEvent]();
 					//return d.attributes.clickEvent(d);
 				}
-			}).append("svg:title")
-				.text(function(d, i){ 
-					return d.attributes.title; 
-				}
-			);;
+			}).append("svg:title").text(function(d, i){ 
+				return d.attributes.title; 
+			});
 		//////////////////////////////////////////////////		  
 			
 			
-			
-		innerNode.append("text")
+		var textAndTooltipInNode = innerNode.insert("g");
+		
+		textAndTooltipInNode.append("svg:title").text(function(d, i){ 
+			return d.attributes.title; 
+		});
+		
+		textAndTooltipInNode.append("text")
 			.attr("class","node-text")
 			.attr("text-anchor", "middle")
 			.attr("dy", ".35em")
