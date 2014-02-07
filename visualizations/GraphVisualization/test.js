@@ -1,4 +1,22 @@
 
+/*
+$(function(){
+	$('g.graphnode').contextMenu('cntxtMenu',{
+		bindings:
+		{
+			'open': function(t) {
+				alert(t.__data__.name);
+			},
+			'delete': function(t) {
+				$('g.node').remove();
+				//alert('Trigger was '+t.__data__.name+'\nAction was Delete');
+			}
+		}
+	});
+});
+
+*/
+
 var db = indexedDB.open("eexcess_db");
 
 
@@ -28,6 +46,7 @@ db.onsuccess = function() {
 
 			res.continue(); // next entry
 		}else{
+			//wordHistory = wordHistory.reverse();
 			//get unique wordlist
 			var uniqueWords = d3.set(wordHistory).values();
 			
@@ -112,7 +131,6 @@ function MakeGraph(){
  
  g.changeOption({	
 		svg:{
-			HTMLObject:{value:"body"},
 			width:{value:1000},
 			height:{value:500}
 		},
@@ -125,10 +143,10 @@ function MakeGraph(){
 			},
 			scale:{value:1}
 		},
-		force:{
-			charge:{value:-3000},
+		force:{//3000
+			charge:{value:-500},
 			gravity:{value:0.05},
-			linkDistance:{value:80}
+			linkDistance:{value:50}
 		}});
 
 
@@ -145,23 +163,24 @@ function MakeGraph(){
 	//console.log(wordHistory);
 	
 	
+	// nodes
 	wordHistory.forEach(function(nodename,index){
 		if(g.build.show.nodeDict.hasOwnProperty("nid"+nodename) == false){
 			g.build.addNode("nid"+nodename);
 			g.build.setNodeProperties("nid"+nodename,{
-				xscale:5,yscale:5,text:index +": "+ nodename,fill:"red","font-size":"20px"
+				xscale:2,yscale:2,text:index +": "+ nodename,fill:"red","font-size":"20px"
 			}); 
 		}
 	});
 	
 
 	
-	
+	// build links between nodes(keywords)
 	var sourceNode;
 	var targetNode;
 	var color = d3.scale.linear()
-		.domain([0, uniqueWordsResult.length/2,uniqueWordsResult.length])
-		.range(["lime","blue","orange"]);
+		.domain([0, uniqueWordsResult.length])
+		.range(["lime","blue"]);
 	var width = d3.scale.linear()
 		.domain([0, uniqueWordsResult.length])
 		.range([2,10]);
@@ -174,52 +193,47 @@ function MakeGraph(){
 			trueCount++
 			g.build.addLink("nid"+nodeCount,"nid"+sourceNode,"nid"+targetNode);
 			g.build.setLinkProperties("nid"+nodeCount,{
-				distance:300,width:width(trueCount),color:color(trueCount)
+				distance:100,width:width(trueCount),color:color(trueCount)
 			});   
 		}
 	}
 	
+	// get results for each keyword
 	var text="";
 	var lc = 0;
 	Object.keys(wordsWithResults).forEach(function(keyword){
-		console.log("#-----");
+		
 		Object.keys(wordsWithResults[keyword].results).forEach(function(result){	
 			text = wordsWithResults[keyword].results[result].title;
 			text = text.length < 10 ? text : text.substring(0,9); 
-			
 
-			
 			g.build.addNodeWithLink("nid"+keyword,"lid"+lc,"lid"+lc);
 			g.build.setNodeProperties("lid"+lc,{
-				xscale:2,yscale:2,fill:"fuchsia",text:text,title:wordsWithResults[keyword].results[result].title
+				xscale:1,yscale:1,fill:"fuchsia",text:text,title:wordsWithResults[keyword].results[result].title
 			}); 
 			
-			///
-			
-			console.log(result);
+			// get node Properties with user mouse interactions
 			if(wordsWithResults[keyword].userActions.hasOwnProperty(result)){
 				g.build.setNodeProperties("lid"+lc,{
 					stroke:"black","stroke-width":"3"
-			}); 
-			//stroke="black" stroke-width="3"
+				}); 
 			}
-			///
+
 			g.build.setLinkProperties("lid"+lc,{
 				width:2,
-				//distance:250,
+				distance:50,
 				color:"purple"//,text:text
 			});   
 			
 			lc++;
 		});
-		console.log("------");
+		
 	});
 	
 
 	
 	
 	//getdata from database
-	
 	$("#getdata").click(function(){
 		window.URL = window.URL || window.webkitURL;
 
@@ -230,11 +244,13 @@ function MakeGraph(){
 		$("#getdata").attr("download", "logdata.txt");
 
 	});
+
 	
-
 	g.build.show.restart();
-
 }
+
+
+
 //get current data
 var getData = {};
 chrome.runtime.sendMessage(
@@ -250,6 +266,7 @@ chrome.runtime.sendMessage(
 		//alert("test X");
 		console.log(reqResult);
 		getData = reqResult;
-	});
+	}
+);
 
 
