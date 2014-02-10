@@ -66,12 +66,6 @@ chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'model', func: 'visi
 chrome.runtime.onMessage.addListener(
         function(request, sender, sendResponse) {
             switch (request.method) {
-                case 'taskStarted':
-                    $('#eexcess_preventer').hide();
-                    break;
-                case 'taskStopped':
-                    $('#eexcess_preventer').show();
-                    break;
                 case 'visibility':
                     // change widget's visibility
                     EEXCESS.handleWidgetVisibility(request.data);
