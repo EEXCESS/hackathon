@@ -41,11 +41,11 @@ EEXCESS.handleWidgetVisibility = function(visible) {
     if (EEXCESS.widgetVisible !== visible) {
         if (visible) { // show widget
             var width = $(window).width() - 333;
-            $('#eexcess_widget').show();
+            $('#eexcess_sidebar').show();
             $('html').css('overflow', 'auto').css('position', 'absolute').css('height', '100%').css('width', width + 'px');
             $('body').css('overflow-x', 'auto').css('position', 'relative').css('overflow-y', 'scroll').css('height', '100%');
         } else { // hide widget
-            $('#eexcess_widget').hide();
+            $('#eexcess_sidebar').hide();
             $('html').css('overflow', '').css('position', '').css('height', '').css('width', '');
             $('body').css('overflow-x', '').css('position', '').css('overflow-y', '').css('height', '');
         }
@@ -59,7 +59,7 @@ EEXCESS.handleWidgetVisibility = function(visible) {
  * visibility in the background's model.
  */
 
-$('<iframe id="eexcess_widget" src="chrome-extension://' + EEXCESS.extID + '/widget/widget.html"></iframe>').appendTo('body');
+$('<iframe id="eexcess_sidebar" src="chrome-extension://' + EEXCESS.extID + '/widget/widget.html"></iframe>').appendTo('body');
 chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'model', func: 'visibility'}}, EEXCESS.handleWidgetVisibility);
 
 // Listen to messages from the background script
@@ -519,7 +519,7 @@ EEXCESS.initiateQuery = function() {
             document,
             NodeFilter.SHOW_ALL,
             {acceptNode: function(node) {
-                    if (node.nodeType === 1 && node.getAttribute('id') === 'eexcess_widget') {
+                    if (node.nodeType === 1 && node.getAttribute('id') === 'eexcess_sidebar') {
                         // filter out EEXCESS content
                         return NodeFilter.FILTER_REJECT;
                     } else if (node.nodeType !== 3) {

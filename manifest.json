@@ -20,7 +20,7 @@
                 "libs/jquery-1.10.1.min.js",
                 "content.js"
             ],
-            "css": ["media/eexcess.css"]
+            "css": ["media/css/sidebar.css"]
         }
     ],
     

@@ -7,23 +7,32 @@ body,html {
     margin:0;
     padding:0;
     overflow: hidden;
-    font-family: Lucida, Lucida Grande; Verdana,Arial,sans-serif;
+    font-family: Lucida, Lucida Grande, Verdana,Arial,sans-serif;
 }
 
 body {
     background-image: url('media/watermark.png');
     background-size: auto 100%;
+    font-size:0.7em;
+}
+
+body a{
+    text-decoration:none;
+    color: #529CBF;
 }
 
 header {
-    /*margin-top:30px; width:500px;*/ background:white; margin-left:auto; margin-right:auto; border-radius:10px 0px 0px 0px; border:1px solid #ccc; ;/*padding-bottom:20px;*/ -webkit-box-shadow:0 0 10px #cdc; 
-
+    /*margin-top:30px; width:500px;*/ 
+    background:white; 
+    margin-left:auto; 
+    margin-right:auto; 
+    /*padding-bottom:20px;*/ 
+    padding-bottom: 30px;   
 }
 
 header .eexcess_submit_btn{
     background-color: #0A3B53;/*494949;*/
     color:#ffffff;
-    
     font-weight:bold;
     height:22px;
     border: solid #70C896 1px;
@@ -37,63 +46,40 @@ header nav ul {
 
 header nav li {
     padding-left: 5px;
-}
-
-#eexcess_main{
-background: #1d904e; padding-bottom: 30px;    
-}
-
-
-#eexcess_content{
-/*background: #1d904e; width:500px;*/
-border-left: 2px solid #1d904e;
-margin-left:auto; margin-right:auto;
-
-height: 300px;
-}
-
-#eexcess_content a{
-    text-decoration:none;
-    font-size:0.8em;
-    color: #529CBF;
-}
-
-#eexcess_content ul{
-
-}
-
-#eexcess_content ul li{
-margin-left:5px;
-margin-right:5px;
-background: rgba(255,255,255,0.7);
-border-bottom: 1px dotted green;
-}
-
-
-#eexcess_content ul li:hover{
-    border: 2px solid #E4A55C;
-}
-
-#eexcess_previewIMG{
-    float:left;
-}
-
-footer {
-
-    border-left: 2px solid #1d904e;
-    border-bottom: 2px solid #1d904e;
-    border-radius:0px 0px 0px 10px;
-
+    float: left;
 }
 
 footer a{
-
     text-decoration:none;
     color: #E4785C;
 }
 
-#eexcess_privacy{
-    
+fieldset {
+    margin:auto;
+    border:none;
+}
+
+.ui-dialog {
+    font-size: 0.8em;
+}
+
+.block_list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.block_list li {
+    padding-left: 5px;
+    padding-top: 2px;
+    margin-left:5px;
+    margin-right:5px;
+    background: rgba(255,255,255,0.7);
+    border-bottom: 1px dotted green;
+}
+
+.block_list li:hover{
+    border: 2px solid #E4A55C;
 }
 
 #eexcess_powered_by{
