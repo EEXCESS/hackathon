@@ -33,21 +33,97 @@ and open the template in the editor.
 		</style>
     </head>
     <body>
-	<!--
-	    <div class="contextMenu" id="cntxtMenu">
-			<ul>
-				<li id="open"> Open</li>
-				<li id="delete"> DELETE</li>
-			</ul>
+		<!--  Popupmenu for D3 Graph-->
+		<div id="popup_menu" style="border:solid 1px black;background-color:white;display:none;">
+			<button id="closepopupmenu">x</button>  
+			<div id="gotodetails"style="border:solid 1px black;margin: 2px;">
+				details
+			</div>
+			  <div id="gotoresults" style="border:solid 1px black;margin: 2px;">
+				results
+			</div>    
 		</div>
-		-->
+		
         <div id="graphContent">
 		
 		</div>
-	<!--
-		<button id="getdata">senario1</button>
-	-->
-	<a id="getdata">getData</a>
+
+		<!-- show details -->
+		<div style="border:solid 1px;width:200px;float:right;margin:5px;">
+			<button id="cleardata">clear data</button>
+			<div style="margin:2px;">
+			title:
+			</div>
+			<br/>
+			<textarea id="title_data" style="border:solid 1px grey;"></textarea>
+			<div style="margin:2px;">
+			link:
+			</div>
+			<div style="overflow-x:auto">
+				<a target="_blank" id="link_data"></a>
+			</div>
+			<div style="margin:2px;">
+			image:
+			</div>   
+			<img  id="image_data" width="150px" height="150px" style="border:solid 1px grey;margin:2px;"></img>
+			<div style="margin:2px;">
+			id:
+			</div>  
+			<div id="id_data" style="overflow-x:auto">
+				
+			</div>
+			<div style="margin:2px;">
+			facets:
+			</div>  
+			<div style="border:solid 1px grey;margin:2px;">
+			<div>
+				<span>
+					&nbsp;&nbsp;language:
+				</span>
+				<span id="language_data">
+					
+				</span>
+			</div>
+			<div>
+				<span>
+					&nbsp;&nbsp;partner:
+				</span>
+				<span id="partner_data">
+					
+				</span>
+			</div>
+			<div style="overflow-x:auto">
+				<span>
+					&nbsp;&nbsp;provider:
+				</span>
+				<span id="provider_data" >
+					
+				</span>
+			</div>
+			<div>
+				<span>
+					&nbsp;&nbsp;type:
+				</span>
+				<span id="type_data">
+					
+				</span>
+			</div>
+			<div>
+				<span>
+					&nbsp;&nbsp;year:
+				</span>
+				<span  id="year_data">
+					
+				</span>
+			</div>
+			</div>
+		</div>
+ 
+
+		<a id="getdata">getData</a></br>
+		<!--
+		<button id="searchTest"> search test</button></br>
+		-->
         <script src="test.js" lang="javascript"></script>
 		<script src="GraphLib/option.js" lang="javascript"></script>
 		<script src="GraphLib/showgraph.js" lang="javascript"></script>

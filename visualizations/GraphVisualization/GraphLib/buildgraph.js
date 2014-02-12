@@ -20,6 +20,7 @@ function BuildGraph(){
 			var node = {};node.attributes={};
 			node.attributes.circleOrPoly = "circle";
 			node.attributes.polypoints = "-5,-5 -5,5 5,5 5,-5";
+			node.attributes.name = name;
 			if(obj != undefined){
 				node = obj;
 			}
