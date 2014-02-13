@@ -12,28 +12,31 @@ function ShowGraph(){
 	this.storeId = "";
 	this.setStore = false;
 	
-	var svgVar = this.option.svg;
-	this.svg= d3.select(svgVar.HTMLObject.value).append("svg")
+	var svgVar = this.option.svg;//append
+	this.svg= d3.select(svgVar.HTMLObject.value).select("svg")
 		.attr("width", svgVar.width.value)
 		.attr("height", svgVar.height.value);
 	
-		
-	this.svg.append("rect")
+	//append	
+	this.svg.select("rect")
 		.attr("width", svgVar.width.value)
 		.attr("height", svgVar.height.value);
 	
 	this.zoom = d3.behavior.zoom();
 		//.on("zoom", redraw);
 	
-	this.vis = this.svg.append("g")	
+	//append
+	this.vis = this.svg.select("g")	
 		.call(this.zoom)
 		//.on("dblclick.zoom", null)
-		.append("g");
+		//append
+		.select("g");
 	
 	
 	
 	var visVar = this.option.vis;
-	this.vis.append("rect")
+	//append
+	this.vis.select("rect")
 		.attr("id","plate")
 		.attr("width", visVar.width.value)
 		.attr("height", visVar.height.value);

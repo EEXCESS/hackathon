@@ -1,7 +1,5 @@
 
-
 var db = indexedDB.open("eexcess_db");
-
 
 var wordsWithResults = {};
 var wordHistory = [];
@@ -10,7 +8,6 @@ var uniqueWordsResult =[];
 
 //start automatically if the script start.
 db.onsuccess = function() {
-
 	var tx = db.result.transaction('queries'); // get read transaction
 	var store = tx.objectStore('queries'); // get object store
 	var idx = store.index('timestamp'); // get timestamp index 
@@ -29,6 +26,10 @@ db.onsuccess = function() {
 
 			res.continue(); // next entry
 		}else{
+			console.log(wordHistory);//Number.MAX_VALUE
+			wordHistory = wordHistory.reverse().splice(0,parseInt($("#last_keywords").val()));
+			console.log(wordHistory);
+			
 			//wordHistory = wordHistory.reverse();
 			//get unique wordlist
 			var uniqueWords = d3.set(wordHistory).values();
@@ -45,7 +46,6 @@ db.onsuccess = function() {
 			});
 		}
 	};
-
 };
 	
 function AsyncGetResultData(keywords,func){
@@ -57,7 +57,9 @@ function AsyncGetResultData(keywords,func){
 	var cursor = idx.openCursor(IDBKeyRange.only(keyword));
 	
 	var resultObject = {};
-	var maxResultCount = 5;
+	var maxResultCount = parseInt($("#results_per_keywords").val());
+	//console.log($("#results_per_keywords").val());
+	
 	cursor.onsuccess = function(evt) {
 		var res = evt.target.result;
 		if (res !== null) {
@@ -92,7 +94,9 @@ function AsyncGetUserAction(func){
 			
 			if(res.value.type){
 				//console.log("g");
-				wordsWithResults[res.value.context.query].userActions[res.value.resource] = res.value;
+				if(wordsWithResults.hasOwnProperty(res.value.context.query)){
+					wordsWithResults[res.value.context.query].userActions[res.value.resource] = res.value;
+				}
 				// res.value // resource, context.query
 			}
 
@@ -188,9 +192,10 @@ var functions = {
 	}
 };
 	
+
 function MakeGraph(){
 
-	var g = new ActionGraph();
+	var g = new ActionGraph();	
 	 
 	g.build.show.ZoomAction = function(){
 		d3.select('#popup_menu').style("display", "none");
@@ -220,14 +225,16 @@ function MakeGraph(){
 	//console.log(uniqueWordsResult);
 
 	
+	
+	//console.log(wordHistory);
 	//wordHistory.reverse();
 	//console.log(wordHistory);
-	
 	
 	// nodes
 	wordHistory.forEach(function(nodename,index){
 		if(g.build.show.nodeDict.hasOwnProperty("nodeId"+nodename) == false){
 			var text = nodename;
+
 			g.build.addNode("nodeId"+nodename);
 			g.build.setNodeProperties("nodeId"+nodename,{
 				xscale:5,yscale:5,text:index +": "+ TextCutter(text,10,9),title:text,fill:"green"
@@ -253,6 +260,7 @@ function MakeGraph(){
 		sourceNode = wordHistory[nodeCount-1];
 		targetNode = wordHistory[nodeCount];
 		
+
 		g.build.addNodeWithLink("nodeId"+targetNode,"subNodeId"+nodeCount,"subLinkId"+nodeCount);
 		g.build.setLinkProperties("subLinkId"+nodeCount,{distance:10});
 		//debug
@@ -276,20 +284,18 @@ function MakeGraph(){
 	// get results for each keyword
 	var text="";
 
-	
-
-	
 	//search finished with results
 	chrome.runtime.onMessage.addListener(
 		function(request, sender, sendResponse) {
 			if (request.method === 'newSearchTriggered') {
 				//console.log("-------");
-				//console.log(request.data);
-				//GetResult(request.data.query,request.data.results);
+				console.log(request.data);
+
 				Object.keys(request.data.results.results).forEach(function(arrayIndex){
 					linecount++
 					text = request.data.results.results[arrayIndex].title;
 					
+
 					g.build.addNodeWithLink(dataParameter.nodeId,"listId"+linecount,"listId"+linecount);
 					var paramData ={text:text,nodeId:"listId"+linecount};
 					g.build.setNodeProperties("listId"+linecount,{
@@ -315,6 +321,7 @@ function MakeGraph(){
 			console.log(result);
 			console.log(keyword);
 			*/
+
 			g.build.addNodeWithLink("nodeId"+keyword,"listId"+linecount,"listId"+linecount);
 			var paramData ={
 				text:text,
@@ -344,11 +351,7 @@ function MakeGraph(){
 		});
 	});
 
-	$("#searchTest").click(function(){
-		//linecount++;
-		//g.build.addNodeWithLink("nodeIdund","XXX"+linecount,"XXX"+linecount);
-		//g.build.show.restart();
-	});
+
 
 	
 	//getdata from database
@@ -367,7 +370,22 @@ function MakeGraph(){
 	g.build.show.restart();
 }
 
+// rebuild graph
+$("#redraw").click(function(){
+	wordsWithResults = {};
+	wordHistory = [];
+	uniqueWordsResult =[];
+	//g = null;
 
+	//dataParameter = {};
+	//linecount = 0;
+
+	db.onsuccess();
+	
+	//linecount++;
+	//g.build.addNodeWithLink("nodeIdund","XXX"+linecount,"XXX"+linecount);
+	//g.build.show.restart();
+});
 
 //get current data
 var getData = {};

@@ -63,6 +63,8 @@ function BuildGraph(){
 		}
 	}
 	
+	//this method is buggy, if you want delete many nodes, store the added node in a row
+	// reverted the row and delete the nodes.
 	this.deleteNode = function(name){
 		var index = this.getNodeIndex(name);
 		this.show.nodes.splice(index, 1);

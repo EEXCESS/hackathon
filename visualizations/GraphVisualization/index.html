@@ -43,11 +43,21 @@ and open the template in the editor.
 				results
 			</div>    
 		</div>
+		<svg>
+			<rect>
+			
+			</rect>
+			<g>
+				<g>
+					<rect id="plate">
+					</rect>
+				</g>
+			</g>
+		</svg>
+		<!--
+        <div id="graphContent"></div>
+		-->
 		
-        <div id="graphContent">
-		
-		</div>
-
 		<!-- show details -->
 		<div style="border:solid 1px;width:200px;float:right;margin:5px;">
 			<button id="cleardata">clear data</button>
@@ -121,9 +131,26 @@ and open the template in the editor.
  
 
 		<a id="getdata">getData</a></br>
-		<!--
-		<button id="searchTest"> search test</button></br>
-		-->
+	
+		<button id="redraw">redraw</button>
+		Results per keywords:
+		<select id="results_per_keywords">
+			<option value="5">5</option>
+			<option value="10">10</option>
+			<option value="20">20</option>
+			<option value="50">50</option>
+			<option value="All">All</option>  
+		</select>
+		Last
+		<select id="last_keywords">
+			<option value="10">10</option>
+			<option value="25">25</option>
+			<option value="50">50</option>
+			<option value="100">100</option>
+			<option value="250">250</option>  
+			<option value="All">All</option>  
+		</select>
+		th keywords of the searchgraph.
         <script src="test.js" lang="javascript"></script>
 		<script src="GraphLib/option.js" lang="javascript"></script>
 		<script src="GraphLib/showgraph.js" lang="javascript"></script>
