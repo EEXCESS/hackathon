@@ -212,7 +212,6 @@ EEXCESS.searchResultList = function(divContainer, options) {
     return {
         showResults: showResults,
         loading: function(){
-    console.log('her we are');
             _list.empty();
             _loader.show();
         }
