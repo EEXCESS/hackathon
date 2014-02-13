@@ -15,7 +15,8 @@ EEXCESS.initDB = function() {
     console.log('init DB');
 
     // initialize connection
-    var req = indexedDB.open('eexcess_db', 39);
+	//Versionnumber 39
+    var req = indexedDB.open('eexcess_db', 40);
     console.log('opening');
 
     // update or create db
@@ -86,6 +87,10 @@ EEXCESS.initDB = function() {
         // create object store 'interactions'
         os = EEXCESS.DB.createObjectStore('interactions', {keyPath: 'id', autoIncrement: true});
         os.createIndex('timestamp', 'timestamp');
+		
+		 // create object store 'clicked_keyword'
+        os = EEXCESS.DB.createObjectStore('clicked_keyword', {keyPath: 'id', autoIncrement: true});
+        os.createIndex('keyword', 'keyword');
     };
 
     req.onsuccess = function() {

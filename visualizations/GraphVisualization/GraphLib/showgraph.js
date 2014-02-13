@@ -65,10 +65,13 @@ function ShowGraph(){
 		//.on("tick", tick);
 		
 
-	
+	this.ZoomAction = function(){};
 	
 	// rescale g
 	this.redraw = function(){
+		//console.log("zoom action");
+		self.ZoomAction();
+	
 		var trans=d3.event.translate;
 		var scale=d3.event.scale;
 		
@@ -181,6 +184,7 @@ function ShowGraph(){
 		this.node = this.node.data(this.nodes);
 		var innerNode = this.node.enter().insert("g")//, ".cursor")
 			.attr("class", "node")
+			.attr("id",function(d){return d.attributes.name;})//node id
 			.call(this.force.drag)
 			
 		var graphNode = innerNode.insert("g")
@@ -206,12 +210,20 @@ function ShowGraph(){
 			.attr("visibility",function(d){return d.attributes.circleOrPoly == "circle"?"visible":"hidden";})
 			.on("click",function(d){
 				if(d.attributes.hasOwnProperty("clickEvent")){
-					return self.functionValues[d.attributes.clickEvent]();
+					return self.functionValues[d.attributes.clickEvent](d.attributes.clickParam);
+				}
+			})
+			.on("contextmenu",function(d){
+				if(d.attributes.hasOwnProperty("contextmenuEvent")){
+					return self.functionValues[d.attributes.contextmenuEvent](d.attributes.contextmenuParam);
 				}
 			})
 			.append("svg:title").text(function(d, i){ 
 					return d.attributes.title; 
 			});
+		
+		
+		
 		
 		graphNode.append("polygon")
 			.attr("visibility",function(d){return d.attributes.circleOrPoly == "polygon"?"visible":"hidden";})
@@ -219,12 +231,19 @@ function ShowGraph(){
 			.attr("points",function(d){return d.attributes.polypoints;})
 			.on("click",function(d){
 				if(d.attributes.hasOwnProperty("clickEvent")){
-					return self.functionValues[d.attributes.clickEvent]();
-					//return d.attributes.clickEvent(d);
+					return self.functionValues[d.attributes.clickEvent](d.attributes.clickParam);
 				}
-			}).append("svg:title").text(function(d, i){ 
+			})
+			.on("contextmenu",function(d){
+				if(d.attributes.hasOwnProperty("contextmenuEvent")){
+					return self.functionValues[d.attributes.contextmenuEvent](d.attributes.contextmenuParam);
+				}
+			})
+			.append("svg:title").text(function(d, i){ 
 				return d.attributes.title; 
 			});
+			
+			
 		//////////////////////////////////////////////////		  
 			
 			
