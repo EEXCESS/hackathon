@@ -1,16 +1,16 @@
 
 var g= null;
 var linecount = 0;
-	
+var optionVar =null;
+
 function MakeGraph(){
-	g = new ActionGraph();	
 	
-	g.build.show.ZoomAction = function(){
-		d3.select('#popup_menu').style("display", "none");
-	}
-	 
+	g = new ActionGraph();	
+
 	g.build.show.functionValues = functions;
- 
+	//g.build.show.setStore = true;
+	
+	
 	g.changeOption({	
 		svg:{
 			width:{value:1000},
@@ -22,8 +22,26 @@ function MakeGraph(){
 		},
 		force:{//3000
 			charge:{value:-250}
-		}});
+		}
+	});
+	
+	if(optionVar != null){
+		g.changeOption({
+			vis:{
+				trans:{
+					x:{value:optionVar.vis.trans.x.value},
+					y:{value:optionVar.vis.trans.y.value}				
+				},
+				scale:{value:optionVar.vis.scale.value}
+			}
+		});
+	}
+	
+	optionVar = g.build.show.option;
 
+	g.build.show.ZoomAction = function(){
+		d3.select('#popup_menu').style("display", "none");
+	}
 
  
 	if(wordHistory.length == 0){

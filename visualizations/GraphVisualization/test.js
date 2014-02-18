@@ -31,8 +31,6 @@ d3.select('#gotoresults').on("click", function () {
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		if (request.method === 'newSearchTriggered') {
-			
-			
 			console.log(request.data);
 
 			Object.keys(request.data.results.results).forEach(function(arrayIndex){
