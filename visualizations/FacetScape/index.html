@@ -8,7 +8,73 @@
     <script type="text/javascript" src="../../libs/clipper_unminified.js" charset="utf-8"></script>
     <script type="text/javascript" src="js/facetScape.js" charset="utf-8"></script>
     <script type="text/javascript" src="js/VoronoiPartitioner.js" charset="utf-8"></script>
+
+    <script type="text/javascript" src="../../libs/rating/jquery.raty.min.js"></script>
+    <script type="text/javascript" src="../../libs/jquery-ui/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../../libs/fancybox/jquery.fancybox.js"></script>
+    <script type="text/javascript" src="../../common_js/searchResultList.js"></script>
+
+    <!--<link rel="stylesheet" href="../../eexcess.css" />-->
+    <link rel="stylesheet" href="../../media/css/searchResultList.css" />
+    <!--<link rel="stylesheet" href="../../libs/jquery-ui/jquery-ui.css" />-->
+    <!--<link rel="stylesheet" href="../../libs/fancybox/jquery.fancybox.css" />-->
     <link rel="stylesheet" type="text/css" href="facetScape.css">
+    <style>
+        body,html {
+            height:100%;
+            margin:0;
+            padding:0;
+            overflow: hidden;
+            font-family: Lucida, Lucida Grande, Verdana,Arial,sans-serif;
+        }
+
+        body {
+            /*background-image: url('../../media/watermark.png') ;*/
+            /*background-size: auto 100%;*/
+            font-size:0.7em;
+            /*background-repeat: repeat-y;*/
+
+        }
+
+        body a{
+            text-decoration:none;
+            color: #529CBF;
+        }
+        .eexcess_submit_btn{
+            background-color: #0A3B53;/*494949;*/
+            color:#ffffff;
+            font-weight:bold;
+            height:22px;
+            border: solid #70C896 1px;
+        }
+        .back_panel {
+            width:50px;
+            height:100%;
+            float:left;
+            background-color:#ffffff;
+        }
+        .back_panel:hover {
+            background-color:#1F914F;
+        }
+        .block_list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .block_list li {
+            padding-left: 5px;
+            padding-top: 2px;
+            margin-left:5px;
+            margin-right:5px;
+            background: rgba(255,255,255,0.7);
+            border-bottom: 1px dotted green;
+        }
+
+        .block_list li:hover{
+            border: 2px solid #E4A55C;
+        }
+    </style>
 </head>
 <body>
 <div id="facetScape"></div>

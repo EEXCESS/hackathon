@@ -77,6 +77,7 @@ chrome.runtime.onMessage.addListener(
                 case 'fancybox':
                     // open fancybox preview of the url provided in request.data
                     $('<a href="' + request.data + '"></a>').fancybox({
+                        'autoSize':false,
                         'type': 'iframe',
                         'width': '90%',
                         'height': '90%',

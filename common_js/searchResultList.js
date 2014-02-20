@@ -146,7 +146,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
                 title = 'no title';
             }
             var pos = i + offset;
-            var li = $('<li data-pos="' + pos + '"></li>');
+            var li = $('<li data-pos="' + pos + '" data-id="' + item.id + '"></li>');
 
             _list.append(li);
 
@@ -155,7 +155,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
             _rating(raty, item.uri, item.rating);
             li.append(raty);
 
-            var containerL = $('<div class="resCtL"></div');
+            var containerL = $('<div class="resCtL"></div>');
             li.append(containerL);
             containerL.append(_link(item.uri, img, '<img class="eexcess_previewIMG" src="' + img + '" />'));
 
