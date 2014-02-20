@@ -58,16 +58,19 @@ function MakeGraph(){
 
 			g.build.addNode("nodeId"+nodename);
 			g.build.setNodeProperties("nodeId"+nodename,{
-				xscale:5,yscale:5,text:TextCutter(text,10,9) + " : 1" ,title:text,fill:"green"
+				"nodeGraph":{xscale:5,yscale:5,fill:"green"},
+				"nodeD3":{title:text,text:TextCutter(text,10,9) + " : 1" }//,
+				//"nodeEvents":{click:{name:"TestFunc"}}
 			}); 
 		}else{
-			var currentNodeProperty = g.build.getNodeProperties("nodeId"+nodename);
+		
+			var currentNodeProperty = g.build.getNodeProperties("nodeId"+nodename)["nodeGraph"];
 			var newXscale = currentNodeProperty.xscale+1;
 			var newYscale = currentNodeProperty.yscale+1;
 			
 			g.build.setNodeProperties("nodeId"+nodename,{
-				xscale:newXscale,yscale:newYscale,
-				text:(currentNodeProperty.xscale-4)+ " : "+TextCutter(text,10,9)   ,title:(currentNodeProperty.xscale-4)+ " : "+text
+				"nodeGraph":{xscale:newXscale,yscale:newYscale},
+				"nodeD3":{text:(currentNodeProperty.xscale-4)+ " : "+TextCutter(text,10,9),title:(currentNodeProperty.xscale-4)+ " : "+text}
 			}); 
 
 
@@ -83,11 +86,11 @@ function MakeGraph(){
 	//First Node for link
 	g.build.addNodeWithLink("nodeId"+wordHistory[0],"subNodeId"+0,"subLinkId"+0);
 	g.build.setLinkProperties("subLinkId"+0,{
-		distance:10*g.build.getNodeProperties("nodeId"+wordHistory[0]).xscale});
+		"linkD3":{distance:10*g.build.getNodeProperties("nodeId"+wordHistory[0])["nodeGraph"].xscale}});
 	g.build.setNodeProperties("subNodeId"+0,{
-		xscale:3,yscale:3,fill:"red",
-		text:"start",title:"start",
-		stroke:"black","stroke-width":2});
+		"nodeGraph":{xscale:3,yscale:3,fill:"red",stroke:"black","stroke-width":2},
+		"nodeD3":{text:"start",title:"start"}
+		});
 	//debug
 	//g.build.setNodeProperties("subNodeId"+0,{text:"subNodeId"+0,title:"subNodeId"+0});
 	
@@ -95,23 +98,28 @@ function MakeGraph(){
 		sourceNode = wordHistory[nodeCount-1];
 		targetNode = wordHistory[nodeCount];
 		
-		var targetNodeProperty = g.build.getNodeProperties("nodeId"+targetNode);
-		var sourceNodeProperty = g.build.getNodeProperties("nodeId"+sourceNode);
+		var targetNodeProperty = g.build.getNodeProperties("nodeId"+targetNode)["nodeGraph"];
+		var sourceNodeProperty = g.build.getNodeProperties("nodeId"+sourceNode)["nodeGraph"];
 		
 		g.build.addNodeWithLink("nodeId"+targetNode,"subNodeId"+nodeCount,"subLinkId"+nodeCount);
-		g.build.setLinkProperties("subLinkId"+nodeCount,{distance:10+targetNodeProperty.xscale*5});
+		g.build.setLinkProperties("subLinkId"+nodeCount,{"linkD3":{distance:10+targetNodeProperty.xscale*5}});
 		//debug
 		//g.build.setNodeProperties("subNodeId"+nodeCount,{text:"subNodeId"+nodeCount,title:"subNodeId"+nodeCount});
 
-		g.build.setNodeProperties("subNodeId"+nodeCount,{fill:color(nodeCount)});
+		g.build.setNodeProperties("subNodeId"+nodeCount,{"nodeGraph":{fill:color(nodeCount)}});
 		g.build.addLink("connectionLink"+nodeCount,"subNodeId"+(nodeCount-1),"subNodeId"+nodeCount);
 		
 		
-		g.build.setLinkProperties("connectionLink"+nodeCount,{color:color(nodeCount),
-			text:nodeCount,title:nodeCount + " of " + wordHistory.length,
-			width:2,distance:/*300*/+10*(targetNodeProperty.xscale+sourceNodeProperty.xscale)});
+		g.build.setLinkProperties("connectionLink"+nodeCount,{
+			"linkGraph":{stroke:color(nodeCount)},
+			"linkD3":{
+				text:nodeCount,title:nodeCount + " of " + wordHistory.length,
+				width:2,distance:10*(targetNodeProperty.xscale+sourceNodeProperty.xscale)
+				}
+			});
+			//300
 		if(sourceNode == targetNode){
-			g.build.setLinkProperties("connectionLink"+nodeCount,{strength:0});  
+			g.build.setLinkProperties("connectionLink"+nodeCount,{"linkD3":{strength:0}});  
 			//g.build.setLinkProperties("connectionLink"+nodeCount,{
 			//	strength:0,color:color(nodeCount),text:nodeCount,title:nodeCount,width:3
 			//});  
@@ -119,47 +127,50 @@ function MakeGraph(){
 	}
 	
 	//LastNode
-	g.build.setNodeProperties("subNodeId"+(wordHistory.length-1),{xscale:3,yscale:3,fill:"blue",text:"finish",title:"finish",
-		stroke:"black","stroke-width":2});
+	g.build.setNodeProperties("subNodeId"+(wordHistory.length-1),{
+		"nodeGraph":{xscale:3,yscale:3,fill:"blue",stroke:"black","stroke-width":2},
+		"nodeD3":{text:"finish",title:"finish"}});
+	
+	
 	
 	
 	// get results for each keyword
+	
 	var text="";
 	Object.keys(wordsWithResults).forEach(function(keyword){
 		Object.keys(wordsWithResults[keyword].results).forEach(function(result){	
 		
 			text = wordsWithResults[keyword].results[result].title;
 			storeDetailsForShorttime[wordsWithResults[keyword].results[result].uri] = wordsWithResults[keyword].results[result];
-		
-			/*
-			console.log("-------------");
-			console.log(result);
-			console.log(keyword);
-			*/
-			var currentNodeProperty = g.build.getNodeProperties("nodeId"+keyword);
-			g.build.addNodeWithLink("nodeId"+keyword,"listId"+linecount,"listId"+linecount);
+
+			//console.log("-------------");
+			//console.log(result);
+			//console.log(keyword);
+			
+			var currentNodeProperty = g.build.getNodeProperties("nodeId"+keyword)["nodeGraph"];
+			g.build.addNodeWithLink("nodeId"+keyword,"ResultId"+linecount,"listId"+linecount);
 			var paramData ={
 				text:text,
-				nodeId:"listId"+linecount,
+				nodeId:"ResultId"+linecount,
 				currentKey:result,
 				keyword:keyword
 				};
-			g.build.setNodeProperties("listId"+linecount,{
-				xscale:2,yscale:2,fill:"orange",text:TextCutter(text,10,9),title:text,
-				"contextmenuEvent":"MakePopupMenu","contextmenuParam":JSON.stringify(paramData)
+			g.build.setNodeProperties("ResultId"+linecount,{
+				"nodeGraph":{xscale:2,yscale:2,fill:"orange"},
+				"nodeD3":{text:TextCutter(text,10,9),title:text},
+				"nodeEvents":{contextmenu:{name:"MakePopupMenu",param:JSON.stringify(paramData)}}
 			}); 
 
 			// get node Properties with user mouse interactions
 			if(wordsWithResults[keyword].userActions.hasOwnProperty(result)){
-				g.build.setNodeProperties("listId"+linecount,{
-					stroke:"black","stroke-width":"3"
+				g.build.setNodeProperties("ResultId"+linecount,{
+					"nodeGraph":{stroke:"black","stroke-width":3}
 				}); 
 			}
 			
 			g.build.setLinkProperties("listId"+linecount,{
-				width:2,
-				distance:75+currentNodeProperty.xscale*5,
-				color:"yellow"
+				"linkD3":{width:2,distance:75+currentNodeProperty.xscale*5},
+				"linkGraph":{stroke:"yellow"}
 			});   
 			
 			linecount++;

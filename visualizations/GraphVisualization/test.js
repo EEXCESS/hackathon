@@ -39,24 +39,24 @@ chrome.runtime.onMessage.addListener(
 				text = request.data.results.results[arrayIndex].title;
 				storeDetailsForShorttime[request.data.results.results[arrayIndex].uri] = request.data.results.results[arrayIndex];
 
-				g.build.addNodeWithLink(dataParameter.nodeId,"listId"+linecount,"listId"+linecount);
+				g.build.addNodeWithLink(dataParameter.nodeId,"ResultId"+linecount,"listId"+linecount);
 				var paramData ={
 					text:text,
-					nodeId:"listId"+linecount,
+					nodeId:"ResultId"+linecount,
 					currentKey:request.data.results.results[arrayIndex].uri
 					};
 				//var paramData ={
 				//	currentKey:result,
 				//	keyword:keyword
 				//};
-				g.build.setNodeProperties("listId"+linecount,{
-					xscale:2,yscale:2,fill:"orange",text:TextCutter(text,10,9),title:text,
-					"contextmenuEvent":"MakePopupMenu","contextmenuParam":JSON.stringify(paramData)
+				g.build.setNodeProperties("ResultId"+linecount,{
+					"nodeGraph":{xscale:2,yscale:2,fill:"orange"},
+					"nodeD3":{text:TextCutter(text,10,9),title:text},
+					"nodeEvents":{"contextmenu":{name:"MakePopupMenu","param":JSON.stringify(paramData)}}
 				}); 
 				g.build.setLinkProperties("listId"+linecount,{
-					width:2,
-					distance:75,
-					color:"yellow"
+					"linkD3":{width:2,distance:75},
+					"linkGraph":{stroke:"yellow"}
 				}); 
 				
 			});
@@ -107,6 +107,9 @@ function ClearDetailData(){
 };
 
 var functions = {
+	TestFunc:function(){
+		console.log("ASDF");
+	},
 	MakePopupMenu:function(paramData){
 		//console.log(paramData);
 		if (d3.event.pageX || d3.event.pageY) {
