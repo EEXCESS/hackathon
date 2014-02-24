@@ -15,7 +15,8 @@ EEXCESS.initDB = function() {
     console.log('init DB');
 
     // initialize connection
-    var req = indexedDB.open('eexcess_db', 39);
+
+    var req = indexedDB.open('eexcess_db', 41);
     console.log('opening');
 
     // update or create db

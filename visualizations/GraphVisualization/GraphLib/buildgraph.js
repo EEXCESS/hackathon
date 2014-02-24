@@ -17,9 +17,18 @@ function BuildGraph(){
 
 	this.addNode = function(name,obj){	
 		if(this.show.nodeDict.hasOwnProperty(name) == false){
-			var node = {};node.attributes={};
-			node.attributes.circleOrPoly = "circle";
-			node.attributes.polypoints = "-5,-5 -5,5 5,5 5,-5";
+			var node = {};
+			node.attributes={
+				"nodeGraph":{},
+				"nodeText":{},
+				"nodeEvents":{},
+				"nodeD3":{}
+			};
+			
+			node.attributes.nodeD3.circleOrPoly = "circle";
+			node.attributes.nodeD3.polypoints = "-5,-5 -5,5 5,5 5,-5";
+			node.attributes.nodeD3.name = name;
+			
 			if(obj != undefined){
 				node = obj;
 			}
@@ -42,26 +51,37 @@ function BuildGraph(){
 		return this.show.nodes.indexOf(this.show.nodeDict[name].obj);
 	}
 	
-	this.setNodeProperties = function(name,properties){
-		var index = this.getNodeIndex(name);
-		for(element in properties){
-			this.show.nodes[index]["attributes"][element] = properties[element];
-		}
+	this.getNodeProperties = function(name){
+		return this.show.nodes[this.getNodeIndex(name)]["attributes"];
 	}
 	
-	this.deleteNodeProperties= function(name,keyArray){
+	this.setNodeProperties = function(name,partitions){
 		var index = this.getNodeIndex(name);
-		var currentArrayElement;
-		for(element in keyArray){
-			currentArrayElement = keyArray[element];
-			delete this.show.nodes[index]["attributes"][currentArrayElement];
-		}
+
+		Object.keys(partitions).forEach(function(part){
+			Object.keys(partitions[part]).forEach(function(attribute){
+				self.show.nodes[index]["attributes"][part][attribute] = partitions[part][attribute];
+			});
+		});
 	}
 	
+	this.deleteNodeProperties = function(name,partitions){
+		var index = this.getNodeIndex(name);
+		Object.keys(partitions).forEach(function(part){
+			Object.keys(partitions[part]).forEach(function(keyArray){
+				delete self.show.nodes[index]["attributes"][part][partitions[part][keyArray]];
+			});
+		});
+	}
+	
+	//this method is buggy, if you want delete many nodes, store the added node in a row
+	// reverted the row and delete the nodes.
+	//bug fix, i hope
 	this.deleteNode = function(name){
 		var index = this.getNodeIndex(name);
 		this.show.nodes.splice(index, 1);
 		
+/*
 		//delete links
 		var toSplice;
 		toSplice = this.show.links.filter(							
@@ -73,6 +93,7 @@ function BuildGraph(){
 				//this.links.splice(links.indexOf(l), 1); 
 				currentObject.links.splice(currentObject.links.indexOf(l), 1); 
 		});
+		*/
 		
 		//delete node and links
 		var nodeElement = this.show.nodeDict[name];
@@ -80,6 +101,8 @@ function BuildGraph(){
 		var linkElement;
 		var currentNodeName;
 		for(var linkName in nodeElement.links){
+			this.deleteLink(linkName);
+			/*
 			linkElement = this.show.linkDict[linkName];
 			if(linkElement.sourcenode != name){
 				currentNodeName = linkElement.sourcenode;
@@ -92,33 +115,54 @@ function BuildGraph(){
 			
 			//delete Links
 			delete this.show.linkDict[linkName];
+			*/
 		}
+
 		// delete selected node.
 		delete this.show.nodeDict[name];
 	}
 	
-	
-	
+
 
 	this.addLink = function(linkName,sourceNode,targetNode,obj){
 		if(this.show.linkDict.hasOwnProperty(linkName) == false &&
 			this.show.nodeDict.hasOwnProperty(sourceNode) == true &&
 			this.show.nodeDict.hasOwnProperty(targetNode) == true){
-		
-			var link = {};
+			
 			var sn = this.show.nodes[this.getNodeIndex(sourceNode)];
 			var tn = this.show.nodes[this.getNodeIndex(targetNode)];
-
+			
+			var link = {};
+			link.attributes = {
+				"linkGraph":{},
+				"linkText":{},
+				"linkEvents":{},
+				"linkD3":{}
+			};
+			
+			
+			link.attributes.linkD3.name = linkName;
+			link.source = sn;
+			link.target = tn;
+			link.attributes.linkD3.distance = this.show.option.force.linkDistance.value;
+			link.attributes.linkD3.strength = this.show.option.force.linkStrength.value;
+			link.attributes.linkGraph["stroke-width"] = 1; 
+			link.attributes.linkGraph["stroke"] = "#000000";
+			
+			/*
 			///////////////////
-			if(link.distance == undefined || link.width == undefined || link.color == undefined){
+			if(link.distance == undefined || link.width == undefined || 
+				link.color == undefined || link.strength == undefined){
 				link.source = sn; link.target = tn;
 				link.distance = this.show.option.force.linkDistance.value;
+				link.strength = this.show.option.force.linkStrength.value;
+				
 				link.width = 1; link.color = "#000000";
 			}else{////???
 				link.source = sn;
 				link.target = tn;
 			}
-			
+			*/
 			if(obj != undefined){
 				link = obj;
 				link.source = sn;
@@ -128,9 +172,14 @@ function BuildGraph(){
 
 			
 			this.show.force.linkDistance(function(d) { 
-				return d.distance;
+				return d.attributes.linkD3.distance;
 			});
 			
+			this.show.force.linkStrength(function(d) { 
+				return d.attributes.linkD3.strength;
+			});
+			
+	
 			var linkElement = {
 				"obj":link,
 				"sourcenode":sourceNode,
@@ -141,7 +190,6 @@ function BuildGraph(){
 			// sn = sourcenode, tn targetnode
 			this.show.nodeDict[sourceNode].links[linkName] = "sn";
 			this.show.nodeDict[targetNode].links[linkName] = "tn";
-			
 		}
 	};
 	
@@ -158,20 +206,23 @@ function BuildGraph(){
 		return this.show.links.indexOf(this.show.linkDict[name].obj);
 	}
 	
-	this.setLinkProperties = function(name,properties){
+	this.setLinkProperties = function(name,partitions){
 		var index = this.getLinkIndex(name);
-		for(element in properties){
-			this.show.links[index][element] = properties[element];
-		}
+
+		Object.keys(partitions).forEach(function(part){
+			Object.keys(partitions[part]).forEach(function(attribute){
+				self.show.links[index]["attributes"][part][attribute] = partitions[part][attribute];
+			});
+		});
 	}
 	
-	this.deleteLinkProperties= function(name,keyArray){
+	this.deleteLinkProperties = function(name,partitions){
 		var index = this.getLinkIndex(name);
-		var currentArrayElement;
-		for(element in keyArray){
-			currentArrayElement = keyArray[element];
-			delete this.show.links[index][currentArrayElement];
-		}
+		Object.keys(partitions).forEach(function(part){
+			Object.keys(partitions[part]).forEach(function(keyArray){
+				delete self.show.links[index]["attributes"][part][partitions[part][keyArray]];
+			});
+		});
 	}
 
 	this.deleteLink = function(name){
