@@ -1,244 +1,172 @@
-/*
-fun();
-function fun(){
-	//alert("test");
-	//var data = 
+
+function GetValueNumber(stringVal,maxNumberInString){
+	return stringVal == maxNumberInString ? Number.MAX_VALUE : parseInt(stringVal);
 }
-*/
 
-	$(function(){
-
-				var funcs = {
-					f1:function(d) {
-						alert("X");
-					},	
-					f2:function(d) {
-						alert(JSON.stringify(d));
-					},	
-					f3:function(d) {
-						alert("!");
-					},
-					f4:function(d){}
-				};		
-					
-					
-					
-				var g = new ActionGraph();
-				g.build.show.functionValues = funcs;
-				g.build.show.storeId = "data";
-				g.build.show.setStore = true;
-
-				if(typeof(Storage)!=="undefined"){
-					if (sessionStorage.getItem("data")){
-					}
-					else{
-						sessionStorage.setItem("data",JSON.stringify(g.build.show.serialize));
-					}
-				}
-				else{
-				  ///no Storage
-				}
-
-
-				  
-				var jsonObj = JSON.parse(sessionStorage.getItem("data"));
-
-				g.build.addNodes(jsonObj.nodeDict);
-				g.build.addLinks(jsonObj.linkDict);
-
-
-				g.changeOption(jsonObj.option);
-
-
-				g.build.show.setStore = false;
-				g.build.show.restart();
-
-				g.build.show.setStore = true;
-				
-				
-				
-/*				
+function TextCutter(text,sizeCompare,sizeCut){
+	return text.length < sizeCompare ? text : text.substring(0,sizeCut)+"..."; 
+}
 	
-chrome.runtime.onMessage.addListener(
-        function(request, sender, sendResponse) {
-            if (request.method === 'newSearchTriggered') {
-                console.log(request.data);
-							
-					
-					//build search graph
-					var objTest = {};
-					if(typeof(Storage)!=="undefined"){
-						if (sessionStorage.getItem("dataTest")){
-						}
-						else{
-							sessionStorage.setItem("dataTest",JSON.stringify(objTest));
-						}
-					}
-					else{
-					  ///no Storage
-					}
-					objTest = JSON.parse(sessionStorage.getItem("dataTest"));
-					console.log(objTest);
-					
-					
-					
-					if(Object.keys(objTest).length == 0){
-						g.build.addNode(request.data.query);
-						g.build.setNodeProperties(request.data.query,{"xscale":2,"yscale":2,"text":request.data.query}); 
-						objTest["lineCount"] = 0;
-					}else{
-						g.build.addNode(request.data.query);
-						g.build.setNodeProperties(request.data.query,{"xscale":2,"yscale":2,"text":request.data.query}); 
-						
-						g.build.addLink("line"+objTest["lineCount"],objTest["lastNodeName"],request.data.query);     
-						g.build.setLinkProperties("line"+objTest["lineCount"],{"text":"line"+objTest["lineCount"],"color":"#00ffff","width":2});  
-						objTest["lineCount"] = objTest["lineCount"]+1;
-					}
+// close Popupmeu	
+d3.select('#closepopupmenu').on("click", function () {
+    d3.select('#popup_menu').style("display", "none");
+});
 
-					
-					g.build.show.restart();
-					
-					objTest["lastNodeName"] = request.data.query;
-					
-
-					sessionStorage["dataTest"] = JSON.stringify(objTest);
-					
-					
-					//Senario1 begin
-					$("#senario1").click(function(){
-						g.build.addNode("n1");
-						g.build.setNodeProperties("n1",{"xscale":2,"yscale":2,"text":"n1"}); 
-						g.build.addNode("n2");
-						g.build.setNodeProperties("n2",{"text":"n2"}); 
-						g.build.addNode("n3");
-						g.build.setNodeProperties("n3",{"text":"n3","fill":"#ff00ff"}); 
-						g.build.addNode("n4");
-						g.build.setNodeProperties("n4",{"text":"n4","fill":"#0000ff","xscale":3,"yscale":1}); 
-						
-						
-						g.build.addLink("l1","n1","n2");     
-						g.build.setLinkProperties("l1",{"text":"l1","color":"#00ffff","width":2});   
-						g.build.addLink("l2","n1","n3");     
-						g.build.setLinkProperties("l2",{"text":"l2","width":3}); 
-						g.build.addLink("l3","n1","n4");     
-						g.build.setLinkProperties("l3",{"text":"l3"}); 
-						
-						g.build.addLink("l4","n2","n3");     
-						g.build.setLinkProperties("l4",{"text":"l4","color":"#00ff00"});   
-						g.build.addLink("l5","n2","n4");     
-						g.build.setLinkProperties("l5",{"text":"l5","color":"#00ff00","width":3}); 
-						
-						
-						g.build.show.restart();
-					});	
-					//Senario1 end	
-						
-			
-			
-				
-            }
-        }
-);
-*/
-
-
+//keyword paramter
+var dataParameter = {};
 
 	
+var storeDetailsForShorttime = {};	
+//get results
+d3.select('#gotoresults').on("click", function () {
+	//start search with asynchronous call.
 	chrome.runtime.sendMessage(
-	chrome.i18n.getMessage('@@extension_id'), 
-	{
-		method: {
-			parent: 'model', 
-			func: 'getResults'
-		},
-	data: null
-	}, 
-	function(reqResult) {
-	var request = {};
-	request.data = reqResult;
-					//build search graph
-					var objTest = {};
-					if(typeof(Storage)!=="undefined"){
-						if (sessionStorage.getItem("dataTest")){
-						}
-						else{
-							sessionStorage.setItem("dataTest",JSON.stringify(objTest));
-						}
-					}
-					else{
-					  ///no Storage
-					}
-					objTest = JSON.parse(sessionStorage.getItem("dataTest"));
-					console.log(objTest);
-					
-					
-					
-					if(Object.keys(objTest).length == 0){
-						g.build.addNode(request.data.query);
-						g.build.setNodeProperties(request.data.query,{"xscale":2,"yscale":2,"text":request.data.query}); 
-						objTest["lineCount"] = 0;
-					}else{
-						g.build.addNode(request.data.query);
-						g.build.setNodeProperties(request.data.query,{"xscale":2,"yscale":2,"text":request.data.query}); 
-						
-						g.build.addLink("line"+objTest["lineCount"],objTest["lastNodeName"],request.data.query);     
-						g.build.setLinkProperties("line"+objTest["lineCount"],{
-						//"text":"line"+objTest["lineCount"],
-						"color":"#00ffff","width":2});  
-						objTest["lineCount"] = objTest["lineCount"]+1;
-					}
-
-					
-					g.build.show.restart();
-					
-					objTest["lastNodeName"] = request.data.query;
-					
-
-					sessionStorage["dataTest"] = JSON.stringify(objTest);
-					
-					
-					//Senario1 begin
-					$("#senario1").click(function(){
-						g.build.addNode("n1");
-						g.build.setNodeProperties("n1",{"xscale":2,"yscale":2,"text":"n1"}); 
-						g.build.addNode("n2");
-						g.build.setNodeProperties("n2",{"text":"n2"}); 
-						g.build.addNode("n3");
-						g.build.setNodeProperties("n3",{"text":"n3","fill":"#ff00ff"}); 
-						g.build.addNode("n4");
-						g.build.setNodeProperties("n4",{"text":"n4","fill":"#0000ff","xscale":3,"yscale":1}); 
-						
-						
-						g.build.addLink("l1","n1","n2");     
-						g.build.setLinkProperties("l1",{"text":"l1","color":"#00ffff","width":2});   
-						g.build.addLink("l2","n1","n3");     
-						g.build.setLinkProperties("l2",{"text":"l2","width":3}); 
-						g.build.addLink("l3","n1","n4");     
-						g.build.setLinkProperties("l3",{"text":"l3"}); 
-						
-						g.build.addLink("l4","n2","n3");     
-						g.build.setLinkProperties("l4",{"text":"l4","color":"#00ff00"});   
-						g.build.addLink("l5","n2","n4");     
-						g.build.setLinkProperties("l5",{"text":"l5","color":"#00ff00","width":3}); 
-						
-						
-						g.build.show.restart();
-					});	
-					//Senario1 end	
-						
-			
-	
-	}
+		chrome.i18n.getMessage('@@extension_id'),{
+			method: {parent: 'model', func: 'query'}, data: [{weight:1,text:dataParameter.text}]
+		}
 	);
+	d3.select('#popup_menu').style("display", "none");
+});
+//search finished with results, asynchronous call
+chrome.runtime.onMessage.addListener(
+	function(request, sender, sendResponse) {
+		if (request.method === 'newSearchTriggered') {
+			console.log(request.data);
+
+			Object.keys(request.data.results.results).forEach(function(arrayIndex){
+				var text="";
+				linecount++
+				text = request.data.results.results[arrayIndex].title;
+				storeDetailsForShorttime[request.data.results.results[arrayIndex].uri] = request.data.results.results[arrayIndex];
+
+				g.build.addNodeWithLink(dataParameter.nodeId,"ResultId"+linecount,"listId"+linecount);
+				var paramData ={
+					text:text,
+					nodeId:"ResultId"+linecount,
+					currentKey:request.data.results.results[arrayIndex].uri
+					};
+				//var paramData ={
+				//	currentKey:result,
+				//	keyword:keyword
+				//};
+				g.build.setNodeProperties("ResultId"+linecount,{
+					"nodeGraph":{xscale:2,yscale:2,fill:"orange"},
+					"nodeD3":{text:TextCutter(text,10,9),title:text},
+					"nodeEvents":{"contextmenu":{name:"MakePopupMenu","param":JSON.stringify(paramData)}}
+				}); 
+				g.build.setLinkProperties("listId"+linecount,{
+					"linkD3":{width:2,distance:75},
+					"linkGraph":{stroke:"yellow"}
+				}); 
+				
+			});
+			g.build.show.restart();
+			
+		}
+	}
+);
+
+
+//get details
+d3.select('#gotodetails').on("click", function () {
+
+	ClearDetailData();
+
+	
+	var detailData = storeDetailsForShorttime[dataParameter.currentKey];
+	//console.log(detailData);
+	
+	$("#title_data").val(detailData.title);
+	$("#link_data").text(detailData.uri).attr("href",detailData.uri);//.val(TextCutter(detailData.uri,20,19));
+	$("#image_data").attr("src",detailData.previewImage);
+	$("#id_data").text(detailData.id);
+	
+	$("#language_data").text(detailData.facets.language);
+	$("#partner_data").text(detailData.facets.partner);
+	$("#provider_data").text(detailData.facets.provider);
+	$("#type_data").text(detailData.facets.type);
+	$("#year_data").text(detailData.facets.year);
 	
 	
+	d3.select('#popup_menu').style("display", "none");
+});
+
+
+
+
+//clear data
+d3.select('#cleardata').on("click", function () {
+	ClearDetailData();
+});
+
+function ClearDetailData(){
+	$("#title_data").val("");
+	$("#link_data").text("").attr("href","");
+	$("#image_data").attr("src","");
+	$("#id_data, #language_data, #partner_data, #provider_data, #type_data, #year_data").text("");
+};
+
+var functions = {
+	TestFunc:function(){
+		console.log("ASDF");
+	},
+	MakePopupMenu:function(paramData){
+		//console.log(paramData);
+		if (d3.event.pageX || d3.event.pageY) {
+			var x = d3.event.pageX;
+			var y = d3.event.pageY;
+		} else if (d3.event.clientX || d3.event.clientY) {
+			var x = d3.event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+			var y = d3.event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+		}
+
+		d3.select('#popup_menu')
+			.style('position', 'absolute')
+			.style('left', x + 'px')
+			.style('top', y + 'px')
+			.style('display', 'block');
+
+		d3.event.preventDefault();
+		dataParameter = JSON.parse(paramData);
+	}
+};
 	
+
+
+// rebuild graph
+$("#redraw").click(function(){
+	wordsWithResults = {};
+	wordHistory = [];
+	uniqueWordsResult =[];
+
+	db.onsuccess();
 	
-	
-	
-		});
-	
-/*
+});
+
+
+
+
+
+
+//Data for Belgin////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//getdata from database
+$("#getdata").click(function(){
+	window.URL = window.URL || window.webkitURL;
+
+	var logString = JSON.stringify(getData);//.join("\r\n");
+	var downloadBlob = new Blob([logString], {type: 'text/plain'});
+
+	$("#getdata").attr("href", window.URL.createObjectURL(downloadBlob));
+	$("#getdata").attr("download", "logdata.txt");
+
+});
+
+
+
+//get current data
+var getData = {};
 chrome.runtime.sendMessage(
 	chrome.i18n.getMessage('@@extension_id'), 
 	{
@@ -246,108 +174,14 @@ chrome.runtime.sendMessage(
 			parent: 'model', 
 			func: 'getResults'
 		},
-	data: null
+		data: null
 	}, 
 	function(reqResult) {
 		//alert("test X");
-		console.log(reqResult);
-		// do something with 'reqResult'
-		
-		$(function(){
-			var funcs = {
-				f1:function(d) {
-					alert("X");
-				},	
-				f2:function(d) {
-					alert(JSON.stringify(d));
-				},	
-				f3:function(d) {
-					alert("!");
-				},
-				f4:function(d){}
-			};		
-				
-				
-				
-			var g = new ActionGraph();
-			g.build.show.functionValues = funcs;
-			g.build.show.storeId = "data";
-			g.build.show.setStore = true;
-			
-			if(typeof(Storage)!=="undefined"){
-				if (sessionStorage.getItem("data")){
-				}
-				else{
-					sessionStorage.setItem("data",JSON.stringify(g.build.show.serialize));
-				}
-			}
-			else{
-			  ///no Storage
-			}
-			
-
-			  
-			var jsonObj = JSON.parse(sessionStorage.getItem("data"));
-
-			g.build.addNodes(jsonObj.nodeDict);
-			g.build.addLinks(jsonObj.linkDict);
-			
-			
-			g.changeOption(jsonObj.option);
-			
-		
-			g.build.show.setStore = false;
-			g.build.show.restart();
-
-			g.build.show.setStore = true;
-			
-			//build search graph
-			
-			if(sessionStorage["lastNode"] == null){
-			
-			}else{
-			
-			}
-			g.build.addNode("Begin search");
-			g.build.setNodeProperties("n1",{"xscale":2,"yscale":2,"text":"n1"}); 
-			g.build.addLink("l1","n1","n2");     
-			g.build.setLinkProperties("l1",{"text":"l1","color":"#00ffff","width":2});  
-
-			
-			
-			//Senario1 begin
-			$("#senario1").click(function(){
-				g.build.addNode("n1");
-				g.build.setNodeProperties("n1",{"xscale":2,"yscale":2,"text":"n1"}); 
-				g.build.addNode("n2");
-				g.build.setNodeProperties("n2",{"text":"n2"}); 
-				g.build.addNode("n3");
-				g.build.setNodeProperties("n3",{"text":"n3","fill":"#ff00ff"}); 
-				g.build.addNode("n4");
-				g.build.setNodeProperties("n4",{"text":"n4","fill":"#0000ff","xscale":3,"yscale":1}); 
-				
-				
-				g.build.addLink("l1","n1","n2");     
-				g.build.setLinkProperties("l1",{"text":"l1","color":"#00ffff","width":2});   
-				g.build.addLink("l2","n1","n3");     
-				g.build.setLinkProperties("l2",{"text":"l2","width":3}); 
-				g.build.addLink("l3","n1","n4");     
-				g.build.setLinkProperties("l3",{"text":"l3"}); 
-				
-				g.build.addLink("l4","n2","n3");     
-				g.build.setLinkProperties("l4",{"text":"l4","color":"#00ff00"});   
-				g.build.addLink("l5","n2","n4");     
-				g.build.setLinkProperties("l5",{"text":"l5","color":"#00ff00","width":3}); 
-				
-				
-				g.build.show.restart();
-			});	
-			//Senario1 end	
-				
-			
-		});
-		
-		
+		//console.log("- - - - -");
+		//console.log(reqResult);
+		getData = reqResult;
 	}
 );
-*/
+
+

@@ -14,14 +14,13 @@
             },
     "content_scripts": [
         {
-            "matches": ["<all_urls>"],
-            "exclude_matches": ["https://www.google.de/webhp?sourceid=chrome*"],
+            "matches": ["http://en.wikipedia.org/*","http://de.wikipedia.org/*","http://www.europeana1914-1918.eu/*"],
             "run_at":"document_end",
             "js": [
                 "libs/jquery-1.10.1.min.js",
                 "content.js"
             ],
-            "css": ["media/eexcess.css"]
+            "css": ["media/css/sidebar.css"]
         }
     ],
     

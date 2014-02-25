@@ -28,15 +28,6 @@ EEXCESS.extID = chrome.i18n.getMessage('@@extension_id');
  */
 EEXCESS.widgetVisible = false;
 
-//EEXCESS.preventer = (function() {
-//    $('body').prepend($('<div id="eexcess_preventer" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:999;background-color:black;text-align:center;opacity:0.9;"><h1 style="position:absolute;background-color:#1D904E;width:100%;text-align:center;color:white;font-size:16pt;padding:12pt;border-bottom:1px solid white;font-weight:normal">please specify and start a task before interacting</h1></div>'));
-//})();
-//// prevent execution of any action without a task started
-//chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'model', func: 'getTaskActive'}}, function(active) {
-//    if (!active) {
-//        $('#eexcess_preventer').show();
-//    }
-//});
 
 /**
  * Changes the widget's visibility to the provided value.
@@ -50,15 +41,13 @@ EEXCESS.handleWidgetVisibility = function(visible) {
     if (EEXCESS.widgetVisible !== visible) {
         if (visible) { // show widget
             var width = $(window).width() - 333;
-            $('#eexcess_widget').show();
-            $('#eexcess_preventer h1').css('width', width);
+            $('#eexcess_sidebar').show();
             $('html').css('overflow', 'auto').css('position', 'absolute').css('height', '100%').css('width', width + 'px');
             $('body').css('overflow-x', 'auto').css('position', 'relative').css('overflow-y', 'scroll').css('height', '100%');
         } else { // hide widget
-            $('#eexcess_widget').hide();
+            $('#eexcess_sidebar').hide();
             $('html').css('overflow', '').css('position', '').css('height', '').css('width', '');
             $('body').css('overflow-x', '').css('position', '').css('overflow-y', '').css('height', '');
-            $('#eexcess_preventer h1').css('width', '100%');
         }
         EEXCESS.widgetVisible = visible;
     }
@@ -70,19 +59,13 @@ EEXCESS.handleWidgetVisibility = function(visible) {
  * visibility in the background's model.
  */
 
-$('<iframe id="eexcess_widget" src="chrome-extension://' + EEXCESS.extID + '/widget/widget.html"></iframe>').appendTo('body');
+$('<iframe id="eexcess_sidebar" src="chrome-extension://' + EEXCESS.extID + '/widget/widget.html"></iframe>').appendTo('body');
 chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'model', func: 'visibility'}}, EEXCESS.handleWidgetVisibility);
 
 // Listen to messages from the background script
 chrome.runtime.onMessage.addListener(
         function(request, sender, sendResponse) {
             switch (request.method) {
-                case 'taskStarted':
-                    $('#eexcess_preventer').hide();
-                    break;
-                case 'taskStopped':
-                    $('#eexcess_preventer').show();
-                    break;
                 case 'visibility':
                     // change widget's visibility
                     EEXCESS.handleWidgetVisibility();
@@ -95,6 +78,7 @@ chrome.runtime.onMessage.addListener(
                 case 'fancybox':
                     // open fancybox preview of the url provided in request.data
                     $('<a href="' + request.data + '"></a>').fancybox({
+                        'autoSize':false,
                         'type': 'iframe',
                         'width': '90%',
                         'height': '90%',
@@ -531,7 +515,7 @@ EEXCESS.initiateQuery = function() {
             document,
             NodeFilter.SHOW_ALL,
             {acceptNode: function(node) {
-                    if (node.nodeType === 1 && node.getAttribute('id') === 'eexcess_widget') {
+                    if (node.nodeType === 1 && node.getAttribute('id') === 'eexcess_sidebar') {
                         // filter out EEXCESS content
                         return NodeFilter.FILTER_REJECT;
                     } else if (node.nodeType !== 3) {

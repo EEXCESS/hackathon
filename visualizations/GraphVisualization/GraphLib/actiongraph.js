@@ -65,16 +65,24 @@ function ActionGraph(){
 					"charge":function(){
 						forceVar.charge.value = jsonForce["charge"].value;
 						selfbuild.force.charge(forceVar.charge.value);
+					},"theta":function(){
+						forceVar.theta.value = jsonForce["theta"].value;
+						selfbuild.force.theta(forceVar.theta.value);
 					},"gravity":function(){
 						forceVar.gravity.value = jsonForce["gravity"].value;
 						selfbuild.force.gravity(forceVar.gravity.value);
 					},"linkDistance":function(){
 						forceVar.linkDistance.value = jsonForce["linkDistance"].value;
 						selfbuild.force.linkDistance(forceVar.linkDistance.value);
+					},"linkStrength":function(){
+						forceVar.linkStrength.value = jsonForce["linkStrength"].value;
+						selfbuild.force.linkStrength(forceVar.linkStrength.value);
 					}
 				});
 			}
 		});
+		
+		selfbuild.ReTransform();
 	};
 	
 	function transAndScale(){

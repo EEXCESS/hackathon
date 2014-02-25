@@ -523,6 +523,28 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         drawTagCloud();
     }
 
+    var previewHandler = function(url) {
+
+        var myFacetScape = $('div#facetScape');
+        var previewPanel = $('<div style="width:100%;height:100%;"></div>');
+        var backPanel = $('<div class="back_panel"></div>');
+        var backButton = $('<img src="../../../media/icons/back.png" style="width:100%;">');
+        var previewFrame = $('<iframe src="' + url + '" frameborder="0" hspace="0" vspace="0" style="width:100%;height:100%;position:absolute;">');
+
+        chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
+
+        myFacetScape.hide();
+        backPanel.click(function() {
+            previewPanel.remove();
+            myFacetScape.show();
+            chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
+        });
+        backPanel.append(backButton);
+        previewPanel.append(backPanel);
+        previewPanel.append(previewFrame);
+        $('body').append(previewPanel);
+    };
+
     init();
 
     //////////////////////////////////////////////////////////////////////
@@ -533,7 +555,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     //////////////////////////////////////////////////////////////////////
     function init() {
         FSQueryPanel();
-        svg = root.append("svg").attr("id", "facetScape").attr("width", svgWidth).attr("height",svgHeight);
+        svg = root.append("svg").attr("id", "facetScapeSvg").attr("width", svgWidth).attr("height",svgHeight);
         spareArea = svg.append("svg:g").attr("id", "spareArea").attr("width", widthSpare).attr("height", svgHeight);
         spareArea.append("svg:rect").attr("class", "spareArea").attr("x", width).attr("y",0).attr("width", widthSpare).attr("height",svgHeight);
         createRadialGradients();
@@ -648,9 +670,9 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     }
     function FSQueryPanel() {
         var resultList = root.append("div").attr("id","RS_Panel").style("width", svgWidth+"px");
-        var resultHeader = resultList.append("div").attr("id", "RS_Header");
+        var resultHeader = resultList.append("div").attr("id", "RS_Header").style("width", svgWidth+"px");
         var resultHeaderSearch = resultHeader.append("div").attr("id", "RS_Header_Search");
-        resultHeaderSearch.append("input").attr("id", "RS_Query").attr("type", "text").attr("name", "query").attr("value",searchTerm);
+        resultHeaderSearch.append("input").attr("id", "RS_Query").attr("class", "RS_QueryInput").attr("type", "text").attr("name", "query").attr("value",searchTerm);
 //        var select = resultHeaderSearch.append("select").attr("id", "RS_provider_selection").attr("name", "provider");
 //        select.append("option").attr("value", "europeana").text("Europeana");
 //        select.append("option").attr("value", "recommender").text("FRecommender");
@@ -658,7 +680,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
 //            provider = $(this).val();
 //        });
 
-        resultHeaderSearch.append("input").attr("id", "RS_SubmitButtonId").attr("class","RS_SubmitButton").attr("type", "submit").attr("value", STR_BTN_SEARCH);
+        resultHeaderSearch.append("input").attr("id", "RS_SubmitButtonId").attr("class","eexcess_submit_btn"/*RS_SubmitButton*/).attr("type", "submit").attr("value", STR_BTN_SEARCH);
 
 //        $('#RS_Query').change(function() {
 //            search($(this).val());
@@ -672,12 +694,12 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
             search($('#RS_Query')[0].value);
         });
 //        resultHeader.append("div").attr("id", "RS_Header_FlowArrow_Right").append("div");
-        resultHeader.append("div").attr("id", "RS_Header_Text").text(STR_QUERY_RESULTS+":").style("padding-left", svgWidth/2 -200 + "px");
+        resultHeader.append("div").attr("id", "RS_Header_Text").text(STR_QUERY_RESULTS+":");//.style("padding-left", svgWidth/2 -200 + "px");
 //        resultHeader.append("div").attr("id", "RS_Header_FlowArrow_Left").append("div");
 
         var resultHeaderFilter = resultHeader.append("div").attr("id", "RS_Header_Filter");
-        resultHeaderFilter.append("input").attr("id", "RS_Keyword_Query").attr("type", "text").attr("name", "keywordQuery").attr("value","");
-        resultHeaderFilter.append("input").attr("id", "RS_Keyword_SubmitButtonId").attr("class","RS_Keyword_SubmitButton").attr("type", "submit").attr("value", STR_BTN_FILTER);
+        resultHeaderFilter.append("input").attr("id", "RS_Keyword_Query").attr("class", "RS_QueryInput").attr("type", "text").attr("name", "keywordQuery").attr("value","");
+        resultHeaderFilter.append("input").attr("id", "RS_Keyword_SubmitButtonId").attr("class", "eexcess_submit_btn" /*RS_Keyword_SubmitButton*/).attr("type", "submit").attr("value", STR_BTN_FILTER);
         $('#RS_Keyword_Query').keypress(function(e){
             if (e.which == 13) {
                 evaluateKeywordFilter(e.currentTarget.value);
@@ -691,7 +713,9 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     }
 
     function FSResultLayout() {
-        root.append("div").attr("id", "RS_ResultList").style("max-Height", 200+"px").style("width", svgWidth+"px");
+
+        root.append("div").attr("id", "RS_ResultList");
+        var rList = EEXCESS.searchResultList($('#RS_ResultList'),{previewHandler:previewHandler,pathToMedia:'../../../media/', pathToLibs:'../../../libs/'});
         refreshResultList();
     }
 
@@ -702,53 +726,30 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     //
     //////////////////////////////////////////////////////////////////////
     function refreshResultList() {
-
-        var results = d3.select("div#RS_ResultList");
-        results.selectAll("div").remove();
-
         selectedResults = evaluateSelection(tagSelection);
-        d3.select("div#RS_Header_Text").text("Query Results ("+selectedResults.length+") :");
+        $("div#RS_Header_Text").text("Query Results (" + selectedResults.length + ")");
+        var allResults = $("div#RS_ResultList ul.block_list li");
+        allResults.each(function(idx) {
+            var item = $(this);
+            item.hide();
+            for(var r in selectedResults) {
+                if(item.attr("data-id") == selectedResults[r].id) {
+                    item.show();
+                }
+            }
+        });
+        var noResultsNode = $("div#RS_ResultList ul.block_list #noResults");
+        if(selectedResults.length == 0) {
+            if(!noResultsNode.length) {
+                $("div#RS_ResultList ul.block_list").append($('<li id="noResults">no results</li>'));
+            }
+            noResultsNode.show();
+        } else {
+            if(noResultsNode.length) {
+                noResultsNode.remove();
+            }
+        }
 
-        var resultNodes = results.selectAll("div").data(selectedResults);
-
-        var singleResultNode = resultNodes.enter().append("div").attr("id", "RS_QueryResultItem");
-        singleResultNode.append("img").attr("id", "RS_QueryResultItem_Thumbnail").attr("src", function(d,i) { return (d.hasOwnProperty("previewImage")) ? d.previewImage : ""; });
-        singleResultNode.append("a").attr("id", "RS_QueryResultItem_Title")
-            .attr("href", function(d, i) { return d.uri/*d.guid*/;})
-            .attr("target", "_blank")
-            .text(function(d,i) {
-                var title = (d.hasOwnProperty("title")) ? d.title : "no title";
-                return (title.length > 80) ? title.substring(0, 80) + "..." : title;
-            });
-
-        var secDesc = singleResultNode.append("div").attr("id", "RS_QueryResultItem_AsynchDesc");
-        //var l = secDesc.append("div").attr("id", "RS_QueryResultItem_Loader");
-        //var d = secDesc.append("div").attr("id", "RS_QueryResultItem_Description1");
-//        var providerIcon = secDesc.append("div").attr("id", "RS_QueryResultItem_Provider").style("background-image", function(d,i) { return "url(../../../../media/icons/"+ ((typeof d.facets.partner != "undefined") ? d.facets.partner : "europeana") + "-favicon.ico";})
-//            .style("background-size", "15px 15px").style("margin-left", "60px").style("left", "40px");
-        var img = secDesc.append("img").attr("class", "partner_icon").attr("src", function(d,i) { return "url(../../../../media/icons/"+ ((typeof d.facets.partner != "undefined") ? d.facets.partner : "europeana") + "-favicon.ico";});
-//        providerIcon.text(function(d,i) {
-//            if(d.provider == "mendeley") {
-//                return "mendeley";
-//            }
-//            if(d.provider == "econbiz") {
-//                return "econbiz";
-//            }
-//            if(d.provider == "europeana") {
-//                return "europeana";
-//            }
-//        })
-//        d.text(function(d,i) {
-//            //TODO: load additional info for each result
-//                //loadDetailedInfo(d.link, d3.select(this.parentNode), loadDescriptionCallback);
-//            });
-
-        singleResultNode.append("p").attr("id", "RS_QueryResultItem_Description2")
-            .text(function(d,i) {
-                var str = "";
-                str += ((d.hasOwnProperty("language") && d.language != "") ? (d.language + ", ") : "") + ((d.hasOwnProperty("type") && d.type != "") ? (d.type + ", ") : "") + ((d.hasOwnProperty("year") && d.year != "") ? d.year : "");
-                return str;
-            });
     }
 
     function drawVoronoi() {
@@ -1238,7 +1239,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'query'}, data: [{weight:1,text:term}]});
         var onReceiveData = function(terms, processedData, items) {
             d3.select("div#RS_Panel").remove();
-            d3.select("svg#facetScape").remove();
+            d3.select("svg#facetScapeSvg").remove();
             d3.select("div#RS_ResultList").remove();
             facetScape(root, svgWidth, height, processedData, items, terms);
         }

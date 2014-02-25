@@ -1,0 +1,92 @@
+/** This is a master css file for eexcess pages
+    all pages should include first this css, and then
+    their own. The base color for the scheme design is #1d904e */
+
+body,html {
+    height:100%;
+    margin:0;
+    padding:0;
+    overflow: hidden;
+    font-family: Lucida, Lucida Grande, Verdana,Arial,sans-serif;
+}
+
+body {
+    background-image: url('media/watermark.png');
+    background-size: auto 100%;
+    font-size:0.7em;
+}
+
+body a{
+    text-decoration:none;
+    color: #529CBF;
+}
+
+header {
+    /*margin-top:30px; width:500px;*/ 
+    background:white; 
+    margin-left:auto; 
+    margin-right:auto; 
+    /*padding-bottom:20px;*/ 
+    padding-bottom: 30px;   
+}
+
+header .eexcess_submit_btn{
+    background-color: #0A3B53;/*494949;*/
+    color:#ffffff;
+    font-weight:bold;
+    height:22px;
+    border: solid #70C896 1px;
+}
+
+header nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+header nav li {
+    padding-left: 5px;
+    float: left;
+}
+
+footer a{
+    text-decoration:none;
+    color: #E4785C;
+}
+
+fieldset {
+    margin:auto;
+    border:none;
+}
+
+.ui-dialog {
+    font-size: 0.8em;
+}
+
+.block_list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.block_list li {
+    padding-left: 5px;
+    padding-top: 2px;
+    margin-left:5px;
+    margin-right:5px;
+    background: rgba(255,255,255,0.7);
+    border-bottom: 1px dotted green;
+}
+
+.block_list li:hover{
+    border: 2px solid #E4A55C;
+}
+
+#eexcess_powered_by{
+    margin: auto;
+    text-align: right;
+}
+
+#eexcess_powered_by img{
+    height:15px;
+}

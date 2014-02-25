@@ -15,9 +15,11 @@ function Options(){
 			scale:{value:1}
 		},
 		force:{
+			theta:{value:0.8},
 			charge:{value:-120},
 			gravity:{value:0.05},
-			linkDistance:{value:80}
+			linkDistance:{value:80},
+			linkStrength:{value:1}
 		}
 	};
 	

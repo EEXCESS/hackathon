@@ -33,16 +33,130 @@ and open the template in the editor.
 		</style>
     </head>
     <body>
-        <div id="graphContent">
-		
+		<!--  Popupmenu for D3 Graph-->
+		<div id="popup_menu" style="border:solid 1px black;background-color:white;display:none;">
+			<button id="closepopupmenu">x</button>  
+			<div id="gotodetails"style="border:solid 1px black;margin: 2px;">
+				details
+			</div>
+			  <div id="gotoresults" style="border:solid 1px black;margin: 2px;">
+				results
+			</div>    
 		</div>
-		<!--
-		<button id="senario1">senario1</button>
-		-->
-        <script type="text/javascript" src="test.js"></script>
-		<script src="option.js" lang="javascript"></script>
-		<script src="showgraph.js" lang="javascript"></script>
-		<script src="buildgraph.js" lang="javascript"></script>
-		<script src="actiongraph.js" lang="javascript"></script>
+		<svg>
+			<rect>
+			
+			</rect>
+			<g>
+				<g>
+					<rect id="plate">
+					</rect>
+				</g>
+			</g>
+		</svg>
+		
+		<!-- show details -->
+		<div style="border:solid 1px;width:200px;float:right;margin:5px;">
+			<button id="cleardata">clear data</button>
+			<div style="margin:2px;">
+			title:
+			</div>
+			<br/>
+			<textarea id="title_data" style="border:solid 1px grey;"></textarea>
+			<div style="margin:2px;">
+			link:
+			</div>
+			<div style="overflow-x:auto">
+				<a target="_blank" id="link_data"></a>
+			</div>
+			<div style="margin:2px;">
+			image:
+			</div>   
+			<img  id="image_data" width="150px" height="150px" style="border:solid 1px grey;margin:2px;"></img>
+			<div style="margin:2px;">
+			id:
+			</div>  
+			<div id="id_data" style="overflow-x:auto">
+				
+			</div>
+			<div style="margin:2px;">
+			facets:
+			</div>  
+			<div style="border:solid 1px grey;margin:2px;">
+			<div>
+				<span>
+					&nbsp;&nbsp;language:
+				</span>
+				<span id="language_data">
+					
+				</span>
+			</div>
+			<div>
+				<span>
+					&nbsp;&nbsp;partner:
+				</span>
+				<span id="partner_data">
+					
+				</span>
+			</div>
+			<div style="overflow-x:auto">
+				<span>
+					&nbsp;&nbsp;provider:
+				</span>
+				<span id="provider_data" >
+					
+				</span>
+			</div>
+			<div>
+				<span>
+					&nbsp;&nbsp;type:
+				</span>
+				<span id="type_data">
+					
+				</span>
+			</div>
+			<div>
+				<span>
+					&nbsp;&nbsp;year:
+				</span>
+				<span  id="year_data">
+					
+				</span>
+			</div>
+			</div>
+		</div>
+ 
+		<!-- databutton -->
+		<a id="getdata">getData</a></br>
+	
+		<button id="redraw">redraw</button>
+		Results per keywords:
+		<select id="results_per_keywords">
+			<option value="5">5</option>
+			<option value="10">10</option>
+			<option value="20">20</option>
+			<option value="50">50</option>
+			<option value="All">All</option>  
+		</select>
+		. |
+		Last
+		<select id="last_keywords">
+			<option value="10">10</option>
+			<option value="25">25</option>
+			<option value="50">50</option>
+			<option value="100">100</option>
+			<option value="250">250</option>  
+			<option value="All">All</option>  
+		</select>
+		th keywords of the searchgraph. |
+		Number of keywords in searchhistory: <label id="keywordnumber">0</label>.
+        <script src="test.js" lang="javascript"></script>
+		<script src="DrawGraph.js" lang="javascript"></script>
+		<script src="GetDataFromIndexedDB.js" lang="javascript"></script>
+		<script src="GraphLib/option.js" lang="javascript"></script>
+		<script src="GraphLib/showgraph.js" lang="javascript"></script>
+		<script src="GraphLib/buildgraph.js" lang="javascript"></script>
+		<script src="GraphLib/actiongraph.js" lang="javascript"></script>
+
     </body>
 </html>

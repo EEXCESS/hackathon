@@ -1,3 +1,6 @@
+#facetScape {
+    height: 100%;
+}
 .VoronoiPolygon {
     stroke: #000000;
     stroke-width: 1px;
@@ -119,19 +122,25 @@ text.shadow {
 }
 #RS_Header {
     background-color: #1F914F;
-    text-align: center;
+    /*text-align: center;*/
+    height: 20px;
+    padding-top:2px;
 }
 #RS_Header_Search {
+    width: 30%;
     float:left;
 }
 #RS_Header_Text {
+    width: 45%;
     color: #ffffff;
     font-family:Arial;
     padding-top: 3px;
     float:left;
-    text-align:right;
+    text-align:center;
 }
 #RS_Header_Filter {
+    width: 25%;
+    float: left;
     text-align:right;
 }
 #RS_Header_Filter_Tags {
@@ -187,10 +196,14 @@ text.shadow {
 #RS_Query {
 
 }
+.RS_QueryInput {
+    border: solid #494949 1px;
+}
 #RS_ResultList {
     overflow: auto;
-    height:100%;
-    border:solid #494949 1px;
+    height:50%;
+    width:100%;
+    border: solid #70C896 1px;/*border:solid #494949 1px;*/
 }
 #RS_QueryResultItem {
     float:left;

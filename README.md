@@ -1,3 +1,3 @@
-usage-mining
+hackathon
 ============
-EEXCESS usage-mining (browser plugin for the beginning)
+browser extension for review meeting...
