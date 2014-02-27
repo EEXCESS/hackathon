@@ -137,12 +137,28 @@ EEXCESS.frCall_impl = function(weightedTerms, start, success, error) {
         error(textStatus);
     });
 };
+if(typeof(Storage)!=="undefined"){
+	if(localStorage.hasOwnProperty("DBCall") == false){
+		localStorage.DBCall = JSON.stringify({call:"frCall_impl",url:'http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend'});
+	}
+}else{
+	console.log("no storage");
+}
+
+EEXCESS.Test = function(){console.log("Test 123.........")};
 
 
 /// proxy federated recommender call (frCall)
 /// the proxy is set up depending on choices made in the options page
 /// this sets up the default (when the values are undefined
 if (EEXCESS.frCall == null){
+/*
     EEXCESS.frCall = EEXCESS.frCall_impl;
     EEXCESS.frUrl  = 'http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
+	*/
+
+	var callObj = JSON.parse(localStorage['DBCall']);
+    EEXCESS.frCall = EEXCESS[callObj.call];//EEXCESS.frCall_impl;
+    EEXCESS.frUrl  = callObj.url;//'http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
+	
 }
