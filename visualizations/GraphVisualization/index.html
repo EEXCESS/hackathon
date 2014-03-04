@@ -11,152 +11,155 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width">
         <script type="text/javascript" src="../../libs/jquery-1.10.1.min.js"></script>
         <script type="text/javascript" src="../../libs/d3.v3.js"></script>
+		<link rel="stylesheet" type="text/css" href="graphVisualization.css">
 		<style>
-			rect {
 
-				fill:none;
-				stroke: #999;
-			  /*
-			  fill: none;
-			  */
-			  pointer-events: all;
-			}
-			/*
-			.node {
-			  fill: #000;
-			}
-
-			.link {
-			  stroke: #999;
-			}
-			*/
 		</style>
     </head>
     <body>
 		<!--  Popupmenu for D3 Graph-->
-		<div id="popup_menu" style="border:solid 1px black;background-color:white;display:none;">
+		<!--
+		border:solid 1px black;background-color:white;
+		-->
+		<div id="popup_menu" class="green_round_box" style="display:none;">
 			<button id="closepopupmenu">x</button>  
-			<div id="gotodetails"style="border:solid 1px black;margin: 2px;">
+			<div id="gotodetails" class="grey_round_box">
 				details
 			</div>
-			  <div id="gotoresults" style="border:solid 1px black;margin: 2px;">
+			  <div id="gotoresults" class="grey_round_box">
 				results
 			</div>    
 		</div>
-		<svg>
-			<rect>
-			
-			</rect>
-			<g>
-				<g>
-					<rect id="plate">
-					</rect>
-				</g>
-			</g>
-		</svg>
 		
-		<!-- show details -->
-		<div style="border:solid 1px;width:200px;float:right;margin:5px;">
-			<button id="cleardata">clear data</button>
-			<div style="margin:2px;">
-			title:
-			</div>
-			<br/>
-			<textarea id="title_data" style="border:solid 1px grey;"></textarea>
-			<div style="margin:2px;">
-			link:
-			</div>
-			<div style="overflow-x:auto">
-				<a target="_blank" id="link_data"></a>
-			</div>
-			<div style="margin:2px;">
-			image:
-			</div>   
-			<img  id="image_data" width="150px" height="150px" style="border:solid 1px grey;margin:2px;"></img>
-			<div style="margin:2px;">
-			id:
-			</div>  
-			<div id="id_data" style="overflow-x:auto">
+		<div style="display:inline-flex;">
+			<!-- Graph-->
+			<svg class="eexcess_vis" style="margin:5px;">
+				<rect>
 				
-			</div>
-			<div style="margin:2px;">
-			facets:
-			</div>  
-			<div style="border:solid 1px grey;margin:2px;">
-			<div>
-				<span>
-					&nbsp;&nbsp;language:
-				</span>
-				<span id="language_data">
+				</rect>
+				<g>
+					<g>
+						<rect id="plate">
+						</rect>
+					</g>
+				</g>
+			</svg>
+		
+		
+			<!-- show details -->
+			<!-- 
+			border:solid 1px;
+			float:right;
+			 style="border:solid 1px grey;"
+			 
+			-->
+			<div class="eexcess_vis" style="margin:5px;width:250px;height:500px;overflow-y:auto;">
+				<button id="cleardata" class="margin_box">clear data</button>
+				<div class="margin_box type_bold">
+				title:
+				</div>
+				<textarea id="title_data" class="grey_round_box margin_box"></textarea>
+				<div  class="margin_box type_bold">
+				link:
+				</div>
+				<div  class="margin_box" style="overflow-x:auto">
+					<a target="_blank" id="link_data"></a>
+				</div>
+				<div  class="margin_box type_bold">
+				image:
+				</div>   
+				<!--  
+				-->
+				<div width="100px" height="150px" style="resize:both;overflow:auto;" class="grey_round_box margin_box">
+					<img width="100%" height="100%" id="image_data"></img>
+				</div>
+				<div class="margin_box type_bold">
+				id:
+				</div>  
+				<div id="id_data" style="overflow-x:auto;" class="margin_box">
 					
-				</span>
-			</div>
-			<div>
-				<span>
-					&nbsp;&nbsp;partner:
-				</span>
-				<span id="partner_data">
-					
-				</span>
-			</div>
-			<div style="overflow-x:auto">
-				<span>
-					&nbsp;&nbsp;provider:
-				</span>
-				<span id="provider_data" >
-					
-				</span>
-			</div>
-			<div>
-				<span>
-					&nbsp;&nbsp;type:
-				</span>
-				<span id="type_data">
-					
-				</span>
-			</div>
-			<div>
-				<span>
-					&nbsp;&nbsp;year:
-				</span>
-				<span  id="year_data">
-					
-				</span>
-			</div>
+				</div>
+				<div class="margin_box type_bold">
+				facets:
+				</div>  
+				<div class="grey_round_box margin_box">
+				<div>
+					<span class="type_bold margin_box">
+						language:
+					</span>
+					<span id="language_data">
+						
+					</span>
+				</div>
+				<div>
+					<span class="type_bold margin_box">
+						partner:
+					</span>
+					<span id="partner_data">
+						
+					</span>
+				</div>
+				<div style="overflow-x:auto">
+					<span class="type_bold margin_box">
+						provider:
+					</span>
+					<span id="provider_data" >
+						
+					</span>
+				</div>
+				<div>
+					<span class="type_bold margin_box">
+						type:
+					</span>
+					<span id="type_data">
+						
+					</span>
+				</div>
+				<div>
+					<span class="type_bold margin_box">
+						year:
+					</span>
+					<span  id="year_data">
+						
+					</span>
+				</div>
+				</div>
 			</div>
 		</div>
  
-		<!-- databutton -->
-		<a id="getdata">getData</a></br>
-	
-		<button id="redraw">redraw</button>
-		Results per keywords:
-		<select id="results_per_keywords">
-			<option value="5">5</option>
-			<option value="10">10</option>
-			<option value="20">20</option>
-			<option value="50">50</option>
-			<option value="All">All</option>  
-		</select>
-		. |
-		Last
-		<select id="last_keywords">
-			<option value="10">10</option>
-			<option value="25">25</option>
-			<option value="50">50</option>
-			<option value="100">100</option>
-			<option value="250">250</option>  
-			<option value="All">All</option>  
-		</select>
-		th keywords of the searchgraph. |
-		Number of keywords in searchhistory: <label id="keywordnumber">0</label>.
-        <script src="test.js" lang="javascript"></script>
-		<script src="DrawGraph.js" lang="javascript"></script>
-		<script src="GetDataFromIndexedDB.js" lang="javascript"></script>
-		<script src="GraphLib/option.js" lang="javascript"></script>
-		<script src="GraphLib/showgraph.js" lang="javascript"></script>
-		<script src="GraphLib/buildgraph.js" lang="javascript"></script>
-		<script src="GraphLib/actiongraph.js" lang="javascript"></script>
-
+		<div class="eexcess_vis">
+			<!-- databutton -->
+			<a id="getdata">getData</a></br>
+		
+			<button id="redraw">redraw</button>
+			Results per keywords:
+			<select id="results_per_keywords">
+				<option value="5">5</option>
+				<option value="10">10</option>
+				<option value="20">20</option>
+				<option value="50">50</option>
+				<option value="All">All</option>  
+			</select>
+			. |
+			Last
+			<select id="last_keywords">
+				<option value="10">10</option>
+				<option value="25">25</option>
+				<option value="50">50</option>
+				<option value="100">100</option>
+				<option value="250">250</option>  
+				<option value="All">All</option>  
+			</select>
+			th keywords of the searchgraph. |
+			Number of keywords in searchhistory: <label id="keywordnumber">0</label>.
+			<script src="graphVisualization.js" lang="javascript"></script>
+			<script src="DrawGraph.js" lang="javascript"></script>
+			<script src="GetDataFromIndexedDB.js" lang="javascript"></script>
+			<script src="GraphLib/option.js" lang="javascript"></script>
+			<script src="GraphLib/showgraph.js" lang="javascript"></script>
+			<script src="GraphLib/buildgraph.js" lang="javascript"></script>
+			<script src="GraphLib/actiongraph.js" lang="javascript"></script>
+		</div>
+		
     </body>
 </html>

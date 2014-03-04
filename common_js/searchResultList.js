@@ -113,6 +113,10 @@ EEXCESS.searchResultList = function(divContainer, options) {
                 if (request.method === 'newSearchTriggered') {
                     showResults(request.data);
                 }
+                if (request.method.parent === 'results' && request.method.func === 'error') {
+                    divContainer.empty();
+                    divContainer.append($('<p>sorry, something went wrong...</p>'));
+                }
             }
     );
 
@@ -142,6 +146,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
                 img = settings.pathToMedia + 'no-img.png';
             }
             var title = item.title;
+
             if (typeof title === 'undefined') {
                 title = 'no title';
             }
@@ -165,8 +170,8 @@ EEXCESS.searchResultList = function(divContainer, options) {
             li.append(resCt);
 
             // partner icon
-            if (typeof item.facets.partner !== 'undefined') {
-                containerL.append($('<img src="' + settings.pathToMedia + 'icons/' + item.facets.partner + '-favicon.ico" class="partner_icon" />'));
+            if (typeof item.facets.provider !== 'undefined') {
+                containerL.append($('<img src="' + settings.pathToMedia + 'icons/' + item.facets.provider + '-favicon.ico" class="partner_icon" />'));
             }
 
             // show link
@@ -191,7 +196,9 @@ EEXCESS.searchResultList = function(divContainer, options) {
 
             // description
             if (typeof item.description !== 'undefined' && item.description !== '') {
-                resCt.append($('<p class="result_description">' + item.description + '</p>'));
+                var shortDescription = shortenDescription(item.description);
+//                resCt.append($('<p class="result_description">' + item.description + '</p>'));
+                resCt.append($('<p class="result_description">' + shortDescription + '</p>'));
             }
             resCt.append($('<p style="clear:both;"></p>'));
 
@@ -208,6 +215,17 @@ EEXCESS.searchResultList = function(divContainer, options) {
 //                });
 //            }
     };
+    var shortenDescription = function(description) {
+
+        var firstPart =  description.substring(0,100);
+        var remainder = description.substring(100, description.length);
+        var endPos = remainder.search(/[.!?; ]/);
+        if(endPos != -1) {
+            firstPart += remainder.substring(0, endPos);
+            firstPart += "...";
+        }
+        return firstPart;
+    }
 //    };
     return {
         showResults: showResults,

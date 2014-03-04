@@ -15,13 +15,6 @@ if (typeof String.prototype.startsWith !== 'function') {
 
 var EEXCESS = EEXCESS || {};
 
-
-
-/**
- * @memberof EEXCESS
- * @type String
- */
-EEXCESS.apiKeyEuropeana = 'HT6JwVWha';
 /**
  * Sends a query with the specified parameters to europeana and hands the results
  * to the success callback or the error message to the error callback.
@@ -69,8 +62,7 @@ EEXCESS.euCall = function(weightedTerms, start, success, error) {
         return facet_list;
     };
     console.log('query: ' + query + ' start:' + start);
-    var xhr = $.ajax('http://europeana.eu/api//v2/search.json?wskey='
-            + EEXCESS.apiKeyEuropeana
+    var xhr = $.ajax(EEXCESS.backend.getURL()
             + '&query=' + query
             + '&start=' + start
             + '&rows=96&profile=standard');
@@ -111,23 +103,14 @@ EEXCESS.frCall_impl = function(weightedTerms, start, success, error) {
     };
     console.log(profile);
     var xhr = $.ajax({
-        url: 'http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend',
+        url: EEXCESS.backend.getURL(),
         data: JSON.stringify(profile),
         type: 'POST',
-        contentType: 'application/json',
+        contentType: 'application/json; charset=UTF-8',
         dataType: 'json'
     });
     xhr.done(function(data) {
         console.log(data);
-        $.map(data.results, function(n, i) {
-            if (n.uri.startsWith('http://www.europeana')) {
-                n.facets.partner = 'europeana';
-            } else if (n.uri.startsWith('http://www.econbiz')) {
-                n.facets.partner = 'econbiz';
-            } else if (n.uri.startsWith('http://www.mendeley')) {
-                n.facets.partner = 'mendeley';
-            }
-        });
         success(data);
     });
     xhr.fail(function(jqXHR, textStatus, errorThrown) {
@@ -139,10 +122,47 @@ EEXCESS.frCall_impl = function(weightedTerms, start, success, error) {
 };
 
 
-/// proxy federated recommender call (frCall)
-/// the proxy is set up depending on choices made in the options page
-/// this sets up the default (when the values are undefined
-if (EEXCESS.frCall == null){
-    EEXCESS.frCall = EEXCESS.frCall_impl;
-    EEXCESS.frUrl  = 'http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
+// set provider call function and url according to the provided value 
+// if an inappropriate value is given, set it to fr-stable
+EEXCESS.backend = (function(){
+    var call = EEXCESS.frCall_impl;
+    var url = 'http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
+    
+    return {
+        setProvider:function(tabID, provider) {
+            if(typeof(Storage) !== 'undefined') {
+                localStorage.setItem('backend', provider);
+            }
+            switch(provider) {
+                case 'eu':
+                    console.log('eu');
+                    call = EEXCESS.euCall;
+                    url = 'http://europeana.eu/api//v2/search.json?wskey=HT6JwVWha';
+                    break;
+                case 'fr-devel':
+                    console.log('fr-devel');
+                    call = EEXCESS.frCall_impl;
+                    url = 'http://digv539.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
+                    break;
+                case 'fr-stable':
+                    console.log('fr-stable');
+                    call = EEXCESS.frCall_impl;
+                    url = 'http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
+                    break;
+            }
+        },
+        getURL: function() {
+            return url;
+        },
+        getCall: function() {
+            return call;
+        }
+    };
+}());
+
+// retrieve provider from local storage or set it to 'fr-stable'
+if(typeof(Storage) !== 'undefined') {
+    EEXCESS.backend.setProvider(-1, localStorage.getItem('backend'));
+} else {
+    EEXCESS.backend.setProvider(-1, 'fr-stable');
 }

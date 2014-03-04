@@ -1,0 +1,61 @@
+/*css for graph*/
+rect {
+
+	fill:none;
+	stroke: #999;
+	
+  /*
+  fill: none;
+  */
+  pointer-events: all;
+}
+/*
+.node {
+  fill: #000;
+}
+
+.link {
+  stroke: #999;
+}
+*/
+
+body {
+    background-image: url('../../media/watermark.png');
+    background-size: auto 100%;
+}
+/*css for index.html*/
+.eexcess_vis{
+/*
+    margin-left:10%;
+    margin-top: 5px;
+	
+    margin-bottom: 5px;
+	*/
+/*
+    width:80%;
+
+    height:400px;
+	*/
+    border-radius:10px 10px 10px 10px; 
+	border:2px solid #1d904e;
+	background-color: rgba(255,255,255,0.75);
+	
+}
+
+.green_round_box{
+	border-radius:5px 5px 5px 5px; 
+	border:2px solid #1d904e;
+	background-color: rgba(255,255,255,0.75);
+	padding: 2px;
+}
+
+.grey_round_box{
+	border-radius:3px 3px 3px 3px; 
+	border:1px solid gray;
+}
+.margin_box{
+	margin:4px;
+}
+.type_bold{
+	font-weight: bold;
+}

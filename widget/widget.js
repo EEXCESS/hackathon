@@ -94,8 +94,16 @@ EEXCESS.init = function(widget) {
 //        $('#eexcess_content').append($('<div id="eexcess_loading"><img id="eexcess_loading" src="../media/loading.gif" /></div>'));
         //evt.preventDefault();
         EEXCESS.searchResults.loading();
-        var query = $('#eexcess_query').val();
-        EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: [{weight: 1, text: query}]});
+        var query_terms = $('#eexcess_query').val().split(' ');
+        var query = [];
+        for(var i=0;i < query_terms.length;i++) {
+            var tmp = {
+                weight:1,
+                text:query_terms[i]
+            };
+            query.push(tmp);
+        }
+        EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
         return false;
     });
     //EEXCESS.update(widget);
@@ -107,10 +115,10 @@ EEXCESS.init = function(widget) {
  * @memberOf EEXCESS
  * @param {String} error The error message to display
  */
-EEXCESS.error = function(error) {
-    alert(error);
-    EEXCESS.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);
-};
+//EEXCESS.error = function(error) {
+//    alert(error);
+//    EEXCESS.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);
+//};
 
 // Initalize the widget with the current state in the background script's model on execution of this script
 EEXCESS.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);
