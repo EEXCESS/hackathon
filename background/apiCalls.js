@@ -106,7 +106,7 @@ EEXCESS.frCall_impl = function(weightedTerms, start, success, error) {
         url: EEXCESS.backend.getURL(),
         data: JSON.stringify(profile),
         type: 'POST',
-        contentType: 'application/json',
+        contentType: 'application/json; charset=UTF-8',
         dataType: 'json'
     });
     xhr.done(function(data) {
