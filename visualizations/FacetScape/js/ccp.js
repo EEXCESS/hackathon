@@ -31,6 +31,7 @@ function requestPlugin(dataCallbackFct, action) {
         } else {
             var queryTerms = response.query;
             var data = response.results;
+            console.log(data);
             var facets = ppEEXCESSFacetInfo(data);
             var results = ppEEXCESSResultInfo(data);
             dataCallbackFct(queryTerms, facets, results);
