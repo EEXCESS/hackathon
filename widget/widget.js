@@ -108,10 +108,10 @@ EEXCESS.init = function(widget) {
  * @memberOf EEXCESS
  * @param {String} error The error message to display
  */
-EEXCESS.error = function(error) {
-    alert(error);
-    EEXCESS.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);
-};
+//EEXCESS.error = function(error) {
+//    alert(error);
+//    EEXCESS.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);
+//};
 
 // Initalize the widget with the current state in the background script's model on execution of this script
 EEXCESS.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);

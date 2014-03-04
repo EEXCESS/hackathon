@@ -127,7 +127,7 @@ EEXCESS.model = (function() {
                 });
             };
             var error = function(error) { // error callback
-                EEXCESS.sendMessage(tabID, {method: 'error', data: error});
+                EEXCESS.sendMessage(tabID, {method: {parent:'results',func:'error'}, data: error});
             };
             // call provider (resultlist should start with first item)
             EEXCESS.backend.getCall()(data, 1, success, error);
@@ -161,7 +161,7 @@ EEXCESS.model = (function() {
                 EEXCESS.logging.logRecommendations(data.results, context);
             };
             var error = function(error) {
-                EEXCESS.sendMessage(tabID, {method: 'error', data: error});
+                EEXCESS.sendMessage(tabID, {method: {parent:'results',func:'error'}, data: error});
             };
             EEXCESS.backend.getCall()(results.weightedTerms, data, success, error);
         },
