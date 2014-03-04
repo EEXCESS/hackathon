@@ -165,8 +165,8 @@ EEXCESS.searchResultList = function(divContainer, options) {
             li.append(resCt);
 
             // partner icon
-            if (typeof item.facets.partner !== 'undefined') {
-                containerL.append($('<img src="' + settings.pathToMedia + 'icons/' + item.facets.partner + '-favicon.ico" class="partner_icon" />'));
+            if (typeof item.facets.provider !== 'undefined') {
+                containerL.append($('<img src="' + settings.pathToMedia + 'icons/' + item.facets.provider + '-favicon.ico" class="partner_icon" />'));
             }
 
             // show link

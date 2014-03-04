@@ -111,15 +111,6 @@ EEXCESS.frCall_impl = function(weightedTerms, start, success, error) {
     });
     xhr.done(function(data) {
         console.log(data);
-        $.map(data.results, function(n, i) {
-            if (n.uri.startsWith('http://www.europeana')) {
-                n.facets.partner = 'europeana';
-            } else if (n.uri.startsWith('http://www.econbiz')) {
-                n.facets.partner = 'econbiz';
-            } else if (n.uri.startsWith('http://www.mendeley')) {
-                n.facets.partner = 'mendeley';
-            }
-        });
         success(data);
     });
     xhr.fail(function(jqXHR, textStatus, errorThrown) {
