@@ -264,7 +264,6 @@ function checkUpdate(){
 	if(!validEmail(email)){
 		$('.stateEmail').html('This is not a valid email');
 	}else{
-		
 		var query = JSON.stringify({
 			user_email: email
 		});

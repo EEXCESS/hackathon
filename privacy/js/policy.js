@@ -31,10 +31,30 @@ function updatePolicy() {
 	console.log("Updating policy setting for '"+fieldName+"' to "+value);
 	
 	localStorage["privacy.policy."+fieldName] = value;
+	
+/* 	var rawValue = localStorage["profile.private."+fieldValue];	
+	privacy.apply(fieldName,rawValue, value);
+	*/
+}
+
+function initPolicyPanel() {
+	var fieldName = $(this).closest(".panel").attr("data-eexcess-policy-field");
+	var value =	localStorage["privacy.policy."+fieldName];
+	console.log("Reloadig policy setting for '"+fieldName+"' as "+value);
+	if($(this).find(".progress-bar").size() <= 2) {
+		$(this).find(".progress-bar").eq(value).each(doProgressClick);
+		if(value == 0) {
+			// Hack, simulate 2 clicks to get zero and update other info
+			$(this).find(".progress-bar").eq(value).each(doProgressClick);
+		}
+	} else {
+		$(this).find(".progress-bar").eq(value - 1).each(doProgressClick);
+	}
 }
 
 (function($) {
   $(".progress-bar").click(doProgressClick);
   $(".progress").live("change",doChangeProgress);
+  $(".progress").each(initPolicyPanel);
 })(jQuery);
 
