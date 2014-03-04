@@ -113,6 +113,10 @@ EEXCESS.searchResultList = function(divContainer, options) {
                 if (request.method === 'newSearchTriggered') {
                     showResults(request.data);
                 }
+                if (request.method.parent === 'results' && request.method.func === 'error') {
+                    divContainer.empty();
+                    divContainer.append($('<p>sorry, something went wrong...</p>'));
+                }
             }
     );
 
