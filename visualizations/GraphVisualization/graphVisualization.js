@@ -69,10 +69,8 @@ chrome.runtime.onMessage.addListener(
 
 //get details
 d3.select('#gotodetails').on("click", function () {
-
 	ClearDetailData();
 
-	
 	var detailData = storeDetailsForShorttime[dataParameter.currentKey];
 	//console.log(detailData);
 	
@@ -109,7 +107,7 @@ function ClearDetailData(){
 var functions = {
 	TestFunc:function(){
 		console.log("ASDF");
-	},
+	},/*
 	NodeIn:function(paramData){
 		d3.event.preventDefault();
 		console.log("in");
@@ -128,6 +126,7 @@ var functions = {
 		}); 
 		g.build.show.restart();
 	},	
+	*/
 	MakePopupMenu:function(paramData){
 		//console.log(paramData);
 		if (d3.event.pageX || d3.event.pageY) {
@@ -163,12 +162,15 @@ $("#redraw").click(function(){
 
 
 //only demo
-/*
-d3.select('#addmetalink').on("click", function () {
 
-	$("#metanodename").val($('#metanodeselect').val());
+d3.select('#deletemetanode').on("click", function () {
+	var nodeName = $("#metanodeselect").val();
+	g.build.deleteNode("metanodeid_"+nodeName)
+	g.build.show.restart();
+	
+	$("#metanodeselect > option[value='"+nodeName+"']").remove();
+	
 });
-*/
 
 d3.select('#workmetalink').on("click", function () {
 	var work = $("#addordeletemetalink").val();
@@ -184,7 +186,6 @@ d3.select('#workmetalink').on("click", function () {
 });
 
 d3.select('#addmetanode').on("click", function () {
-
 	//console.log(dataParameter);//.nodeid
 	var nodeName = $("#metanodename").val();
 
@@ -206,7 +207,7 @@ d3.select('#addmetanode').on("click", function () {
 		}
 	});
 	if(differentElement){
-		$("#metanodeselect").append("<option>"+nodeName+"</option>");
+		$("#metanodeselect").append('<option value="'+nodeName+'">'+nodeName+'</option>');
 	}
 	
 	g.build.show.restart();

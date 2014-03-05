@@ -73,15 +73,22 @@ function MakeGraph(){
 				"nodeD3":{text:(currentNodeProperty.xscale-4)+ " : "+TextCutter(text,10,9),title:(currentNodeProperty.xscale-4)+ " : "+text}
 			}); 
 		}
-		
+		var paramData ={
+			text:text,
+			nodeId:"nodeId"+nodename
+			};
+		g.build.setNodeProperties("nodeId"+nodename,{
+			"nodeEvents":{contextmenu:{name:"MakePopupMenu",param:JSON.stringify(paramData)}}
+		}); 
+		/*
 		var nN = "nodeId"+nodename;
 		g.build.setNodeProperties("nodeId"+nodename,{
 			"nodeEvents":{
-				"mouseover":{"name":"NodeIn","param":nN},
+				"mouseenter":{"name":"NodeIn","param":nN},
 				"mouseout":{"name":"NodeOut","param":nN}
 			}
 		});
-		
+		*/
 	});
 	
 	
