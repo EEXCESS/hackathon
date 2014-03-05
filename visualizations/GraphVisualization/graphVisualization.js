@@ -110,6 +110,24 @@ var functions = {
 	TestFunc:function(){
 		console.log("ASDF");
 	},
+	NodeIn:function(paramData){
+		d3.event.preventDefault();
+		console.log("in");
+		
+		g.build.setNodeProperties(paramData,{
+			"nodeGraph":{fill:"purple"}
+		}); 
+		g.build.show.restart();
+	},
+	NodeOut:function(paramData){
+		d3.event.preventDefault();
+		console.log("out");
+	
+		g.build.setNodeProperties(paramData,{
+			"nodeGraph":{fill:"green"}
+		}); 
+		g.build.show.restart();
+	},	
 	MakePopupMenu:function(paramData){
 		//console.log(paramData);
 		if (d3.event.pageX || d3.event.pageY) {
@@ -144,7 +162,58 @@ $("#redraw").click(function(){
 });
 
 
+//only demo
+/*
+d3.select('#addmetalink').on("click", function () {
 
+	$("#metanodename").val($('#metanodeselect').val());
+});
+*/
+
+d3.select('#workmetalink').on("click", function () {
+	var work = $("#addordeletemetalink").val();
+	var nodeName = $("#metanodeselect").val();
+	if(work == "+"){
+		g.build.addLink("metalinkid_"+dataParameter.nodeId+"_"+nodeName,
+			dataParameter.nodeId,"metanodeid_"+nodeName);
+		g.build.show.restart();
+	}else if(work == "x"){
+		g.build.deleteLink("metalinkid_"+dataParameter.nodeId+"_"+nodeName)
+		g.build.show.restart();
+	}
+});
+
+d3.select('#addmetanode').on("click", function () {
+
+	//console.log(dataParameter);//.nodeid
+	var nodeName = $("#metanodename").val();
+
+	g.build.addNodeWithLink(dataParameter.nodeId,"metanodeid_"+nodeName,
+		"metalinkid_"+dataParameter.nodeId+"_"+nodeName);
+	g.build.setNodeProperties("metanodeid_"+nodeName,{
+		"nodeGraph":{xscale:7,yscale:7,fill:"blue"},
+		"nodeD3":{title:nodeName,text:TextCutter(nodeName,10,9)}
+	}); 
+	g.build.setLinkProperties("metalinkid_"+dataParameter.nodeId+"_"+nodeName,{
+		"linkD3":{distance:100},
+		"linkGraph":{stroke:"black"}});
+
+	var differentElement = true;
+	$("#metanodeselect > option").each(function(index,element){
+		//console.log($(element).val());
+		if(nodeName == $(element).val()){
+			differentElement = false;
+		}
+	});
+	if(differentElement){
+		$("#metanodeselect").append("<option>"+nodeName+"</option>");
+	}
+	
+	g.build.show.restart();
+	
+	$("#metanodename").val("");
+	d3.select('#popup_menu').style("display", "none");
+});
 
 
 

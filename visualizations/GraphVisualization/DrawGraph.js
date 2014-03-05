@@ -59,7 +59,7 @@ function MakeGraph(){
 			g.build.addNode("nodeId"+nodename);
 			g.build.setNodeProperties("nodeId"+nodename,{
 				"nodeGraph":{xscale:5,yscale:5,fill:"green"},
-				"nodeD3":{title:text,text:TextCutter(text,10,9) + " : 1" }//,
+				"nodeD3":{title:text,text:TextCutter(text,10,9) + " : 1" }
 				//"nodeEvents":{click:{name:"TestFunc"}}
 			}); 
 		}else{
@@ -72,10 +72,16 @@ function MakeGraph(){
 				"nodeGraph":{xscale:newXscale,yscale:newYscale},
 				"nodeD3":{text:(currentNodeProperty.xscale-4)+ " : "+TextCutter(text,10,9),title:(currentNodeProperty.xscale-4)+ " : "+text}
 			}); 
-
-
 		}
-
+		
+		var nN = "nodeId"+nodename;
+		g.build.setNodeProperties("nodeId"+nodename,{
+			"nodeEvents":{
+				"mouseover":{"name":"NodeIn","param":nN},
+				"mouseout":{"name":"NodeOut","param":nN}
+			}
+		});
+		
 	});
 	
 	
