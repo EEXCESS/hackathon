@@ -19,22 +19,18 @@ and open the template in the editor.
     <body>
 		<!--  Popupmenu for D3 Graph-->
 		<!--
-		border:solid 1px black;background-color:white;
+		border:solid 1px black;background-color:white;class="grey_round_box"
 		-->
 		<div id="popup_menu" class="green_round_box" style="display:none;">
-			<button id="closepopupmenu">x</button>  
-			<div id="gotodetails" class="grey_round_box">
+			<div style="margin: 3px 1px 5px 1px;"><span id="closepopupmenu" class="grey_round_box">x</span></div> 
+			<span id="gotodetails" class="grey_round_box">
 				details
-			</div>
-			<div id="gotoresults" class="grey_round_box">
+			</span>
+			<span id="gotoresults" class="grey_round_box">
 				results
-			</div>    
+			</span>    
 			<div>
 				select node</br>
-				<!--
-				<span class="grey_round_box" id="addmetalink">+</span>
-				<span id="deletemetalink" class="grey_round_box">x</span>
-				-->
 				<select id="addordeletemetalink">
 					<option>+</option>
 					<option>x</option>
