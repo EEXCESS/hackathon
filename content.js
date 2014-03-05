@@ -72,13 +72,13 @@ chrome.runtime.onMessage.addListener(
                     break;
                 case 'privacySandbox':
                     // change widget's visibility
-                	console.log("Message recieved"); 
+                    console.log("Message recieved");
                     EEXCESS.handlePrivacyBoxVisibility(request.data);
                     break;
                 case 'fancybox':
                     // open fancybox preview of the url provided in request.data
                     $('<a href="' + request.data + '"></a>').fancybox({
-                        'autoSize':false,
+                        'autoSize': false,
                         'type': 'iframe',
                         'width': '90%',
                         'height': '90%',
@@ -482,15 +482,15 @@ EEXCESS.topKcorpus = function(corpus, k) {
     if (typeof sorted[0] !== 'undefined') {
         divisor = sorted[0].value['c'];
         topK.push({
-            "weight":1,
-            "text":sorted[0].key
+            "weight": 1,
+            "text": sorted[0].key
         });
     }
-    for(var i=1; i < k; i++) {
-        if(typeof sorted[i] !== 'undefined') {
+    for (var i = 1; i < k; i++) {
+        if (typeof sorted[i] !== 'undefined') {
             topK.push({
-                "weight":(sorted[i].value['c'] / divisor),
-                "text":sorted[i].key
+                "weight": (sorted[i].value['c'] / divisor),
+                "text": sorted[i].key
             });
         } else {
             break;
@@ -541,12 +541,17 @@ EEXCESS.initiateQuery = function() {
     EEXCESS.triggerQuery(elements);
 }();
 
+EEXCESS.selectedText = '';
+
 $(document).mouseup(function() {
     var text = window.getSelection().toString();
     if (text !== '') {
-        var elements = [];
-        elements.push({text: text});
-        EEXCESS.triggerQuery(elements);
+        if (text !== EEXCESS.selectedText) {
+            EEXCESS.selectedText = text;
+            var elements = [];
+            elements.push({text: text});
+            EEXCESS.triggerQuery(elements);
+        }
     }
 });
 
@@ -554,8 +559,8 @@ $(document).mouseup(function() {
  * privacy initialization stuff
  */
 EEXCESS.handlePrivacyBoxVisibility = function() {
-	console.log("We get here");
-	var visible = !$('#eexcess_privacy').is(':visible');
+    console.log("We get here");
+    var visible = !$('#eexcess_privacy').is(':visible');
     if (EEXCESS.privacyVisible !== visible) {
         if (visible) {
             $('#eexcess_privacy').show();
