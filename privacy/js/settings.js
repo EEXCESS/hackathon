@@ -21,13 +21,27 @@ function updateUserInfo(){
 		});
 }
 
+function doSimplePolicyToggle(fieldName) {
+	var elQuery = "#" + fieldName + "Setting";
+	var policyKey = "privacy.policy."+fieldName;
+	var profileKey = "privacy.profile."+fieldName;
+	
+	if($(elQuery).attr("class") == "todo-done"){
+		localStorage[policyKey] = "1";
+		$("#list_settings").find(".email").html("Email: " + localStorage["privacy.profile.email"]);
+	} else{
+		localStorage[policyKey] = "0";
+		$("#list_settings").find(".email").html("Email: nothing");
+	}
+}
+
 function doSwitchEmail() {
 	if($("#emailSetting").attr("class") == "todo-done"){
-		userInfo.privacy.email = "1";
-		$("#list_settings").find(".email").html("Email: " + userInfo.email);
+		localStorage["privacy.policy.email"] = "1";
+		$("#list_settings").find(".email").html("Email: " + localStorage["privacy.profile.email"]);
 	}
 	else{
-		userInfo.privacy.email= "0";
+		localStorage["privacy.policy.email"] = "0";
 		$("#list_settings").find(".email").html("Email: nothing");
 	}
 	updateRecommendation(initSandBox);
@@ -38,15 +52,15 @@ function doSwitchGender() {
 	if($("#genderSetting").attr("class") == "todo-done"){
 		$("#titleSetting").show();
 		$("#titleSetting").addClass("todo-done");
-		userInfo["privacy"]["gender"] = "1";
-		$("#list_settings").find(".gender").html("Gender: " + userInfo.gender);
+		localStorage["privacy.policy.gender"] = "1";
+		$("#list_settings").find(".gender").html("Gender: " + localStorage["privacy.profile.gender"]);
 	}
 	else{
 		$("#titleSetting").hide();
-		userInfo["privacy"]["gender"] = "0";
+		localStorage["privacy.policy.gender"] = "0";
 		$("#list_settings").find(".gender").html("Gender: nothing");
 		$("#titleSetting").removeClass("todo-done");
-		userInfo["privacy"]["title"] = "0";
+		localStorage["privacy.policy.title"] = "0";
 		$("#list_settings").find(".title").html("Title: nothing");
 	}
 	updateRecommendation(initSandBox);

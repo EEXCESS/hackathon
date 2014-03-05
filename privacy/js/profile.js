@@ -7,11 +7,9 @@ var idUser;
 function initUserInfo(){
 
 	var request ={
-		
 		_id: localStorage["user_id"]
 		
 	};
-	
 	
 	var JSONrequest = JSON.stringify(request);
 	
@@ -266,7 +264,6 @@ function checkUpdate(){
 	if(!validEmail(email)){
 		$('.stateEmail').html('This is not a valid email');
 	}else{
-		
 		var query = JSON.stringify({
 			user_email: email
 		});
