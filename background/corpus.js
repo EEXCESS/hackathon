@@ -9,12 +9,14 @@ var EEXCESS = EEXCESS || {};
 EEXCESS.corpus = (function() {
     return {
         getCorpus: function(tabID, data, callback) {
-            var worker = new Worker('corpus_webWorker.js');
-            worker.addEventListener('message', function(e) {
-                // send corpus back to content script
-                callback(e.data);
-            }, false);
-            worker.postMessage({request: 'tokenize', elements: data, language: 'en'});
+            chrome.tabs.detectLanguage(tabID, function(lang) {
+                var worker = new Worker('corpus_webWorker.js');
+                worker.addEventListener('message', function(e) {
+                    // send corpus back to content script
+                    callback(e.data);
+                }, false);
+                worker.postMessage({request: 'tokenize', elements: data, language: lang});
+            });
         }
     };
 }());

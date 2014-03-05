@@ -58,7 +58,7 @@ EEXCESS.stopwords = function(language) {
         "jedem", "jeden", "jeder", "jedes", "jener", "jenes", "jetzt", "kann",
         "kannst", "können", "könnt", "machen", "mein", "meine", "mit", "muß",
         "mußt", "musst", "müssen", "müßt", "nach", "nachdem", "nein", "nicht",
-        "nun", "oder", "seid", "sein", "seine", "sich", "sie", "sind", "soll",
+        "nun", "oder", "seid", "sein", "seine", "sich", "sie", "sind", "soll", "siehe",
         "sollen", "sollst", "sollt", "sonst", "soweit", "sowie", "und", "unser",
         "unsere", "unter", "vom", "von", "vor", "wann", "warum", "was",
         "weiter", "weitere", "wenn", "wer", "werde", "werden", "werdet",
@@ -99,8 +99,8 @@ EEXCESS.createToken = function(text, parent) {
     }
     // remove special chars (keep umlauts)
     text = text.replace(/[^\w\säÄöÖüÜß]/g, '');
-    // remove digits
-    text = text.replace(/\d/g, '');
+    // remove everything with digits in it
+    text = text.replace(/.*\d.*/g, '');
     // token has at least 2 chars
     if (text.length > 1) {
         return new this.Token(text, parent, 'w');

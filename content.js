@@ -172,8 +172,6 @@ chrome.runtime.onMessage.addListener(
                     var node;
                     var viewPortText = '';
                     while (node = walker.nextNode()) {
-//                        console.log($(node).parent().get(0).tagName);
-//                        console.log(node.nodeValue);
                         viewPortText += node.nodeValue;
                     }
                     /*
@@ -365,7 +363,7 @@ EEXCESS.detectUserActions = (function() {
     // attach handlers for input, submit, click
     $(document).on('input', _inputHandler);
     $(document).on('submit', _submitHandler);
-    $(document).on('click', _clickHandler);
+    //$(document).on('click', _clickHandler);
 
     // attach handlers to iframes as well
     $(document).ready(function() {
@@ -544,7 +542,6 @@ EEXCESS.initiateQuery = function() {
 
 $(document).mouseup(function() {
     var text = window.getSelection().toString();
-    console.log(text);
     if (text !== '') {
         var elements = [];
         elements.push({text: text});
