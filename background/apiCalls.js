@@ -79,6 +79,7 @@ EEXCESS.euCall = function(weightedTerms, start, success, error) {
             for (var i = 0, len = data.results.length; i < len; i++) {
                 data.results[i].facets = _facets(data.results[i]);
                 data.results[i].facets.provider = 'Europeana';
+                    data.results[i].title = data.results[i].title[0];
             }
         }
         console.log(data);
