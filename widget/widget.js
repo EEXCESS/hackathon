@@ -45,16 +45,6 @@ EEXCESS.update = function(widget) {
     } else {
         $('#eexcess_query').val(widget.results.query);
     }
-
-//    switch (widget.params.tab) {
-//        case 'results':
-//            EEXCESS.results.showResults(widget.results.data);
-//            break;
-//    }
-
-//    setTimeout(function() {
-//        $('#eexcess_content').scrollTop(widget[widget.params.tab].scroll);
-//    }, 200);
 };
 
 
@@ -64,18 +54,9 @@ EEXCESS.update = function(widget) {
  * @param {Object} widget The current state of the widget's model in the background script
  */
 EEXCESS.init = function(widget) {
-//    $('#eexcess_tab a.inline').click(function(evt) {
-//        evt.preventDefault();
-//        $('#eexcess_tab').find('a').removeAttr('class');
-//        $(this).attr('class', 'selected');
-//        $('#eexcess_content').empty();
-//        $('#eexcess_content').append($('<div id="eexcess_loading"><img id="eexcess_loading" src="../media/loading.gif" /></div>'));
-//        EEXCESS.callBG({method: {parent: 'model', func: 'changeTab'}, data: $(this).data('name')});
-//    });
     
     $('#eexcess_tab a.fancybox_link').click(function(evt) {
         evt.preventDefault();
-        //console.log();
         EEXCESS.callBG({method: 'fancybox', data: 'chrome-extension://'+EEXCESS.extID + '/' +$(evt.target).parent('a').attr('href')});
     });
 
@@ -106,19 +87,8 @@ EEXCESS.init = function(widget) {
         EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
         return false;
     });
-    //EEXCESS.update(widget);
 };
 
-/**
- * Displays an error message to the user and resets the widget to its current state
- * in the background script's model
- * @memberOf EEXCESS
- * @param {String} error The error message to display
- */
-//EEXCESS.error = function(error) {
-//    alert(error);
-//    EEXCESS.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);
-//};
 
 // Initalize the widget with the current state in the background script's model on execution of this script
 EEXCESS.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);

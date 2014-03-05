@@ -38,10 +38,11 @@ EEXCESS.searchResultList = function(divContainer, options) {
                 }
             });
         }
-    },options);
-    var _loader = $('<div class="eexcess_loading" style="display:none"><img src="'+settings.pathToMedia+'loading.gif" /></div>');
+    }, options);
+    var _loader = $('<div class="eexcess_loading" style="display:none"><img src="' + settings.pathToMedia + 'loading.gif" /></div>');
     var _list = $('<ul class="block_list" data-total="0"></ul>').append($('<li>no results</li>'));
     var _dialog = $('<div style="display:none"><div>').append('<p></p>');
+    var _error = $('<p style="display:none">sorry, something went wrong...<p>');
     var _link = function(url, img, title) {
         var link = $('<a href="#">' + title + '</a>');
         link.click(function() {
@@ -96,6 +97,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
     divContainer.append(_loader);
     divContainer.append(_dialog);
     divContainer.append(_list);
+    divContainer.append(_error);
 
     // obtain current results
     chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'model', func: 'getResults'}, data: null}, function(reqResult) {
@@ -114,17 +116,13 @@ EEXCESS.searchResultList = function(divContainer, options) {
                     showResults(request.data);
                 }
                 if (request.method.parent === 'results' && request.method.func === 'error') {
-                    divContainer.empty();
-                    divContainer.append($('<p>sorry, something went wrong...</p>'));
+                    _list.empty();
+                    _loader.hide();
+                    _error.show();
                 }
             }
     );
 
-//    return {
-    var loading = function() {
-        _list.empty();
-        divContainer.append($('<div id="eexcess_loading"><img src="'+settings.pathToMedia+'loading.gif" /></div>'));
-    };
     var showResults = function(data) {
         _loader.hide();
         data = data.results;
@@ -217,10 +215,10 @@ EEXCESS.searchResultList = function(divContainer, options) {
     };
     var shortenDescription = function(description) {
 
-        var firstPart =  description.substring(0,100);
+        var firstPart = description.substring(0, 100);
         var remainder = description.substring(100, description.length);
         var endPos = remainder.search(/[.!?; ]/);
-        if(endPos != -1) {
+        if (endPos != -1) {
             firstPart += remainder.substring(0, endPos);
             firstPart += "...";
         }
@@ -229,7 +227,8 @@ EEXCESS.searchResultList = function(divContainer, options) {
 //    };
     return {
         showResults: showResults,
-        loading: function(){
+        loading: function() {
+            _error.hide();
             _list.empty();
             _loader.show();
         }
