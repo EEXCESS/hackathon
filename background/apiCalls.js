@@ -79,7 +79,9 @@ EEXCESS.euCall = function(weightedTerms, start, success, error) {
             for (var i = 0, len = data.results.length; i < len; i++) {
                 data.results[i].facets = _facets(data.results[i]);
                 data.results[i].facets.provider = 'Europeana';
-                    data.results[i].title = data.results[i].title[0];
+                if(data.results[i].title instanceof Array) {
+                data.results[i].title = data.results[i].title[0];
+                }
             }
         }
         console.log(data);
@@ -126,16 +128,16 @@ EEXCESS.frCall_impl = function(weightedTerms, start, success, error) {
 
 // set provider call function and url according to the provided value 
 // if an inappropriate value is given, set it to fr-stable
-EEXCESS.backend = (function(){
+EEXCESS.backend = (function() {
     var call = EEXCESS.frCall_impl;
     var url = 'http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
-    
+
     return {
-        setProvider:function(tabID, provider) {
-            if(typeof(Storage) !== 'undefined') {
+        setProvider: function(tabID, provider) {
+            if (typeof (Storage) !== 'undefined') {
                 localStorage.setItem('backend', provider);
             }
-            switch(provider) {
+            switch (provider) {
                 case 'eu':
                     console.log('eu');
                     call = EEXCESS.euCall;
@@ -163,7 +165,7 @@ EEXCESS.backend = (function(){
 }());
 
 // retrieve provider from local storage or set it to 'fr-stable'
-if(typeof(Storage) !== 'undefined') {
+if (typeof (Storage) !== 'undefined') {
     EEXCESS.backend.setProvider(-1, localStorage.getItem('backend'));
 } else {
     EEXCESS.backend.setProvider(-1, 'fr-stable');
