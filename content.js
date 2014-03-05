@@ -68,7 +68,7 @@ chrome.runtime.onMessage.addListener(
             switch (request.method) {
                 case 'visibility':
                     // change widget's visibility
-                    EEXCESS.handleWidgetVisibility();
+                    EEXCESS.handleWidgetVisibility(request.data);
                     break;
                 case 'privacySandbox':
                     // change widget's visibility
