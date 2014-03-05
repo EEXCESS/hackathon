@@ -127,7 +127,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
         _loader.hide();
         data = data.results;
         _list.empty();
-        if (data === null || data.totalResults === '0') {
+        if (data === null || data.totalResults === 0 || data.totalResults === '0') {
             _list.append($('<li>no results</li>'));
             return;
         }
