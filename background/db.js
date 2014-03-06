@@ -11,12 +11,10 @@ EEXCESS.DB = {};
  * @memberOf EEXCESS
  */
 EEXCESS.initDB = function() {
-
     console.log('init DB');
-
+    
     // initialize connection
-
-    var req = indexedDB.open('eexcess_db', 41);
+    var req = indexedDB.open('eexcess_db', 42);
     console.log('opening');
 
     // update or create db
@@ -50,9 +48,9 @@ EEXCESS.initDB = function() {
         if (EEXCESS.DB.objectStoreNames.contains('tasks') && clear) {
             EEXCESS.DB.deleteObjectStore('tasks');
         }
-        // create object store 'tasks'
-        os = EEXCESS.DB.createObjectStore('tasks', {keyPath: 'task_id', autoIncrement: true});
-        os.createIndex('start', 'start');
+//        // create object store 'tasks'
+//        os = EEXCESS.DB.createObjectStore('tasks', {keyPath: 'task_id', autoIncrement: true});
+//        os.createIndex('start', 'start');
 
         // remove existing object store 'queries' if present
         if (EEXCESS.DB.objectStoreNames.contains('queries') && clear) {
@@ -77,8 +75,8 @@ EEXCESS.initDB = function() {
         if (EEXCESS.DB.objectStoreNames.contains('demographics') && clear) {
             EEXCESS.DB.deleteObjectStore('demographics');
         }
-        // create object store 'demographics'
-        os = EEXCESS.DB.createObjectStore('demographics', {keyPath: 'user_id'});
+//        // create object store 'demographics'
+//        os = EEXCESS.DB.createObjectStore('demographics', {keyPath: 'user_id'});
 
         // remove existing object store 'interactions' if present
         if (EEXCESS.DB.objectStoreNames.contains('interactions') && clear) {
