@@ -104,101 +104,101 @@ chrome.runtime.onMessage.addListener(
                     }
                     break;
                 case 'getTextualContext':
-                    /*
-                     * Retrieves the text of dom-nodes, currently visible in the
-                     * viewport and sends it to the background script.
-                     * If a selection is present, this selection is sent as well.
-                     */
-                    // viewport
-                    var docViewTop = $(window).scrollTop();
-                    var docViewBottom = docViewTop + $(window).height();
-                    /*
-                     * Generic filtering, using only nodes inside the current
-                     * viewport, excluding 'style', 'script', 'noscript' and 
-                     * hidden nodes
-                     */
-                    var root = document;
-                    var filter = {acceptNode: function(node) {
-                            var parent = $(node).parent();
-                            var elemTop = parent.offset().top;
-                            var elemBottom = elemTop + $(node).parent().height();
-                            if ((elemBottom > docViewTop) && (elemTop < docViewBottom)) {
-                                var nodeName = parent.prop('nodeName');
-                                // exclude 'style', 'script' and 'noscript' nodes, as they 
-                                var dataElement = (nodeName === 'STYLE' || nodeName === 'SCRIPT' || nodeName === 'NOSCRIPT');
-                                if (!dataElement && !parent.is(':hidden')) {
-                                    return NodeFilter.FILTER_ACCEPT;
-                                }
-                            }
-                            return NodeFilter.FILTER_REJECT;
-                        }};
-
-                    /*
-                     * Specific filtering for wikipedia, considering only nodes
-                     * within the content part of the page, excluding navigational
-                     * menus.
-                     */
-                    var wikiContent = $('#mw-content-text').get()[0];
-                    if (typeof wikiContent !== 'undefined') {
-                        root = wikiContent;
-                        filter = {acceptNode: function(node) {
-                                if ($(node).parents('.dablink').length > 0) {
-                                    return NodeFilter.FILTER_REJECT;
-                                }
-                                if ($(node).parents('#toc').length > 0) {
-                                    return NodeFilter.FILTER_REJECT;
-                                }
-                                var parent = $(node).parent();
-                                var elemTop = parent.offset().top;
-                                var elemBottom = elemTop + parent.height();
-                                if ((elemBottom > docViewTop) && (elemTop < docViewBottom)) {
-                                    var nodeName = parent.prop('nodeName');
-                                    // exclude 'style', 'script' and 'noscript' nodes, as they 
-                                    var dataElement = (nodeName === 'STYLE' || nodeName === 'SCRIPT' || nodeName === 'NOSCRIPT');
-                                    if (!dataElement && !parent.is(':hidden')) {
-                                        return NodeFilter.FILTER_ACCEPT;
-                                    }
-                                } else {
-                                    return NodeFilter.FILTER_REJECT;
-                                }
-                            }};
-                    }
-                    // tree walker with generic or wikipedia filter
-                    var walker = document.createTreeWalker(
-                            root,
-                            NodeFilter.SHOW_TEXT,
-                            filter
-                            );
-                    // concatenate text of respective nodes
-                    var node;
-                    var viewPortText = '';
-                    while (node = walker.nextNode()) {
-                        viewPortText += node.nodeValue;
-                    }
-                    /*
-                     * The text inside the viewport is split into several 
-                     * paragraphs, in order to extract only those parts,
-                     * which contain relevant information (navigational items
-                     * should be ignored for example). There seem to be several
-                     * blank text nodes between dom elements (mostly linebreaks),
-                     * thus, the text is splitted at at least two consecutive
-                     * whitespace characters. Enforcing the extracted text parts
-                     * to have a certain minimum length increases the probability
-                     * to extract paragraphs, which consist of real sentences 
-                     * and thus reveal contextual information
-                     * TODO: do not apply filter here, but post filter the log?
-                     */
-                    var matches = viewPortText.match(/\s{2,}(\S*\s?\S)+/g);
-                    var paragraphs = [];
-                    for (var i = 0, len = matches.length; i < len; i++) {
-                        var tmp = matches[i].trim();
-                        if (tmp.length > 0) { // may be adjusted for filtering
-                            if (tmp !== 'Annotate') { // filter out annotator
-                                paragraphs.push(tmp);
-                            }
-                        }
-                    }
-                    sendResponse({selectedText: document.getSelection().toString(), paragraphs: paragraphs, url: document.URL});
+//                    /*
+//                     * Retrieves the text of dom-nodes, currently visible in the
+//                     * viewport and sends it to the background script.
+//                     * If a selection is present, this selection is sent as well.
+//                     */
+//                    // viewport
+//                    var docViewTop = $(window).scrollTop();
+//                    var docViewBottom = docViewTop + $(window).height();
+//                    /*
+//                     * Generic filtering, using only nodes inside the current
+//                     * viewport, excluding 'style', 'script', 'noscript' and 
+//                     * hidden nodes
+//                     */
+//                    var root = document;
+//                    var filter = {acceptNode: function(node) {
+//                            var parent = $(node).parent();
+//                            var elemTop = parent.offset().top;
+//                            var elemBottom = elemTop + $(node).parent().height();
+//                            if ((elemBottom > docViewTop) && (elemTop < docViewBottom)) {
+//                                var nodeName = parent.prop('nodeName');
+//                                // exclude 'style', 'script' and 'noscript' nodes, as they 
+//                                var dataElement = (nodeName === 'STYLE' || nodeName === 'SCRIPT' || nodeName === 'NOSCRIPT');
+//                                if (!dataElement && !parent.is(':hidden')) {
+//                                    return NodeFilter.FILTER_ACCEPT;
+//                                }
+//                            }
+//                            return NodeFilter.FILTER_REJECT;
+//                        }};
+//
+//                    /*
+//                     * Specific filtering for wikipedia, considering only nodes
+//                     * within the content part of the page, excluding navigational
+//                     * menus.
+//                     */
+//                    var wikiContent = $('#mw-content-text').get()[0];
+//                    if (typeof wikiContent !== 'undefined') {
+//                        root = wikiContent;
+//                        filter = {acceptNode: function(node) {
+//                                if ($(node).parents('.dablink').length > 0) {
+//                                    return NodeFilter.FILTER_REJECT;
+//                                }
+//                                if ($(node).parents('#toc').length > 0) {
+//                                    return NodeFilter.FILTER_REJECT;
+//                                }
+//                                var parent = $(node).parent();
+//                                var elemTop = parent.offset().top;
+//                                var elemBottom = elemTop + parent.height();
+//                                if ((elemBottom > docViewTop) && (elemTop < docViewBottom)) {
+//                                    var nodeName = parent.prop('nodeName');
+//                                    // exclude 'style', 'script' and 'noscript' nodes, as they 
+//                                    var dataElement = (nodeName === 'STYLE' || nodeName === 'SCRIPT' || nodeName === 'NOSCRIPT');
+//                                    if (!dataElement && !parent.is(':hidden')) {
+//                                        return NodeFilter.FILTER_ACCEPT;
+//                                    }
+//                                } else {
+//                                    return NodeFilter.FILTER_REJECT;
+//                                }
+//                            }};
+//                    }
+//                    // tree walker with generic or wikipedia filter
+//                    var walker = document.createTreeWalker(
+//                            root,
+//                            NodeFilter.SHOW_TEXT,
+//                            filter
+//                            );
+//                    // concatenate text of respective nodes
+//                    var node;
+//                    var viewPortText = '';
+//                    while (node = walker.nextNode()) {
+//                        viewPortText += node.nodeValue;
+//                    }
+//                    /*
+//                     * The text inside the viewport is split into several 
+//                     * paragraphs, in order to extract only those parts,
+//                     * which contain relevant information (navigational items
+//                     * should be ignored for example). There seem to be several
+//                     * blank text nodes between dom elements (mostly linebreaks),
+//                     * thus, the text is splitted at at least two consecutive
+//                     * whitespace characters. Enforcing the extracted text parts
+//                     * to have a certain minimum length increases the probability
+//                     * to extract paragraphs, which consist of real sentences 
+//                     * and thus reveal contextual information
+//                     * TODO: do not apply filter here, but post filter the log?
+//                     */
+//                    var matches = viewPortText.match(/\s{2,}(\S*\s?\S)+/g);
+//                    var paragraphs = [];
+//                    for (var i = 0, len = matches.length; i < len; i++) {
+//                        var tmp = matches[i].trim();
+//                        if (tmp.length > 0) { // may be adjusted for filtering
+//                            if (tmp !== 'Annotate') { // filter out annotator
+//                                paragraphs.push(tmp);
+//                            }
+//                        }
+//                    }
+                    sendResponse({selectedText: document.getSelection().toString(), url: document.URL});
                     break;
             }
         }

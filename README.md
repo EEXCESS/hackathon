@@ -103,7 +103,6 @@ This interaction is logged on submitting a form on a particular web page.
 
 ##### queries #####	
 * *context*: the context, in which the query was issued
-	* *paragraphs*: an array of paragraphs, visible in the viewport by the time the query was issued (seems to produce heavy load retrieving them, may be removed)
 	* *selectedText*: text that was selected when the query was issued (if any)
 	* *url*: the url of the page on which the query was issued
 * *id*: auto incremented query identifier
