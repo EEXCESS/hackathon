@@ -130,7 +130,7 @@ EEXCESS.frCall_impl = function(weightedTerms, start, success, error) {
 // if an inappropriate value is given, set it to fr-stable
 EEXCESS.backend = (function() {
     var call = EEXCESS.frCall_impl;
-    var url = 'http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
+    var url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
 
     return {
         setProvider: function(tabID, provider) {
@@ -146,12 +146,12 @@ EEXCESS.backend = (function() {
                 case 'fr-devel':
                     console.log('fr-devel');
                     call = EEXCESS.frCall_impl;
-                    url = 'http://digv539.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
+                    url = 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
                     break;
                 case 'fr-stable':
                     console.log('fr-stable');
                     call = EEXCESS.frCall_impl;
-                    url = 'http://digv536.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
+                    url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
                     break;
             }
         },
