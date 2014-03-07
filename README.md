@@ -23,6 +23,41 @@ file structure
 
 (for detailed information on a component, see the readme in the respective folder)
 
+common methods
+--------------------------
+Please use the message\_wrapper in common\_js to send/receive messages.
+ 
+### retrieving current query and results ###
+```javascript
+EEXCESS.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(res) {
+    console.log(res);
+});
+```
+The current query is contained in res.query and the results in res.results
+
+### listen for new search events ###
+```javascript
+EEXCESS.messageListener(
+        function(request, sender, sendResponse) {
+            if (request.method === 'newSearchTriggered') {
+                console.log(request.data);
+            }
+        }
+);
+```
+The issued query is contained in request.data.query and the results in request.data.results
+
+### issue a new query ###
+```javascript
+// call loading-method on search result list (to show loading bar)
+EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
+```
+
+The query-object has to contain the query as an array, consisting of terms and weights, i.e. each element of the array needs to adhere to the following structure:
+```javascript
+{weight: [0-1], text:"single query term"}
+```
+
 data stored
 ---------------------------------------
 This section provides an overview of the data stored within the extension and accessible by all extension pages.
