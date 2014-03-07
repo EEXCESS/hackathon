@@ -49,8 +49,8 @@ The issued query is contained in request.data.query and the results in request.d
 
 ### issue a new query ###
 ```javascript
-// call loading-method on search result list (to show loading bar)
-EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
+SearchResultList.loading() // call loading-method on search result list first (to show loading bar). Adapt variable name of the list!
+EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query}); // issue query
 ```
 
 The query-object has to contain the query as an array, consisting of terms and weights, for example:
