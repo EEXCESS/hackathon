@@ -1,5 +1,4 @@
 var EEXCESS = EEXCESS || {};
-EEXCESS.extID = chrome.i18n.getMessage('@@extension_id');
 
 /**
  * Implements a search result list, which can be used by all components.
@@ -25,18 +24,17 @@ EEXCESS.searchResultList = function(divContainer, options) {
         pathToMedia: '../media/',
         pathToLibs: '../libs/',
         previewHandler: function(url) {
-            chrome.runtime.sendMessage(EEXCESS.extID, {method: 'fancybox', data: url});
+            EEXCESS.callBG({method: 'fancybox', data: url});
         },
         ratingHandler: function(uri, score, pos) {
-            chrome.runtime.sendMessage(EEXCESS.extID, {
+            EEXCESS.callBG({
                 method: {parent: 'model', func: 'rating'},
                 data: {
                     uri: uri,
                     score: score,
                     pos: pos,
                     beenRecommended: true
-                }
-            });
+                }});
         }
     }, options);
     var _loader = $('<div class="eexcess_loading" style="display:none"><img src="' + settings.pathToMedia + 'loading.gif" /></div>');
@@ -100,12 +98,12 @@ EEXCESS.searchResultList = function(divContainer, options) {
     divContainer.append(_error);
 
     // obtain current results
-    chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'model', func: 'getResults'}, data: null}, function(reqResult) {
+    EEXCESS.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(reqResult) {
         showResults(reqResult);
     });
 
     // listen for updates
-    chrome.runtime.onMessage.addListener(
+    EEXCESS.messageListener(
             function(request, sender, sendResponse) {
                 if (request.method.parent === 'results') {
                     if (request.method.func === 'rating') {

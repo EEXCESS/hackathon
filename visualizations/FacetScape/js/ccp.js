@@ -39,11 +39,11 @@ function requestPlugin(dataCallbackFct, action) {
     }
 
     if(typeof action == "undefined") {
-        chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
+        EEXCESS.callBG({method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
             updateFacetScape(reqResult);
         });
     } else if(action == "refresh") {
-        chrome.runtime.onMessage.addListener(
+        EEXCESS.messageListener(
             function(request, sender, sendResponse) {
                 if (request.method === 'newSearchTriggered') {
                     updateFacetScape(request.data);

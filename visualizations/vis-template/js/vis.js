@@ -372,7 +372,7 @@ function vis(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
 
 
     function search(term) {
-        chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'query'}, data: [{weight:1,text:term}]});
+        EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: [{weight:1,text:term}]});
         var onReceiveData = function(terms, processedData, items) {
             d3.select("div#RS_Panel").remove();
             d3.select("svg#facetScape").remove();

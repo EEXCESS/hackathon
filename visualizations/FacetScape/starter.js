@@ -4,7 +4,7 @@ var onReceiveData = function(queryTerms, processedData, items) {
     var scape = facetScape(d3.select("body").select("div#facetScape"), width, height, processedData, items, queryTerms);
 }
 
-chrome.runtime.onMessage.addListener(
+EEXCESS.messageListener(
     function(request, sender, sendResponse) {
         if (request.method === 'newSearchTriggered') {
             //requestPlugin(onReceiveData);

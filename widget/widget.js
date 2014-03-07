@@ -54,18 +54,18 @@ EEXCESS.update = function(widget) {
  * @param {Object} widget The current state of the widget's model in the background script
  */
 EEXCESS.init = function(widget) {
-    
+
     $('#eexcess_tab a.fancybox_link').click(function(evt) {
         evt.preventDefault();
-        EEXCESS.callBG({method: 'fancybox', data: 'chrome-extension://'+EEXCESS.extID + '/' +$(evt.target).parent('a').attr('href')});
+        EEXCESS.callBG({method: 'fancybox', data: 'chrome-extension://' + EEXCESS.extID + '/' + $(evt.target).parent('a').attr('href')});
     });
 
-    
+
     $('#eexcess_privacy').click(function(evt) {
-    	console.log("Click sent");
+        console.log("Click sent");
         evt.preventDefault();
         //console.log();
-        EEXCESS.callBG({method: 'privacySandbox', data: 'chrome-extension://'+EEXCESS.extID + '/' +$(evt.target).parent('a').attr('href')});
+        EEXCESS.callBG({method: 'privacySandbox', data: 'chrome-extension://' + EEXCESS.extID + '/' + $(evt.target).parent('a').attr('href')});
     });
     var form = $('#eexcess_searchForm');
     form.submit(function() {
@@ -77,10 +77,10 @@ EEXCESS.init = function(widget) {
         EEXCESS.searchResults.loading();
         var query_terms = $('#eexcess_query').val().split(' ');
         var query = [];
-        for(var i=0;i < query_terms.length;i++) {
+        for (var i = 0; i < query_terms.length; i++) {
             var tmp = {
-                weight:1,
-                text:query_terms[i]
+                weight: 1,
+                text: query_terms[i]
             };
             query.push(tmp);
         }
@@ -92,3 +92,14 @@ EEXCESS.init = function(widget) {
 
 // Initalize the widget with the current state in the background script's model on execution of this script
 EEXCESS.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);
+
+
+EEXCESS.messageListener(function(request, sender, sendResponse) {
+    if (request.method !== 'privacySandbox' && request.method !== 'visibility' && request.method !== 'fancybox' && request.method !== 'useResource' && request.method !== 'getTextualContext' && request.method !== 'newSearchTriggered' && request.method.parent !== 'results') {
+        if (typeof request.method.parent !== 'undefined') {
+            EEXCESS[request.method.parent][request.method.func](request.data);
+        } else {
+            EEXCESS[request.method](request.data);
+        }
+    }
+});

@@ -20,15 +20,13 @@ var storeDetailsForShorttime = {};
 //get results
 d3.select('#gotoresults').on("click", function () {
 	//start search with asynchronous call.
-	chrome.runtime.sendMessage(
-		chrome.i18n.getMessage('@@extension_id'),{
+        EEXCESS.callBG({
 			method: {parent: 'model', func: 'query'}, data: [{weight:1,text:dataParameter.text}]
-		}
-	);
+		});
 	d3.select('#popup_menu').style("display", "none");
 });
 //search finished with results, asynchronous call
-chrome.runtime.onMessage.addListener(
+EEXCESS.messageListener(
 	function(request, sender, sendResponse) {
 		if (request.method === 'newSearchTriggered') {
 			console.log(request.data);
@@ -237,9 +235,7 @@ $("#getdata").click(function(){
 
 //get current data
 var getData = {};
-chrome.runtime.sendMessage(
-	chrome.i18n.getMessage('@@extension_id'), 
-	{
+EEXCESS.callBG(	{
 		method: {
 			parent: 'model', 
 			func: 'getResults'
@@ -251,7 +247,7 @@ chrome.runtime.sendMessage(
 		//console.log("- - - - -");
 		//console.log(reqResult);
 		getData = reqResult;
-	}
-);
+	});
+
 
 

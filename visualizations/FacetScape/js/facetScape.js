@@ -531,13 +531,13 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         var backButton = $('<img src="../../../media/icons/back.png" style="width:100%;">');
         var previewFrame = $('<iframe src="' + url + '" frameborder="0" hspace="0" vspace="0" style="width:100%;height:100%;position:absolute;">');
 
-        chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
+        EEXCESS.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
 
         myFacetScape.hide();
         backPanel.click(function() {
             previewPanel.remove();
             myFacetScape.show();
-            chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
+            EEXCESS.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
         });
         backPanel.append(backButton);
         previewPanel.append(backPanel);
@@ -1236,7 +1236,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     }
 
     function search(term) {
-        chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'query'}, data: [{weight:1,text:term}]});
+        EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: [{weight:1,text:term}]});
         var onReceiveData = function(terms, processedData, items) {
             d3.select("div#RS_Panel").remove();
             d3.select("svg#facetScapeSvg").remove();
