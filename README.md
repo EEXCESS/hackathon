@@ -53,9 +53,9 @@ The issued query is contained in request.data.query and the results in request.d
 EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
 ```
 
-The query-object has to contain the query as an array, consisting of terms and weights, i.e. each element of the array needs to adhere to the following structure:
+The query-object has to contain the query as an array, consisting of terms and weights, for example:
 ```javascript
-{weight: [0-1], text:"single query term"}
+[{weight: 1, text:"term1"},{weight:1,text:"term2"}]
 ```
 
 data stored
