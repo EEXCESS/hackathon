@@ -4,8 +4,8 @@
  * Create custom handlers for the results' preview
  * In this case, open a fancybox with the url provided in the result.
  * Please make sure to log opening/closing the preview properly (methods:
- * chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
- * chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
+ * EEXCESS.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
+ * EEXCESS.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
  */
 var previewHandler = function(url) {
     $('<a href="' + url + '"></a>').fancybox({
@@ -14,11 +14,11 @@ var previewHandler = function(url) {
         'height': '90%',
         afterShow: function() {
             // log opening the page's preview in the background script
-            chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
+            EEXCESS.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
         },
         afterClose: function(evt) {
             // log closing the page's preview in the background script
-            chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
+            EEXCESS.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
         }
     }).trigger('click');
 };
@@ -28,6 +28,11 @@ var previewHandler = function(url) {
  * defined above and sets the correct paths (pathToMedia & pathToLibs)
  */
 var rList = EEXCESS.searchResultList($('#test'), {previewHandler: previewHandler, pathToMedia: '../../media/', pathToLibs: '../../libs/'});
+
+// populate query field initially
+EEXCESS.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(res) {
+    $('#query').val(res.query);
+});
 
 
 // ================= CREATING NEW QUERIES (INPUT FORM FIELD) =================//
@@ -52,12 +57,12 @@ $('#testForm').submit(function(evt) {
         query.push(tmp);
     }
     // send query for new results
-    chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'model', func: 'query'}, data: query});
+    EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
 });
 
 
 // update search input field on new query
-chrome.runtime.onMessage.addListener(
+EEXCESS.messageListener(
         function(request, sender, sendResponse) {
             if (request.method === 'newSearchTriggered') {
                 $('#query').val(request.data.query);
