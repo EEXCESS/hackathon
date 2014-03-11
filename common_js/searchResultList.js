@@ -122,6 +122,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
     );
 
     var showResults = function(data) {
+        _error.hide();
         _loader.hide();
         data = data.results;
         _list.empty();
