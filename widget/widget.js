@@ -47,6 +47,10 @@ EEXCESS.update = function(widget) {
     }
 };
 
+EEXCESS.newSearchTriggered = function(data) {
+    $('#eexcess_query').val(data.query);
+};
+
 
 /**
  * Initializes the widget's view with the current state of the widget in the background script's model
@@ -95,7 +99,7 @@ EEXCESS.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);
 
 
 EEXCESS.messageListener(function(request, sender, sendResponse) {
-    if (request.method !== 'privacySandbox' && request.method !== 'visibility' && request.method !== 'fancybox' && request.method !== 'useResource' && request.method !== 'getTextualContext' && request.method !== 'newSearchTriggered' && request.method.parent !== 'results') {
+    if (request.method !== 'privacySandbox' && request.method !== 'visibility' && request.method !== 'fancybox' && request.method !== 'useResource' && request.method !== 'getTextualContext' && request.method.parent !== 'results') {
         if (typeof request.method.parent !== 'undefined') {
             EEXCESS[request.method.parent][request.method.func](request.data);
         } else {

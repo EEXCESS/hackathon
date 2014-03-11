@@ -75,6 +75,33 @@ EEXCESS.model = (function() {
             params.visible = !params.visible;
             return params.visible;
         },
+        quietQuery: function(tabID, data, callback) {
+            var simpleQuery = '';
+            for(var i=0,len=data.length; i<len;i++) {
+                simpleQuery += data[i].text;
+                if(i < len-1) {
+                    simpleQuery += ' ';
+                }
+            }
+            EEXCESS.logging.logQuery(tabID, data);
+            var success = function(res) { // success callback
+                if (res.totalResults !== 0) {
+                    // update results with ratings
+                    _updateRatings(res.results);
+                    // provide searchResults to callback
+                    callback(res);
+                    // create context
+                    var context = {query: simpleQuery};
+                    // log results
+                    EEXCESS.logging.logRecommendations(res.results, context);
+                }
+            };
+            var error = function(error) { // error callback
+                EEXCESS.sendMessage(tabID, {method: {parent:'results',func:'error'}, data: error});
+            };
+            // call provider (resultlist should start with first item)
+            EEXCESS.backend.getCall()(data, 1, success, error);
+        },
         /**
          * Executes the following functions:
          * - log the query
@@ -105,19 +132,11 @@ EEXCESS.model = (function() {
             var success = function(data) { // success callback
                 // TODO: search may return no results (although successful)
                 results.data = data;
-                // send results to all tabs
-                EEXCESS.sendMsgAll({
-                    method: 'update',
-                    data: {params: params, results: results, task: task}
-                });
                 if (data.totalResults !== 0) {
                     // update results with ratings
                     _updateRatings(data.results);
                     // create context
                     var context = {query: results.query};
-                    if (task.id !== -1) {
-                        context.task_id = task.id;
-                    }
                     // log results
                     EEXCESS.logging.logRecommendations(data.results, context);
                 }
