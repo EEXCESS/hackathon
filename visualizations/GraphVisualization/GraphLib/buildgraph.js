@@ -25,7 +25,10 @@ function BuildGraph(){
 				"nodeD3":{}
 			};
 			
-			node.attributes.nodeD3.circleOrPoly = "circle";
+			//node.attributes.nodeD3.circleOrPoly = "circle";
+			node.attributes.nodeD3.circle = "visible";
+			node.attributes.nodeD3.image = "hidden";
+			node.attributes.nodeD3.poly = "hidden";
 			node.attributes.nodeD3.polypoints = "-5,-5 -5,5 5,5 5,-5";
 			node.attributes.nodeD3.name = name;
 			

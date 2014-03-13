@@ -240,7 +240,8 @@ function ShowGraph(){
 		graphNode.append("circle")
 			.attr("vector-effect","non-scaling-stroke")
 			.attr("r", 5)
-			.attr("visibility",function(d){return d.attributes.nodeD3.circleOrPoly == "circle"?"visible":"hidden";})		
+			//.attr("visibility",function(d){return d.attributes.nodeD3.circleOrPoly == "circle"?"visible":"hidden";})	
+			.attr("visibility",function(d){return d.attributes.nodeD3.circle;})			
 			.append("svg:title").text(function(d){ 
 				if(d.attributes.nodeD3.hasOwnProperty("title")){
 					return d.attributes.nodeD3.title; 
@@ -248,13 +249,40 @@ function ShowGraph(){
 			});
 
 		graphNode.append("polygon")
-			.attr("visibility",function(d){return d.attributes.nodeD3.circleOrPoly == "polygon"?"visible":"hidden";})
+			//.attr("visibility",function(d){return d.attributes.nodeD3.circleOrPoly == "polygon"?"visible":"hidden";})
+			.attr("visibility",function(d){return d.attributes.nodeD3.poly;})	
 			.attr("vector-effect","non-scaling-stroke")
 			.attr("points",function(d){return d.attributes.nodeD3.polypoints;})
 			.append("svg:title").text(function(d, i){ 
 				return d.attributes.nodeD3.title; 
 			});
 			
+		graphNode.append("rect")
+			.attr("style","stroke:black;stroke-width:2;")
+			.attr("vector-effect","non-scaling-stroke")
+						/////////////
+			.attr("x",function(d){return d.attributes.nodeD3.imageX;})	
+			.attr("y",function(d){return d.attributes.nodeD3.imageY;})	
+			.attr("width",function(d){return d.attributes.nodeD3.imageWidth;})	
+			.attr("height",function(d){return d.attributes.nodeD3.imageHeight;})	
+			.attr("xlink:href",function(d){return d.attributes.nodeD3.imageLink;});
+			///////////////
+		graphNode.append("image")
+			//.attr("visibility",function(d){return d.attributes.nodeD3.circleOrPoly == "polygon"?"visible":"hidden";})
+			.attr("visibility",function(d){return d.attributes.nodeD3.image;})	
+			.attr("vector-effect","non-scaling-stroke")
+			.attr({"preserveAspectRatio":"xMidYMid slice"})
+			/////////////
+			.attr("x",function(d){return d.attributes.nodeD3.imageX;})	
+			.attr("y",function(d){return d.attributes.nodeD3.imageY;})	
+			.attr("width",function(d){return d.attributes.nodeD3.imageWidth;})	
+			.attr("height",function(d){return d.attributes.nodeD3.imageHeight;})	
+			.attr("xlink:href",function(d){return d.attributes.nodeD3.imageLink;})	
+			///////////////
+			.append("svg:title").text(function(d, i){ 
+				return d.attributes.nodeD3.title; 
+			});
+		
 		//////////////////////////////////////////////////		  		
 			
 		var textAndTooltipInNode = innerNode.insert("g");

@@ -153,7 +153,9 @@ function MakeGraph(){
 	Object.keys(wordsWithResults).forEach(function(keyword){
 		Object.keys(wordsWithResults[keyword].results).forEach(function(result){	
 		
-			text = wordsWithResults[keyword].results[result].title;
+			var currentResult = wordsWithResults[keyword].results[result];
+			text = currentResult.title;
+			
 			storeDetailsForShorttime[wordsWithResults[keyword].results[result].uri] = wordsWithResults[keyword].results[result];
 
 			//console.log("-------------");
@@ -170,7 +172,18 @@ function MakeGraph(){
 				};
 			g.build.setNodeProperties("ResultId"+linecount,{
 				"nodeGraph":{xscale:2,yscale:2,fill:"orange"},
-				"nodeD3":{text:TextCutter(text,10,9),title:text},
+				"nodeD3":{
+					text:TextCutter(text,10,9),
+					title:text,
+					poly:"hidden",
+					circle:"hidden",
+					image:"visible",
+					imageX:-5,
+					imageY:-5,
+					imageWidth:10,
+					imageHeight:10,
+					imageLink: currentResult.hasOwnProperty("previewImage") ? currentResult.previewImage : "/media/no-img.png"
+				},
 				"nodeEvents":{contextmenu:{name:"MakePopupMenu",param:JSON.stringify(paramData)}}
 			}); 
 
