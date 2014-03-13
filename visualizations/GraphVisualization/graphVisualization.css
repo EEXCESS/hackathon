@@ -42,6 +42,10 @@ body {
 	
 }
 
+#graph_header{
+	padding-bottom: 0px;
+}
+
 .green_round_box{
 	border-radius:5px 5px 5px 5px; 
 	border:2px solid #1d904e;
@@ -61,3 +65,43 @@ body {
 .type_bold{
 	font-weight: bold;
 }
+
+/* css for expander control*/
+.expanderControl{
+    border:1px solid green;
+    border-radius:2px 2px 2px 2px; 
+    margin:1px;
+}
+
+.expanderhead{
+    
+    border:1px solid lightgrey;
+    border-radius:2px 2px 2px 2px; 
+    
+    margin:1px;
+    padding:2px;
+}
+
+.expanderbutton{
+    border:1px solid grey;
+    border-radius:2px 2px 2px 2px; 
+    margin:0px;1px;0px;1px;
+    padding:1px;
+}
+
+.expandertext{
+    /*
+    border:1px solid;
+    border-radius:2px 2px 2px 2px; 
+    */
+    margin:2px;
+}
+
+.expanderbody{
+    border:1px solid lightgrey;
+    border-radius:2px 2px 2px 2px; 
+    padding:2px;
+}
+
+
+

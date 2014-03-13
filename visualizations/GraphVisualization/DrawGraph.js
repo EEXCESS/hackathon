@@ -13,7 +13,7 @@ function MakeGraph(){
 	
 	g.changeOption({	
 		svg:{
-			width:{value:1000},
+			width:{value:750},
 			height:{value:500}
 		},
 		vis:{

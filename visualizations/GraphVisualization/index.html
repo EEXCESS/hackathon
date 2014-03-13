@@ -11,8 +11,11 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width">
         <script type="text/javascript" src="../../libs/jquery-1.10.1.min.js"></script>
         <script type="text/javascript" src="../../libs/d3.v3.js"></script>
+		<script type="text/javascript" src="../../libs/md5.js"></script>
         <script type="text/javascript" src="../../common_js/message_wrapper.js"></script>
 		<link rel="stylesheet" type="text/css" href="graphVisualization.css">
+		<link rel="stylesheet" type="text/css" href="../../eexcess.css">
+		
 		<style>
 
 		</style>
@@ -48,6 +51,9 @@ and open the template in the editor.
 			</div>
 		</div>
 		
+		<!-- 
+			Content. Graph and sidebar
+		-->
 		<div style="display:inline-flex;">
 			<!-- Graph-->
 			<svg class="eexcess_vis" style="margin:5px;">
@@ -62,88 +68,113 @@ and open the template in the editor.
 				</g>
 			</svg>
 		
-		
-			<!-- show details -->
-			<!-- 
+					<!-- 
 			border:solid 1px;
 			float:right;
 			 style="border:solid 1px grey;"
 			 
 			-->
-			<div class="eexcess_vis" style="margin:5px;width:250px;height:500px;overflow-y:auto;">
-				<button id="cleardata" class="margin_box">clear data</button>
-				<div class="margin_box type_bold">
-				title:
-				</div>
-				<textarea id="title_data" class="grey_round_box margin_box"></textarea>
-				<div  class="margin_box type_bold">
-				link:
-				</div>
-				<div  class="margin_box" style="overflow-x:auto">
-					<a target="_blank" id="link_data"></a>
-				</div>
-				<div  class="margin_box type_bold">
-				image:
-				</div>   
-				<!--  
-				-->
-				<div width="100px" height="150px" style="resize:both;overflow:auto;" class="grey_round_box margin_box">
-					<img width="100%" height="100%" id="image_data"></img>
-				</div>
-				<div class="margin_box type_bold">
-				id:
-				</div>  
-				<div id="id_data" style="overflow-x:auto;" class="margin_box">
-					
-				</div>
-				<div class="margin_box type_bold">
-				facets:
-				</div>  
-				<div class="grey_round_box margin_box">
-				<div>
-					<span class="type_bold margin_box">
-						language:
-					</span>
-					<span id="language_data">
+			
+
+			<!-- show details and metadata export -->
+			<div class="eexcess_vis" style="margin:5px;width:300px;height:500px;overflow-y:auto;">
+				<header id="graph_header" class="header_sidebar">
+					<button id="detail_btn" class="eexcess_submit_btn margin_box">details</button>
+					<button id="export_btn" class="eexcess_submit_btn margin_box">export metadata</button>
+				</header>
+	
+				<!-- show details panel-->
+				<div id="detail_panel" class="grey_round_box">
+					<button id="cleardata" class="margin_box">clear data</button>
+					<div class="margin_box type_bold">
+					title:
+					</div>
+					<textarea id="title_data" class="grey_round_box margin_box"></textarea>
+					<div  class="margin_box type_bold">
+					link:
+					</div>
+					<div  class="margin_box" style="overflow-x:auto">
+						<a target="_blank" id="link_data"></a>
+					</div>
+					<div  class="margin_box type_bold">
+					image:
+					</div>   
+					<!--  
+					-->
+					<div width="100px" height="150px" style="resize:both;overflow:auto;" class="grey_round_box margin_box">
+						<img width="100%" height="100%" id="image_data"></img>
+					</div>
+					<div class="margin_box type_bold">
+					id:
+					</div>  
+					<div id="id_data" style="overflow-x:auto;" class="margin_box">
 						
-					</span>
+					</div>
+					<div class="margin_box type_bold">
+					facets:
+					</div>  
+					<div class="grey_round_box margin_box">
+						<div>
+							<span class="type_bold margin_box">
+								language:
+							</span>
+							<span id="language_data">
+								
+							</span>
+						</div>
+						<div>
+							<span class="type_bold margin_box">
+								partner:
+							</span>
+							<span id="partner_data">
+								
+							</span>
+						</div>
+						<div style="overflow-x:auto">
+							<span class="type_bold margin_box">
+								provider:
+							</span>
+							<span id="provider_data" >
+								
+							</span>
+						</div>
+						<div>
+							<span class="type_bold margin_box">
+								type:
+							</span>
+							<span id="type_data">
+								
+							</span>
+						</div>
+						<div>
+							<span class="type_bold margin_box">
+								year:
+							</span>
+							<span  id="year_data">
+								
+							</span>
+						</div>
+					</div>
+				
 				</div>
-				<div>
-					<span class="type_bold margin_box">
-						partner:
-					</span>
-					<span id="partner_data">
-						
-					</span>
-				</div>
-				<div style="overflow-x:auto">
-					<span class="type_bold margin_box">
-						provider:
-					</span>
-					<span id="provider_data" >
-						
-					</span>
-				</div>
-				<div>
-					<span class="type_bold margin_box">
-						type:
-					</span>
-					<span id="type_data">
-						
-					</span>
-				</div>
-				<div>
-					<span class="type_bold margin_box">
-						year:
-					</span>
-					<span  id="year_data">
-						
-					</span>
-				</div>
+			
+				<!-- show export panel-->
+				<div id="export_panel" class="grey_round_box"  style="display:none;">
+					<button id="exportmetadata" class="margin_box">export metadata</button>
+					<!--
+					class="grey_round_box"
+					-->
+					<div id="tree_view" >
+					</div>
 				</div>
 			</div>
+			
 		</div>
  
+ 
+		 <!-- 
+			bottom Controls
+		 -->
 		<div class="eexcess_vis">
 			<!-- databutton -->
 			<a id="getdata">getData</a></br>

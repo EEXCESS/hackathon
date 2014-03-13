@@ -1,4 +1,5 @@
 
+//help functions
 function GetValueNumber(stringVal,maxNumberInString){
 	return stringVal == maxNumberInString ? Number.MAX_VALUE : parseInt(stringVal);
 }
@@ -6,6 +7,47 @@ function GetValueNumber(stringVal,maxNumberInString){
 function TextCutter(text,sizeCompare,sizeCut){
 	return text.length < sizeCompare ? text : text.substring(0,sizeCut)+"..."; 
 }
+
+//functions for expander control
+function GetExpanderFunction(currentControl){
+    var expanderButton = ".expanderhead > .expanderbutton";
+    $(currentControl+ " > "+expanderButton).click(function(){
+    
+        if($(currentControl+ " > .expanderbody").css("display") == "none"){
+            $(currentControl+ " > .expanderbody").css("display","");
+            $(currentControl+ " > "+expanderButton).text("x");
+        }else{
+            $(currentControl+ " > .expanderbody").css("display","none");
+            $(currentControl+ " > "+expanderButton).text("+");
+        }
+    });
+};
+
+
+function GenerateExpander(controlId){
+    return '<div id="'+controlId+'" class="expanderControl">'+
+        '<div class="expanderhead">'+
+            '<span class="expanderbutton">'+
+                'x'+
+            '</span>'+
+            '<span class="expandertext">'+
+            '</span>'+
+        '</div>'+
+        '<div class="expanderbody">'+
+        '</div>'+
+    '</div>';  
+};
+
+
+// tab control	
+d3.select('#export_btn').on("click",function(){
+	d3.selectAll('#export_panel, #detail_panel').style("display","none");
+	d3.select('#export_panel').style("display",null);
+});
+d3.select('#detail_btn').on("click",function(){
+	d3.selectAll('#export_panel, #detail_panel').style("display","none");
+	d3.select('#detail_panel').style("display",null);
+});
 	
 // close Popupmeu	
 d3.select('#closepopupmenu').on("click", function () {
@@ -166,8 +208,11 @@ d3.select('#deletemetanode').on("click", function () {
 	g.build.deleteNode("metanodeid_"+nodeName)
 	g.build.show.restart();
 	
-	$("#metanodeselect > option[value='"+nodeName+"']").remove();
+	//delete Metadata Node
+	$("#metadataId_"+nodeName).remove();
 	
+	$("#metanodeselect > option[value='"+nodeName+"']").remove();
+	d3.select('#popup_menu').style("display", "none");
 });
 
 d3.select('#workmetalink').on("click", function () {
@@ -176,11 +221,30 @@ d3.select('#workmetalink').on("click", function () {
 	if(work == "+"){
 		g.build.addLink("metalinkid_"+dataParameter.nodeId+"_"+nodeName,
 			dataParameter.nodeId,"metanodeid_"+nodeName);
+		g.build.setLinkProperties("metalinkid_"+dataParameter.nodeId+"_"+nodeName,{
+			"linkD3":{distance:100,strength:0},
+			"linkGraph":{stroke:"black"}});	
 		g.build.show.restart();
+		
+		//generate nested expanders
+		///////////////////////////
+		AddResultInTreeView(dataParameter,nodeName);
+		
 	}else if(work == "x"){
 		g.build.deleteLink("metalinkid_"+dataParameter.nodeId+"_"+nodeName)
 		g.build.show.restart();
+		
+		//delete Metadata Node
+		//$("#metadataId_"+nodeName).remove();
+		$("#metaresultId_"+MD5(dataParameter.text)).remove();
+		if(dataParameter.hasOwnProperty("keyword")){
+		
+		}else{
+		
+		}
+		
 	}
+	d3.select('#popup_menu').style("display", "none");
 });
 
 d3.select('#addmetanode').on("click", function () {
@@ -190,11 +254,11 @@ d3.select('#addmetanode').on("click", function () {
 	g.build.addNodeWithLink(dataParameter.nodeId,"metanodeid_"+nodeName,
 		"metalinkid_"+dataParameter.nodeId+"_"+nodeName);
 	g.build.setNodeProperties("metanodeid_"+nodeName,{
-		"nodeGraph":{xscale:7,yscale:7,fill:"blue"},
+		"nodeGraph":{xscale:7,yscale:7,fill:"lightblue"},
 		"nodeD3":{title:nodeName,text:TextCutter(nodeName,10,9)}
 	}); 
 	g.build.setLinkProperties("metalinkid_"+dataParameter.nodeId+"_"+nodeName,{
-		"linkD3":{distance:100},
+		"linkD3":{distance:100,strength:0},
 		"linkGraph":{stroke:"black"}});
 
 	var differentElement = true;
@@ -206,14 +270,77 @@ d3.select('#addmetanode').on("click", function () {
 	});
 	if(differentElement){
 		$("#metanodeselect").append('<option value="'+nodeName+'">'+nodeName+'</option>');
+		
+		g.build.show.restart();
+	
+		$("#metanodename").val("");
+		d3.select('#popup_menu').style("display", "none");
+		
+		
+		//generate nested expanders
+		///////////////////////////
+		//metadata node
+		$("#tree_view").append(GenerateExpander("metadataId_"+nodeName));
+		$("#metadataId_"+nodeName+" > .expanderhead > .expandertext").text(nodeName);
+		GetExpanderFunction("#metadataId_"+nodeName);
+		AddResultInTreeView(dataParameter,nodeName);
+		
 	}
-	
-	g.build.show.restart();
-	
-	$("#metanodename").val("");
-	d3.select('#popup_menu').style("display", "none");
+
 });
 
+//generate nested expanders
+///////////////////////////
+function AddResultInTreeView(dataParameter,nodeName){
+	if(dataParameter.hasOwnProperty("keyword")){
+		//metadata result
+		var md5MetaResult = MD5(dataParameter.text);
+		$("#metadataId_"+nodeName + " > .expanderbody").append(GenerateExpander("metaresultId_"+md5MetaResult));
+		$("#metaresultId_"+md5MetaResult+" > .expanderhead > .expandertext").text(
+			"result: " + TextCutter(dataParameter.text,10,9) +
+			" query: " + TextCutter(dataParameter.keyword,10,9) );
+		$("#metaresultId_"+md5MetaResult+" > .expanderhead").attr(
+			"title","result: " + dataParameter.text + " || " + " query: " + dataParameter.keyword);
+		GetExpanderFunction("#metaresultId_"+md5MetaResult);
+		
+		
+		//metadata allresults
+		var resultObjects = wordsWithResults[dataParameter.keyword].results;
+		var md5MetaAllResults = null;
+		Object.keys(resultObjects).forEach(function(key){
+			md5MetaAllResults = MD5(resultObjects[key].title);
+			$("#metaresultId_"+md5MetaResult + " > .expanderbody").append(GenerateExpander("metaallresultId_"+md5MetaAllResults));
+			$("#metaallresultId_"+md5MetaAllResults+" > .expanderhead > .expandertext").text(
+				TextCutter(resultObjects[key].title,30,29));
+			$("#metaallresultId_"+md5MetaAllResults+" > .expanderhead").attr("title",resultObjects[key].title);
+			$("#metaallresultId_"+md5MetaAllResults+" > .expanderbody").css("display","none");
+			$("#metaallresultId_"+md5MetaAllResults+" .expanderbutton").css("display","none");
+		});
+	}else{
+		//metadata result
+		var md5MetaResult = MD5(dataParameter.text);
+		$("#metadataId_"+nodeName + " > .expanderbody").append(GenerateExpander("metaresultId_"+md5MetaResult));
+		$("#metaresultId_"+md5MetaResult+" > .expanderhead > .expandertext").text(
+			"query: " + TextCutter(dataParameter.text,10,9) );
+		$("#metaresultId_"+md5MetaResult+" > .expanderhead").attr(
+			"title",dataParameter.text);
+		GetExpanderFunction("#metaresultId_"+md5MetaResult);
+		
+		//metadata allresults
+		var resultObjects = wordsWithResults[dataParameter.text].results;
+		var md5MetaAllResults = null;
+		Object.keys(resultObjects).forEach(function(key){
+			md5MetaAllResults = MD5(resultObjects[key].title);
+			$("#metaresultId_"+md5MetaResult + " > .expanderbody").append(GenerateExpander("metaallresultId_"+md5MetaAllResults));
+			$("#metaallresultId_"+md5MetaAllResults+" > .expanderhead > .expandertext").text(
+				TextCutter(resultObjects[key].title,30,29));
+			$("#metaallresultId_"+md5MetaAllResults+" > .expanderhead").attr("title",resultObjects[key].title);
+			$("#metaallresultId_"+md5MetaAllResults+" > .expanderbody").css("display","none");
+			$("#metaallresultId_"+md5MetaAllResults+" .expanderbutton").css("display","none");
+		});
+	
+	}
+};
 
 
 //Data for Belgin////////////////////////////////////////////////////////////////////////////////////////
