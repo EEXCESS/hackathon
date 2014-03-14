@@ -203,6 +203,8 @@ $("#redraw").click(function(){
 
 //only demo
 
+var exportMetadataPerJson = {};
+
 d3.select('#deletemetanode').on("click", function () {
 	var nodeName = $("#metanodeselect").val();
 	g.build.deleteNode("metanodeid_"+nodeName)
@@ -210,6 +212,7 @@ d3.select('#deletemetanode').on("click", function () {
 	
 	//delete Metadata Node
 	$("#metadataId_"+nodeName).remove();
+	delete exportMetadataPerJson[nodeName];
 	
 	$("#metanodeselect > option[value='"+nodeName+"']").remove();
 	d3.select('#popup_menu').style("display", "none");
@@ -236,13 +239,13 @@ d3.select('#workmetalink').on("click", function () {
 		
 		//delete Metadata Node
 		//$("#metadataId_"+nodeName).remove();
-		$("#metaresultId_"+MD5(dataParameter.text)).remove();
+		$("#metaresultId_"+nodeName + "_" +MD5(dataParameter.nodeId)).remove();
+		delete exportMetadataPerJson[nodeName]["result:"+MD5(dataParameter.nodeId)];
+		/*
 		if(dataParameter.hasOwnProperty("keyword")){
-		
 		}else{
-		
 		}
-		
+		*/
 	}
 	d3.select('#popup_menu').style("display", "none");
 });
@@ -280,10 +283,15 @@ d3.select('#addmetanode').on("click", function () {
 		//generate nested expanders
 		///////////////////////////
 		//metadata node
+		exportMetadataPerJson[nodeName] ={};
+		
 		$("#tree_view").append(GenerateExpander("metadataId_"+nodeName));
+		$("#metadataId_"+nodeName).css("border","1px solid grey");
 		$("#metadataId_"+nodeName+" > .expanderhead > .expandertext").text(nodeName);
+		$("#metadataId_"+nodeName+" > .expanderhead > .expanderbutton").css("border","1px solid black");
+		$("#metadataId_"+nodeName+" > .expanderhead > .expanderbutton").css("background-color","lightblue");	
 		GetExpanderFunction("#metadataId_"+nodeName);
-		AddResultInTreeView(dataParameter,nodeName);
+		AddResultInTreeView(dataParameter,nodeName );
 		
 	}
 
@@ -292,45 +300,76 @@ d3.select('#addmetanode').on("click", function () {
 //generate nested expanders
 ///////////////////////////
 function AddResultInTreeView(dataParameter,nodeName){
+
+	//metadata result
+	var md5MetaResult = nodeName + "_" + MD5(dataParameter.nodeId);
+	exportMetadataPerJson[nodeName]["result:"+MD5(dataParameter.nodeId)] ={};
+	exportMetadataPerJson[nodeName]["result:"+MD5(dataParameter.nodeId)]["allresults"] ={};
+	
 	if(dataParameter.hasOwnProperty("keyword")){
-		//metadata result
-		var md5MetaResult = MD5(dataParameter.text);
-		$("#metadataId_"+nodeName + " > .expanderbody").append(GenerateExpander("metaresultId_"+md5MetaResult));
+		////metadata result
+		//var md5MetaResult = nodeName + "_" + MD5(dataParameter.nodeId);
+		exportMetadataPerJson[nodeName]["result:"+MD5(dataParameter.nodeId)]["data"] ={
+			"result":dataParameter.text,"query":dataParameter.keyword
+		};		
+		
+		$("#metadataId_"+nodeName +" > .expanderbody").append(GenerateExpander("metaresultId_" +md5MetaResult));
 		$("#metaresultId_"+md5MetaResult+" > .expanderhead > .expandertext").text(
 			"result: " + TextCutter(dataParameter.text,10,9) +
 			" query: " + TextCutter(dataParameter.keyword,10,9) );
+		//exportMetadataPerJson[nodeName]["result:"+MD5(dataParameter.nodeId)] ={};
+
+		//exportMetadataPerJson[nodeName]["result:"+MD5(dataParameter.nodeId)]["allresults"] ={};
+		
 		$("#metaresultId_"+md5MetaResult+" > .expanderhead").attr(
 			"title","result: " + dataParameter.text + " || " + " query: " + dataParameter.keyword);
+		$("#metaresultId_"+md5MetaResult+" > .expanderhead > .expanderbutton").css("background-color","gold");	
 		GetExpanderFunction("#metaresultId_"+md5MetaResult);
-		
 		
 		//metadata allresults
 		var resultObjects = wordsWithResults[dataParameter.keyword].results;
 		var md5MetaAllResults = null;
-		Object.keys(resultObjects).forEach(function(key){
+		
+		//exportMetadataPerJson[nodeName]["result:"+MD5(dataParameter.nodeId)]["allresults"] ={};
+		
+		Object.keys(resultObjects).forEach(function(key,index){
+			exportMetadataPerJson[nodeName]["result:"+MD5(dataParameter.nodeId)]["allresults"][index] = 
+				resultObjects[key].title;	
+				
 			md5MetaAllResults = MD5(resultObjects[key].title);
+
 			$("#metaresultId_"+md5MetaResult + " > .expanderbody").append(GenerateExpander("metaallresultId_"+md5MetaAllResults));
 			$("#metaallresultId_"+md5MetaAllResults+" > .expanderhead > .expandertext").text(
 				TextCutter(resultObjects[key].title,30,29));
-			$("#metaallresultId_"+md5MetaAllResults+" > .expanderhead").attr("title",resultObjects[key].title);
+			$("#metaallresultId_"+md5MetaAllResults+" > .expanderhead")
+				.attr("title",resultObjects[key].title);
 			$("#metaallresultId_"+md5MetaAllResults+" > .expanderbody").css("display","none");
 			$("#metaallresultId_"+md5MetaAllResults+" .expanderbutton").css("display","none");
+			
 		});
 	}else{
-		//metadata result
-		var md5MetaResult = MD5(dataParameter.text);
+		////metadata result
+		//var md5MetaResult = nodeName + "_" + MD5(dataParameter.nodeId);
+		exportMetadataPerJson[nodeName]["result:"+MD5(dataParameter.nodeId)]["data"] ={
+			"query":dataParameter.text
+		};	
 		$("#metadataId_"+nodeName + " > .expanderbody").append(GenerateExpander("metaresultId_"+md5MetaResult));
 		$("#metaresultId_"+md5MetaResult+" > .expanderhead > .expandertext").text(
 			"query: " + TextCutter(dataParameter.text,10,9) );
 		$("#metaresultId_"+md5MetaResult+" > .expanderhead").attr(
 			"title",dataParameter.text);
+		$("#metaresultId_"+md5MetaResult+" > .expanderhead > .expanderbutton").css("background-color","lightgreen");	
 		GetExpanderFunction("#metaresultId_"+md5MetaResult);
 		
 		//metadata allresults
 		var resultObjects = wordsWithResults[dataParameter.text].results;
 		var md5MetaAllResults = null;
-		Object.keys(resultObjects).forEach(function(key){
+		Object.keys(resultObjects).forEach(function(key,index){
+			exportMetadataPerJson[nodeName]["result:"+MD5(dataParameter.nodeId)]["allresults"][index] = 
+				resultObjects[key].title;	
+				
 			md5MetaAllResults = MD5(resultObjects[key].title);
+			$("#metaallresultId_"+md5MetaAllResults).css("border","1px dashed lightgrey;");
 			$("#metaresultId_"+md5MetaResult + " > .expanderbody").append(GenerateExpander("metaallresultId_"+md5MetaAllResults));
 			$("#metaallresultId_"+md5MetaAllResults+" > .expanderhead > .expandertext").text(
 				TextCutter(resultObjects[key].title,30,29));
@@ -338,8 +377,9 @@ function AddResultInTreeView(dataParameter,nodeName){
 			$("#metaallresultId_"+md5MetaAllResults+" > .expanderbody").css("display","none");
 			$("#metaallresultId_"+md5MetaAllResults+" .expanderbutton").css("display","none");
 		});
-	
 	}
+	
+	
 };
 
 

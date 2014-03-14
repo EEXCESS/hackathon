@@ -68,14 +68,14 @@ body {
 
 /* css for expander control*/
 .expanderControl{
-    border:1px solid green;
+    border:1px solid lightgrey;
     border-radius:2px 2px 2px 2px; 
-    margin:1px;
+    margin:2px;
 }
 
 .expanderhead{
     
-    border:1px solid lightgrey;
+    /*border:1px solid lightgrey;*/
     border-radius:2px 2px 2px 2px; 
     
     margin:1px;
@@ -98,10 +98,11 @@ body {
 }
 
 .expanderbody{
-    border:1px solid lightgrey;
+    /*border:1px solid lightgrey;*/
     border-radius:2px 2px 2px 2px; 
     padding:2px;
 }
+
 
 
 

@@ -196,7 +196,7 @@ function MakeGraph(){
 			
 			g.build.setLinkProperties("listId"+linecount,{
 				"linkD3":{width:2,distance:75+currentNodeProperty.xscale*5},
-				"linkGraph":{stroke:"yellow"}
+				"linkGraph":{stroke:"green"}//yellow
 			});   
 			
 			linecount++;
