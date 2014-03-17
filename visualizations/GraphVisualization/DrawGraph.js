@@ -64,10 +64,10 @@ function MakeGraph(){
 	// nodes
 	wordHistory.forEach(function(nodename,index){
 		var text= nodename;
-		if(g.build.show.nodeDict.hasOwnProperty("nodeId"+nodename) == false){
+		if(g.build.show.nodeDict.hasOwnProperty("nodeId"+MD5(nodename)) == false){
 
-			g.build.addNode("nodeId"+nodename);
-			g.build.setNodeProperties("nodeId"+nodename,{
+			g.build.addNode("nodeId"+MD5(nodename));
+			g.build.setNodeProperties("nodeId"+MD5(nodename),{
 				"nodeGraph":{xscale:5,yscale:5,fill:"green"},
 				"nodeD3":{title:text,text:TextCutter(text,10,9) + " : 1" }
 				//"nodeEvents":{click:{name:"TestFunc"}}
@@ -78,28 +78,19 @@ function MakeGraph(){
 			var newXscale = currentNodeProperty.xscale+1;
 			var newYscale = currentNodeProperty.yscale+1;
 			
-			g.build.setNodeProperties("nodeId"+nodename,{
+			g.build.setNodeProperties("nodeId"+MD5(nodename),{
 				"nodeGraph":{xscale:newXscale,yscale:newYscale},
 				"nodeD3":{text:(currentNodeProperty.xscale-4)+ " : "+TextCutter(text,10,9),title:(currentNodeProperty.xscale-4)+ " : "+text}
 			}); 
 		}
 		var paramData ={
 			text:text,
-			nodeId:"nodeId"+nodename
+			nodeId:"nodeId"+MD5(nodename)
 			};
-		g.build.setNodeProperties("nodeId"+nodename,{
+		g.build.setNodeProperties("nodeId"+MD5(nodename),{
 			"nodeEvents":{contextmenu:{name:"MakePopupMenu",param:JSON.stringify(paramData)}},
 			"nodeGraph":{stroke:"darkgreen","stroke-width":4}
 		}); 
-		/*
-		var nN = "nodeId"+nodename;
-		g.build.setNodeProperties("nodeId"+nodename,{
-			"nodeEvents":{
-				"mouseenter":{"name":"NodeIn","param":nN},
-				"mouseout":{"name":"NodeOut","param":nN}
-			}
-		});
-		*/
 	});
 	
 	
@@ -117,9 +108,9 @@ function MakeGraph(){
 		.range([10,1]);	
 		
 	//First Node for link
-	g.build.addNodeWithLink("nodeId"+wordHistory[0],"subNodeId"+0,"subLinkId"+0);
+	g.build.addNodeWithLink("nodeId"+MD5(wordHistory[0]),"subNodeId"+0,"subLinkId"+0);
 	g.build.setLinkProperties("subLinkId"+0,{
-		"linkD3":{distance:10*g.build.getNodeProperties("nodeId"+wordHistory[0])["nodeGraph"].xscale}});
+		"linkD3":{distance:10*g.build.getNodeProperties("nodeId"+MD5(wordHistory[0]))["nodeGraph"].xscale}});
 	g.build.setNodeProperties("subNodeId"+0,{
 		"nodeGraph":{xscale:3,yscale:3,fill:"red",stroke:"black","stroke-width":2},
 		"nodeD3":{text:"start",title:"start"}
@@ -131,10 +122,10 @@ function MakeGraph(){
 		sourceNode = wordHistory[nodeCount-1];
 		targetNode = wordHistory[nodeCount];
 		
-		var targetNodeProperty = g.build.getNodeProperties("nodeId"+targetNode)["nodeGraph"];
-		var sourceNodeProperty = g.build.getNodeProperties("nodeId"+sourceNode)["nodeGraph"];
+		var targetNodeProperty = g.build.getNodeProperties("nodeId"+MD5(targetNode))["nodeGraph"];
+		var sourceNodeProperty = g.build.getNodeProperties("nodeId"+MD5(sourceNode))["nodeGraph"];
 		
-		g.build.addNodeWithLink("nodeId"+targetNode,"subNodeId"+nodeCount,"subLinkId"+nodeCount);
+		g.build.addNodeWithLink("nodeId"+MD5(targetNode),"subNodeId"+nodeCount,"subLinkId"+nodeCount);
 		g.build.setLinkProperties("subLinkId"+nodeCount,{"linkD3":{distance:10+targetNodeProperty.xscale*5}});
 		//debug
 		//g.build.setNodeProperties("subNodeId"+nodeCount,{text:"subNodeId"+nodeCount,title:"subNodeId"+nodeCount});
@@ -182,8 +173,8 @@ function MakeGraph(){
 			//console.log(result);
 			//console.log(keyword);
 			
-			var currentNodeProperty = g.build.getNodeProperties("nodeId"+keyword)["nodeGraph"];
-			g.build.addNodeWithLink("nodeId"+keyword,"ResultId"+linecount,"listId"+linecount);
+			var currentNodeProperty = g.build.getNodeProperties("nodeId"+MD5(keyword))["nodeGraph"];
+			g.build.addNodeWithLink("nodeId"+MD5(keyword),"ResultId"+linecount,"listId"+linecount);
 			var paramData ={
 				text:text,
 				nodeId:"ResultId"+linecount,
