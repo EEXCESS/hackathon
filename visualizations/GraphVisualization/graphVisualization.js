@@ -195,6 +195,10 @@ var functions = {
 
 // rebuild graph
 $("#redraw").click(function(){
+	$("#tree_view *").remove();
+	exportMetadataPerJson = {};
+	$("#metanodeselect *").remove()
+
 	wordsWithResults = {};
 	wordHistory = [];
 	uniqueWordsResult =[];

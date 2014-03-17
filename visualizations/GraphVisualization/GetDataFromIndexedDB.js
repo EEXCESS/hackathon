@@ -23,7 +23,9 @@ db.onsuccess = function() {
 		if (res !== null) {
 			
 			// get history wordlist
-			var valquery = res.value.query[0];valquery != undefined ? wordHistory.push(valquery.text):"";
+			var valquery = res.value.query.map(function(d){return d.text;}).join(" ");//res.value.query[0];
+			//valquery != undefined ? wordHistory.push(valquery.text):"";
+			valquery != undefined ? wordHistory.push(valquery):"";
 
 			res.continue(); // next entry
 		}else{
