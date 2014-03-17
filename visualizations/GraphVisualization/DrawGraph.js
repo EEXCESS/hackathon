@@ -43,7 +43,17 @@ function MakeGraph(){
 		d3.select('#popup_menu').style("display", "none");
 	}
 
- 
+	g.build.show.svg.on("click",function(){
+		d3.event.preventDefault();
+		d3.select('#popup_menu').style("display", "none");
+	});
+	
+ 	d3.select("svg").on("contextmenu",function(){
+		d3.event.preventDefault();
+
+		
+	});
+	
 	if(wordHistory.length == 0){
 		return;
 	}
@@ -78,7 +88,8 @@ function MakeGraph(){
 			nodeId:"nodeId"+nodename
 			};
 		g.build.setNodeProperties("nodeId"+nodename,{
-			"nodeEvents":{contextmenu:{name:"MakePopupMenu",param:JSON.stringify(paramData)}}
+			"nodeEvents":{contextmenu:{name:"MakePopupMenu",param:JSON.stringify(paramData)}},
+			"nodeGraph":{stroke:"darkgreen","stroke-width":4}
 		}); 
 		/*
 		var nN = "nodeId"+nodename;
@@ -96,6 +107,15 @@ function MakeGraph(){
 		.domain([0,wordHistory.length])
 		.range(["red","blue"]);
 	
+	var transparent = d3.scale.linear()
+		.domain([0,wordHistory.length])
+		.range([0.2,0.75]);
+		
+		
+	var lineWidth = d3.scale.linear()
+		.domain([0,wordHistory.length])
+		.range([10,1]);	
+		
 	//First Node for link
 	g.build.addNodeWithLink("nodeId"+wordHistory[0],"subNodeId"+0,"subLinkId"+0);
 	g.build.setLinkProperties("subLinkId"+0,{
@@ -124,10 +144,10 @@ function MakeGraph(){
 		
 		
 		g.build.setLinkProperties("connectionLink"+nodeCount,{
-			"linkGraph":{stroke:color(nodeCount)},
+			"linkGraph":{stroke:color(nodeCount),"stroke-width":lineWidth(nodeCount),"stroke-opacity":transparent(nodeCount)},
 			"linkD3":{
 				text:nodeCount,title:nodeCount + " of " + wordHistory.length,
-				width:2,distance:10*(targetNodeProperty.xscale+sourceNodeProperty.xscale)
+				distance:10*(targetNodeProperty.xscale+sourceNodeProperty.xscale)
 				}
 			});
 			//300
@@ -195,8 +215,8 @@ function MakeGraph(){
 			}
 			
 			g.build.setLinkProperties("listId"+linecount,{
-				"linkD3":{width:2,distance:75+currentNodeProperty.xscale*5},
-				"linkGraph":{stroke:"green"}//yellow
+				"linkD3":{distance:75+currentNodeProperty.xscale*5},
+				"linkGraph":{stroke:"green","stroke-width":2}//yellow
 			});   
 			
 			linecount++;

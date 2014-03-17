@@ -11,7 +11,7 @@ function TextCutter(text,sizeCompare,sizeCut){
 //functions for expander control
 function GetExpanderFunction(currentControl){
     var expanderButton = ".expanderhead > .expanderbutton";
-    $(currentControl+ " > "+expanderButton).click(function(){
+    $(currentControl+ " > "+expanderButton).on("click",function(){
     
         if($(currentControl+ " > .expanderbody").css("display") == "none"){
             $(currentControl+ " > .expanderbody").css("display","");
@@ -144,29 +144,32 @@ function ClearDetailData(){
 	$("#id_data, #language_data, #partner_data, #provider_data, #type_data, #year_data").text("");
 };
 
+// Event function
 var functions = {
 	TestFunc:function(){
 		console.log("ASDF");
-	},/*
-	NodeIn:function(paramData){
-		d3.event.preventDefault();
-		console.log("in");
-		
-		g.build.setNodeProperties(paramData,{
+	},
+	MouseIn:function(paramData){
+		//d3.event.preventDefault();
+		//d3.event.stopPropagation();
+		//console.log("MI");
+		g.build.setNodeProperties("metanodeid_"+paramData,{
 			"nodeGraph":{fill:"purple"}
 		}); 
 		g.build.show.restart();
+		$("#metadataId_"+paramData+" > .expanderhead > .expanderbutton").css("background-color","purple");
+		
 	},
-	NodeOut:function(paramData){
-		d3.event.preventDefault();
-		console.log("out");
-	
-		g.build.setNodeProperties(paramData,{
-			"nodeGraph":{fill:"green"}
+	MouseOut:function(paramData){
+		//d3.event.preventDefault();
+		//d3.event.stopPropagation();
+		//console.log("MO");
+		g.build.setNodeProperties("metanodeid_"+paramData,{
+			"nodeGraph":{fill:"lightblue"}
 		}); 
 		g.build.show.restart();
-	},	
-	*/
+		$("#metadataId_"+paramData+" > .expanderhead > .expanderbutton").css("background-color","lightblue");
+	},
 	MakePopupMenu:function(paramData){
 		//console.log(paramData);
 		if (d3.event.pageX || d3.event.pageY) {
@@ -257,8 +260,12 @@ d3.select('#addmetanode').on("click", function () {
 	g.build.addNodeWithLink(dataParameter.nodeId,"metanodeid_"+nodeName,
 		"metalinkid_"+dataParameter.nodeId+"_"+nodeName);
 	g.build.setNodeProperties("metanodeid_"+nodeName,{
-		"nodeGraph":{xscale:7,yscale:7,fill:"lightblue"},
-		"nodeD3":{title:nodeName,text:TextCutter(nodeName,10,9)}
+		"nodeGraph":{xscale:7,yscale:7,fill:"lightblue",stroke:"grey","stroke-width":4},
+		"nodeD3":{title:nodeName,text:TextCutter(nodeName,10,9)},
+		"nodeEvents":{
+			"mouseenter":{name:"MouseIn",param:nodeName},
+			"mouseleave":{name:"MouseOut",param:nodeName},
+		}
 	}); 
 	g.build.setLinkProperties("metalinkid_"+dataParameter.nodeId+"_"+nodeName,{
 		"linkD3":{distance:100,strength:0},
@@ -290,6 +297,19 @@ d3.select('#addmetanode').on("click", function () {
 		$("#metadataId_"+nodeName+" > .expanderhead > .expandertext").text(nodeName);
 		$("#metadataId_"+nodeName+" > .expanderhead > .expanderbutton").css("border","1px solid black");
 		$("#metadataId_"+nodeName+" > .expanderhead > .expanderbutton").css("background-color","lightblue");	
+		$("#metadataId_"+nodeName+" > .expanderhead").mouseover(function(){
+			$("#metadataId_"+nodeName+" > .expanderhead > .expanderbutton").css("background-color","purple");
+			g.build.setNodeProperties("metanodeid_"+nodeName,{
+				"nodeGraph":{fill:"purple"}
+			}); 
+			g.build.show.restart();
+		}).mouseout(function(){
+			$("#metadataId_"+nodeName+" > .expanderhead > .expanderbutton").css("background-color","lightblue");
+			g.build.setNodeProperties("metanodeid_"+nodeName,{
+				"nodeGraph":{fill:"lightblue"}
+			}); 
+			g.build.show.restart();
+		});
 		GetExpanderFunction("#metadataId_"+nodeName);
 		AddResultInTreeView(dataParameter,nodeName );
 		
@@ -315,17 +335,20 @@ function AddResultInTreeView(dataParameter,nodeName){
 		
 		$("#metadataId_"+nodeName +" > .expanderbody").append(GenerateExpander("metaresultId_" +md5MetaResult));
 		$("#metaresultId_"+md5MetaResult+" > .expanderhead > .expandertext").text(
-			"result: " + TextCutter(dataParameter.text,10,9) +
-			" query: " + TextCutter(dataParameter.keyword,10,9) );
+			"result: " + TextCutter(dataParameter.text,20,19) /*+
+			" query: " + TextCutter(dataParameter.keyword,10,9) */);
 		//exportMetadataPerJson[nodeName]["result:"+MD5(dataParameter.nodeId)] ={};
 
 		//exportMetadataPerJson[nodeName]["result:"+MD5(dataParameter.nodeId)]["allresults"] ={};
 		
 		$("#metaresultId_"+md5MetaResult+" > .expanderhead").attr(
-			"title","result: " + dataParameter.text + " || " + " query: " + dataParameter.keyword);
+			"title","result: " + dataParameter.text /*+ " || " + " query: " + dataParameter.keyword*/);
 		$("#metaresultId_"+md5MetaResult+" > .expanderhead > .expanderbutton").css("background-color","gold");	
 		GetExpanderFunction("#metaresultId_"+md5MetaResult);
+		$("#metaresultId_"+md5MetaResult+" > .expanderbody").css("display","none");
+		$("#metaresultId_"+md5MetaResult+" .expanderbutton").off("click");
 		
+		/*
 		//metadata allresults
 		var resultObjects = wordsWithResults[dataParameter.keyword].results;
 		var md5MetaAllResults = null;
@@ -347,6 +370,8 @@ function AddResultInTreeView(dataParameter,nodeName){
 			$("#metaallresultId_"+md5MetaAllResults+" .expanderbutton").css("display","none");
 			
 		});
+		*/
+		
 	}else{
 		////metadata result
 		//var md5MetaResult = nodeName + "_" + MD5(dataParameter.nodeId);
@@ -355,7 +380,7 @@ function AddResultInTreeView(dataParameter,nodeName){
 		};	
 		$("#metadataId_"+nodeName + " > .expanderbody").append(GenerateExpander("metaresultId_"+md5MetaResult));
 		$("#metaresultId_"+md5MetaResult+" > .expanderhead > .expandertext").text(
-			"query: " + TextCutter(dataParameter.text,10,9) );
+			"query: " + TextCutter(dataParameter.text,20,19) );
 		$("#metaresultId_"+md5MetaResult+" > .expanderhead").attr(
 			"title",dataParameter.text);
 		$("#metaresultId_"+md5MetaResult+" > .expanderhead > .expanderbutton").css("background-color","lightgreen");	
@@ -381,6 +406,18 @@ function AddResultInTreeView(dataParameter,nodeName){
 	
 	
 };
+
+//export metadata
+$("#exportmetadata").click(function(){
+	window.URL = window.URL || window.webkitURL;
+
+	var logString = JSON.stringify(exportMetadataPerJson);//.join("\r\n");
+	var downloadBlob = new Blob([logString], {type: 'text/plain'});
+
+	$("#exportmetadata").attr("href", window.URL.createObjectURL(downloadBlob));
+	$("#exportmetadata").attr("download", "metadata.txt");
+
+});
 
 
 //Data for Belgin////////////////////////////////////////////////////////////////////////////////////////
