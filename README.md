@@ -77,8 +77,6 @@ database name: 'eexcess_db'
     * uri
 	* query
 	* timestamp
-* **clicked_keyword** [graph visualization]
-	* keyword
 * **interactions** a user's interactions with a web page (currently textual input)
 	* timestamp
 * **queries** the queries issued so far (im- & explicit queries)
@@ -108,9 +106,6 @@ more detailed description of the objects stored in the database's particular obj
 * *result*: object, containing information of the retrieved result. At the moment, this object is exactly identical to the original result object. However, this will change over time and only a subset of the original result will be contained, as soon as we know which data is actually necessary, since storing all information about all results will consume too much disk space.  
 * *timestamp*: timestamp of when the result was retrieved (in ms since the epoch)   
 * *uri*: the url of a webpage, presenting details about the result  
-
-##### clicked_keyword #####
-[graph visualization]
 
 ##### interactions #####
 This object store can contain different objects, according to the interactions executed by the user.
