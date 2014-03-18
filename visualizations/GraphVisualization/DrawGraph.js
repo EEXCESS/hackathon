@@ -74,7 +74,7 @@ function MakeGraph(){
 			}); 
 		}else{
 		
-			var currentNodeProperty = g.build.getNodeProperties("nodeId"+nodename)["nodeGraph"];
+			var currentNodeProperty = g.build.getNodeProperties("nodeId"+MD5(nodename))["nodeGraph"];
 			var newXscale = currentNodeProperty.xscale+1;
 			var newYscale = currentNodeProperty.yscale+1;
 			
@@ -85,7 +85,8 @@ function MakeGraph(){
 		}
 		var paramData ={
 			text:text,
-			nodeId:"nodeId"+MD5(nodename)
+			nodeId:"nodeId"+MD5(nodename),
+			result_details:true
 			};
 		g.build.setNodeProperties("nodeId"+MD5(nodename),{
 			"nodeEvents":{contextmenu:{name:"MakePopupMenu",param:JSON.stringify(paramData)}},

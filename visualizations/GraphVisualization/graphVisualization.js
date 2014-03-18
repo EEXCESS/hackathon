@@ -62,9 +62,20 @@ var storeDetailsForShorttime = {};
 //get results
 d3.select('#gotoresults').on("click", function () {
 	//start search with asynchronous call.
-        EEXCESS.callBG({
-			method: {parent: 'model', func: 'query'}, data: [{weight:1,text:dataParameter.text}]
-		});
+	
+	
+	var query_terms = dataParameter.text.split(' ');
+	var query = [];
+	for (var i = 0; i < query_terms.length; i++) {
+		var tmp = {
+			weight: 1,
+			text: query_terms[i]
+		};
+		query.push(tmp);
+	}
+	EEXCESS.callBG({
+		method: {parent: 'model', func: 'query'}, data:query //data: [{weight:1,text:dataParameter.text}]
+	});
 	d3.select('#popup_menu').style("display", "none");
 });
 //search finished with results, asynchronous call
@@ -72,33 +83,36 @@ EEXCESS.messageListener(
 	function(request, sender, sendResponse) {
 		if (request.method === 'newSearchTriggered') {
 			console.log(request.data);
-
+			var maxResultOutput = $("#results_per_keywords").val();
+			
 			Object.keys(request.data.results.results).forEach(function(arrayIndex){
-				var text="";
-				linecount++
-				text = request.data.results.results[arrayIndex].title;
-				storeDetailsForShorttime[request.data.results.results[arrayIndex].uri] = request.data.results.results[arrayIndex];
+				//console.log("loadrsult: " + arrayIndex);
+				if(parseInt(arrayIndex) < parseInt(maxResultOutput)){
+					var text="";
+					linecount++
+					text = request.data.results.results[arrayIndex].title;
+					storeDetailsForShorttime[request.data.results.results[arrayIndex].uri] = request.data.results.results[arrayIndex];
 
-				g.build.addNodeWithLink(dataParameter.nodeId,"ResultId"+linecount,"listId"+linecount);
-				var paramData ={
-					text:text,
-					nodeId:"ResultId"+linecount,
-					currentKey:request.data.results.results[arrayIndex].uri
-					};
-				//var paramData ={
-				//	currentKey:result,
-				//	keyword:keyword
-				//};
-				g.build.setNodeProperties("ResultId"+linecount,{
-					"nodeGraph":{xscale:2,yscale:2,fill:"orange"},
-					"nodeD3":{text:TextCutter(text,10,9),title:text},
-					"nodeEvents":{"contextmenu":{name:"MakePopupMenu","param":JSON.stringify(paramData)}}
-				}); 
-				g.build.setLinkProperties("listId"+linecount,{
-					"linkD3":{width:2,distance:75},
-					"linkGraph":{stroke:"yellow"}
-				}); 
-				
+					g.build.addNodeWithLink(dataParameter.nodeId,"ResultId"+linecount,"listId"+linecount);
+					var paramData ={
+						text:text,
+						nodeId:"ResultId"+linecount,
+						currentKey:request.data.results.results[arrayIndex].uri
+						};
+					//var paramData ={
+					//	currentKey:result,
+					//	keyword:keyword
+					//};
+					g.build.setNodeProperties("ResultId"+linecount,{
+						"nodeGraph":{xscale:2,yscale:2,fill:"orange"},
+						"nodeD3":{text:TextCutter(text,10,9),title:text},
+						"nodeEvents":{"contextmenu":{name:"MakePopupMenu","param":JSON.stringify(paramData)}}
+					}); 
+					g.build.setLinkProperties("listId"+linecount,{
+						"linkD3":{width:2,distance:75},
+						"linkGraph":{stroke:"yellow"}
+					}); 
+				}
 			});
 			g.build.show.restart();
 			
@@ -111,19 +125,25 @@ EEXCESS.messageListener(
 d3.select('#gotodetails').on("click", function () {
 	ClearDetailData();
 
-	var detailData = storeDetailsForShorttime[dataParameter.currentKey];
-	//console.log(detailData);
+	if(dataParameter.hasOwnProperty("result_details")){
+		$("#title_data").val(dataParameter.text);
+	}else{
+		var detailData = storeDetailsForShorttime[dataParameter.currentKey];
+		//console.log(detailData);
+		
+		$("#title_data").val(detailData.title);
+		$("#link_data").text(detailData.uri).attr("href",detailData.uri);//.val(TextCutter(detailData.uri,20,19));
+		$("#image_data").attr("src",detailData.previewImage);
+		$("#id_data").text(detailData.id);
+		
+		$("#language_data").text(detailData.facets.language);
+		$("#partner_data").text(detailData.facets.partner);
+		$("#provider_data").text(detailData.facets.provider);
+		$("#type_data").text(detailData.facets.type);
+		$("#year_data").text(detailData.facets.year);
+	}
 	
-	$("#title_data").val(detailData.title);
-	$("#link_data").text(detailData.uri).attr("href",detailData.uri);//.val(TextCutter(detailData.uri,20,19));
-	$("#image_data").attr("src",detailData.previewImage);
-	$("#id_data").text(detailData.id);
-	
-	$("#language_data").text(detailData.facets.language);
-	$("#partner_data").text(detailData.facets.partner);
-	$("#provider_data").text(detailData.facets.provider);
-	$("#type_data").text(detailData.facets.type);
-	$("#year_data").text(detailData.facets.year);
+
 	
 	
 	d3.select('#popup_menu').style("display", "none");
@@ -186,8 +206,17 @@ var functions = {
 			.style('top', y + 'px')
 			.style('display', 'block');
 
+			
 		d3.event.preventDefault();
 		dataParameter = JSON.parse(paramData);
+		if(dataParameter.hasOwnProperty("result_details")){
+			$("#gotoresults").css("display","none");
+			$("#gotodetails").text("title"); 
+		}
+		else{
+			$("#gotoresults").css("display","");
+			$("#gotodetails").text("details"); 
+		}
 	}
 };
 	
@@ -348,6 +377,7 @@ function AddResultInTreeView(dataParameter,nodeName){
 		$("#metaresultId_"+md5MetaResult+" > .expanderhead").attr(
 			"title","result: " + dataParameter.text /*+ " || " + " query: " + dataParameter.keyword*/);
 		$("#metaresultId_"+md5MetaResult+" > .expanderhead > .expanderbutton").css("background-color","gold");	
+		$("#metaresultId_"+md5MetaResult+" > .expanderhead > .expanderbutton").text("o");	
 		GetExpanderFunction("#metaresultId_"+md5MetaResult);
 		$("#metaresultId_"+md5MetaResult+" > .expanderbody").css("display","none");
 		$("#metaresultId_"+md5MetaResult+" .expanderbutton").off("click");
