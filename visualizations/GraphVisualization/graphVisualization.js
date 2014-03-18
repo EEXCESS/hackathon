@@ -144,8 +144,6 @@ d3.select('#gotodetails').on("click", function () {
 	}
 	
 
-	
-	
 	d3.select('#popup_menu').style("display", "none");
 });
 
@@ -237,8 +235,8 @@ $("#redraw").click(function(){
 });
 
 
-//only demo
 
+//only demo
 var exportMetadataPerJson = {};
 
 d3.select('#deletemetanode').on("click", function () {
@@ -286,6 +284,7 @@ d3.select('#workmetalink').on("click", function () {
 	d3.select('#popup_menu').style("display", "none");
 });
 
+
 d3.select('#addmetanode').on("click", function () {
 	//console.log(dataParameter);//.nodeid
 	var nodeName = $("#metanodename").val();
@@ -296,10 +295,12 @@ d3.select('#addmetanode').on("click", function () {
 		"nodeGraph":{xscale:7,yscale:7,fill:"lightblue",stroke:"grey","stroke-width":4},
 		"nodeD3":{title:nodeName,text:TextCutter(nodeName,10,9)},
 		"nodeEvents":{
-			"mouseenter":{name:"MouseIn",param:nodeName},
 			"mouseleave":{name:"MouseOut",param:nodeName},
+			"mouseenter":{name:"MouseIn",param:nodeName}
 		}
+		
 	}); 
+
 	g.build.setLinkProperties("metalinkid_"+dataParameter.nodeId+"_"+nodeName,{
 		"linkD3":{distance:100,strength:0},
 		"linkGraph":{stroke:"black"}});
@@ -315,7 +316,7 @@ d3.select('#addmetanode').on("click", function () {
 		$("#metanodeselect").append('<option value="'+nodeName+'">'+nodeName+'</option>');
 		
 		g.build.show.restart();
-	
+
 		$("#metanodename").val("");
 		d3.select('#popup_menu').style("display", "none");
 		
@@ -349,6 +350,7 @@ d3.select('#addmetanode').on("click", function () {
 	}
 
 });
+
 
 //generate nested expanders
 ///////////////////////////
