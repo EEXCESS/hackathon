@@ -162,6 +162,19 @@ function ClearDetailData(){
 	$("#id_data, #language_data, #partner_data, #provider_data, #type_data, #year_data").text("");
 };
 
+var CurrentTagAction = function(e,func){
+
+    if(e.relatedTarget == null){
+        func();
+    }else{
+
+        if($(e.relatedTarget).closest("#"+e.currentTarget.id).length == 0){
+            func();
+        }
+    }
+};
+
+
 // Event function
 var functions = {
 	TestFunc:function(){
@@ -170,23 +183,30 @@ var functions = {
 	MouseIn:function(paramData){
 		//d3.event.preventDefault();
 		//d3.event.stopPropagation();
-		//console.log("MI");
-		g.build.setNodeProperties("metanodeid_"+paramData,{
-			"nodeGraph":{fill:"purple"}
-		}); 
-		g.build.show.restart();
-		$("#metadataId_"+paramData+" > .expanderhead > .expanderbutton").css("background-color","purple");
+		CurrentTagAction(d3.event,function(){
+		    console.log("MI");
+			g.build.setNodeProperties("metanodeid_"+paramData,{
+				"nodeGraph":{fill:"purple"}
+			}); 
+			g.build.show.restart();
+			$("#metadataId_"+paramData+" > .expanderhead > .expanderbutton").css("background-color","purple");
+		});
 		
 	},
 	MouseOut:function(paramData){
 		//d3.event.preventDefault();
 		//d3.event.stopPropagation();
-		//console.log("MO");
-		g.build.setNodeProperties("metanodeid_"+paramData,{
-			"nodeGraph":{fill:"lightblue"}
-		}); 
-		g.build.show.restart();
-		$("#metadataId_"+paramData+" > .expanderhead > .expanderbutton").css("background-color","lightblue");
+		CurrentTagAction(d3.event,function(){
+		    console.log("MO");
+			g.build.setNodeProperties("metanodeid_"+paramData,{
+				"nodeGraph":{fill:"lightblue"}
+			}); 
+			g.build.show.restart();
+			
+			$("#metadataId_"+paramData+" > .expanderhead > .expanderbutton").css("background-color","lightblue");
+		});
+		
+		console.log("MO -- ");
 	},
 	MakePopupMenu:function(paramData){
 		//console.log(paramData);
@@ -295,8 +315,8 @@ d3.select('#addmetanode').on("click", function () {
 		"nodeGraph":{xscale:7,yscale:7,fill:"lightblue",stroke:"grey","stroke-width":4},
 		"nodeD3":{title:nodeName,text:TextCutter(nodeName,10,9)},
 		"nodeEvents":{
-			"mouseleave":{name:"MouseOut",param:nodeName},
-			"mouseenter":{name:"MouseIn",param:nodeName}
+			"mouseout":{name:"MouseOut",param:nodeName},
+			"mouseover":{name:"MouseIn",param:nodeName}
 		}
 		
 	}); 
