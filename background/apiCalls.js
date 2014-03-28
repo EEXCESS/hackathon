@@ -79,8 +79,8 @@ EEXCESS.euCall = function(weightedTerms, start, success, error) {
             for (var i = 0, len = data.results.length; i < len; i++) {
                 data.results[i].facets = _facets(data.results[i]);
                 data.results[i].facets.provider = 'Europeana';
-                if(data.results[i].title instanceof Array) {
-                data.results[i].title = data.results[i].title[0];
+                if (data.results[i].title instanceof Array) {
+                    data.results[i].title = data.results[i].title[0];
                 }
             }
         }
@@ -131,9 +131,12 @@ EEXCESS.frCall_impl = function(weightedTerms, start, success, error) {
 EEXCESS.backend = (function() {
     var call = EEXCESS.frCall_impl;
     var url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
+    var fr_url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
+    var backend = 'fr-stable';
 
     return {
         setProvider: function(tabID, provider) {
+            backend = provider;
             if (typeof (Storage) !== 'undefined') {
                 localStorage.setItem('backend', provider);
             }
@@ -153,9 +156,35 @@ EEXCESS.backend = (function() {
                     call = EEXCESS.frCall_impl;
                     url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
                     break;
+                case 'self':
+                    console.log('self');
+                    call = EEXCESS.frCall_impl;
+                    url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
+                    fr_url = url;
+                    if (typeof (Storage) !== 'undefined') {
+                        var local_url = localStorage.getItem('local_url');
+                        if (typeof local_url !== 'undefined' && local_url !== null) {
+                            url = local_url;
+                        }
+                        var local_fr_url = localStorage.getItem('federated_url');
+                        if (typeof local_fr_url !== 'undefined' && local_fr_url !== null) {
+                            fr_url = local_fr_url;
+                        }
+                    }
             }
         },
+        setURL: function(tabID, urls) {
+            if (typeof (Storage) !== 'undefined') {
+                localStorage.setItem('local_url', urls.pp);
+                localStorage.setItem('federated_url', urls.fr);
+            }
+            url = urls.pp;
+            fr_url = urls.fr;
+        },
         getURL: function() {
+            if(backend === 'self') {
+                return (url + '?fr_url=' + fr_url);
+            }
             return url;
         },
         getCall: function() {

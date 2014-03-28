@@ -20,7 +20,7 @@ header h2 {font-family: "Comic Sans", "Zapf Chancery", cursive;font-style:italic
 #contents em { display: block; }
 span.note { margin-left: 10px; line-height:30px; font-size:11px; margin-bottom:3px; }
 
-textarea, input { max-width:300px; width:300px; }
+textarea { max-width:300px; }
 
 textarea { height:100px; max-height:400px; }
 
@@ -50,3 +50,9 @@ a[href^="https://"], a[href^="http://"] { padding-right: 16px; background-image:
 .dropDown li:nth-child(2) { background-position: 0 -42px; } 
 .dropDown li:nth-child(3) { background-position: 0 -56px; } 
 */
+
+
+#info_msg {
+    font-weight: bold;
+    color:#1d904e;
+}
