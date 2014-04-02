@@ -56,6 +56,7 @@ EEXCESS.model = (function() {
             }
         }
     };
+    var _queryTimestamp;
     return {
         /**
          * Sets the scroll position of the current resultlist to the specified 
@@ -76,6 +77,7 @@ EEXCESS.model = (function() {
             return params.visible;
         },
         quietQuery: function(tabID, data, callback) {
+            _queryTimestamp = new Date().getTime();
             var simpleQuery = '';
             for(var i=0,len=data.length; i<len;i++) {
                 simpleQuery += data[i].text;
@@ -83,7 +85,7 @@ EEXCESS.model = (function() {
                     simpleQuery += ' ';
                 }
             }
-            EEXCESS.logging.logQuery(tabID, data);
+            EEXCESS.logging.logQuery(tabID, data, _queryTimestamp);
             var success = function(res) { // success callback
                 if (res.totalResults !== 0) {
                     // update results with ratings
@@ -93,7 +95,7 @@ EEXCESS.model = (function() {
                     // create context
                     var context = {query: simpleQuery};
                     // log results
-                    EEXCESS.logging.logRecommendations(res.results, context);
+                    EEXCESS.logging.logRecommendations(res.results, context, _queryTimestamp);
                 }
             };
             var error = function(error) { // error callback
@@ -118,6 +120,7 @@ EEXCESS.model = (function() {
          * @param {String} data The query term 
          */
         query: function(tabID, data) {
+            _queryTimestamp = new Date().getTime();
             results.weightedTerms = data;
             results.query = '';
             for(var i=0,len=data.length; i<len;i++) {
@@ -128,7 +131,7 @@ EEXCESS.model = (function() {
             }
             params.tab = 'results';
             results.scroll = 0;
-            EEXCESS.logging.logQuery(tabID, data);
+            EEXCESS.logging.logQuery(tabID, data, _queryTimestamp);
             var success = function(data) { // success callback
                 // TODO: search may return no results (although successful)
                 results.data = data;
@@ -138,7 +141,7 @@ EEXCESS.model = (function() {
                     // create context
                     var context = {query: results.query};
                     // log results
-                    EEXCESS.logging.logRecommendations(data.results, context);
+                    EEXCESS.logging.logRecommendations(data.results, context, _queryTimestamp);
                 }
                 EEXCESS.sendMsgAll({
                     method: 'newSearchTriggered',
@@ -177,7 +180,7 @@ EEXCESS.model = (function() {
                     context.task_id = task.id;
                 }
                 // log results
-                EEXCESS.logging.logRecommendations(data.results, context);
+                EEXCESS.logging.logRecommendations(data.results, context, _queryTimestamp);
             };
             var error = function(error) {
                 EEXCESS.sendMessage(tabID, {method: {parent:'results',func:'error'}, data: error});
