@@ -173,7 +173,7 @@ EEXCESS.logging = (function() {
          * @param {Array.<Recommendation>} recommendations Recommendations as returned by a query on a partner's datastore
          * @param {Object} context The context in which the recommendations were provided (can e.g. contain a query term)
          */
-        logRecommendations: function(recommendations, context) {
+        logRecommendations: function(recommendations, context, timestamp) {
             var tx = EEXCESS.DB.transaction('recommendations', 'readwrite');
             var store = tx.objectStore('recommendations');
             var idx = store.index('uri');
@@ -197,7 +197,7 @@ EEXCESS.logging = (function() {
                                 cursor.continue();
                             }
                         } else {
-							store.put({result:recommendations[i],uri: recommendations[i].uri, context: context, timestamp:new Date().getTime()}).onsuccess = handleNext;
+							store.put({result:recommendations[i],uri: recommendations[i].uri, context: context, timestamp:timestamp}).onsuccess = handleNext;
                             //store.put({uri: recommendations[i].uri, context: context, timestamp:new Date().getTime()}).onsuccess = handleNext;
                             i++;
                         }
@@ -214,7 +214,7 @@ EEXCESS.logging = (function() {
          * @param {Integer} tabID Identifier of the browsertab, the query was executed in
          * @param {String} query The query term
          */
-        logQuery: function(tabID, query) {
+        logQuery: function(tabID, query, timestamp) {
             /**
              * request the context from the browsertab, the query was sent and
              * execute database transaction on callback
@@ -222,7 +222,7 @@ EEXCESS.logging = (function() {
             EEXCESS.sendMessage(tabID, {method: 'getTextualContext'}, function(data) {
                 var tx = EEXCESS.DB.transaction('queries', 'readwrite');
                 var store = tx.objectStore('queries');
-                store.put({query: query, timestamp: new Date().getTime(), context: data});
+                store.put({query: query, timestamp: timestamp, context: data});
             });
         },
         /**
