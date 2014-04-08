@@ -66,7 +66,7 @@ same as above, the "res"-object in the callback contains the query in res.query 
 
 ### issue a new query without informing other components and without logging the query & results ###
 ```javascript
-EEXCESS.callBG({method: {parent: 'model', func: 'quietQuery'}, data: query}, function(res) {console.log(res);});
+EEXCESS.callBG({method: {parent: 'model', func: 'quietQueryNoHistory'}, data: query}, function(res) {console.log(res);});
 ```
 same as above without logging
 
