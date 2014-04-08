@@ -104,6 +104,21 @@ EEXCESS.model = (function() {
             // call provider (resultlist should start with first item)
             EEXCESS.backend.getCall()(data, 1, success, error);
         },
+        quietQueryNoHistory: function(tabID, data, callback) {
+            var success = function(res) { // success callback
+                if (res.totalResults !== 0) {
+                    // update results with ratings
+                    _updateRatings(res.results);
+                    // provide searchResults to callback
+                    callback(res);
+                }
+            };
+            var error = function(error) { // error callback
+                EEXCESS.sendMessage(tabID, {method: {parent:'results',func:'error'}, data: error});
+            };
+            // call provider (resultlist should start with first item)
+            EEXCESS.backend.getCall()(data, 1, success, error);
+        },
         /**
          * Executes the following functions:
          * - log the query

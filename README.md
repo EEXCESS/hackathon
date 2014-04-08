@@ -58,6 +58,18 @@ The query-object has to contain the query as an array, consisting of terms and w
 [{weight: 1, text:"term1"},{weight:1,text:"term2"}]
 ```
 
+### issue a new query without informing other components ###
+```javascript
+EEXCESS.callBG({method: {parent: 'model', func: 'quietQuery'}, data: query}, function(res) {console.log(res);});
+```
+same as above, the "res"-object in the callback contains the query in res.query and the results in res.results
+
+### issue a new query without informing other components and without logging the query & results ###
+```javascript
+EEXCESS.callBG({method: {parent: 'model', func: 'quietQuery'}, data: query}, function(res) {console.log(res);});
+```
+same as above without logging
+
 data stored
 ---------------------------------------
 This section provides an overview of the data stored within the extension and accessible by all extension pages.
