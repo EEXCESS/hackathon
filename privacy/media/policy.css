@@ -5,3 +5,7 @@
 .progress-bar {
 	cursor: pointer !important;
 }
+
+.label-container span.label {
+	margin: 3px;
+}
