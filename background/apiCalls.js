@@ -111,8 +111,7 @@ EEXCESS.frCall_impl = function(weightedTerms, start, success, error) {
         data: JSON.stringify(profile),
         type: 'POST',
         contentType: 'application/json; charset=UTF-8',
-        dataType: 'json',
-        headers: {Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"}
+        dataType: 'json'
     });
     xhr.done(function(data) {
         console.log(data);
