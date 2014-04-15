@@ -1,40 +1,61 @@
 function display_querycrumbs(domElem) {
 
-    // Parameters
+    // Query Crumbs dimensions
     var HISTORY_LENGTH = 11;
-    var DENSE_PIXELS = 16;
+    var DENSE_PIXELS = 25;
     var rectHeight = 20;
     var rectWidth = 20;
-    var docRectHorizontal = 4;
-    var docRectVertical = 4;
+    var docRectHorizontal = 5;
+    var docRectVertical = 5;
     var docRectHeight = rectHeight / docRectVertical;
     var docRectWidth = rectWidth / docRectHorizontal;
 
     var edgeWidth = 10;
     var edgeHeight = 10;
 
+    // node border and padding of additional info on mouse over
     var rectBorderWidth = 2;
     var rectInfoVertPadding = 15;
     var edgeInfoVertPadding = 17;
 
+    // params for color-coded similarity
     var newDocOpacity = 0.1;
     var oldDocOpacity = 0.5;
+    // if similarity of a node exceeds this threshold it gets the same color
     var color_threshold = 0.1;
 
+    // A list of the HISTORY_LENGTH recent queries
     var historyData = [];
+    // A list of similarities of one node to its predecessor
     var similarities = [];
+    // The main data object for visualization. Holding queries, positional information and similarities. This is what we need to redraw when new queries are issued.
     var visualData = {};
 
+    // Reference to the currently selected query node
     var currentNode = null;
     var currentIdx = 0;
 
+    // A flag indicating that a user clicked on a recent query node. Thus, no new query node is append to the QueryCrumbs.
     var fWait_BackNaviResults = false;
 
+    // Temporarily stores the result documents which are identical to those of the currently hovered node.
     var simResults = [];
 
+    // The dimension of the svg panel
     var width = HISTORY_LENGTH * (rectWidth + edgeWidth) - edgeWidth + 4;
     var height = rectHeight + rectInfoVertPadding + edgeInfoVertPadding;
 
+    var svgContainer = domElem.append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("id", "queryCrumbs-svg");
+
+    /*
+        Several basic distinct colors can be defined here. When appending a new node to the QueryCrumbs, we assign
+        one of these colors to the node. If the similarity of the new node compared to the previous node is below a
+        certain threshold 'color_threshold', we assign the color which comes next in this list to the new node. Otherwise
+        the new node gets the same color as the previous nod.
+     */
     var BaseColors = {
         current: 0,
         currentFirstBaseColor: null,
@@ -68,11 +89,179 @@ function display_querycrumbs(domElem) {
         }
     };
 
-    EEXCESS.messageListener(
-        function(request, sender, sendResponse) {
+    var INTERACTION = {
+        onClick: function(d, i) {
+            var weightedTerms = [];
+            for(var term in d.query) {
+                var weightedTerm = {
+                    text: d.query[term],
+                    weight: 1
+                }
+                weightedTerms.push(weightedTerm);
+            }
+            currentNode = d;
+            currentIdx = i;
+
+            fWait_BackNaviResults = true;
+            EEXCESS.searchResults.loading();
+            EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: weightedTerms});
+        },
+        onMouseOverNode: function(d, i) {
+            var infoBox = svgContainer.select("g").append("g").attr("class", "infoBoxNode");
+            d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", true).style("cursor","pointer");
+            infoBox.append("text")
+                .text(d.query.toString())
+                .attr("class", "nodeInfo")
+                .attr("text-anchor", "start")
+                .attr("x", d.x_pos)
+                .attr("y", d.y_pos)
+                .attr("dy", -5);
+            var jqNode = $("g text.nodeInfo");
+            var w = jqNode.width();
+            var h = jqNode.height();
+            var ttX = d.x_pos - rectBorderWidth;
+            ttX = (ttX + w > width) ? width - w - (2 * rectBorderWidth): ttX - (2 * rectBorderWidth);
+            ttX = (ttX < 0) ? 0 : ttX;
+            infoBox.select("text.nodeInfo").attr("x", ttX);
+            infoBox.append("rect")
+                .attr("class", "nodeBg")
+                .attr("x", ttX)
+                .attr("y", d.y_pos - rectInfoVertPadding)
+                .attr("width", w)
+                .attr("height", h)
+                .style("fill", d.base_color)
+            $("rect.nodeBg").insertBefore(jqNode);
+
+            var rootGroup = d3.select(this.parentNode);
+            var iDocs = CORE.collectIdenticalDocs(i);
+
+            for(var n in iDocs) {
+                var docRects = rootGroup.select("g:nth-of-type("+(parseInt(n)+1)+").queryNode").select("g").selectAll("rect.docNode").filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
+                simResults.push(docRects);
+                docRects.style("fill", "black").style("opacity", 1);
+            }
+        },
+        onMouseOutNode: function(d) {
+            svgContainer.selectAll("g.infoBoxNode").remove();
+            d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", false).style("cursor",null);
+            for(var n in simResults) {
+                simResults[n].style("fill", "black")
+                    .style("opacity", function(d) { return ((d.preIdx == -1) ? newDocOpacity : oldDocOpacity);});
+            }
+        },
+        onMouseOverEdge: function(d, i) {
+
+            RENDERING.createGradient(d.baseColorStart, d.baseColorEnd);
+            d3.select(this).style("fill", "url(#gradient)").style("opacity", 1.0);
+
+            var infoBox = svgContainer.select("g").append("g").attr("class", "infoBoxEdge");
+
+            infoBox.append("text")
+                .text(d.diffTerms.toString())
+                .attr("class", "edgeInfo")
+                .attr("x", d.end_x)
+                .attr("y", d.end_y);
+            var jqNode = $("g text.edgeInfo");
+            var w = jqNode.width();
+            var h = jqNode.height();
+            var ttX = d.end_x - w / 2 - edgeWidth / 2;
+            ttX = (ttX + w > width) ? width - w - 2: ttX;
+            ttX = (ttX < 0) ? 0 : ttX;
+            infoBox.select("text.edgeInfo").attr("x", ttX).attr("y", d.end_y + edgeInfoVertPadding + 4/5 * h);
+
+            infoBox.append("rect")
+                .attr("class", "edgeBg")
+                .attr("x", ttX)
+                .attr("y", d.end_y + edgeInfoVertPadding)
+                .attr("width", w)
+                .attr("height", h)
+                .style("fill", "url(#gradient)")
+            $("rect.edgeBg").insertBefore(jqNode);
+        },
+        onMouseOutEdge: function(d) {
+            d3.select(this).style("fill", null).style("opacity", function(d) { return d.simTerms;});
+            svgContainer.selectAll("g.infoBoxEdge").remove();
+            RENDERING.removeGradient();
+        }
+    };
+
+    /*
+        There are two ways for the QueryCrumbs visualization to obtain data. One is to load the user's query history
+        from the IndexedDB. This is what we do initially when QueryCrumbs are generated. The second one is to listen to
+        queries that are issued from the EEXCESS extension.
+     */
+    var QUERYING = {
+        loadDataFromIndexedDB: function() {
+            var queries = [];
+            var db;
+            var reqDB = indexedDB.open('eexcess_db', 42);
+            reqDB.onerror = function(event) {
+                console.error("No access to IndexedDB.");
+            };
+            reqDB.onsuccess = function(event) {
+
+                db = reqDB.result;
+
+                var tx1 = db.transaction("queries")
+                var index = tx1.objectStore("queries").index("timestamp");
+                var i = 0;
+
+                index.openCursor(null, "prev").onsuccess = function(event) {
+                    var cursor = event.target.result;
+                    if (cursor && i < HISTORY_LENGTH) {
+                        queries.push(cursor.value);
+                        i += 1;
+                        cursor.continue();
+                    }
+                }
+                tx1.oncomplete = function(event) {
+
+                    var fLoadSuccess = 0;
+
+                    var pushResults = function(q) {
+                        queries[q].results = [];
+                        var tx_sub = db.transaction("recommendations");
+                        var recIndex = tx_sub.objectStore("recommendations").index("query");
+                        var queryString = '';
+                        queries[q].query.forEach(function(d) { queryString += d.text + ' ';});
+                        queryString = queryString.trim();
+                        queries[q].query = queryString.split(' ');
+                        var singleKeyRange = IDBKeyRange.only(queryString);
+                        recIndex.openCursor(singleKeyRange).onsuccess = function(event) {
+                            var cursor2 = event.target.result;
+                            if (cursor2) {
+                                var result = {
+                                    title: cursor2.value.result.title,
+                                    uri: cursor2.value.result.uri
+                                };
+                                queries[q].results.push(result);
+                                cursor2.continue();
+                            }
+                        }
+
+                        tx_sub.oncomplete = function(event) {
+                            fLoadSuccess += 1;
+                            if(fLoadSuccess == queries.length) {
+                                init(queries);
+                            }
+                        }
+                    };
+
+                    for(var q = 0; q < queries.length; q++) {
+                        pushResults(q);
+                    }
+                }
+            };
+        },
+        /*
+            A callback function for the EEXCESS extension's background script. It gets called each time a query is issued.
+            When receiving results, we insert the query as new node immediately after the node that is currently
+            selected ('currentNode') and remove all subsequent nodes.
+         */
+        SearchTriggeredListener: function(request, sender, sendResponse) {
             if (request.method === 'newSearchTriggered') {
                 if(historyData.length == 0) {
-                    loadDataFromIndexedDB();
+                    QUERYING.loadDataFromIndexedDB();
                 } else {
                     var latestNode = {
                         query: request.data.query.split(" "),
@@ -101,401 +290,258 @@ function display_querycrumbs(domElem) {
                         historyData.push(latestNode);
                     }
 
-                    similarities = calculateSimilarities(historyData);
-                    visualData = generateVisualData(historyData, similarities);
-                    redraw(visualData);
+                    similarities = CORE.calculateSimilarities(historyData);
+                    visualData = CORE.generateVisualData(historyData, similarities);
+                    RENDERING.redraw(visualData);
                 }
             }
         }
-    );
+    };
 
-    var svgContainer = domElem.append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("id", "queryCrumbs-svg");
+    /*
+        The CORE component contains any methods related to transforming the input data into a data object that can be visualized
+        directly with D3.
+     */
+    var CORE = {
+        /*
+            Calculates the similarities between nodes and returns a list of similarity-objects of length HISTORY_LENGTH
+            each of which contains information on how similar node i is compared to node i-1.
+        */
+        calculateSimilarities: function(history) {
+            var sims = [];
+            for(var i = 0; i < history.length; i++) {
+                var rsSimilarity, qSimilarity;
+                var preResults = [], preQuery = [];
+                if((i-1) < 0) {
+                    preResults = [];
+                    preQuery = [];
+                } else {
+                    preResults = history[i-1].results;
+                    preQuery = history[i-1].query;
+                }
 
-    var onClick = function(d, i) {
-        var weightedTerms = [];
-        for(var term in d.query) {
-            var weightedTerm = {
-                text: d.query[term],
-                weight: 1
+                rsSimilarity = CORE.calcResultSetSimilarity(preResults, history[i].results);
+                qSimilarity = CORE.calcQueryTermSimilarity(preQuery, history[i].query);
+
+                var similarity = {
+                    rsSimScore: rsSimilarity,
+                    qSimScore: qSimilarity
+                }
+                sims.push(similarity);
             }
-            weightedTerms.push(weightedTerm);
-        }
-        currentNode = d;
-        currentIdx = i;
-
-        fWait_BackNaviResults = true;
-        EEXCESS.searchResults.loading();
-        EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: weightedTerms});
-    }
-
-    var onMouseOverEdge = function(d, i) {
-
-        createGradient2(d.baseColorStart, d.baseColorEnd);
-        d3.select(this).style("fill", "url(#gradient)").style("opacity", 1.0);
-
-        var infoBox = svgContainer.select("g").append("g").attr("class", "infoBoxEdge");
-
-        infoBox.append("text")
-            .text(d.diffTerms.toString())
-            .attr("class", "edgeInfo")
-            .attr("x", d.end_x)
-            .attr("y", d.end_y);
-        var jqNode = $("g text.edgeInfo");
-        var w = jqNode.width();
-        var h = jqNode.height();
-        var ttX = d.end_x - w / 2 - edgeWidth / 2;
-        ttX = (ttX + w > width) ? width - w - 2: ttX;
-        ttX = (ttX < 0) ? 0 : ttX;
-        infoBox.select("text.edgeInfo").attr("x", ttX).attr("y", d.end_y + edgeInfoVertPadding + 4/5 * h);
-
-        infoBox.append("rect")
-            .attr("class", "edgeBg")
-            .attr("x", ttX)
-            .attr("y", d.end_y + edgeInfoVertPadding)
-            .attr("width", w)
-            .attr("height", h)
-            .style("fill", "url(#gradient)")
-        $("rect.edgeBg").insertBefore(jqNode);
-    }
-
-    var onMouseOutEdge = function(d) {
-        d3.select(this).style("fill", null).style("opacity", function(d) { return d.simTerms;});
-        svgContainer.selectAll("g.infoBoxEdge").remove();
-        removeGradient2();
-    }
-
-    var onMouseOverNode = function(d, i) {
-        var infoBox = svgContainer.select("g").append("g").attr("class", "infoBoxNode");
-        d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", true).style("cursor","pointer");//style("stroke", d.base_color).style("stroke-width", "3px").style("stroke-opacity", 0.5).style("cursor", "pointer");
-        infoBox.append("text")
-            .text(d.query.toString())
-            .attr("class", "nodeInfo")
-            .attr("text-anchor", "start")
-            .attr("x", d.x_pos)
-            .attr("y", d.y_pos)
-            .attr("dy", -5);
-        var jqNode = $("g text.nodeInfo");
-        var w = jqNode.width();
-        var h = jqNode.height();
-        var ttX = d.x_pos - rectBorderWidth;
-        ttX = (ttX + w > width) ? width - w - (2 * rectBorderWidth): ttX - (2 * rectBorderWidth);
-        ttX = (ttX < 0) ? 0 : ttX;
-        infoBox.select("text.nodeInfo").attr("x", ttX);
-        infoBox.append("rect")
-            .attr("class", "nodeBg")
-            .attr("x", ttX)
-            .attr("y", d.y_pos - rectInfoVertPadding)
-            .attr("width", w)
-            .attr("height", h)
-            .style("fill", d.base_color)
-        $("rect.nodeBg").insertBefore(jqNode);
-
-        var rootGroup = d3.select(this.parentNode);
-        var iDocs = collectIdenticalDocs(i);
-
-        for(var n in iDocs) {
-            var docRects = rootGroup.select("g:nth-of-type("+(parseInt(n)+1)+").queryNode").select("g").selectAll("rect.docNode").filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
-            simResults.push(docRects);
-            docRects.style("fill", "black").style("opacity", 1);
-        }
-
-    }
-    var collectIdenticalDocs = function(refNodeIdx) {
-
-        var sims = [];
-        for(var node = 0; node < historyData.length; node++) {
-            var nodeSims = [];
-            for(var r = 0; r < historyData[refNodeIdx].results.length; r++) {
-                for(var rn = 0; rn < historyData[node].results.length; rn++) {
-                    if(historyData[refNodeIdx].results[r].uri == historyData[node].results[rn].uri) {
-                        nodeSims.push(rn);
+            return sims;
+        },
+        /*
+            A simple heuristic to determine how similar two queries (nodes) are based on the number of results they
+            have in common. Returns the score [0,1] and a list of indices 'recurrence' referring to the indices of the results of
+            the preceding node. If a result of the current node has already appeared at position j in the result list of the preceding
+            node, 'recurrence' contains an element j. If a result didn't show up before, 'recurrence' contains the value
+            -1 at that position.
+         */
+        calcResultSetSimilarity: function(predecessor, current) {
+            var sim = 0;
+            var recurrence = [];
+            for(var i = 0; i < current.length; i++) {
+                var docAlreadyKnown = false;
+                var docAlreadyKnownIdx = -1;
+                for(var j = 0; j < predecessor.length; j++) {
+                    if(current[i].uri == predecessor[j].uri) {
+                        sim++;
+                        docAlreadyKnown = true;
+                        docAlreadyKnownIdx = j;
+                        break;
                     }
                 }
-            }
-            sims.push(nodeSims);
-        }
-        return sims;
-    }
 
-    var onMouseOutNode = function(d) {
-        svgContainer.selectAll("g.infoBoxNode").remove();
-        d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", false).style("cursor",null);
-        for(var n in simResults) {
-            simResults[n].style("fill", "black")
-                .style("opacity", function(d) { return ((d.preIdx == -1) ? newDocOpacity : oldDocOpacity);});
+                recurrence.push(docAlreadyKnownIdx);
+            }
+            return {sim: sim/current.length, recurrence: recurrence};
+        },
+        /*
+            A simple heuristic to determine the similarity of two queries (nodes) based on the number of query terms
+            they have in common. Returns the score [0,1] and a delta 'diff' containing the terms of both queries that
+            are not in the intersection of both sets of query terms.
+            (List of query terms Q1, Q2. Then 'diff' = (Q1 OR Q2)\(Q1 AND Q2) )
+         */
+        calcQueryTermSimilarity: function(predecessor, current) {
+            var sim = 0;
+            var intersectWords = [];
+            var differenceWords = [];
+            for(var term1 in predecessor) {
+                if(current.indexOf(predecessor[term1]) != -1) {
+                    intersectWords.push(predecessor[term1]);
+                    sim++;
+                } else {
+                    differenceWords.push(predecessor[term1]);
+                }
+            }
+            for(var term2 in current) {
+                if(predecessor.indexOf(current[term2]) == -1) {
+                    differenceWords.push(current[term2]);
+                }
+            }
+            return {sim: sim / (intersectWords.length + differenceWords.length), diff: differenceWords};
+        },
+        /*
+            Generates the main data object for visualization from the input data 'history' and the calculated
+            similarities 'similarities' and enriches it with positional and graphical information.
+         */
+        generateVisualData: function(history, similarities) {
+            var visualDataNodes = [];
+            var visualDataEdges = [];
+            for(var nodeIdx = 0; nodeIdx < history.length; nodeIdx++) {
+                var vNode = {};
+                vNode.query = history[nodeIdx].query;
+                vNode.sim = similarities[nodeIdx].rsSimScore.sim;
+                vNode.base_color = (visualDataNodes[nodeIdx-1]) ? BaseColors.getColor(visualDataNodes[nodeIdx-1].base_color, vNode.sim) : BaseColors.getFirstColor();
+                vNode.x_pos = nodeIdx * (rectWidth + edgeWidth);
+                vNode.y_pos = 0;
+                vNode.width = rectWidth;
+                vNode.height = rectHeight;
+                vNode.results = [];
+                for(var docIdx = 0; docIdx < DENSE_PIXELS; docIdx++) {
+                    var vDoc = {};
+                    vDoc.x_pos = vNode.x_pos + (docIdx % docRectHorizontal) * docRectWidth;
+                    vDoc.y_pos = vNode.y_pos + Math.floor(docIdx / docRectVertical) * docRectHeight;
+                    vDoc.width = docRectWidth;
+                    vDoc.height = docRectHeight;
+                    vDoc.sim = (similarities[nodeIdx].rsSimScore.recurrence[docIdx] == -1) ? 1 : 0;
+                    vDoc.preIdx = (typeof similarities[nodeIdx].rsSimScore.recurrence[docIdx] != "undefined") ? similarities[nodeIdx].rsSimScore.recurrence[docIdx] : -1;
+                    vDoc.uri = (history[nodeIdx].results[docIdx]) ? history[nodeIdx].results[docIdx].uri : "";
+                    vNode.results.push(vDoc);
+                }
+                visualDataNodes.push(vNode);
+                if(nodeIdx > 0) {
+                    var vEdge = {};
+                    vEdge.start_x = vNode.x_pos - edgeWidth;
+                    vEdge.start_y = rectHeight / 2 - edgeHeight / 2;
+                    vEdge.end_x = vNode.x_pos;
+                    vEdge.end_y = rectHeight / 2 - edgeHeight / 2;
+                    vEdge.diffTerms = similarities[nodeIdx].qSimScore.diff;
+                    vEdge.simTerms = similarities[nodeIdx].qSimScore.sim;
+                    vEdge.simResults = similarities[nodeIdx].rsSimScore.sim;
+                    vEdge.baseColorStart = visualDataNodes[nodeIdx-1].base_color;
+                    vEdge.baseColorEnd = visualDataNodes[nodeIdx].base_color;
+                    visualDataEdges.push(vEdge);
+                }
+            }
+            return {visualDataNodes: visualDataNodes, visualDataEdges: visualDataEdges};
+        },
+        /*
+            This method returns a 2-dim list of indices referring to results that are identical to those of a given
+            reference node 'refNodeIdx'.
+         */
+        collectIdenticalDocs: function(refNodeIdx) {
+
+            var sims = [];
+            for(var node = 0; node < historyData.length; node++) {
+                var nodeSims = [];
+                for(var r = 0; r < historyData[refNodeIdx].results.length; r++) {
+                    for(var rn = 0; rn < historyData[node].results.length; rn++) {
+                        if(historyData[refNodeIdx].results[r].uri == historyData[node].results[rn].uri) {
+                            nodeSims.push(rn);
+                        }
+                    }
+                }
+                sims.push(nodeSims);
+            }
+            return sims;
         }
-    }
+    };
+
+    var RENDERING = {
+        createGradient: function(color1, color2) {
+            var defs = svgContainer.append("svg:defs");
+            var gradient = defs.append("svg:linearGradient")
+                .attr("id", "gradient")
+                .attr("x1", "0%")
+                .attr("y1", "50%")
+                .attr("x2", "100%")
+                .attr("y2", "50%")
+                .attr("spreadMethod", "pad");
+
+            gradient.append("svg:stop")
+                .attr("offset", "0%")
+                .attr("stop-color", color1)
+                .attr("stop-opacity", 0.8);
+
+            gradient.append("svg:stop")
+                .attr("offset", "100%")
+                .attr("stop-color", color2)
+                .attr("stop-opacity", 0.8);
+        },
+        removeGradient: function() {
+            d3.select("svg defs").remove();
+        },
+        redraw: function(visualData) {
+
+            svgContainer.selectAll("g").remove();
+            var group = svgContainer.append("g").attr("transform", "translate(2, "+15+")");
+
+            var queryRects = group.selectAll("g")
+                .data(visualData.visualDataNodes)
+                .enter()
+                .append("g")
+                .classed("queryNode", true)
+                .on("mouseenter", INTERACTION.onMouseOverNode)
+                .on("mouseleave", INTERACTION.onMouseOutNode)
+                .on("click", INTERACTION.onClick);
+
+            queryRects.append("rect")
+                .attr("x", function (d) { return d.x_pos - rectBorderWidth; })
+                .attr("y", function (d) { return d.y_pos - rectBorderWidth; } )
+                .attr("width", function (d) { return d.width + 2 * rectBorderWidth; })
+                .attr("height", function (d) { return d.height + 2 * rectBorderWidth; })
+                .classed("queryRectBg", true)
+                .classed("queryRectBg-selected", function(d,i) { return (i == currentIdx);});
+
+            queryRects.append("rect")
+                .attr("x", function (d) { return d.x_pos; })
+                .attr("y", function (d) { return d.y_pos; } )
+                .attr("width", function (d) { return d.width; })
+                .attr("height", function (d) { return d.height; })
+                .style("fill", function (d) { return d.base_color; })
+                .classed("queryRect", true)
+                .append("svg:title")
+                .text(function(d) { return d.query.toString(); });
+
+            var queryDocRects = queryRects.append("g").selectAll("rect").data(function(d) { return d.results; })
+                .enter()
+                .append("rect");
+
+            queryDocRects.attr("class", "docNode")
+                .attr("x", function(d) { return d.x_pos; })
+                .attr("y", function(d) { return d.y_pos; })
+                .attr("width", function(d) { return d.width; })
+                .attr("height", function(d) { return d.height; })
+                .style("opacity", function(d) { return ((d.preIdx == -1) ? newDocOpacity : oldDocOpacity);});
+
+
+            var queryEdges =  group.selectAll("rect.queryEdge")
+                .data(visualData.visualDataEdges)
+                .enter()
+                .append("rect")
+                .attr("class", "queryEdge")
+                .on("mouseover", INTERACTION.onMouseOverEdge)
+                .on("mouseout", INTERACTION.onMouseOutEdge);
+
+            queryEdges.attr("x",function (d) { return d.start_x; } )
+                .attr("y",function (d) { return d.start_y; } )
+                .attr("width", edgeWidth )
+                .attr("height", edgeHeight)
+                .style("opacity", function(d) { return d.simTerms;});
+
+        }
+    };
+
+    EEXCESS.messageListener(QUERYING.SearchTriggeredListener);
 
     function init(data) {
         historyData = data.reverse();
         currentIdx = historyData.length-1;
         currentNode = historyData[currentIdx];
-        similarities = calculateSimilarities(historyData);
-        visualData = generateVisualData(historyData, similarities);
-        redraw(visualData);
-    }
-
-    function loadDataFromIndexedDB() {
-
-        var queries = [];
-
-        var db;
-        var reqDB = indexedDB.open('eexcess_db', 42);
-        reqDB.onerror = function(event) {
-            console.error("No access to IndexedDB.");
-        };
-        reqDB.onsuccess = function(event) {
-
-            db = reqDB.result;
-
-            var tx1 = db.transaction("queries")
-            var index = tx1.objectStore("queries").index("timestamp");
-            var i = 0;
-
-            index.openCursor(null, "prev").onsuccess = function(event) {
-                var cursor = event.target.result;
-                if (cursor && i < HISTORY_LENGTH) {
-                    queries.push(cursor.value);
-                    i += 1;
-                    cursor.continue();
-                }
-            }
-            tx1.oncomplete = function(event) {
-
-                var fLoadSuccess = 0;
-
-                var pushResults = function(q) {
-                    queries[q].results = [];
-                    var tx_sub = db.transaction("recommendations");
-                    var recIndex = tx_sub.objectStore("recommendations").index("query");
-                    var queryString = '';
-                    queries[q].query.forEach(function(d) { queryString += d.text + ' ';});
-                    queryString = queryString.trim();
-                    queries[q].query = queryString.split(' ');
-                    var singleKeyRange = IDBKeyRange.only(queryString);
-                    recIndex.openCursor(singleKeyRange).onsuccess = function(event) {
-                        var cursor2 = event.target.result;
-                        if (cursor2) {
-                            var result = {
-                                title: cursor2.value.result.title,
-                                uri: cursor2.value.result.uri
-                            };
-                            queries[q].results.push(result);
-                            cursor2.continue();
-                        }
-                    }
-
-                    tx_sub.oncomplete = function(event) {
-                        fLoadSuccess += 1;
-                        if(fLoadSuccess == queries.length) {
-                            init(queries);
-                        }
-                    }
-                };
-
-                for(var q = 0; q < queries.length; q++) {
-                    pushResults(q);
-                }
-            }
-        };
-    }
-
-    function calculateSimilarities(history) {
-        var sims = [];
-        for(var i = 0; i < history.length; i++) {
-            var rsSimilarity, qSimilarity;
-            var preResults = [], preQuery = [];
-            if((i-1) < 0) {
-                preResults = [];
-                preQuery = [];
-            } else {
-                preResults = history[i-1].results;
-                preQuery = history[i-1].query;
-            }
-
-            rsSimilarity = calcResultSetSimilarity(preResults, history[i].results);
-            qSimilarity = calcQueryTermSimilarity(preQuery, history[i].query);
-
-            var similarity = {
-                rsSimScore: rsSimilarity,
-                qSimScore: qSimilarity
-            }
-            sims.push(similarity);
-        }
-        return sims;
-    }
-
-    function calcResultSetSimilarity(predecessor, current) {
-
-        var sim = 0;
-        var resultSetDiff = [];
-        var recurrence = [];
-        for(var i = 0; i < current.length; i++) {
-            var docAlreadyKnown = false;
-            var docAlreadyKnownIdx = -1;
-            for(var j = 0; j < predecessor.length; j++) {
-                if(current[i].uri == predecessor[j].uri) {
-                    sim++;
-                    docAlreadyKnown = true;
-                    docAlreadyKnownIdx = j;
-                    break;
-                }
-            }
-
-            recurrence.push(docAlreadyKnownIdx);
-        }
-        return {sim: sim/current.length, recurrence: recurrence};
-    }
-
-    function calcQueryTermSimilarity(predecessor, current) {
-
-        var sim = 0;
-        var intersectWords = [];
-        var differenceWords = [];
-        for(var term1 in predecessor) {
-            if(current.indexOf(predecessor[term1]) != -1) {
-                intersectWords.push(predecessor[term1]);
-                sim++;
-            } else {
-                differenceWords.push(predecessor[term1]);
-            }
-        }
-        for(var term2 in current) {
-            if(predecessor.indexOf(current[term2]) == -1) {
-                differenceWords.push(current[term2]);
-            }
-        }
-        return {sim: sim / (intersectWords.length + differenceWords.length), diff: differenceWords};
-    }
-
-    function generateVisualData(history, similarities) {
-        var visualDataNodes = [];
-        var visualDataEdges = [];
-        for(var nodeIdx = 0; nodeIdx < history.length; nodeIdx++) {
-            var vNode = {};
-            vNode.query = history[nodeIdx].query;
-            vNode.sim = similarities[nodeIdx].rsSimScore.sim;
-            vNode.base_color = (visualDataNodes[nodeIdx-1]) ? BaseColors.getColor(visualDataNodes[nodeIdx-1].base_color, vNode.sim) : BaseColors.getFirstColor();
-            vNode.x_pos = nodeIdx * (rectWidth + edgeWidth);
-            vNode.y_pos = 0;
-            vNode.width = rectWidth;
-            vNode.height = rectHeight;
-            vNode.results = [];
-            for(var docIdx = 0; docIdx < DENSE_PIXELS; docIdx++) {
-                var vDoc = {};
-                vDoc.x_pos = vNode.x_pos + (docIdx % docRectHorizontal) * docRectWidth;
-                vDoc.y_pos = vNode.y_pos + Math.floor(docIdx / docRectVertical) * docRectHeight;
-                vDoc.width = docRectWidth;
-                vDoc.height = docRectHeight;
-                vDoc.sim = (similarities[nodeIdx].rsSimScore.recurrence[docIdx] == -1) ? 1 : 0;
-                vDoc.preIdx = (typeof similarities[nodeIdx].rsSimScore.recurrence[docIdx] != "undefined") ? similarities[nodeIdx].rsSimScore.recurrence[docIdx] : -1;
-                vDoc.uri = (history[nodeIdx].results[docIdx]) ? history[nodeIdx].results[docIdx].uri : "";
-                vNode.results.push(vDoc);
-            }
-            visualDataNodes.push(vNode);
-            if(nodeIdx > 0) {
-                var vEdge = {};
-                vEdge.start_x = vNode.x_pos - edgeWidth;
-                vEdge.start_y = rectHeight / 2 - edgeHeight / 2;
-                vEdge.end_x = vNode.x_pos;
-                vEdge.end_y = rectHeight / 2 - edgeHeight / 2;
-                vEdge.diffTerms = similarities[nodeIdx].qSimScore.diff;
-                vEdge.simTerms = similarities[nodeIdx].qSimScore.sim;
-                vEdge.simResults = similarities[nodeIdx].rsSimScore.sim;
-                vEdge.baseColorStart = visualDataNodes[nodeIdx-1].base_color;
-                vEdge.baseColorEnd = visualDataNodes[nodeIdx].base_color;
-                visualDataEdges.push(vEdge);
-            }
-        }
-
-        return {visualDataNodes: visualDataNodes, visualDataEdges: visualDataEdges};
-    }
-
-    function createGradient2(color1, color2) {
-        var defs = svgContainer.append("svg:defs");
-        var gradient = defs.append("svg:linearGradient")
-            .attr("id", "gradient")
-            .attr("x1", "0%")
-            .attr("y1", "50%")
-            .attr("x2", "100%")
-            .attr("y2", "50%")
-            .attr("spreadMethod", "pad");
-
-        gradient.append("svg:stop")
-            .attr("offset", "0%")
-            .attr("stop-color", color1)
-            .attr("stop-opacity", 0.8);
-
-        gradient.append("svg:stop")
-            .attr("offset", "100%")
-            .attr("stop-color", color2)
-            .attr("stop-opacity", 0.8);
-    }
-
-    function removeGradient2() {
-        d3.select("svg defs").remove();
-    }
-
-    function redraw(visualData) {
-
-        svgContainer.selectAll("g").remove();
-        var group = svgContainer.append("g").attr("transform", "translate(2, "+15+")");
-
-        var queryRects = group.selectAll("g")
-            .data(visualData.visualDataNodes)
-            .enter()
-            .append("g")
-            .classed("queryNode", true)
-            .on("mouseenter", onMouseOverNode)
-            .on("mouseleave", onMouseOutNode)
-            .on("click", onClick);
-
-        queryRects.append("rect")
-            .attr("x", function (d) { return d.x_pos - rectBorderWidth; })
-            .attr("y", function (d) { return d.y_pos - rectBorderWidth; } )
-            .attr("width", function (d) { return d.width + 2 * rectBorderWidth; })
-            .attr("height", function (d) { return d.height + 2 * rectBorderWidth; })
-            .classed("queryRectBg", true)
-            .classed("queryRectBg-selected", function(d,i) { return (i == currentIdx);});
-
-        queryRects.append("rect")
-            .attr("x", function (d) { return d.x_pos; })
-            .attr("y", function (d) { return d.y_pos; } )
-            .attr("width", function (d) { return d.width; })
-            .attr("height", function (d) { return d.height; })
-            .style("fill", function (d) { return d.base_color; })
-            .classed("queryRect", true)
-            .append("svg:title")
-            .text(function(d) { return d.query.toString(); });
-
-        var queryDocRects = queryRects.append("g").selectAll("rect").data(function(d) { return d.results; })
-            .enter()
-            .append("rect");
-
-        queryDocRects.attr("class", "docNode")
-            .attr("x", function(d) { return d.x_pos; })
-            .attr("y", function(d) { return d.y_pos; })
-            .attr("width", function(d) { return d.width; })
-            .attr("height", function(d) { return d.height; })
-            .style("opacity", function(d) { return ((d.preIdx == -1) ? newDocOpacity : oldDocOpacity);});
-
-
-        var queryEdges =  group.selectAll("rect.queryEdge")
-            .data(visualData.visualDataEdges)
-            .enter()
-            .append("rect")
-            .attr("class", "queryEdge")
-            .on("mouseover", onMouseOverEdge)
-            .on("mouseout", onMouseOutEdge);
-
-        queryEdges.attr("x",function (d) { return d.start_x; } )
-            .attr("y",function (d) { return d.start_y; } )
-            .attr("width", edgeWidth )
-            .attr("height", edgeHeight)
-            .style("opacity", function(d) { return d.simTerms;});
-
+        similarities = CORE.calculateSimilarities(historyData);
+        visualData = CORE.generateVisualData(historyData, similarities);
+        RENDERING.redraw(visualData);
     }
 }
