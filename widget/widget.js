@@ -91,6 +91,9 @@ EEXCESS.init = function(widget) {
         EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
         return false;
     });
+
+    // Move me to a better location
+    display_querycrumbs(d3.select("div#queryCrumbs"));
 };
 
 
