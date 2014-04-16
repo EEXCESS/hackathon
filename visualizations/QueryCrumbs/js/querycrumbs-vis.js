@@ -2,11 +2,11 @@ function display_querycrumbs(domElem) {
 
     // Query Crumbs dimensions
     var HISTORY_LENGTH = 11;
-    var DENSE_PIXELS = 25;
+    var DENSE_PIXELS = 16;
     var rectHeight = 20;
     var rectWidth = 20;
-    var docRectHorizontal = 5;
-    var docRectVertical = 5;
+    var docRectHorizontal = 4;
+    var docRectVertical = 4;
     var docRectHeight = rectHeight / docRectVertical;
     var docRectWidth = rectWidth / docRectHorizontal;
 
@@ -66,7 +66,6 @@ function display_querycrumbs(domElem) {
             d3.rgb("hsl(30,50%, 50%)"),  // orange
             d3.rgb("hsl(120,50%, 50%)") // green
         ],
-
         getColor: function(preNodeColor, similarity) {
             if(preNodeColor) {
                 if(similarity > color_threshold) {
@@ -79,7 +78,6 @@ function display_querycrumbs(domElem) {
                 return BaseColors.base_colors[0];
             }
         },
-
         getFirstColor: function() {
             if(BaseColors.currentFirstBaseColor) {
                 return BaseColors.currentFirstBaseColor;
@@ -138,14 +136,14 @@ function display_querycrumbs(domElem) {
             for(var n in iDocs) {
                 var docRects = rootGroup.select("g:nth-of-type("+(parseInt(n)+1)+").queryNode").select("g").selectAll("rect.docNode").filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
                 simResults.push(docRects);
-                docRects.style("fill", "black").style("opacity", 1);
+                docRects.classed("docNode", true).classed("docNode-highlighted", true).style("opacity", 1);
             }
         },
         onMouseOutNode: function(d) {
             svgContainer.selectAll("g.infoBoxNode").remove();
             d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", false).style("cursor",null);
             for(var n in simResults) {
-                simResults[n].style("fill", "black")
+                simResults[n].classed("docNode", true).classed("docNode-highlighted", false)
                     .style("opacity", function(d) { return ((d.preIdx == -1) ? newDocOpacity : oldDocOpacity);});
             }
         },
