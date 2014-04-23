@@ -107,6 +107,7 @@ function display_querycrumbs(domElem) {
         onMouseOverNode: function(d, i) {
             var infoBox = svgContainer.select("g").append("g").attr("class", "infoBoxNode");
             d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", true).style("cursor","pointer");
+            console.log(d);
             infoBox.append("text")
                 .text(d.query.toString())
                 .attr("class", "nodeInfo")
@@ -130,11 +131,11 @@ function display_querycrumbs(domElem) {
                 .style("fill", d.base_color)
             $("rect.nodeBg").insertBefore(jqNode);
 
+            simResults = [];
             var rootGroup = d3.select(this.parentNode);
             var iDocs = CORE.collectIdenticalDocs(i);
-
             for(var n in iDocs) {
-                var docRects = rootGroup.select("g:nth-of-type("+(parseInt(n)+1)+").queryNode").select("g").selectAll("rect.docNode").filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
+                var docRects = rootGroup.selectAll("g.queryNode").filter(function(d,i) { return (d.timestamp == visualData.visualDataNodes[n].timestamp);}).select("g").selectAll("rect.docNode").filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
                 simResults.push(docRects);
                 docRects.classed("docNode", true).classed("docNode-highlighted", true).style("opacity", 1);
             }
@@ -146,6 +147,7 @@ function display_querycrumbs(domElem) {
                 simResults[n].classed("docNode", true).classed("docNode-highlighted", false)
                     .style("opacity", function(d) { return ((d.preIdx == -1) ? newDocOpacity : oldDocOpacity);});
             }
+            simResults = [];
         },
         onMouseOverEdge: function(d, i) {
 
@@ -263,6 +265,7 @@ function display_querycrumbs(domElem) {
                 } else {
                     var latestNode = {
                         query: request.data.query.split(" "),
+                        timestamp: new Date().getTime(),
                         results: []
                     }
                     for(var r in request.data.results.results) {
@@ -276,7 +279,6 @@ function display_querycrumbs(domElem) {
                     if(fWait_BackNaviResults) {
                         currentNode = latestNode;
                         historyData[currentIdx] = currentNode;
-                        fWait_BackNaviResults = false;
                     } else {
                         if(currentIdx == HISTORY_LENGTH-1) {
                             historyData.splice(-HISTORY_LENGTH,1);
@@ -291,6 +293,8 @@ function display_querycrumbs(domElem) {
                     similarities = CORE.calculateSimilarities(historyData);
                     visualData = CORE.generateVisualData(historyData, similarities);
                     RENDERING.redraw(visualData);
+
+                    fWait_BackNaviResults = false;
                 }
             }
         }
@@ -387,9 +391,11 @@ function display_querycrumbs(domElem) {
         generateVisualData: function(history, similarities) {
             var visualDataNodes = [];
             var visualDataEdges = [];
+            console.log(history);
             for(var nodeIdx = 0; nodeIdx < history.length; nodeIdx++) {
                 var vNode = {};
                 vNode.query = history[nodeIdx].query;
+                vNode.timestamp = history[nodeIdx].timestamp;
                 vNode.sim = similarities[nodeIdx].rsSimScore.sim;
                 vNode.base_color = (visualDataNodes[nodeIdx-1]) ? BaseColors.getColor(visualDataNodes[nodeIdx-1].base_color, vNode.sim) : BaseColors.getFirstColor();
                 vNode.x_pos = nodeIdx * (rectWidth + edgeWidth);
@@ -473,40 +479,46 @@ function display_querycrumbs(domElem) {
         },
         redraw: function(visualData) {
 
-            svgContainer.selectAll("g").remove();
-            var group = svgContainer.append("g").attr("transform", "translate(2, "+15+")");
+            var crumbsSel = svgContainer.selectAll("g.crumbs").data([visualData]);
+            crumbsSel.enter().append("g").attr("class", "crumbs");
+            var crumbsUpd = crumbsSel.attr("transform", "translate(2, "+15+")");
+            crumbsSel.exit().remove();
 
-            var queryRects = group.selectAll("g")
-                .data(visualData.visualDataNodes)
-                .enter()
-                .append("g")
-                .classed("queryNode", true)
+            var queryNodesSel = crumbsUpd.selectAll("g.queryNode").data(function(d) { return d.visualDataNodes; }, function(d) { return d.timestamp;});
+            var nodeEnter = queryNodesSel.enter().append("g");
+            queryNodesSel.classed("queryNode", true)
                 .on("mouseenter", INTERACTION.onMouseOverNode)
                 .on("mouseleave", INTERACTION.onMouseOutNode)
                 .on("click", INTERACTION.onClick);
+            nodeEnter.append("rect").attr("class", "queryRectBg");
+            nodeEnter.append("rect").attr("class", "queryRect");
+            nodeEnter.append("g");
+            queryNodesSel.exit().transition().style("opacity", 0).attr("transform", function(d,i) { if(fWait_BackNaviResults) { return "translate(0,0)"; } else { return ("translate(0, 100)");}}).remove();
+            nodeEnter.attr("transform", function(d,i) {
+                if(fWait_BackNaviResults) {
+                    return "translate(0,0)";
+                } else {
+                    var lOffset = edgeWidth + rectWidth;
+                    return ("translate("+parseInt(-lOffset)+", 0)");
+                }
+            });
 
-            queryRects.append("rect")
-                .attr("x", function (d) { return d.x_pos - rectBorderWidth; })
+            queryNodesSel.select("rect.queryRectBg").attr("x", function (d) { return d.x_pos - rectBorderWidth; })
                 .attr("y", function (d) { return d.y_pos - rectBorderWidth; } )
                 .attr("width", function (d) { return d.width + 2 * rectBorderWidth; })
                 .attr("height", function (d) { return d.height + 2 * rectBorderWidth; })
                 .classed("queryRectBg", true)
-                .classed("queryRectBg-selected", function(d,i) { return (i == currentIdx);});
-
-            queryRects.append("rect")
-                .attr("x", function (d) { return d.x_pos; })
+                .classed("queryRectBg-selected", function(d,i) { console.log("me: "+i+" curIdx: "+currentIdx);return (i == currentIdx);});
+            queryNodesSel.select("rect.queryRect").attr("x", function (d) { return d.x_pos; })
                 .attr("y", function (d) { return d.y_pos; } )
                 .attr("width", function (d) { return d.width; })
                 .attr("height", function (d) { return d.height; })
                 .style("fill", function (d) { return d.base_color; })
-                .classed("queryRect", true)
-                .append("svg:title")
-                .text(function(d) { return d.query.toString(); });
+                .classed("queryRect", true);
+            nodeEnter.transition().attr("transform", "translate(0,0)");
 
-            var queryDocRects = queryRects.append("g").selectAll("rect").data(function(d) { return d.results; })
-                .enter()
-                .append("rect");
-
+            var queryDocRects = queryNodesSel.select("g").selectAll("rect.docNode").data(function(d) { return d.results; });
+            queryDocRects.enter().append("rect");
             queryDocRects.attr("class", "docNode")
                 .attr("x", function(d) { return d.x_pos; })
                 .attr("y", function(d) { return d.y_pos; })
@@ -514,21 +526,97 @@ function display_querycrumbs(domElem) {
                 .attr("height", function(d) { return d.height; })
                 .style("opacity", function(d) { return ((d.preIdx == -1) ? newDocOpacity : oldDocOpacity);});
 
-
-            var queryEdges =  group.selectAll("rect.queryEdge")
-                .data(visualData.visualDataEdges)
-                .enter()
+            var queryEdgesSel = crumbsUpd.selectAll("rect.queryEdge").data(function(d) { return d.visualDataEdges;});
+            var queryEdgesEnter = queryEdgesSel.enter()
                 .append("rect")
                 .attr("class", "queryEdge")
                 .on("mouseover", INTERACTION.onMouseOverEdge)
                 .on("mouseout", INTERACTION.onMouseOutEdge);
 
-            queryEdges.attr("x",function (d) { return d.start_x; } )
+            queryEdgesSel.exit().transition().style("opacity", 0).attr("transform", function(d,i) { if(fWait_BackNaviResults) { return "translate(0,0)"; } else { return ("translate(0, 100)");}}).remove();
+
+            queryEdgesSel.attr("x",function (d) { return d.start_x; } )
                 .attr("y",function (d) { return d.start_y; } )
                 .attr("width", edgeWidth )
                 .attr("height", edgeHeight)
                 .style("opacity", function(d) { return d.simTerms;});
 
+
+//            svgContainer.selectAll("g").remove();
+//            var group = svgContainer.append("g").attr("transform", "translate(2, "+15+")");
+//
+//            var queryRects = group.selectAll("g.queryNode")
+//                .data(visualData.visualDataNodes);
+//
+//            queryRects.enter()
+//                .append("g")
+//                .classed("queryNode", true)
+//                .on("mouseenter", INTERACTION.onMouseOverNode)
+//                .on("mouseleave", INTERACTION.onMouseOutNode)
+//                .on("click", INTERACTION.onClick);
+//
+//            queryRects.append("rect")
+//                .attr("x", function (d) { return d.x_pos - rectBorderWidth; })
+//                .attr("y", function (d) { return d.y_pos - rectBorderWidth; } )
+//                .attr("width", function (d) { return d.width + 2 * rectBorderWidth; })
+//                .attr("height", function (d) { return d.height + 2 * rectBorderWidth; })
+//                .classed("queryRectBg", true)
+//                .classed("queryRectBg-selected", function(d,i) { return (i == currentIdx);});
+//
+//            queryRects.append("rect")
+//                .attr("x", function (d) { return d.x_pos; })
+//                .attr("y", function (d) { return d.y_pos; } )
+//                .attr("width", function (d) { return d.width; })
+//                .attr("height", function (d) { return d.height; })
+//                .style("fill", function (d) { return d.base_color; })
+//                .classed("queryRect", true)
+//                .append("svg:title")
+//                .text(function(d) { return d.query.toString(); });
+//
+//            var queryDocRects = queryRects.append("g").selectAll("rect").data(function(d) { return d.results; })
+//                .enter()
+//                .append("rect");
+//
+//            queryDocRects.attr("class", "docNode")
+//                .attr("x", function(d) { return d.x_pos; })
+//                .attr("y", function(d) { return d.y_pos; })
+//                .attr("width", function(d) { return d.width; })
+//                .attr("height", function(d) { return d.height; })
+//                .style("opacity", function(d) { return ((d.preIdx == -1) ? newDocOpacity : oldDocOpacity);});
+//
+//            var queryEdges =  group.selectAll("rect.queryEdge")
+//                .data(visualData.visualDataEdges)
+//                .enter()
+//                .append("rect")
+//                .attr("class", "queryEdge")
+//                .on("mouseover", INTERACTION.onMouseOverEdge)
+//                .on("mouseout", INTERACTION.onMouseOutEdge);
+//
+//            queryEdges.attr("x",function (d) { return d.start_x; } )
+//                .attr("y",function (d) { return d.start_y; } )
+//                .attr("width", edgeWidth )
+//                .attr("height", edgeHeight)
+//                .style("opacity", function(d) { return d.simTerms;});
+        },
+        transitionTo: function(visualData, currIdx) {
+            var nodesToFadeOut = svgContainer.selectAll("g.queryNode").filter(function(d,i) { return (i > currIdx);});
+            var edgesToFadeOut = svgContainer.selectAll("rect.queryEdge").filter(function(d,i) { return (i >= currIdx);});
+            nodesToFadeOut.transition()
+                .delay(0)
+                .duration(500)
+                .attr("transform", "translate(0, 100)")
+                .style("opacity", 0)
+                .each("end",function() {
+                    d3.select(this).remove();
+                });
+            edgesToFadeOut.transition()
+                .delay(0)
+                .duration(500)
+                .attr("transform", "translate(0,100)")
+                .style("opacity", 0)
+                .each("end", function() {
+                    d3.select(this).remove;
+                });
         }
     };
 
