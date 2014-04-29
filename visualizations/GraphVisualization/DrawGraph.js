@@ -1,3 +1,8 @@
+//help functions
+function TextCutter(text,sizeCompare,sizeCut){
+	return text.length < sizeCompare ? text : text.substring(0,sizeCut)+"..."; 
+}
+
 
 var g= null;
 var linecount = 0;
@@ -7,7 +12,7 @@ function MakeGraph(){
 	
 	g = new ActionGraph();	
 
-	g.build.show.functionValues = functions;
+	////////////g.build.show.functionValues = functions;
 	//g.build.show.setStore = true;
 	
 	
