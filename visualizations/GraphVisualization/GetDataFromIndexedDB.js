@@ -8,13 +8,10 @@ var wordHistory = [];
 var uniqueWordsResult =[];
 
 
-var data = null;
 
 //start automatically async method if the script start.
 db.onsuccess = function() {
 
-data = GetDataFromIndexedDB();
-data.Init();
 
 //var GetDataFromDB = function(evt) {
 
@@ -271,6 +268,11 @@ function LastTestAction(){
 	
 	console.log("---------");
 }
+
+var data = null;
+data = GetDataFromIndexedDB();
+data.Init();
+
 
 //------------------------------------------------------------------------------------------------------------------------
 
