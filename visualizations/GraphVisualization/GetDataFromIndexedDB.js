@@ -57,7 +57,9 @@ db.onsuccess = function() {
 			//console.log(">");
 			//console.log(wordHistory);
 			$("#keywordnumber").text(wordHistory.length);
-			wordHistory = wordHistory.reverse().splice(0,GetValueNumber($("#last_keywords").val(),"All"));
+			wordHistory = wordHistory.reverse().splice(0,
+				10//Number.MAX_VALUE//GetValueNumber($("#last_keywords").val(),"All")
+				);
 			wordHistory = wordHistory.reverse();
 			//console.log(wordHistory);
 			
@@ -92,7 +94,7 @@ function AsyncGetResultData(keywords,func){
 	var cursor = idx.openCursor(IDBKeyRange.only(keyword));
 	
 	var resultObject = {};
-	var maxResultCount = GetValueNumber($("#results_per_keywords").val(),"All");
+	var maxResultCount = 5;//GetValueNumber($("#results_per_keywords").val(),"All");
 	
 	cursor.onsuccess = function(evt) {
 		
