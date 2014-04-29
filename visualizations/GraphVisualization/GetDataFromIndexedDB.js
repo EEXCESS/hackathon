@@ -13,6 +13,8 @@ var data = null;
 //start automatically async method if the script start.
 db.onsuccess = function() {
 
+console.log("master go!");
+
 data = GetDataFromIndexedDB();
 data.Init();
 
