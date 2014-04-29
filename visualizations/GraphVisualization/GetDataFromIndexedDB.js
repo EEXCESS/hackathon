@@ -1,5 +1,5 @@
 
-
+/*
 
 var db = indexedDB.open("eexcess_db");
 
@@ -21,14 +21,14 @@ db.onsuccess = function() {
 	var idx = store.index('timestamp'); // get timestamp index 
 
 	//number of elements -------------------------------------------------------------------------
-	/*
-	var cursor2 = idx.openCursor(IDBKeyRange.lowerBound(0),"prev");
-	//async method
-	cursor2.onsuccess = function(evt1) {
-		var res = evt1.target.result.value;
-		console.log(res);
-	}
-	*/
+	
+	//var cursor2 = idx.openCursor(IDBKeyRange.lowerBound(0),"prev");
+	////async method
+	//cursor2.onsuccess = function(evt1) {
+	//	var res = evt1.target.result.value;
+	//	console.log(res);
+	//}
+	
 	//number of elements -------------------------------------------------------------------------
 
 	var cursor = idx.openCursor(IDBKeyRange.lowerBound(0)); // open cursor, starting at "0" (every timestamp is larger)
@@ -148,6 +148,7 @@ function AsyncGetUserAction(func){
 		
 	};
 }
+*/
 
 //new Code -------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------
@@ -262,7 +263,7 @@ var GetDataFromIndexedDB = function(){
 
 
 function LastTestAction(){
-	console.log(data.queryObjHistory);
+	console.log({"wl":data.queryObjHistory});
 	console.log({"wl":data.uniqueWords});
 
 	console.log(data.wordsWithResults);

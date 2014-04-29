@@ -1,3 +1,4 @@
+/*
 //help functions
 function TextCutter(text,sizeCompare,sizeCut){
 	return text.length < sizeCompare ? text : text.substring(0,sizeCut)+"..."; 
@@ -223,3 +224,4 @@ function MakeGraph(){
 	
 	g.build.show.restart();
 }
+*/
