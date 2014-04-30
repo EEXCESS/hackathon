@@ -66,9 +66,9 @@ var oC = {
 		oC.outer = d3.select(oC.graphData.options.svg.chartId)
 			.append("svg")
 			.attr("width", oC.graphData.options.svg.width)
-			.attr("height", oC.graphData.options.svg.height)
+			.attr("height", oC.graphData.options.svg.height);
 			//.attr("pointer-events", "all")
-			.attr("class","box");
+			//.attr("class","box");
 
 			
 		oC.vis = oC.outer.append('g');
@@ -204,9 +204,9 @@ var oC = {
 		oC.outer = d3.select(oC.graphData.options.svg.chartId)
 		  .select("svg")
 			.attr("width", oC.graphData.options.svg.width)
-			.attr("height", oC.graphData.options.svg.height)
+			.attr("height", oC.graphData.options.svg.height);
 			//.attr("pointer-events", "all")
-			.attr("class","box");
+			//.attr("class","box");
 
 		//options for graph
 		oC.force.size([oC.graphData.options.size.width, oC.graphData.options.size.height])

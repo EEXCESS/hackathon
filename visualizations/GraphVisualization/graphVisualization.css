@@ -114,12 +114,10 @@ body {
 
 
 .brush .extent{
+/*
   fill-opacity: .125;
+  */
+  fill-opacity: .5;
   fill:green;
   shape-rendering: crispEdges;
-}
-
-/*css for graph*/
-.box{
-border:1px solid blue;
 }

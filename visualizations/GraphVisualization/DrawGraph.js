@@ -14,6 +14,10 @@ function GetSamePartOfArray(arraySize,parts){
 	return resultArray;
 }
 
+function TextCutter(text,sizeCompare,sizeCut){
+	return text.length < sizeCompare ? text : text.substring(0,sizeCut)+"..."; 
+}
+
 
 function BuildSlider(){
 
@@ -22,8 +26,8 @@ function BuildSlider(){
 		forceGraph.InitGraph("#D3graph");
 		//////////////////////////////
 		
-		console.log("build slider");
-		console.log({"wl":getDataFromIndexedDB.queryObjHistory});
+		//console.log("build slider");
+		//console.log({"wl":getDataFromIndexedDB.queryObjHistory});
 		
 		var historyData = getDataFromIndexedDB.queryObjHistory;
 		var intalvalResults = GetSamePartOfArray(historyData.length,4);
@@ -71,35 +75,129 @@ var forceGraph = new FGraph();
 
 function DrawGraph(min,max){
 
-	forceGraph.To.Node()
-		.Add("n1").Add("n2")
-		.Add("n3").Add("n4")
-		.Add("n5").Add("n6")
-	.To.Object().To.Link()	
-		.Add("n1","n2","l1")
-		.Add("n3","n4","l2")
-		.Add("n3","n1","l3")
-		.Add("n5","n6","l4")
-		.Add("n5","n1","l5")
-		.Add("n5","n4","l6");
-		
+
+	
+	console.log("==========================");
+	console.log({"wl":getDataFromIndexedDB.uniqueWords});
+	console.log({"wl":getDataFromIndexedDB.queryObjHistory});
+
+	console.log(getDataFromIndexedDB.wordsWithResults);
+	console.log({"wl":getDataFromIndexedDB.wordHistory});
+	
+	//StartNodeID
+	//StartConnectionID
+	//EndNodeID
+	//EndConnectionID
+	
+	//UniqueNodeID...
+	
+	//HistoryNodeID...
+	//HistoryLinkID...
+	//HistoryConnectionID...
+	
+	//draw a first graph
+	//action begin --------------------------------------------------------------------------------------------
+	//first node
+	var historyIndex = 0;
+	
+	var queries = getDataFromIndexedDB.wordHistory[historyIndex];
+	var nodeName = "UniqueNodeID_"+historyIndex;
+	
 	
 	forceGraph.To.Object().To.Node()
-		.Add("c1").Add("c2").Add("c3").Add("c4").Add("c5").Add("c6").Add("c7")
-		.Change("c2",{cluster:{name:"clusX",distance:10,active:true},drag:true})
-		.Change("c3",{cluster:{name:"clusX",distance:5,active:true}})
-		.Change("c4",{cluster:{name:"clusX",distance:20,active:true}})
-		.Change("c1",{cluster:{name:"clusX",distance:20,active:true},drag:true})
-		//.Change("c1",{drag:true})
-		.Change("c5",{cluster:{name:"clusY",distance:5,active:true}})
-		.Change("c6",{cluster:{name:"clusY",distance:10,active:true}})
-		.Change("c7",{cluster:{name:"clusY",distance:5,active:true},drag:true})
-		.To.Cluster()
-			.Add("clusX","c1")
-			.Add("clusY","c5");
+		.Add(nodeName)
+		.Change(nodeName,{title:queries})
+		.To.SubElement()
+			.Add(nodeName,"svgtext","text")
+			.Change(nodeName,"svgtext",{attr:{transform:"translate(-20)"},text:TextCutter(queries,10,9)})
+			.Change(nodeName,"svgcircle",{attr:{fill:"green",r:10}});
+	
+
+	//draw a start node
+	var startNodeId = "StartNodeID";
+	var startConnectionID = "StartConnectionID";
+	forceGraph.To.Object().To.Node()
+			.Add(startNodeId)
+			.To.SubElement()
+				.Add(startNodeId,"svgtext","text")
+				.Change(startNodeId,"svgtext",{attr:{},text:"start"})
+				.Change(startNodeId,"svgcircle",{attr:{fill:"blue"}})
+	.To.Object().To.Link()	
+			.Add(nodeName,startNodeId,startConnectionID)
+			.Change(startConnectionID,{distance:70});
+	//action end --------------------------------------------------------------------------------------------		
 	
 	
-	forceGraph.To.Object().To.Graph().ReDraw();
+	function AddUniqueQuery(index){
+		//var queries = getDataFromIndexedDB.wordHistory[index];
+		
+		var nodeName = "UniqueNodeID_"+index;
+		if(forceGraph.Graph.GetGraphData().data.dict.node[nodeName] == undefined){
+			var queries = getDataFromIndexedDB.wordHistory[index];
+			
+			forceGraph.To.Object().To.Node()
+				.Add(nodeName)
+				.Change(nodeName,{title:queries})
+				.To.SubElement()
+					.Add(nodeName,"svgtext","text")
+					.Change(nodeName,"svgtext",{attr:{transform:"translate(-20)"},text:TextCutter(queries,10,9)})
+					.Change(nodeName,"svgcircle",{attr:{fill:"green",r:10}});
+		}
+		
+	}
+	function AddHistoryQuery(index){
+		var historyNodeID = "HistoryNodeID_"+index;
+		var queries = getDataFromIndexedDB.wordHistory[index];
+		
+		var nodeName = "UniqueNodeID_"+index;
+		var connectionName = "HistoryConnectionID_"+index;
+		
+		
+		forceGraph.To.Object().To.Node()
+			.Add(historyNodeID)
+			.To.SubElement()
+				.Add(historyNodeID,"svgtext","text")
+				.Change(historyNodeID,"svgtext",{attr:{},text:index})
+				.Change(historyNodeID,"svgcircle",{attr:{}})
+		.To.Object().To.Link()	
+				.Add(nodeName,historyNodeID,connectionName)
+				;//.Change(startConnectionID,{});
+				
+	}
+	
+	AddUniqueQuery(1);
+	AddHistoryQuery(1);
+	
+	
+	//draw a graph
+	forceGraph.To.Object().To.Graph().ReDraw();	
+	
+	/*
+	//first node
+	var queries = getDataFromIndexedDB.uniqueWords[0];
+	var nodeName = "ID" + MD5(queries);
+	
+	forceGraph.To.Object().To.Node()
+		.Add(nodeName)
+		.Change(nodeName,{title:queries})
+		.To.SubElement()
+			.Add(nodeName,"svgtext","text")
+			.Change(nodeName,"svgtext",{attr:{transform:"translate(-20)"},text:TextCutter(queries,10,9)})
+			.Change(nodeName,"svgcircle",{attr:{fill:"green",r:10}});
+			
+	
+	//test
+	forceGraph.To.Object().To.Node()
+			.Add("nX")
+	.To.Object().To.Link()	
+			.Add(nodeName,"nX","l1");
+	
+	
+			
+	//draw a graph
+	forceGraph.To.Object().To.Graph().ReDraw();	
+	*/
+	
 }
 
 
