@@ -1,3 +1,108 @@
+function GetSamePartOfArray(arraySize,parts){
+	var resultArray = [];
+	var interval = d3.round(arraySize/(parts+1));
+	var iterate = interval-1;
+
+	resultArray.push(0);
+	do{
+		resultArray.push(iterate);
+		iterate = iterate +interval;
+		parts--;
+	}while(parts != 0);
+
+	resultArray.push(arraySize-1);
+	return resultArray;
+}
+
+
+function BuildSlider(){
+
+	$(function(){
+		//////////////////////////////
+		forceGraph.InitGraph("#D3graph");
+		//////////////////////////////
+		
+		console.log("build slider");
+		console.log({"wl":getDataFromIndexedDB.queryObjHistory});
+		
+		var historyData = getDataFromIndexedDB.queryObjHistory;
+		var intalvalResults = GetSamePartOfArray(historyData.length,4);
+		var sliderWidth = 900;
+		
+		//generate slider
+		var slidercontrol = new SilderControl();	
+		slidercontrol.SetSliderControl("d3Slider","d3_slider");
+		
+		//set slider width
+		slidercontrol.x.range([0,sliderWidth]);//slider width
+		slidercontrol.x.domain([0,historyData.length-1]);		
+		slidercontrol.isScale.xDataScale.domain(
+				intalvalResults//["0","100","200","300"]
+			)
+			.rangePoints([0, sliderWidth], 0);//slider scale width
+		
+		
+		//set slider work , min max values.
+		var sliderMin = historyData.length-10;
+		var sliderMax = historyData.length-1;
+		
+		//slider with events
+		slidercontrol.brush.extent([sliderMin,sliderMax])
+			.on("brush",function() {
+				  var s = slidercontrol.brush.extent();
+				  //circle.classed("selected", function(d) { return s[0] <= d && d <= s[1]; });
+				  console.log(d3.round(s[0]) + " - " + d3.round(s[1]));
+				})
+			.on("brushend",function() {
+					var s = slidercontrol.brush.extent();
+				  //svg.classed("selecting", !d3.event.target.empty());
+				});
+		
+		slidercontrol.ChangeSilderControl();
+		
+		//draw a graph
+		DrawGraph(sliderMin,sliderMax);
+
+	});
+	
+}
+
+var forceGraph = new FGraph();
+
+function DrawGraph(min,max){
+
+	forceGraph.To.Node()
+		.Add("n1").Add("n2")
+		.Add("n3").Add("n4")
+		.Add("n5").Add("n6")
+	.To.Object().To.Link()	
+		.Add("n1","n2","l1")
+		.Add("n3","n4","l2")
+		.Add("n3","n1","l3")
+		.Add("n5","n6","l4")
+		.Add("n5","n1","l5")
+		.Add("n5","n4","l6");
+		
+	
+	forceGraph.To.Object().To.Node()
+		.Add("c1").Add("c2").Add("c3").Add("c4").Add("c5").Add("c6").Add("c7")
+		.Change("c2",{cluster:{name:"clusX",distance:10,active:true},drag:true})
+		.Change("c3",{cluster:{name:"clusX",distance:5,active:true}})
+		.Change("c4",{cluster:{name:"clusX",distance:20,active:true}})
+		.Change("c1",{cluster:{name:"clusX",distance:20,active:true},drag:true})
+		//.Change("c1",{drag:true})
+		.Change("c5",{cluster:{name:"clusY",distance:5,active:true}})
+		.Change("c6",{cluster:{name:"clusY",distance:10,active:true}})
+		.Change("c7",{cluster:{name:"clusY",distance:5,active:true},drag:true})
+		.To.Cluster()
+			.Add("clusX","c1")
+			.Add("clusY","c5");
+	
+	
+	forceGraph.To.Object().To.Graph().ReDraw();
+}
+
+
 /*
 //help functions
 function TextCutter(text,sizeCompare,sizeCut){

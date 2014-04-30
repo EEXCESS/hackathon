@@ -58,6 +58,18 @@ and open the template in the editor.
 		-->
 		<div style="display:inline-flex;">
 			<!-- Graph-->
+			<div>
+				<div id="D3graph" class="eexcess_vis" style="margin:5px;">
+				</div>
+				<!--
+				<svg width="800" height="400" >
+
+				</svg>
+				-->
+				<svg id="d3_slider" style="margin:5px;">
+
+				</svg>
+			</div>
 			<!--
 			<svg class="eexcess_vis" style="margin:5px;">
 				<rect>
@@ -214,15 +226,27 @@ and open the template in the editor.
 			th keywords of the searchgraph. |
 			Number of keywords in searchhistory: <label id="keywordnumber">0</label>
 			-->
-			
+			<!--
 			<script src="graphVisualization.js" lang="javascript"></script>
-			<script src="DrawGraph.js" lang="javascript"></script>
+			-->
+
 			<script src="GetDataFromIndexedDB.js" lang="javascript"></script>
+			<script src="Libs/SliderControl.js" lang="javascript"></script>
+			
+			<script src="Libs/core.js" lang="javascript"></script>
+			<script src="Libs/ForceGraph.js" lang="javascript"></script>
+			<script src="Libs/links&marker.js" lang="javascript"></script>
+			<script src="Libs/nodes&cluster.js" lang="javascript"></script>
+			<script src="Libs/work.js" lang="javascript"></script>
+			
+			
+			<script src="DrawGraph.js" lang="javascript"></script>
+			<!--
 			<script src="GraphLib/option.js" lang="javascript"></script>
 			<script src="GraphLib/showgraph.js" lang="javascript"></script>
 			<script src="GraphLib/buildgraph.js" lang="javascript"></script>
 			<script src="GraphLib/actiongraph.js" lang="javascript"></script>
-			
+			-->
 			
 		</div>
     </body>

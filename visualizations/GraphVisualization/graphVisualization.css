@@ -1,14 +1,16 @@
-/*css for graph*/
+/*css for graph ??????????????*/
+/*
 rect {
 
 	fill:none;
 	stroke: #999;
 	
-  /*
+  
   fill: none;
-  */
+ 
   pointer-events: all;
 }
+ */
 /*
 .node {
   fill: #000;
@@ -103,6 +105,21 @@ body {
     padding:2px;
 }
 
+/*css for slider control*/
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
 
 
+.brush .extent{
+  fill-opacity: .125;
+  fill:green;
+  shape-rendering: crispEdges;
+}
 
+/*css for graph*/
+.box{
+border:1px solid blue;
+}

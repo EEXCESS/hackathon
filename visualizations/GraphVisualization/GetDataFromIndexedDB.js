@@ -231,7 +231,9 @@ var GetDataFromIndexedDB = function(){
 						if(oC.uniqueWords.length-1 == index){
 							// async call posible;
 							//console.log("--finish--");
-							LastTestAction();
+							//LastTestAction();
+							//BuildSlider();
+							oC.asyncCall();
 							//console.log("--finish--");
 						
 						}else{
@@ -248,12 +250,15 @@ var GetDataFromIndexedDB = function(){
 	};
 	
 	var oC = {
+		asyncCall:function(){},
+	
 		queryObjHistory:[],
 		wordHistory:[],
 		uniqueWords:[],
 		
 		wordsWithResults :{},
-		Init:function(){
+		Init:function(asyncCall){
+			oC.asyncCall = asyncCall;
 			database.onsuccess = GetData;
 		}
 	};
@@ -261,20 +266,26 @@ var GetDataFromIndexedDB = function(){
 };
 
 
-
+//only test function
 function LastTestAction(){
-	console.log({"wl":data.queryObjHistory});
-	console.log({"wl":data.uniqueWords});
+//only test output
+	console.log({"wl":getDataFromIndexedDB.queryObjHistory});
+	console.log({"wl":getDataFromIndexedDB.uniqueWords});
 
-	console.log(data.wordsWithResults);
-	console.log({"wl":data.wordHistory});
+	console.log(getDataFromIndexedDB.wordsWithResults);
+	console.log({"wl":getDataFromIndexedDB.wordHistory});
 	
 	console.log("---------");
 }
 
-var data = null;
-data = GetDataFromIndexedDB();
-data.Init();
+var getDataFromIndexedDB = null;
+getDataFromIndexedDB = new GetDataFromIndexedDB();
+var call = function(){
+	//LastTestAction();
+	BuildSlider();
+};
+
+getDataFromIndexedDB.Init(call);
 
 
 //------------------------------------------------------------------------------------------------------------------------
