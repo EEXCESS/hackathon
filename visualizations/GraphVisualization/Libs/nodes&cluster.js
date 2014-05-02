@@ -6,6 +6,7 @@ var NodeClass = function(core){
 	var graphData = core.graphData;
 	var nodes = core.nodes;
 	var links = core.links;
+	
 	//////////////////////////
 	var helpFunc = new HelpFunctions();
 	
@@ -99,8 +100,12 @@ var NodeClass = function(core){
 			//And filter in link list and delete it: ok.
 			//delete dictionary element# key: elementId; from node and links.
 			nodes.splice(getArrayElementById(nodes,nodeId,"elementId").index, 1);
-			spliceLinksForNode(nodeId,function(currentLink){
+			spliceLinksForNode(nodeId,function(currentLink){		
+				var currentLink = graphData.data.dict.link[currentLink.elementId];
+				delete graphData.data.dict.node[currentLink.source.elementId].connections[currentLink.elementId];
+				delete graphData.data.dict.node[currentLink.target.elementId].connections[currentLink.elementId];
 				delete graphData.data.dict.link[currentLink.elementId];
+
 			},links);
 
 			//if the node a center of the cluster,the cluster are removed.

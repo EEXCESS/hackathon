@@ -395,11 +395,12 @@ var oC = {
 				});
 			});
 			
-
+/*//////////////////////////////////
 		if (d3.event) {
 			// prevent browser's default behavior
 			d3.event.preventDefault();
 		}
+*/////////////////////////////////
 
 		oC.force.start();
 
