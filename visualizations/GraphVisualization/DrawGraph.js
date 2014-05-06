@@ -356,23 +356,22 @@ if(min == sliderMin && max == sliderMax){
 			previousNode = historyNodeID;
 		}
 		
-		//console.log(index);
-		//console.log(sliderMin);
 		var lastNode = "HistoryNodeID_"+sliderMin;
+		var lastLink = "HistoryLinkID_"+sliderMin;
+		
 		if(sliderMin == sliderMax){
 			lastNode = "EndNodeID";
+			lastLink = "EndLinkID";
 		}
+		
 		forceGraph.To.Object().To.Link()	
 			//draw a history link	
-			.Add(previousNode,lastNode,"HistoryLinkID_"+sliderMin)
-			.Change("HistoryLinkID_"+sliderMin,{strength:0,attr:{stroke:"red"}})
+			.Add(previousNode,lastNode,lastLink)
+			.Change(lastLink,{strength:0,attr:{stroke:"red"}})
 			.To.SubElement()
-				.Change("HistoryLinkID_"+sliderMin,"svgtext",{attr:{},text:sliderMin});
+				.Change(lastLink,"svgtext",{attr:{},text:sliderMin});
 
 		
-		//addHistoryLink(previousNode,("HistoryNodeID_"+(index)));
-		
-		//drawEndNode(nodeName,previousNode);
 		
 	}else if(min > sliderMin){
 		forceGraph.To.Object().To.Node()
@@ -387,48 +386,59 @@ if(min == sliderMin && max == sliderMax){
 		previousNode = "StartNodeID";
 		drawStartNode(nodeName,previousNode);
 		
-		/*
-		console.log(index);
-		console.log(min);
-		console.log(sliderMin);
-		*/
-		
+
 		var lastNode = "HistoryNodeID_"+min;
+		var lastLine = "HistoryLinkID_"+ min;
 		if(sliderMin+1 == sliderMax){
 			lastNode = "EndNodeID";
+			lastLine = "EndLinkID";
 		}
 		
 		forceGraph.To.Object().To.Link()	
 			//draw a history link	
-			.Add(previousNode,lastNode,"HistoryLinkID_"+(min))
-			.Change("HistoryLinkID_"+(min),{strength:0,attr:{stroke:"red"}})
+			.Add(previousNode,lastNode,lastLine)
+			.Change(lastLine,{strength:0,attr:{stroke:"red"}})
 			.To.SubElement()
-				.Change("HistoryLinkID_"+(min),"svgtext",{attr:{},text:(min)});
+				.Change(lastLine,"svgtext",{attr:{},text:(min)});
 		
-			//historyNodeID = "HistoryNodeID_"+index
-		//addHistoryLink(previousNode);
 		
 	}
 
 	if(max < sliderMax){
-
-		//forceGraph.To.Object().To.Node()
-		//	.Delete("EndNodeID");
-		//AddUniqueQuery(max);	
-		//drawEndNode();
-		//AddUniqueQuery(max);
-		//for(var index=max;index<sliderMax;index++){
-		//	changeGraph(index);
-		//}
-		//AddUniqueQuery(max);
+		forceGraph.To.Object().To.Node()
+			.Delete("EndNodeID");
+			
+		var firstNode = "HistoryNodeID_"+(max-1);
+		if(sliderMin+1 == sliderMax){
+			firstNode = "StartNodeID";
+		}
 		
-		//previousNode = "HistoryNodeID_"+max;// "UniqueNodeID_"+MD5(getDataFromIndexedDB.wordHistory[max-1]);
-		//
-		//addHistoryLink();
+		var nodeName = getUniqueNodeName(max-1);
+		drawEndNode(nodeName,firstNode);	
+		
+		for(var index=max;index<sliderMax;index++){
+			changeGraph(index);
+		}
 
 
 	}else if(max > sliderMax){
+		forceGraph.To.Object().To.Node()
+			.Delete("EndNodeID");
+			
+		var nodeName = null;//getUniqueNodeName(sliderMax);
+		
+		previousNode = "HistoryNodeID_"+(sliderMax-1);
+		for(var index=sliderMax;index<max;index++){
+			nodeName = getUniqueNodeName(index);
+			historyNodeID = "HistoryNodeID_"+index;
+			
+			AddHistoryQuery(index,nodeName,historyNodeID,previousNode);
+			previousNode = historyNodeID;
+		}
+		
+		drawEndNode(nodeName,previousNode);
 
+		
 		//forceGraph.To.Object().To.Node()
 		//	.Delete("EndNodeID");
 		
