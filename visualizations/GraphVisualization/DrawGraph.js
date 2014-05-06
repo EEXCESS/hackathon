@@ -61,11 +61,11 @@ function BuildSlider(){
 				var s = slidercontrol.brush.extent();
 				if(sliderMin != d3.round(s[0]) || sliderMax != d3.round(s[1])){
 					//circle.classed("selected", function(d) { return s[0] <= d && d <= s[1]; });
-					console.log(d3.round(s[0]) + " - " + d3.round(s[1]));
+					//console.log(d3.round(s[0]) + " - " + d3.round(s[1]));
 					  
-					forceGraph.To.Object().To.Node()
-						.Delete("StartNodeID")
-						;//.Delete("EndNodeID");
+					//forceGraph.To.Object().To.Node()
+						//.Delete("StartNodeID")
+						//.Delete("EndNodeID");
 						
 					//draw a graph
 					DrawGraph(d3.round(s[0]),d3.round(s[1]),"yellow");
@@ -84,7 +84,7 @@ function BuildSlider(){
 		
 		slidercontrol.ChangeSilderControl();
 		
-		//draw a graph
+		//draw a graph in first time
 		DrawGraph(sliderMin,sliderMax,"grey");
 		
 		forceGraph.To.Object().To.Graph().ReDraw();	
@@ -93,84 +93,17 @@ function BuildSlider(){
 }
 
 
+//var nodeName = null;
+//var previousNode = null;
 
 function DrawGraph(min,max,colorTest){
 
+	function getUniqueNodeName(index){
+		return "UniqueNodeID_"+MD5(getDataFromIndexedDB.wordHistory[index]);
+	};
 
-/*
-	console.log("==========================");
-	console.log({"wl":getDataFromIndexedDB.uniqueWords});
-	console.log({"wl":getDataFromIndexedDB.queryObjHistory});
-
-	console.log(getDataFromIndexedDB.wordsWithResults);
-	console.log({"wl":getDataFromIndexedDB.wordHistory});
-	*/
-
-	if(sliderMin<min){
-		for(var index=sliderMin;index<min;index++){
-		
-			// get data from graph
-			var graphData = forceGraph.Graph.GetGraphData().data.dict;	
-			var uniqueNodeId = graphData.link["HistoryConnectionID_"+index].source.elementId
-
-			
-			//delete history node
-			forceGraph.To.Object().To.Node()
-				.Delete("HistoryNodeID_"+index);
-			
-			//delete unique query node
-			if(Object.keys(graphData.node[uniqueNodeId].connections).length == 0){
-				forceGraph.To.Object().To.Node()
-					.Delete(uniqueNodeId);
-			}
-			
-		}
-	}
-	
-	
-	//draw a first graph
-	
-	//action begin --------------------------------------------------------------------------------------------
-	//first node
-	var historyIndex = min;//0;
-	
-	//assing variable--------------
-	var nodeName = "UniqueNodeID_"+MD5(getDataFromIndexedDB.wordHistory[historyIndex]);
-	
-	
-	var queries = getDataFromIndexedDB.wordHistory[historyIndex];
-
-	forceGraph.To.Object().To.Node()
-		.Add(nodeName)
-		.Change(nodeName,{title:queries})
-		.To.SubElement()
-			.Add(nodeName,"svgtext","text")
-			.Change(nodeName,"svgtext",{attr:{transform:"translate(-20)"},text:TextCutter(queries,10,9)})
-			.Change(nodeName,"svgcircle",{attr:{fill:"green",r:10}});
-	
-
-	//draw a start node
-	var startNodeId = "StartNodeID";
-	var startConnectionID = "StartConnectionID";
-	forceGraph.To.Object().To.Node()
-			.Add(startNodeId)
-			.To.SubElement()
-				.Add(startNodeId,"svgtext","text")
-				.Change(startNodeId,"svgtext",{attr:{},text:"start"})
-				.Change(startNodeId,"svgcircle",{attr:{fill:"blue"}})
-	.To.Object().To.Link()	
-			.Add(nodeName,startNodeId,startConnectionID)
-			.Change(startConnectionID,{distance:50});
-	//action end --------------------------------------------------------------------------------------------		
-	
-
-	
-	//assing variable--------------
-	var previousNode = startNodeId;
-
-	
-	function AddUniqueQuery(index){
-		nodeName = "UniqueNodeID_"+MD5(getDataFromIndexedDB.wordHistory[index]);
+	function AddUniqueQuery(index,nodeName){
+		//nodeName = "UniqueNodeID_"+MD5(getDataFromIndexedDB.wordHistory[index]);
 		if(forceGraph.Graph.GetGraphData().data.dict.node[nodeName] == undefined){
 			var queries = getDataFromIndexedDB.wordHistory[index];
 			
@@ -181,23 +114,31 @@ function DrawGraph(min,max,colorTest){
 				.To.SubElement()
 					.Add(nodeName,"svgtext","text")
 					.Change(nodeName,"svgtext",{attr:{transform:"translate(-20)"},text:TextCutter(queries,10,9)})
-					.Change(nodeName,"svgcircle",{attr:{fill:"green",r:10}});
+					.Change(nodeName,"svgcircle",{attr:{fill:"green",r:10}})
+					.Add(nodeName,"svgtext1","text")
+					.Change(nodeName,"svgtext1",{attr:{transform:"translate(-20,-20)"},text:10});
 		}
 		
 	}
 
 	
-	function AddHistoryQuery(index){
-		AddUniqueQuery(index)
+	function AddHistoryQuery(index,nodeName,historyNodeID,previousNode){
+		//nodeName = getUniqueNodeName(index);
+		AddUniqueQuery(index,nodeName);
 	
 		var queries = getDataFromIndexedDB.wordHistory[index];
 		
-		var historyNodeID = "HistoryNodeID_"+index;		
+		//var historyNodeID = "HistoryNodeID_"+index;		
 		var historyConnectionNameID = "HistoryConnectionID_"+index;
 		var historyLinkNameID = "HistoryLinkID_"+index;
+	
 		
-
 		if(forceGraph.Graph.GetGraphData().data.dict.node[historyNodeID] == undefined){
+		
+			var radius = forceGraph.Graph.GetGraphData()
+				.data.dict.node[nodeName].object.nodeContent.subElements["svgcircle"].attr.r;
+			radius = radius +2;
+			
 			//draw a subnode
 			forceGraph.To.Object().To.Node()
 				.Add(historyNodeID)
@@ -206,19 +147,141 @@ function DrawGraph(min,max,colorTest){
 					.Change(historyNodeID,"svgtext",{attr:{},text:index})
 					.Change(historyNodeID,"svgcircle",{attr:{fill:colorTest}})
 			.To.Object().To.Link()	
-					//draw a connection link	
-					.Add(nodeName,historyNodeID,historyConnectionNameID)
-					//draw a histrory link			
-					.Add(previousNode,historyNodeID,historyLinkNameID)
-					.Change(historyLinkNameID,{strength:0});
-			previousNode = historyNodeID;	
+				//draw a connection link	
+				.Add(nodeName,historyNodeID,historyConnectionNameID)
+				//draw a histrory link			
+				.Add(previousNode,historyNodeID,historyLinkNameID)
+				.Change(historyLinkNameID,{strength:0})
+			// grow a query node //????????????????
+			.To.Object().To.Node()
+				.To.SubElement()
+					.Change(nodeName,"svgcircle",{attr:{r:radius}})
+					.Change(nodeName,"svgtext1",{attr:{transform:"translate(-20,-20)"},text:radius});
+				
+			//previousNode = historyNodeID;	
 		}else{
-			console.log("## node");
-			return 1;
+			console.log("boooooooooooooooooooooooooooooooom!");
+			//previousNode = "HistoryNodeID_"+(index-1);	;
+			//console.log("## node");
+			
+		//	return 1;
 		}
-		return 0;		
+		//return 0;		
 	}
+
+/*
+	console.log("==========================");
+	console.log({"wl":getDataFromIndexedDB.uniqueWords});
+	console.log({"wl":getDataFromIndexedDB.queryObjHistory});
+
+	console.log(getDataFromIndexedDB.wordsWithResults);
+	console.log({"wl":getDataFromIndexedDB.wordHistory});
+	*/
+
+	var changeGraph = function(index){
+		// get data from graph
+		var graphData = forceGraph.Graph.GetGraphData().data.dict;	
+		var uniqueNodeId = graphData.link["HistoryConnectionID_"+index].source.elementId
+
+		//delete history node
+		forceGraph.To.Object().To.Node()
+			.Delete("HistoryNodeID_"+index);
+
+		//delete unique query node
+		if(Object.keys(graphData.node[uniqueNodeId].connections).length == 0){
+			forceGraph.To.Object().To.Node()
+				.Delete(uniqueNodeId);
+		}else{
+			// shrink the query node radius. //????????????????????
+			var radius = graphData.node[uniqueNodeId].object.nodeContent.subElements["svgcircle"].attr.r;
+			radius = radius -2;
+			forceGraph.To.Object().To.Node()
+				.To.SubElement()
+					.Change(uniqueNodeId,"svgcircle",{attr:{r:radius}})
+					.Change(uniqueNodeId,"svgtext1",{attr:{transform:"translate(-20,-20)"},text:radius});;
+		}
+	};
+
+	//draw a first graph
 	
+	//first node
+
+	//assing variable--------------
+
+	//if(colorTest == "grey"){
+		//AddUniqueQuery(min);
+	//}
+
+	
+	//AddUniqueQuery(min);
+
+
+	
+	var drawStartNode = function(nodeName,startNodeId){
+		//draw a start node
+		//var  = "StartNodeID";
+		var startConnectionID = "StartConnectionID";
+		forceGraph.To.Object().To.Node()
+			.Add(startNodeId)
+			.To.SubElement()
+				.Add(startNodeId,"svgtext","text")
+				.Change(startNodeId,"svgtext",{attr:{},text:"start"})
+				.Change(startNodeId,"svgcircle",{attr:{fill:"blue"}})
+		.To.Object().To.Link()	
+			.Add(nodeName,startNodeId,startConnectionID)
+			.Change(startConnectionID,{distance:50});
+		//previousNode = startNodeId;
+	};
+	
+	//draw the last node
+	var drawEndNode = function(nodeName,previousNode){
+		var endNodeId = "EndNodeID";
+		var endConnectionID = "EndConnectionID";
+		var endLinkID = "EndLinkID";
+		
+		forceGraph.To.Object().To.Node()
+			.Add(endNodeId)
+			.To.SubElement()
+				.Add(endNodeId,"svgtext","text")
+				.Change(endNodeId,"svgtext",{attr:{},text:"end"})
+				.Change(endNodeId,"svgcircle",{attr:{fill:"red"}})
+		.To.Object().To.Link()	
+			//draw a connection link	
+			.Add(nodeName,endNodeId,endConnectionID)
+			//draw a histrory link			
+			.Add(previousNode,endNodeId,endLinkID)
+			.Change(endLinkID,{strength:0});
+	};
+	
+	var addHistoryLink = function(previousNode,historyNodeID){
+		forceGraph.To.Object().To.Link()	
+			//draw a history link	
+			.Add(previousNode,historyNodeID,"HistoryLinkID_"+index)
+			.Change(historyNodeID,{strength:0,attr:{stroke:"red"}})
+			.To.SubElement()
+				.Change(historyNodeID,"svgtext",{attr:{},text:index});
+	};
+	
+	
+	//drawStartNode();
+	 
+	
+	
+	
+	
+	/*
+	if(max<sliderMax){
+		for(var index=max;index<sliderMax;index++){
+			changeGraph(index+1);
+		}
+	}	
+
+	if(sliderMin<min){
+		for(var index=sliderMin;index<min;index++){
+			changeGraph(index);
+		}
+	}
+	*/
 	
 	/*
 	getDataFromIndexedDB.wordHistory.forEach(function(element,index){
@@ -226,43 +289,162 @@ function DrawGraph(min,max,colorTest){
 	});
 	*/
 ///////////////////////////////
+/*
 	var result;
 	for(var index=min;index<=max;index++){
 		result = AddHistoryQuery(index);
 		
 		if(result == 1){
-			var zzz=0;
+
 			forceGraph.To.Object().To.Link()	
 				//draw a connection link	
 				.Add(previousNode,"HistoryNodeID_"+index,"HistoryLinkID_"+index)
-				.Change("HistoryLinkID_"+index,{strength:0,attr:{stroke:"red"}});
-				
-			break;
+				.Change("HistoryLinkID_"+index,{strength:0,attr:{stroke:"red"}})
+				.To.SubElement()
+					.Change("HistoryLinkID_"+index,"svgtext",{attr:{},text:index});
+			//console.log("draw rest lines");	
+			//break;
 		}
 	}
+	*/
 ///////////////////////////
 
+/////////////////////////////////////////
+var previousNode = null;
+
+console.log("#: " +min+"(" + sliderMin + ")" + " - " +max+"(" + sliderMax + ")");
+
+// draw first time a graph
+if(min == sliderMin && max == sliderMax){
+	var nodeName = getUniqueNodeName(min);
+	AddUniqueQuery(min,nodeName);
+	previousNode = "StartNodeID";
+	drawStartNode(nodeName,previousNode);
 	
+	for(var index=min;index<max;index++){
+		nodeName = getUniqueNodeName(index);	
+		var historyNodeID	= "HistoryNodeID_"+index;
+		
+		AddHistoryQuery(index,nodeName,historyNodeID,previousNode);
+		previousNode = historyNodeID;
+	}
 	
-	//draw the last node
-	/*
-	var endNodeId = "EndNodeID";
-	var endConnectionID = "EndConnectionID";
-	var endLinkID = "EndLinkID";
-	
-	forceGraph.To.Object().To.Node()
-			.Add(endNodeId)
+	drawEndNode(nodeName,previousNode);
+}
+
+
+
+	if(min < sliderMin){
+
+		forceGraph.To.Object().To.Node()
+			.Delete("StartNodeID");
+		//forceGraph.To.Object().To.Node()
+		//	.Delete("EndNodeID");
+			
+		var nodeName = getUniqueNodeName(min);
+		AddUniqueQuery(min,nodeName);
+		previousNode = "StartNodeID";
+		drawStartNode(nodeName,previousNode);
+		
+		var historyNodeID = "";
+
+		for(var index=min;index<sliderMin;index++){
+			nodeName = getUniqueNodeName(index);
+			historyNodeID = "HistoryNodeID_"+index;
+			
+			AddHistoryQuery(index,nodeName,historyNodeID,previousNode);
+			previousNode = historyNodeID;
+		}
+		
+		//console.log(index);
+		//console.log(sliderMin);
+		var lastNode = "HistoryNodeID_"+sliderMin;
+		if(sliderMin == sliderMax){
+			lastNode = "EndNodeID";
+		}
+		forceGraph.To.Object().To.Link()	
+			//draw a history link	
+			.Add(previousNode,lastNode,"HistoryLinkID_"+sliderMin)
+			.Change("HistoryLinkID_"+sliderMin,{strength:0,attr:{stroke:"red"}})
 			.To.SubElement()
-				.Add(endNodeId,"svgtext","text")
-				.Change(endNodeId,"svgtext",{attr:{},text:"end"})
-				.Change(endNodeId,"svgcircle",{attr:{fill:"red"}})
-	.To.Object().To.Link()	
-			//draw a connection link	
-			.Add(nodeName,endNodeId,endConnectionID)
-			//draw a histrory link			
-			.Add(previousNode,endNodeId,endLinkID)
-			.Change(endLinkID,{strength:0});
-	*/		
+				.Change("HistoryLinkID_"+sliderMin,"svgtext",{attr:{},text:sliderMin});
+
+		
+		//addHistoryLink(previousNode,("HistoryNodeID_"+(index)));
+		
+		//drawEndNode(nodeName,previousNode);
+		
+	}else if(min > sliderMin){
+		forceGraph.To.Object().To.Node()
+			.Delete("StartNodeID");
+			
+		for(var index=sliderMin;index<min;index++){
+			changeGraph(index);
+		}
+		var nodeName = getUniqueNodeName(min);
+		//AddUniqueQuery(min,nodeName);
+		
+		previousNode = "StartNodeID";
+		drawStartNode(nodeName,previousNode);
+		
+		/*
+		console.log(index);
+		console.log(min);
+		console.log(sliderMin);
+		*/
+		
+		var lastNode = "HistoryNodeID_"+min;
+		if(sliderMin+1 == sliderMax){
+			lastNode = "EndNodeID";
+		}
+		
+		forceGraph.To.Object().To.Link()	
+			//draw a history link	
+			.Add(previousNode,lastNode,"HistoryLinkID_"+(min))
+			.Change("HistoryLinkID_"+(min),{strength:0,attr:{stroke:"red"}})
+			.To.SubElement()
+				.Change("HistoryLinkID_"+(min),"svgtext",{attr:{},text:(min)});
+		
+			//historyNodeID = "HistoryNodeID_"+index
+		//addHistoryLink(previousNode);
+		
+	}
+
+	if(max < sliderMax){
+
+		//forceGraph.To.Object().To.Node()
+		//	.Delete("EndNodeID");
+		//AddUniqueQuery(max);	
+		//drawEndNode();
+		//AddUniqueQuery(max);
+		//for(var index=max;index<sliderMax;index++){
+		//	changeGraph(index);
+		//}
+		//AddUniqueQuery(max);
+		
+		//previousNode = "HistoryNodeID_"+max;// "UniqueNodeID_"+MD5(getDataFromIndexedDB.wordHistory[max-1]);
+		//
+		//addHistoryLink();
+
+
+	}else if(max > sliderMax){
+
+		//forceGraph.To.Object().To.Node()
+		//	.Delete("EndNodeID");
+		
+		//AddUniqueQuery(sliderMax);	
+		//for(var index=sliderMax;index<max;index++){
+		//	AddHistoryQuery(index);
+		//}
+		
+		//drawEndNode();
+		
+	}
+
+
+
+///////////////////////////////////
+		
 	
 	//draw a graph
 	forceGraph.To.Object().To.Graph().ReDraw();	
