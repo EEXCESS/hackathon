@@ -265,49 +265,7 @@ function DrawGraph(min,max,colorTest){
 	
 	//drawStartNode();
 	 
-	
-	
-	
-	
-	/*
-	if(max<sliderMax){
-		for(var index=max;index<sliderMax;index++){
-			changeGraph(index+1);
-		}
-	}	
 
-	if(sliderMin<min){
-		for(var index=sliderMin;index<min;index++){
-			changeGraph(index);
-		}
-	}
-	*/
-	
-	/*
-	getDataFromIndexedDB.wordHistory.forEach(function(element,index){
-		AddHistoryQuery(index);
-	});
-	*/
-///////////////////////////////
-/*
-	var result;
-	for(var index=min;index<=max;index++){
-		result = AddHistoryQuery(index);
-		
-		if(result == 1){
-
-			forceGraph.To.Object().To.Link()	
-				//draw a connection link	
-				.Add(previousNode,"HistoryNodeID_"+index,"HistoryLinkID_"+index)
-				.Change("HistoryLinkID_"+index,{strength:0,attr:{stroke:"red"}})
-				.To.SubElement()
-					.Change("HistoryLinkID_"+index,"svgtext",{attr:{},text:index});
-			//console.log("draw rest lines");	
-			//break;
-		}
-	}
-	*/
-///////////////////////////
 
 /////////////////////////////////////////
 var previousNode = null;
@@ -331,7 +289,6 @@ if(min == sliderMin && max == sliderMax){
 	
 	drawEndNode(nodeName,previousNode);
 }
-
 
 
 	if(min < sliderMin){
@@ -451,10 +408,7 @@ if(min == sliderMin && max == sliderMax){
 		
 	}
 
-
-
-///////////////////////////////////
-		
+///////////////////////////////////	
 	
 	//draw a graph
 	forceGraph.To.Object().To.Graph().ReDraw();	
