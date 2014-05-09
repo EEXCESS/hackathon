@@ -113,7 +113,10 @@ function DrawGraph(min,max){
 			// draw a query node
 			forceGraph.To.Object().To.Node()
 				.Add(uniqueNodeName)
-				.Change(uniqueNodeName,{title:queries})
+				.Change(uniqueNodeName,{title:queries,drag:true,cluster:{name:"clus_"+uniqueNodeName,distance:40,active:true}})
+				.To.Cluster()
+					.Add("clus_"+uniqueNodeName,uniqueNodeName)
+					.To.Node()	
 				.To.SubElement()
 					.Add(uniqueNodeName,"svgtext","text")
 					.Change(uniqueNodeName,"svgtext",{attr:{transform:"translate(-20)"},text:TextCutter(queries,10,9)})
@@ -132,14 +135,18 @@ function DrawGraph(min,max){
 		var test = forceGraph.Graph.GetGraphData();
 		if(forceGraph.Graph.GetGraphData().data.dict.node[historyNodeID] == undefined){
 		
-			var radius = forceGraph.Graph.GetGraphData()
-				.data.dict.node[uniqueNodeName].object.nodeContent.subElements["svgcircle"].attr.r;
+			var graphData = forceGraph.Graph.GetGraphData();
+			var radius = graphData.data.dict.node[uniqueNodeName].object.nodeContent.subElements["svgcircle"].attr.r;
 			radius = radius +2;
+			var clusterDistance = graphData.data.clusters["clus_"+uniqueNodeName].nodeContent.parameter.cluster.distance;
+			clusterDistance = clusterDistance +2;
 			
 			//draw a subnode
 			forceGraph.To.Object().To.Node()
 				.Add(historyNodeID)
-				.Change(historyNodeID,{drag:true})
+				.Change(historyNodeID,{
+					//drag:true,
+					cluster:{name:"clus_"+uniqueNodeName,distance:10,active:true}})
 				.To.SubElement()
 					.Add(historyNodeID,"svgtext","text")
 					.Change(historyNodeID,"svgtext",{attr:{},text:index})
@@ -152,6 +159,7 @@ function DrawGraph(min,max){
 				//.Change(historyLinkNameID,{strength:0})
 			// grow a query node //????????????????
 			.To.Object().To.Node()
+				.Change(uniqueNodeName,{cluster:{distance:clusterDistance}})
 				.To.SubElement()
 					.Change(uniqueNodeName,"svgcircle",{attr:{r:radius}})
 					.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(-20,-20)"},text:radius});
@@ -171,22 +179,29 @@ function DrawGraph(min,max){
 	
 	function DeleteHistoryQueryNode(index){
 		// get data from graph
-		var graphData = forceGraph.Graph.GetGraphData().data.dict;	
-		var uniqueNodeId = graphData.link["HistoryConnectionID_"+index].source.elementId
+		var graphData = forceGraph.Graph.GetGraphData().data;//.dict;	
+		var uniqueNodeId = graphData.dict.link["HistoryConnectionID_"+index].source.elementId
 
 		//delete history node
 		forceGraph.To.Object().To.Node()
 			.Delete("HistoryNodeID_"+index);
 
 		//delete unique query node
-		if(Object.keys(graphData.node[uniqueNodeId].connections).length == 0){
+		if(Object.keys(graphData.dict.node[uniqueNodeId].connections).length == 0){
 			forceGraph.To.Object().To.Node()
-				.Delete(uniqueNodeId);
+				.Delete(uniqueNodeId)
+				.To.Cluster()
+					.Delete("clus_"+uniqueNodeId);
 		}else{
 			// shrink the query node radius. //????????????????????
-			var radius = graphData.node[uniqueNodeId].object.nodeContent.subElements["svgcircle"].attr.r;
+			var radius = graphData.dict.node[uniqueNodeId].object.nodeContent.subElements["svgcircle"].attr.r;
 			radius = radius -2;
+			
+			var clusterDistance = graphData.clusters["clus_"+uniqueNodeId].nodeContent.parameter.cluster.distance;
+			clusterDistance = clusterDistance -2;
+			
 			forceGraph.To.Object().To.Node()
+				.Change(uniqueNodeId,{cluster:{distance:clusterDistance}})
 				.To.SubElement()
 					.Change(uniqueNodeId,"svgcircle",{attr:{r:radius}})
 					.Change(uniqueNodeId,"svgtext1",{attr:{transform:"translate(-20,-20)"},text:radius});;
@@ -357,325 +372,6 @@ function DrawGraph(min,max){
 }
 
 
-
-
-function DrawGraph_(min,max,colorTest){
-
-	function getUniqueNodeName(index){
-		return "UniqueNodeID_"+MD5(getDataFromIndexedDB.wordHistory[index]);
-	};
-
-	function AddUniqueQuery(index,nodeName){
-		//nodeName = "UniqueNodeID_"+MD5(getDataFromIndexedDB.wordHistory[index]);
-		if(forceGraph.Graph.GetGraphData().data.dict.node[nodeName] == undefined){
-			var queries = getDataFromIndexedDB.wordHistory[index];
-			
-			// draw a node
-			forceGraph.To.Object().To.Node()
-				.Add(nodeName)
-				.Change(nodeName,{title:queries})
-				.To.SubElement()
-					.Add(nodeName,"svgtext","text")
-					.Change(nodeName,"svgtext",{attr:{transform:"translate(-20)"},text:TextCutter(queries,10,9)})
-					.Change(nodeName,"svgcircle",{attr:{fill:"green",r:10}})
-					.Add(nodeName,"svgtext1","text")
-					.Change(nodeName,"svgtext1",{attr:{transform:"translate(-20,-20)"},text:10});
-		}
-		
-	}
-
-	
-	function AddHistoryQuery(index,nodeName,historyNodeID,previousNode){
-		//nodeName = getUniqueNodeName(index);
-		AddUniqueQuery(index,nodeName);
-	
-		var queries = getDataFromIndexedDB.wordHistory[index];
-		
-		//var historyNodeID = "HistoryNodeID_"+index;		
-		var historyConnectionNameID = "HistoryConnectionID_"+index;
-		var historyLinkNameID = "HistoryLinkID_"+index;
-	
-		
-		if(forceGraph.Graph.GetGraphData().data.dict.node[historyNodeID] == undefined){
-		
-			var radius = forceGraph.Graph.GetGraphData()
-				.data.dict.node[nodeName].object.nodeContent.subElements["svgcircle"].attr.r;
-			radius = radius +2;
-			
-			//draw a subnode
-			forceGraph.To.Object().To.Node()
-				.Add(historyNodeID)
-				.To.SubElement()
-					.Add(historyNodeID,"svgtext","text")
-					.Change(historyNodeID,"svgtext",{attr:{},text:index})
-					.Change(historyNodeID,"svgcircle",{attr:{fill:colorTest}})
-			.To.Object().To.Link()	
-				//draw a connection link	
-				.Add(nodeName,historyNodeID,historyConnectionNameID)
-				//draw a histrory link			
-				.Add(previousNode,historyNodeID,historyLinkNameID)
-				.Change(historyLinkNameID,{strength:0})
-			// grow a query node //????????????????
-			.To.Object().To.Node()
-				.To.SubElement()
-					.Change(nodeName,"svgcircle",{attr:{r:radius}})
-					.Change(nodeName,"svgtext1",{attr:{transform:"translate(-20,-20)"},text:radius});
-				
-			//previousNode = historyNodeID;	
-		}else{
-			console.log("boooooooooooooooooooooooooooooooom!");
-			//previousNode = "HistoryNodeID_"+(index-1);	;
-			//console.log("## node");
-			
-		//	return 1;
-		}
-		//return 0;		
-	}
-
-/*
-	console.log("==========================");
-	console.log({"wl":getDataFromIndexedDB.uniqueWords});
-	console.log({"wl":getDataFromIndexedDB.queryObjHistory});
-
-	console.log(getDataFromIndexedDB.wordsWithResults);
-	console.log({"wl":getDataFromIndexedDB.wordHistory});
-	*/
-
-	var changeGraph = function(index){
-		// get data from graph
-		var graphData = forceGraph.Graph.GetGraphData().data.dict;	
-		var uniqueNodeId = graphData.link["HistoryConnectionID_"+index].source.elementId
-
-		//delete history node
-		forceGraph.To.Object().To.Node()
-			.Delete("HistoryNodeID_"+index);
-
-		//delete unique query node
-		if(Object.keys(graphData.node[uniqueNodeId].connections).length == 0){
-			forceGraph.To.Object().To.Node()
-				.Delete(uniqueNodeId);
-		}else{
-			// shrink the query node radius. //????????????????????
-			var radius = graphData.node[uniqueNodeId].object.nodeContent.subElements["svgcircle"].attr.r;
-			radius = radius -2;
-			forceGraph.To.Object().To.Node()
-				.To.SubElement()
-					.Change(uniqueNodeId,"svgcircle",{attr:{r:radius}})
-					.Change(uniqueNodeId,"svgtext1",{attr:{transform:"translate(-20,-20)"},text:radius});;
-		}
-	};
-
-	//draw a first graph
-	
-	//first node
-
-	//assing variable--------------
-
-	//if(colorTest == "grey"){
-		//AddUniqueQuery(min);
-	//}
-
-	
-	//AddUniqueQuery(min);
-
-
-	
-	var drawStartNode = function(nodeName,startNodeId){
-		//draw a start node
-		//var  = "StartNodeID";
-		var startConnectionID = "StartConnectionID";
-		forceGraph.To.Object().To.Node()
-			.Add(startNodeId)
-			.To.SubElement()
-				.Add(startNodeId,"svgtext","text")
-				.Change(startNodeId,"svgtext",{attr:{},text:"start"})
-				.Change(startNodeId,"svgcircle",{attr:{fill:"blue"}})
-		.To.Object().To.Link()	
-			.Add(nodeName,startNodeId,startConnectionID)
-			.Change(startConnectionID,{distance:50});
-		//previousNode = startNodeId;
-	};
-	
-	//draw the last node
-	var drawEndNode = function(nodeName,previousNode){
-		var endNodeId = "EndNodeID";
-		var endConnectionID = "EndConnectionID";
-		var endLinkID = "EndLinkID";
-		
-		forceGraph.To.Object().To.Node()
-			.Add(endNodeId)
-			.To.SubElement()
-				.Add(endNodeId,"svgtext","text")
-				.Change(endNodeId,"svgtext",{attr:{},text:"end"})
-				.Change(endNodeId,"svgcircle",{attr:{fill:"red"}})
-		.To.Object().To.Link()	
-			//draw a connection link	
-			.Add(nodeName,endNodeId,endConnectionID)
-			//draw a histrory link			
-			.Add(previousNode,endNodeId,endLinkID)
-			.Change(endLinkID,{strength:0});
-	};
-	
-	var addHistoryLink = function(previousNode,historyNodeID){
-		forceGraph.To.Object().To.Link()	
-			//draw a history link	
-			.Add(previousNode,historyNodeID,"HistoryLinkID_"+index)
-			.Change(historyNodeID,{strength:0,attr:{stroke:"red"}})
-			.To.SubElement()
-				.Change(historyNodeID,"svgtext",{attr:{},text:index});
-	};
-	
-	
-	//drawStartNode();
-	 
-
-
-/////////////////////////////////////////
-var previousNode = null;
-
-console.log("#: " +min+"(" + sliderMin + ")" + " - " +max+"(" + sliderMax + ")");
-
-// draw first time a graph
-if(min == sliderMin && max == sliderMax){
-	var nodeName = getUniqueNodeName(min);
-	AddUniqueQuery(min,nodeName);
-	previousNode = "StartNodeID";
-	drawStartNode(nodeName,previousNode);
-	
-	for(var index=min;index<max;index++){
-		nodeName = getUniqueNodeName(index);	
-		var historyNodeID	= "HistoryNodeID_"+index;
-		
-		AddHistoryQuery(index,nodeName,historyNodeID,previousNode);
-		previousNode = historyNodeID;
-	}
-	
-	drawEndNode(nodeName,previousNode);
-}
-
-
-	if(min < sliderMin){
-
-		forceGraph.To.Object().To.Node()
-			.Delete("StartNodeID");
-		//forceGraph.To.Object().To.Node()
-		//	.Delete("EndNodeID");
-			
-		var nodeName = getUniqueNodeName(min);
-		AddUniqueQuery(min,nodeName);
-		previousNode = "StartNodeID";
-		drawStartNode(nodeName,previousNode);
-		
-		var historyNodeID = "";
-
-		for(var index=min;index<sliderMin;index++){
-			nodeName = getUniqueNodeName(index);
-			historyNodeID = "HistoryNodeID_"+index;
-			
-			AddHistoryQuery(index,nodeName,historyNodeID,previousNode);
-			previousNode = historyNodeID;
-		}
-		
-		var lastNode = "HistoryNodeID_"+sliderMin;
-		var lastLink = "HistoryLinkID_"+sliderMin;
-		
-		if(sliderMin == sliderMax){
-			lastNode = "EndNodeID";
-			lastLink = "EndLinkID";
-		}
-		
-		forceGraph.To.Object().To.Link()	
-			//draw a history link	
-			.Add(previousNode,lastNode,lastLink)
-			.Change(lastLink,{strength:0,attr:{stroke:"red"}})
-			.To.SubElement()
-				.Change(lastLink,"svgtext",{attr:{},text:sliderMin});
-
-		
-		
-	}else if(min > sliderMin){
-		forceGraph.To.Object().To.Node()
-			.Delete("StartNodeID");
-			
-		for(var index=sliderMin;index<min;index++){
-			changeGraph(index);
-		}
-		var nodeName = getUniqueNodeName(min);
-		//AddUniqueQuery(min,nodeName);
-		
-		previousNode = "StartNodeID";
-		drawStartNode(nodeName,previousNode);
-		
-
-		var lastNode = "HistoryNodeID_"+min;
-		var lastLine = "HistoryLinkID_"+ min;
-		if(sliderMin+1 == sliderMax){
-			lastNode = "EndNodeID";
-			lastLine = "EndLinkID";
-		}
-		
-		forceGraph.To.Object().To.Link()	
-			//draw a history link	
-			.Add(previousNode,lastNode,lastLine)
-			.Change(lastLine,{strength:0,attr:{stroke:"red"}})
-			.To.SubElement()
-				.Change(lastLine,"svgtext",{attr:{},text:(min)});
-		
-		
-	}
-
-	if(max < sliderMax){
-		forceGraph.To.Object().To.Node()
-			.Delete("EndNodeID");
-			
-		var firstNode = "HistoryNodeID_"+(max-1);
-		if(sliderMin+1 == sliderMax){
-			firstNode = "StartNodeID";
-		}
-		
-		var nodeName = getUniqueNodeName(max-1);
-		drawEndNode(nodeName,firstNode);	
-		
-		for(var index=max;index<sliderMax;index++){
-			changeGraph(index);
-		}
-
-
-	}else if(max > sliderMax){
-		forceGraph.To.Object().To.Node()
-			.Delete("EndNodeID");
-			
-		var nodeName = null;//getUniqueNodeName(sliderMax);
-		
-		previousNode = "HistoryNodeID_"+(sliderMax-1);
-		for(var index=sliderMax;index<max;index++){
-			nodeName = getUniqueNodeName(index);
-			historyNodeID = "HistoryNodeID_"+index;
-			
-			AddHistoryQuery(index,nodeName,historyNodeID,previousNode);
-			previousNode = historyNodeID;
-		}
-		
-		drawEndNode(nodeName,previousNode);
-
-		
-		//forceGraph.To.Object().To.Node()
-		//	.Delete("EndNodeID");
-		
-		//AddUniqueQuery(sliderMax);	
-		//for(var index=sliderMax;index<max;index++){
-		//	AddHistoryQuery(index);
-		//}
-		
-		//drawEndNode();
-		
-	}
-
-///////////////////////////////////	
-	
-	//draw a graph
-	forceGraph.To.Object().To.Graph().ReDraw();	
-}
 
 
 

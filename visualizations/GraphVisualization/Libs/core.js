@@ -32,7 +32,7 @@ var oC = {
 					height:500
 				},
 				force:{
-					chargeValue: -200
+					chargeValue: -1000//-200
 				}
 			},
 						
