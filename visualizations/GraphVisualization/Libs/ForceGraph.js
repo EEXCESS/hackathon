@@ -108,7 +108,7 @@ var FGraph = function(){
 			},
 			ChangeSubElement:{
 				To:{
-					Object:ToObject,Node:ToNode
+					Object:ToObject,Link:ToLink//,Node:ToNode
 				},
 				Delete:function(linkId,deleteSubLinkId){
 					linkWorks.ChangeSubElement.Delete(linkId,deleteSubLinkId);return currentObjectContent;
@@ -136,7 +136,7 @@ var FGraph = function(){
 			},
 			ChangeSubElement:{
 				To:{
-					Object:ToObject,Node:ToMarker
+					Object:ToObject,Marker:ToMarker
 				},
 				Delete:function(markerId,newSubMarkerId){
 					markerWorks.ChangeSubElement.Delete(markerId,newSubMarkerId);return currentObjectContent;

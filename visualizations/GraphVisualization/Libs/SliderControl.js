@@ -49,6 +49,7 @@ function SilderControl(){
 			
 		brushg.selectAll(".resize")
 			//.append("path")
+			.append("g")
 			.attr("transform", "translate(0," +  /*height*//*96 /2*/ 96/2 + ")")
 			;//.attr("d", arc);
 
