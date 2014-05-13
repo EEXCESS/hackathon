@@ -146,6 +146,7 @@ function DrawGraph(min,max){
 				.Add(historyNodeID)
 				.Change(historyNodeID,{
 					//drag:true,
+					//prop:{px:10,py:10},
 					cluster:{name:"clus_"+uniqueNodeName,distance:10,active:true}})
 				.To.SubElement()
 					.Add(historyNodeID,"svgtext","text")
@@ -211,8 +212,19 @@ function DrawGraph(min,max){
 	
 	
 	
+	function Loop(startValue,endValue,func){
+		var index = startValue;
+		do{
+			func(index);
+			//console.log(index);
+			//AddHistoryQueryNode(true,index,getUniqueNodeName(index),"HistoryNodeID_"+(index-1),"HistoryNodeID_"+(index));
+			index++;
+		}while(index <= max);
+	}
 	
-	
+	var addQueryHistoryNode = function(index){
+		AddHistoryQueryNode(true,index,getUniqueNodeName(index),"HistoryNodeID_"+(index-1),"HistoryNodeID_"+(index));
+		}
 	
 	
 	//console.log("#: " +min+"(" + sliderMin + ")" + " - " +max+"(" + sliderMax + ")");
@@ -220,13 +232,16 @@ function DrawGraph(min,max){
 	// draw first time a graph
 	if(min == sliderMin && max == sliderMax){
 		console.log("slider first time");
+		/*
 		AddHistoryQueryNode(false,min,getUniqueNodeName(min),null,"HistoryNodeID_"+min);
+		Loop(min+1,max,addQueryHistoryNode);
+		*/
 		
+		AddHistoryQueryNode(false,min,getUniqueNodeName(min),null,"HistoryNodeID_"+min);
 		var index = min+1;
 		do{
 			//console.log(index);
 			AddHistoryQueryNode(true,index,getUniqueNodeName(index),"HistoryNodeID_"+(index-1),"HistoryNodeID_"+(index));
-		
 			index++;
 		}while(index <= max);
 	
@@ -239,40 +254,47 @@ function DrawGraph(min,max){
 			forceGraph.To.Object()
 				.To.Graph().Delete();
 			
+			//delete all nodes from search graph
 			var currentNode = forceGraph.To.Object().To.Node();			
 			Object.keys(forceGraph.Graph.GetGraphData().data.dict.node).forEach(function(key){
 				currentNode.Delete(key);	
 			});	
 				
 			var test = forceGraph.Graph.GetGraphData();
-			
+			/*
+			AddHistoryQueryNode(false,min,getUniqueNodeName(min),null,"HistoryNodeID_"+min);
+			Loop(min+1,max,addQueryHistoryNode);
+			*/
 			
 			AddHistoryQueryNode(false,min,getUniqueNodeName(min),null,"HistoryNodeID_"+min);
-			
 			var index = min+1;
 			do{
 				//console.log(index);
 				AddHistoryQueryNode(true,index,getUniqueNodeName(index),"HistoryNodeID_"+(index-1),"HistoryNodeID_"+(index));
-			
 				index++;
 			}while(index <= max);
 			
 		
 		}else{
-			//first indexes of the search graph.
+			
 			if(min < sliderMin){
+				//add nodes on left side of the search graph.
 				console.log("slider grow on the left side");
+				/*
+				AddHistoryQueryNode(false,min,getUniqueNodeName(min),null,"HistoryNodeID_"+min);
+				Loop(min+1,sliderMin-1,addQueryHistoryNode);
+				*/
 				
 				AddHistoryQueryNode(false,min,getUniqueNodeName(min),null,"HistoryNodeID_"+min);
-			
 				var index = min+1;
-				do{//while(index < sliderMin){
-					//console.log(index);
+				do{
 					AddHistoryQueryNode(true,index,getUniqueNodeName(index),"HistoryNodeID_"+(index-1),"HistoryNodeID_"+(index));
-					//console.log("-" + index + "." + sliderMin);
-				
+					//console.log(min+" . " + index + " . " + sliderMin);
 					index++;
-				}while(index < sliderMin);
+				//}while(index < sliderMin);
+				}while(index <= sliderMin-1);
+				
+				
 				
 				var nextNode = "HistoryNodeID_"+sliderMin;
 				var previousNode = "HistoryNodeID_"+(sliderMin-1)//min;
@@ -285,13 +307,21 @@ function DrawGraph(min,max){
 						.Change(linkName,"svgtext",{attr:{},text:sliderMin});
 
 			}else if(min > sliderMin){
+				//delete nodes on left side of the search graph.
+				
 				console.log("slider shrink on the left side");
+				/*
+				Loop(sliderMin,min-1,function(index){DeleteHistoryQueryNode(index);});
+				*/
 				var index = sliderMin;
-				while(index < min){
-					//console.log(index);
+				do{//while(index < min){
+					//console.log(sliderMin + " - "+index + " - " + min);
 					DeleteHistoryQueryNode(index);
 					index++;
-				};
+				}while(index <= min-1);	
+				
+				//}while(index < min);
+				
 			}
 			
 			var minNoUpdateGraph = min < sliderMin ? sliderMin : min;
@@ -318,6 +348,10 @@ function DrawGraph(min,max){
 			
 			if(max < sliderMax){
 				console.log("slider shrink on the right side");
+				//delete nodes on right side of the search graph.
+				/*
+				Loop(max+1,sliderMax,function(index){DeleteHistoryQueryNode(index);});			
+				*/
 				var index = max+1;
 				do{
 					//console.log(index);
@@ -325,18 +359,21 @@ function DrawGraph(min,max){
 					index++;
 				}while(index <= sliderMax);
 				
+				
 			}else if(max > sliderMax){
 				console.log("slider grow on the rifght side");
 				
+				/*
+				Loop(sliderMax+1,max,addQueryHistoryNode);	
+				*/
+				
 				var index = sliderMax+1;
-				do{//while(index < sliderMin){
-					
+				do{
 					//console.log("-" + index + "." + max);
 					AddHistoryQueryNode(true,index,getUniqueNodeName(index),"HistoryNodeID_"+(index-1),"HistoryNodeID_"+(index));
-					
-
 					index++;
 				}while(index <= max);
+				
 			}
 		}
 		

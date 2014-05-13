@@ -32,7 +32,10 @@ var oC = {
 					height:500
 				},
 				force:{
-					chargeValue: -1000//-200
+					chargeValue: -400,//-200
+					gravity:0.05,
+					friction:0.5,
+					theta:0.8
 				}
 			},
 						
@@ -209,9 +212,12 @@ var oC = {
 			//.attr("class","box");
 
 		//options for graph
+		var optionsForce = oC.graphData.options.force;
 		oC.force.size([oC.graphData.options.size.width, oC.graphData.options.size.height])
-			.charge(oC.graphData.options.force.chargeValue);
-		
+			.charge(optionsForce.chargeValue)
+			.gravity(optionsForce.gravity)
+			.friction(optionsForce.friction)
+			.theta(optionsForce.theta);
 	},
 
 
@@ -255,7 +261,10 @@ var oC = {
 	//var count = 0;
 	redraw:function() {
 		//console.log("redraw "+ count);count++;
-
+		
+		///////////////////////
+		oC.force.stop();
+		///////////////////////
 		
 		//link properties
 		oC.force.linkDistance(function(d){
@@ -364,8 +373,7 @@ var oC = {
 						subElement.call(oC.force.drag);
 					}
 				});
-			});
-
+			});	
 			
 		// generate any svg marker
 		oC.marker.data([]).exit().remove();
