@@ -282,7 +282,7 @@ var getDataFromIndexedDB = null;
 getDataFromIndexedDB = new GetDataFromIndexedDB();
 var call = function(){
 	//LastTestAction();
-	BuildSlider();
+	BuildControls();
 };
 
 getDataFromIndexedDB.Init(call);
