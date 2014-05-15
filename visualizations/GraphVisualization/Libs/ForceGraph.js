@@ -177,6 +177,9 @@ var FGraph = function(){
 			},
 			GetGraphData:function(){
 				return core.graphData;
+			},
+			GetForceObj:function(){
+				return core.force;
 			}
 		}
 		

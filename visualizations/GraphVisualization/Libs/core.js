@@ -4,6 +4,7 @@ var Core = function(){
 var oC = {
 	
 	graphData:null,
+	
 	outer:null,
 	vis:null,
 	zoomCall:null,
@@ -262,9 +263,10 @@ var oC = {
 	redraw:function() {
 		//console.log("redraw "+ count);count++;
 		
-		///////////////////////
-		oC.force.stop();
-		///////////////////////
+/*
+		if(oC.force.stopCalc){
+			oC.force.stop();
+		}*/
 		
 		//link properties
 		oC.force.linkDistance(function(d){
