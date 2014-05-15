@@ -3,6 +3,49 @@ function getUniqueNodeName(index){
 	return "UniqueNodeID_"+MD5(getDataFromIndexedDB.wordHistory[index]);
 };
 
+function AddResultNodes(uniqueNodeName,queries){
+
+	var manyResult = getDataFromIndexedDB.wordsWithResults[queries];
+
+	if(manyResult.resultList.length == 0){
+		return;
+	}
+//manyResult.results[....]
+// .title
+// .previewImage
+// .uri
+	var maxLength = 5;
+	maxLength > manyResult.resultList.length ? manyResult.resultList.length : maxLength;
+	
+	var currentResult = {};
+	var resultNodeName = "";
+	var resultLinkName = "";
+	//draw a result node
+	for(var count=0;count<maxLength;count++){
+		currentResult = manyResult.results[manyResult.resultList[count]];
+		resultNodeName = "ResultNodeID_"+uniqueNodeName+"_"+count;
+		resultLinkName = "ResultLinkID_"+uniqueNodeName+"_"+count;
+		
+		
+		forceGraph.To.Object().To.Node()
+			.Add(resultNodeName)
+			.Change(resultNodeName,{
+				//drag:true,
+				title:currentResult.title,
+				cluster:{name:"clus_"+uniqueNodeName,distance:30/*55*/,active:true}})
+			.To.SubElement()
+				.Add(resultNodeName,"svgtext","text")
+				.Change(resultNodeName,"svgtext",{attr:{},text:TextCutter(currentResult.title,10,9)})
+				.Change(resultNodeName,"svgcircle",{attr:{fill:"yellow",r:10}})
+		.To.Object().To.Link()	
+			//draw a connection link	
+			.Add(uniqueNodeName,resultNodeName,resultLinkName)
+			.Change(resultLinkName,{strength:0})
+	}
+
+}
+
+
 function AddUniqueQueryNode(index,uniqueNodeName){
 	if(forceGraph.Graph.GetGraphData().data.dict.node[uniqueNodeName] == undefined){
 		var queries = getDataFromIndexedDB.wordHistory[index];
@@ -10,16 +53,20 @@ function AddUniqueQueryNode(index,uniqueNodeName){
 		// draw a query node
 		forceGraph.To.Object().To.Node()
 			.Add(uniqueNodeName)
-			.Change(uniqueNodeName,{title:queries,/*drag:true,*/cluster:{name:"clus_"+uniqueNodeName,distance:20,active:true}})
+			.Change(uniqueNodeName,{title:queries,/*drag:true,*/cluster:{name:"clus_"+uniqueNodeName,distance:15,active:true}})
 			.To.Cluster()
 				.Add("clus_"+uniqueNodeName,uniqueNodeName)
 				.To.Node()	
 			.To.SubElement()
 				.Add(uniqueNodeName,"svgtext","text")
 				.Change(uniqueNodeName,"svgtext",{attr:{transform:"translate(-20)"},text:TextCutter(queries,10,9)})
-				.Change(uniqueNodeName,"svgcircle",{attr:{fill:"green",r:10}})
+				.Change(uniqueNodeName,"svgcircle",{attr:{fill:"green",r:/*120*/10}})
 				.Add(uniqueNodeName,"svgtext1","text")
 				.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(-20,-20)"},text:10});
+				
+		AddResultNodes(uniqueNodeName,queries);
+	}else{
+		//unknown
 	}
 };
 
@@ -83,8 +130,24 @@ function DeleteHistoryQueryNode(index){
 	forceGraph.To.Object().To.Node()
 		.Delete("HistoryNodeID_"+index);
 
-	//delete unique query node
-	if(Object.keys(graphData.dict.node[uniqueNodeId].connections).length == 0){
+	//delete nodes
+	var resultNodes = FilterTextList(graphData.dict.node[uniqueNodeId].connections,"HistoryConnectionID_");
+	if(resultNodes.length == 0){
+	//if(Object.keys(graphData.dict.node[uniqueNodeId].connections).length == 0){
+		
+		//delete a result nodes
+		var resultLinks = FilterTextList(graphData.dict.node[uniqueNodeId].connections,"ResultLinkID_"+ uniqueNodeId + "_");
+		//console.log(resultLinks);
+		
+		var resultLinkName = "";
+		resultLinks.forEach(function(element){
+			//console.log(element);
+			resultLinkName = "ResultNodeID_"+element.substring(13,element.length);
+			forceGraph.To.Object().To.Node()
+				.Delete(resultLinkName);
+		});
+	
+		//delete unique query node
 		forceGraph.To.Object().To.Node()
 			.Delete(uniqueNodeId)
 			.To.Cluster()
@@ -147,6 +210,22 @@ function AddLastNode(lastNode,uniqueNode){
 function ChangeGraph(min,max){
 	
 	//console.log(min +" - "+ max);
+
+	var domainArray = [0,getDataFromIndexedDB.wordHistory.length];//index
+	var domainArrayColor = [0,(max-min)];//count
+	
+	var color = d3.scale.linear()
+		.domain(domainArrayColor)
+		.range(["red","blue"]);
+	
+	var transparent = d3.scale.linear()
+		.domain(domainArray)
+		.range([0.2,0.75]);
+	
+	var lineWidth = d3.scale.linear()
+		.domain(domainArray)
+		.range([10,1]);	
+		
 	var index = min;
 	var currentLinkName = "";
 	var currentNodeName = "";
@@ -157,7 +236,11 @@ function ChangeGraph(min,max){
 		currentLinkName = "HistoryLinkID_"+(index+1);
 
 		forceGraph.To.Object().To.Link()
-			.Change(currentLinkName,{attr:{stroke:"orange"}})
+			.Change(currentLinkName,{attr:{
+				stroke:color(count),
+				"stroke-opacity":transparent(index),
+				"stroke-width":lineWidth(index)
+			}})
 			.To.SubElement()
 			.Change(currentLinkName,"svgtext",{text:count,attr:{fill:"purple"}});
 		
@@ -173,7 +256,7 @@ function ReDrawGraph(min,max,sliderMin,sliderMax){
 
 	// draw first time a graph
 	var firstDraw = function(){
-		console.log("slider first time");
+		//console.log("slider first time");
 
 		AddHistoryQueryNode(false,min,getUniqueNodeName(min),null,"HistoryNodeID_"+min);
 		
@@ -190,7 +273,7 @@ function ReDrawGraph(min,max,sliderMin,sliderMax){
 	};
 	
 	var sliderBigJump = function(){
-		console.log("slider big junp");
+		//console.log("slider big junp");
 		
 		forceGraph.To.Object()
 			.To.Graph().Delete();
@@ -220,7 +303,7 @@ function ReDrawGraph(min,max,sliderMin,sliderMax){
 	
 	var sliderGrowLeft = function(){
 		//add nodes on left side of the search graph.
-		console.log("slider grow on the left side");
+		//console.log("slider grow on the left side");
 
 		AddHistoryQueryNode(false,min,getUniqueNodeName(min),null,"HistoryNodeID_"+min);
 		
@@ -254,7 +337,7 @@ function ReDrawGraph(min,max,sliderMin,sliderMax){
 	var  sliderShrinkLeft= function(){
 		//delete nodes on left side of the search graph.
 		
-		console.log("slider shrink on the left side");
+		//console.log("slider shrink on the left side");
 
 		forceGraph.To.Object().To.Node().Delete("StartNodeID");
 		
@@ -276,7 +359,7 @@ function ReDrawGraph(min,max,sliderMin,sliderMax){
 	};
 	
 	var sliderShrinkRight = function(){
-		console.log("slider shrink on the right side");
+		//console.log("slider shrink on the right side");
 		//delete nodes on right side of the search graph.
 		
 		forceGraph.To.Object().To.Node().Delete("EndNodeID");
@@ -293,7 +376,7 @@ function ReDrawGraph(min,max,sliderMin,sliderMax){
 	};
 	
 	var sliderGrowRight = function(){
-		console.log("slider grow on the rifght side");
+		//console.log("slider grow on the rifght side");
 		
 		forceGraph.To.Object().To.Node().Delete("EndNodeID");
 
@@ -394,10 +477,7 @@ function IterateGraph(min,max,sliderMin,sliderMax,
 	*/
 	//test Control end
 	
-	
-	
-	//draw a graph
-	//forceGraph.To.Object().To.Graph().ReDraw();	
+
 }
 
 

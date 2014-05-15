@@ -18,6 +18,14 @@ function TextCutter(text,sizeCompare,sizeCut){
 	return text.length < sizeCompare ? text : text.substring(0,sizeCut)+"..."; 
 }
 
+function FilterTextList(objectVar,stringVal){
+	return Object.keys(objectVar).filter(function(element){
+        return stringVal == element.substring(0,stringVal.length);
+    });
+}
+
+
+
 var forceGraph = new FGraph();
 
 
@@ -54,7 +62,7 @@ function BuildControls(){
 		
 		
 		//set slider work , min max values.
-		sliderMin = historyData.length-5;////////////////////////
+		sliderMin > historyData.length-5 ? 0 :historyData.length-5;////////////////////////
 		sliderMax = historyData.length-1;
 		
 		//slider with events

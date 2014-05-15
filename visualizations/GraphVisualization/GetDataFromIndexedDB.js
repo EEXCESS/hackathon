@@ -209,7 +209,7 @@ var GetDataFromIndexedDB = function(){
 				oC.uniqueWords = d3.set(oC.wordHistory).values();
 
 				oC.uniqueWords.forEach(function(d){
-					oC.wordsWithResults[d] = {results:{},userActions:{}};//userActions ??
+					oC.wordsWithResults[d] = {results:{},userActions:{},resultList:[]};//userActions ??
 				});
 				//console.log(oC.uniqueWords);
 				
@@ -220,14 +220,17 @@ var GetDataFromIndexedDB = function(){
 				index++;
 				var keyword = oC.uniqueWords[index];
 				var resultObject ={};
-				
+				var resultList = [];
 				AsyncGetSubData(database,'recommendations','query',IDBKeyRange.only(keyword),
 					function(evt){
 						var res = evt.target.result;
 						resultObject[res.value.result.uri] = res.value.result;
-
+						resultList.push(res.value.result.uri);
+						
 					},function(){
 						oC.wordsWithResults[keyword].results = resultObject;
+						oC.wordsWithResults[keyword].resultList = resultList;
+						
 						if(oC.uniqueWords.length-1 == index){
 							// async call posible;
 							//console.log("--finish--");
@@ -266,6 +269,10 @@ var GetDataFromIndexedDB = function(){
 };
 
 
+
+
+
+
 //only test function
 function LastTestAction(){
 //only test output
@@ -281,7 +288,7 @@ function LastTestAction(){
 var getDataFromIndexedDB = null;
 getDataFromIndexedDB = new GetDataFromIndexedDB();
 var call = function(){
-	//LastTestAction();
+	LastTestAction();
 	BuildControls();
 };
 
