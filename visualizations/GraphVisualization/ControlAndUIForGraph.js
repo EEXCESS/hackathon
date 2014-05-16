@@ -62,8 +62,26 @@ function BuildControls(){
 		
 		
 		//set slider work , min max values.
-		sliderMin > historyData.length-5 ? 0 :historyData.length-5;////////////////////////
-		sliderMax = historyData.length-1;
+		/*
+		if(historyData.length == 0){
+			sliderMin=0;
+			sliderMax = 0;
+		}else if(historyData.length < 5){
+			sliderMin=0;
+			sliderMax = historyData.length-1;
+		}else
+			sliderMin = historyData.length-5;
+			sliderMax = historyData.length;
+		}*/
+		console.log(historyData);
+		if(historyData.length < 5){
+			sliderMin = 0;
+			sliderMax = 0;
+		}else{
+			sliderMin = historyData.length-5;
+			sliderMax = historyData.length-1;
+		}
+
 		
 		//slider with events
 		slidercontrol.brush.extent([sliderMin,sliderMax])
@@ -71,7 +89,7 @@ function BuildControls(){
 				var s = slidercontrol.brush.extent();
 				if(sliderMin != d3.round(s[0]) || sliderMax != d3.round(s[1])){
 					//circle.classed("selected", function(d) { return s[0] <= d && d <= s[1]; });
-					//console.log(d3.round(s[0]) + " - " + d3.round(s[1]));
+					//console.log("min: " + d3.round(s[0]) + " - max: " + d3.round(s[1]));
 					  
 					
 					ReDrawGraph(d3.round(s[0]),d3.round(s[1]),sliderMin,sliderMax);
