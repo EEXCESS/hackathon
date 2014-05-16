@@ -33,10 +33,11 @@ var oC = {
 					height:500
 				},
 				force:{
-					chargeValue: -400,//-200
-					gravity:0.05,
-					friction:0.5,
-					theta:0.8
+					chargeValue: -400,//-400,//-200
+					gravity:0.05, //0.05,
+					friction:0.6, //0.5,
+					theta:0.8,
+					alpha:0.01
 				}
 			},
 						
@@ -218,6 +219,7 @@ var oC = {
 			.charge(optionsForce.chargeValue)
 			.gravity(optionsForce.gravity)
 			.friction(optionsForce.friction)
+			.alpha(optionsForce.alpha)
 			.theta(optionsForce.theta);
 	},
 

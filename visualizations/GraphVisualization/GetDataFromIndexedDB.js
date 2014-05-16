@@ -263,6 +263,9 @@ var GetDataFromIndexedDB = function(){
 		Init:function(asyncCall){
 			oC.asyncCall = asyncCall;
 			database.onsuccess = GetData;
+		},
+		GetNewData:function(){
+			GetData();
 		}
 	};
 	return oC;
@@ -287,6 +290,7 @@ function LastTestAction(){
 
 var getDataFromIndexedDB = null;
 getDataFromIndexedDB = new GetDataFromIndexedDB();
+
 var call = function(){
 	LastTestAction();
 	BuildControls();

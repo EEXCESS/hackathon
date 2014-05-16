@@ -123,6 +123,47 @@ function BuildControls(){
 		ChangeGraph(sliderMin,sliderMax);
 		
 		forceGraph.To.Object().To.Graph().ReDraw();	
+		///////////////////////////////////////////////////////////////////////////
+		
+		
+		
+		$("#go").click(function(){
+		
+			var textinput = $("#serachtext").val();
+			var query_terms = textinput.split(' ');
+			var query = [];
+			for (var i = 0; i < query_terms.length; i++) {
+				var tmp = {
+					weight: 1,
+					text: query_terms[i]
+				};
+				query.push(tmp);
+			}
+			console.log("start search");
+			
+			EEXCESS.callBG({
+				method: {parent: 'model', func: 'query'}, data:query //data: [{weight:1,text:dataParameter.text}]
+			});
+
+		});
+		
+		//search finished with results, asynchronous call
+		EEXCESS.messageListener(
+			function(request, sender, sendResponse) {
+				if (request.method === 'newSearchTriggered') {
+					console.log("finish search XX");
+					getDataFromIndexedDB.GetNewData();
+					//getDataFromIndexedDB = null;
+					//getDataFromIndexedDB = new GetDataFromIndexedDB();
+					//getDataFromIndexedDB.Init(call);
+				}
+			}
+		);
+		
 	});
 	
 }
+
+
+
+

@@ -47,6 +47,7 @@ function AddResultNodes(uniqueNodeName,queries){
 
 
 function AddUniqueQueryNode(index,uniqueNodeName){
+
 	if(forceGraph.Graph.GetGraphData().data.dict.node[uniqueNodeName] == undefined){
 		var queries = getDataFromIndexedDB.wordHistory[index];
 		
@@ -66,13 +67,14 @@ function AddUniqueQueryNode(index,uniqueNodeName){
 				
 		AddResultNodes(uniqueNodeName,queries);
 	}else{
-		//unknown
+		return true;
 	}
+	return false
 };
 
 function AddHistoryQueryNode(isPreviousNode,index,uniqueNodeName,previousNode,historyNodeID){
 
-	AddUniqueQueryNode(index,uniqueNodeName);
+	var isQueryNode = AddUniqueQueryNode(index,uniqueNodeName);
 
 	var historyConnectionNameID = "HistoryConnectionID_"+index;
 
@@ -98,8 +100,6 @@ function AddHistoryQueryNode(isPreviousNode,index,uniqueNodeName,previousNode,hi
 		.To.Object().To.Link()	
 			//draw a connection link	
 			.Add(uniqueNodeName,historyNodeID,historyConnectionNameID)
-			////draw a histrory link			
-			//.Add(previousNode,historyNodeID,historyLinkNameID)
 			.Change(historyConnectionNameID,{strength:0})
 		// grow a query node //????????????????
 		.To.Object().To.Node()
@@ -108,12 +108,17 @@ function AddHistoryQueryNode(isPreviousNode,index,uniqueNodeName,previousNode,hi
 				.Change(uniqueNodeName,"svgcircle",{attr:{r:radius}})
 				.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(-20,-20)"},text:radius});
 		
+		var lineProperty = {strength:0};
+		if(!isQueryNode){
+			lineProperty = {strength:0.3,distance:300};
+		}
+		//draw a histrory link	
 		if(isPreviousNode){
 			var historyLinkNameID = "HistoryLinkID_"+index;
 			forceGraph.To.Object().To.Link()	
 				//draw a histrory link			
 				.Add(previousNode,historyNodeID,historyLinkNameID)
-				.Change(historyLinkNameID,{strength:0});
+				.Change(historyLinkNameID,lineProperty);
 		}
 			
 	}else{
