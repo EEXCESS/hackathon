@@ -264,39 +264,30 @@ var GetDataFromIndexedDB = function(){
 			oC.asyncCall = asyncCall;
 			database.onsuccess = GetData;
 		},
-		GetNewData:function(){
-			GetData();
+		GetNewData:function(asyncCall){
+		
+			oC.asyncCall = function(){};
+			oC.queryObjHistory=[];
+			oC.wordHistory=[];
+			oC.uniqueWords=[];
+			
+			oC.wordsWithResults ={};
+			
+			//console.log(oC);
+			
+			oC.asyncCall = asyncCall;
+			database.onsuccess();
+			//LastTestAction();
+
+			//BuildControls();
+				//forceGraph.InitGraph("#D3graph");
+			
+			
 		}
 	};
 	return oC;
 };
 
-
-
-
-
-
-//only test function
-function LastTestAction(){
-//only test output
-	console.log({"wl":getDataFromIndexedDB.queryObjHistory});
-	console.log({"wl":getDataFromIndexedDB.uniqueWords});
-
-	console.log(getDataFromIndexedDB.wordsWithResults);
-	console.log({"wl":getDataFromIndexedDB.wordHistory});
-	
-	console.log("---------");
-}
-
-var getDataFromIndexedDB = null;
-getDataFromIndexedDB = new GetDataFromIndexedDB();
-
-var call = function(){
-	LastTestAction();
-	BuildControls();
-};
-
-getDataFromIndexedDB.Init(call);
 
 
 //------------------------------------------------------------------------------------------------------------------------
