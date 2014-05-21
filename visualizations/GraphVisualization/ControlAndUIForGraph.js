@@ -1,3 +1,4 @@
+//help functions
 function GetSamePartOfArray(arraySize,parts){
 	var resultArray = [];
 	var interval = d3.round(arraySize/(parts+1));
@@ -29,7 +30,16 @@ function FilterTextList(objectVar,stringVal){
     });
 }
 
+function ChangeResultNodes(properties){
+	var changeNodes = FilterTextList(forceGraph.Graph.GetGraphData().data.dict.node,"ResultNodeID_UniqueNodeID_");
+	
+	changeNodes.forEach(function(element){
+		forceGraph.To.Object().To.Node().To.SubElement()
+			.Change(element,"svgcircle",properties);
+	});
 
+	
+}
 
 
 //only test function
@@ -44,6 +54,8 @@ function LastTestAction(){
 	console.log("---------");
 }
 
+//init the application
+
 //get data from indexedDB
 var getDataFromIndexedDB = null;
 getDataFromIndexedDB = new GetDataFromIndexedDB();
@@ -51,13 +63,42 @@ getDataFromIndexedDB = new GetDataFromIndexedDB();
 getDataFromIndexedDB.Init(function(){
 	LastTestAction();
 	forceGraph.InitGraph("#D3graph");
-	
+	forceGraph.To.Object().Graph.GetGraphData().data.funcDict = funcStore;
 	//very important!
 	//start the jQuery library
 	$(BuildControls);
 	
 	//BuildControls();
 });
+
+
+var funcStore =	{
+	"WorkWithResultNode":function(param){
+		var appModus = "bookmark";
+		if(appModus == "bookmark"){
+			console.log(JSON.parse(param).nodeName + " - " +currentSelectedBookmark);
+			var currentNodeId = JSON.parse(param).nodeName;
+			//var test = forceGraph.Graph.GetGraphData();
+			if(currentSelectedBookmark == null){
+				console.log("no bookmark selected");
+			}else{
+				var bookmarkElement = $("#"+currentSelectedBookmark+" .bookmark-element-"+currentNodeId);
+				
+				if(bookmarkElement.length == 0){
+					//add bookmark element
+					$("#"+currentSelectedBookmark+" .bookmarkelement")
+						.append('<div class="bookmark-element-'+currentNodeId+'">'+currentNodeId+'</div>');
+					
+				}else{
+					//delete bookmark element
+					$("#"+currentSelectedBookmark+" .bookmark-element-"+currentNodeId).remove();
+				}
+			}
+		}
+	}
+};
+
+
 
 // make graph and control objects.
 var forceGraph = new FGraph();
@@ -69,10 +110,11 @@ var slidercontrol = new SilderControl();
 //function BuildControls(){
 
 
-var BuildControls = function(){
 
+var BuildControls = function(){
 	var sliderMin = 0;
 	var sliderMax = 0;
+
 	//console.log("build slider");
 	//console.log({"wl":getDataFromIndexedDB.queryObjHistory});
 	

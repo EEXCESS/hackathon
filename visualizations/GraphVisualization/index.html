@@ -17,7 +17,51 @@ and open the template in the editor.
 		<link rel="stylesheet" type="text/css" href="../../eexcess.css">
 		
 		<style>
+			.bookmark{
+				border:1px solid green;
+				height:60px;
+			}
 
+			.bookmarkelement{
+				border:1px solid green;
+				/*
+				height:150px;
+				*/
+			}
+
+			#message{
+				border:1px solid green;
+				height:20px;
+			}
+
+			#bookmark{
+				border:1px solid blue;
+				height:400px;
+				width:330px;
+			}
+
+			#bookmark-header{
+				height:50px;
+				border:1px solid green;
+			}
+			#bookmark-body{
+				border:1px solid red;
+				height:340px;
+				overflow-y:auto;
+			}
+
+			.deletebookmark, .expanderbookmark{
+				width:22px;    
+				height:22px;
+				margin:2px;
+			}
+
+
+			input[type=color]{
+				width:20px;    
+				height:16px; 
+				margin:2px;
+			}
 		</style>
     </head>
     <body>
@@ -182,13 +226,19 @@ and open the template in the editor.
 					<button id="exportmetadata" class="margin_box">export metadata</button>
 					class="grey_round_box"
 				-->
-				<!--
-				<div id="export_panel" class="grey_round_box"  style="display:none;">
-					<a id="exportmetadata" class="margin_box">export metadata</a></br>
-					<div id="tree_view" >
+				<div id="bookmark">
+					<div id="bookmark-header">
+						<input id="newbookmarkname" type="text"></input>
+						<input id="newcolor" type="color"></input>
+						<button id="addbookmark">+</button>
+						<button id="workbookmark">explore</button>
+						<div id="message">  
+						</div>
+					</div>
+					<div id="bookmark-body">
+						
 					</div>
 				</div>
-				-->
 			</div>
 			
 		</div>
@@ -244,6 +294,7 @@ and open the template in the editor.
 			
 		</div>
 		<script src="Libs/SliderControl.js" lang="javascript"></script>
+		<script src="Libs/BookmarkControl.js" lang="javascript"></script>
 		
 		<script src="Libs/core.js" lang="javascript"></script>
 		<script src="Libs/ForceGraph.js" lang="javascript"></script>

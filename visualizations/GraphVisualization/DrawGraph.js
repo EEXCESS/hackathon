@@ -45,11 +45,17 @@ var DrawGraph = function(){
 				.To.SubElement()
 					.Add(resultNodeName,"svgtext","text")
 					.Change(resultNodeName,"svgtext",{attr:{},text:TextCutter(titleData,10,9)})
-					.Change(resultNodeName,"svgcircle",{attr:{fill:"yellow",r:10}})
+					.Change(resultNodeName,"svgcircle",{
+						attr:{fill:"yellow",r:10},
+						event:{action:"click",func:"WorkWithResultNode",param:JSON.stringify({nodeName:resultNodeName})}
+					})
 			.To.Object().To.Link()	
 				//draw a connection link	
 				.Add(uniqueNodeName,resultNodeName,resultLinkName)
-				.Change(resultLinkName,{strength:0})
+				.Change(resultLinkName,{strength:0});
+				
+			oC.ResultNodeEvent(resultNodeName);
+			//console.log(oC);
 		}
 
 	}
@@ -312,6 +318,7 @@ var DrawGraph = function(){
 	
 	
 	var oC = {
+		ResultNodeEvent:function(param){},
 		ChangeGraph:function(min,max){
 			
 			//console.log(min +" - "+ max);
