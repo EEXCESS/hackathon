@@ -1,64 +1,3 @@
-
-function AddBookMark(nodeId,idInClass,color,width,x,y){
-    var bookmarkmCount = $("#"+nodeId+" div[class^='bookmark']");
-    
-    //console.log(rectCount.length);
-    
-    $("#node").append(
-        '<div '
-       +'style="position:fixed;left:'+(x+bookmarkmCount.length*width)+'px;top:'+y+'px;'
-       +'width:'+width+'px;height:'+width+'px;background:'+color+';"'
-       +' class="'+idInClass+'"></div>');
-}
-
-function DeleteBookMark(nodeId,idInClass,width){
-    var currentObj = $("#"+nodeId+" ."+idInClass);
-
-    //var postion = (parseInt(cxAttr.slice(0,-2))-x)/width+1;
-    var position = parseInt(currentObj.css("left").slice(0,-2));
-    
-    //console.log("#"+position);
-    
-    $("#"+nodeId+" ."+idInClass).remove();
-    var currentElement = null;
-    $("#"+nodeId+" div[class^='bookmark']").each(function(index,element){
-        currentElement = parseInt($(element).css("left").slice(0,-2));
-        if(currentElement > position){
-            //console.log(currentElement);
-            $(element).css("left",currentElement-width);
-        }
-        
-    });
-    
-}
-
-/*
-AddBookMark("node","bookmark-23","blue",12,20,20);
-AddBookMark("node","bookmark-43","yellow",12,20,20);
-AddBookMark("node","bookmark-13","red",12,20,20);
-AddBookMark("node","bookmark-45545","green",12,20,20);
-AddBookMark("node","bookmark-werr","orange",12,20,20);
-
-DeleteBookMark("node","bookmark-43",12);
-DeleteBookMark("node","bookmark-45545",12);
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-//tests
-//var testIds = ["id322","id3522","id56","id45666","id445"];
-
-
 //bookmark control
 
 //deselect
@@ -70,16 +9,23 @@ $("#bookmark-header").click(function(){
 */
 
 var currentSelectedBookmark = null;
-
+var bookmarkDict = {
+	bookmarks:{},
+	nodes:{}
+};
 
 //work with bookmark
 $("#workbookmark").click(function(event){
     
+	////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////
+	
     if($("#workbookmark").text() == "explore"){
         //work modus
-        $("#workbookmark").text("work");
+        $("#workbookmark").text("(de)select");
 
-        $(".editbookmarkname,.editcolor").prop("disabled",true);
+        //$(".editbookmarkname,.editcolor,#newcolor,#addbookmark").prop("disabled",true);
 		
 		drawGraphObj.ResultNodeEvent = function(resultNodeName){
 			forceGraph.To.Object().To.Node().To.SubElement()
@@ -89,33 +35,11 @@ $("#workbookmark").click(function(event){
 		ChangeResultNodes({attr:{stroke:"red","stroke-width":3}});
 		forceGraph.To.Object().To.Graph().ReDraw();	
 		
-		/*
-        testIds.forEach(function(elementId){
-            $("#"+elementId).attr({"stroke-width":2,"stroke":"blue"})
-                .on("click",function(){
-                    if(currentSelectedBookmark == null){
-                        console.log("no bookmark selected");
-                    }else{
-                        var bookmarkElement = $("#"+currentSelectedBookmark+" .bookmark-element-"+elementId);
-                        
-                        if(bookmarkElement.length == 0){
-                            //add bookmark element
-                            $("#"+currentSelectedBookmark+" .bookmarkelement")
-                                .append('<div class="bookmark-element-'+elementId+'">'+elementId+'</div>');
-                            
-                        }else{
-                            //delete bookmark element
-                            $("#"+currentSelectedBookmark+" .bookmark-element-"+elementId).remove();
-                        }
-                    }
-                });
-        });
-		*/
 		
-    }else if($("#workbookmark").text() == "work"){
+    }else if($("#workbookmark").text() == "(de)select"){
         //explore modus
         $("#workbookmark").text("explore");
-        $(".editbookmarkname,.editcolor").prop("disabled",false);
+        //$(".editbookmarkname,.editcolor,#newcolor,#addbookmark").prop("disabled",false);
 		drawGraphObj.ResultNodeEvent = function(resultNodeName){
 			forceGraph.To.Object().To.Node().To.SubElement()
 				.Change(resultNodeName,"svgcircle",{attr:{stroke:"","stroke-width":""}});
@@ -124,13 +48,11 @@ $("#workbookmark").click(function(event){
 		ChangeResultNodes({attr:{stroke:"","stroke-width":""}});
 		forceGraph.To.Object().To.Graph().ReDraw();	
 		
-        /*
-        testIds.forEach(function(elementId){
-            $("#"+elementId).attr({"stroke-width":"","stroke":""})
-                .off("click");
-        });
-        */
     }
+	////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////
+	
 });
 
 
@@ -160,8 +82,8 @@ $("#addbookmark").click(function(){
             +'<div class="bookmark">'
                 +'<div>'
                     +'<input class="bookmarktext" type="text" readonly value="'+bookmarkname+'"></input>'
-                    +'<button class="editbookmarkname">edit</button>'
-                    +'<input class="editcolor" type="color" value="'+$("#newcolor").val()+'"></input>'
+                   // +'<button class="editbookmarkname">edit</button>'
+                    +'<input class="editcolor" disabled type="color" value="'+$("#newcolor").val()+'"></input>'
                 +'</div>'
                 +'<div class="workbookmarkshow" >'
                     +'<button class="expanderbookmark">+</button>'        
@@ -204,27 +126,58 @@ $("#addbookmark").click(function(){
     
     
     //edit bookmark color
+	/*
     var EditBookmarlColor = function(event){
         //change the color nodes
         //todo...
+        //bookmarkDict.bookmarks[event.data.bookmarkname] ={};
+		
         
-        /*
-        $("#"+bookmarkname+" .showable").css(
-            "background",$("#"+bookmarkname+" .editcolor").val()
-        );
-        */
+        //$("#"+bookmarkname+" .showable").css(
+        //    "background",$("#"+bookmarkname+" .editcolor").val()
+        //);
+        
     };
     $("#"+bookmarkname+" .editcolor").on("change",{bookmarkname:bookmarkname},EditBookmarlColor);
-    
+    */
     
     //delete bookmark
     var DeleteBookmark = function(event){
         if (confirm("You want delete this bookmark?") == true) {
             $("#"+event.data.bookmarkname).remove();
             currentSelectedBookmark = null;
+			
             //delete bookmarks from nodes
-            //todo...
-            
+
+			//delete nodes from graph
+			//var test = forceGraph.Graph.GetGraphData();	
+			var resultNodelistObj = bookmarkDict.bookmarks[event.data.bookmarkname];
+			Object.keys(resultNodelistObj).forEach(function(resultNodeId){
+				var currentBookmarkName = "Bookmark_"+resultNodeId+"_"+event.data.bookmarkname;
+				if(forceGraph.Graph.GetGraphData().data.dict.node.hasOwnProperty(currentBookmarkName)){
+					forceGraph.To.Object()
+						.Node.Delete(currentBookmarkName);
+				}
+					
+			});
+			forceGraph.To.Object().To.Graph().ReDraw();
+			
+			//work with dictionary 
+			var deletedNodes = bookmarkDict.bookmarks[event.data.bookmarkname];
+			Object.keys(deletedNodes).forEach(function(elementNode){
+
+				if(bookmarkDict.nodes.hasOwnProperty(elementNode)){
+					delete bookmarkDict.nodes[elementNode][event.data.bookmarkname];
+					if(bookmarkDict.nodes[elementNode].length == 0){
+						delete bookmarkDict.nodes[elementNode];
+					}
+				}
+			});
+
+            delete bookmarkDict.bookmarks[event.data.bookmarkname];
+			
+
+			
             $("#message").text("bookmark deleted successfully!");
         }else{
             $("#message").text("cancel bookmark deleted!");
@@ -277,7 +230,7 @@ $("#addbookmark").click(function(){
                 $("#"+event.data.bookmarkname+" .editbookmarkname").off("click");
                 $("#"+event.data.bookmarkname+" .cancelbookmarkname").off("click");
                 $("#"+event.data.bookmarkname+" .deletebookmark").off("click");
-                $("#"+event.data.bookmarkname+" .editcolor").off("change");
+                //$("#"+event.data.bookmarkname+" .editcolor").off("change");
                 $("#"+event.data.bookmarkname+" .expanderbookmark").off("click");
 
                 
@@ -292,12 +245,17 @@ $("#addbookmark").click(function(){
                     .on("click",{bookmarkname:newBookmarkName},CancelEditCurrentbookmark);
                 $("#"+newBookmarkName+" .deletebookmark")
                     .on("click",{bookmarkname:newBookmarkName},DeleteBookmark);
-                $("#"+newBookmarkName+" .editcolor")
-                    .on("change",{bookmarkname:newBookmarkName},EditBookmarlColor);
+                //$("#"+newBookmarkName+" .editcolor")
+                //    .on("change",{bookmarkname:newBookmarkName},EditBookmarlColor);
                 $("#"+newBookmarkName+" .expanderbookmark")
                     .on("click",{bookmarkname:newBookmarkName},ExpandBookmarkElement);
                 currentSelectedBookmark = newBookmarkName;
                 
+				var currentBookmark = bookmarkDict.bookmarks[event.data.bookmarkname];
+				delete bookmarkDict.bookmarks[event.data.bookmarkname];
+				bookmarkDict.bookmarks[newBookmarkName] ={};
+				bookmarkDict.bookmarks[newBookmarkName] = currentBookmark;
+				
                 //rename(id) bookmarks from nodes
                 //todo...
                 
@@ -334,6 +292,8 @@ $("#addbookmark").click(function(){
     $("#newbookmarkname").val("");
     $("#message").text("success");
     
+	bookmarkDict.bookmarks[bookmarkname] ={};
+	
 });
 
 

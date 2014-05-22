@@ -38,7 +38,6 @@ function ChangeResultNodes(properties){
 			.Change(element,"svgcircle",properties);
 	});
 
-	
 }
 
 
@@ -72,28 +71,115 @@ getDataFromIndexedDB.Init(function(){
 });
 
 
+
+
+function AddBookMarkInGraph(nodeId,bookmarkId,color){
+
+	var bookmarkNodeId = "Bookmark_"+nodeId+"_"+bookmarkId;
+	forceGraph.To.Object().To.Node()
+		.Add(bookmarkNodeId)
+		.Change(bookmarkNodeId,{title:bookmarkId})
+		.To.SubElement()
+			.Delete(bookmarkNodeId,"svgcircle")
+			.Add(bookmarkNodeId,"svgrect","rect")
+			.Change(bookmarkNodeId,"svgrect",{
+				attr:{"fill":color,x:-5,y:-5,width:10,height:10}
+			})
+	.To.Object().To.Link()
+		.Add(nodeId,bookmarkNodeId,"LinkBookmark_"+nodeId+"_"+bookmarkId)
+		.Change("LinkBookmark_"+nodeId+"_"+bookmarkId,{distance:2});
+	
+	forceGraph.To.Object().To.Graph().ReDraw();
+	
+	/*
+	bookmarkDict.bookmarks[bookmarkId][nodeId] ={};
+	bookmarkDict.bookmarks[bookmarkId][nodeId] ={
+		color:color
+	};
+	
+	if(!bookmarkDict.nodes.hasOwnProperty(nodeId)){
+		bookmarkDict.nodes[nodeId]={};
+	}
+	bookmarkDict.nodes[nodeId][bookmarkId] = null;
+	*/
+}
+
+function DeleteBookMarkFromGraph(nodeId,bookmarkId){
+
+
+	var bookmarkNodeId = "Bookmark_"+nodeId+"_"+bookmarkId;
+	forceGraph.To.Object().To.Node()
+		.Delete(bookmarkNodeId);
+	forceGraph.To.Object().To.Graph().ReDraw();
+	/*
+	delete bookmarkDict.bookmarks[bookmarkId][nodeId];
+	
+	delete bookmarkDict.nodes[nodeId][bookmarkId];
+	
+	if(bookmarkDict.nodes.nodeId.length == 0){
+		delete bookmarkDict.nodes.nodeId;
+	}
+	*/
+}
+
+
+
 var funcStore =	{
 	"WorkWithResultNode":function(param){
 		var appModus = "bookmark";
 		if(appModus == "bookmark"){
-			console.log(JSON.parse(param).nodeName + " - " +currentSelectedBookmark);
-			var currentNodeId = JSON.parse(param).nodeName;
-			//var test = forceGraph.Graph.GetGraphData();
-			if(currentSelectedBookmark == null){
-				console.log("no bookmark selected");
-			}else{
-				var bookmarkElement = $("#"+currentSelectedBookmark+" .bookmark-element-"+currentNodeId);
+			if($("#workbookmark").text() == "(de)select"){
+				console.log(JSON.parse(param).nodeName + " - " +currentSelectedBookmark);
+				var currentNodeId = JSON.parse(param).nodeName;
+				//var test = forceGraph.Graph.GetGraphData();
 				
-				if(bookmarkElement.length == 0){
-					//add bookmark element
-					$("#"+currentSelectedBookmark+" .bookmarkelement")
-						.append('<div class="bookmark-element-'+currentNodeId+'">'+currentNodeId+'</div>');
-					
+				if(currentSelectedBookmark == null){
+					console.log("no bookmark selected");
 				}else{
-					//delete bookmark element
-					$("#"+currentSelectedBookmark+" .bookmark-element-"+currentNodeId).remove();
+					var bookmarkElement = $("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId);
+					
+					if(bookmarkElement.length == 0){
+						//add new bookmark element
+						
+						var queryNodePartNames = currentNodeId.split("_");
+						$("#"+currentSelectedBookmark+" .bookmarkelement")
+							.append(
+								'<div class="bookmark_element_'+currentNodeId+'">'
+									+'<div class="bookmarkdata">'
+										+"Query: "+$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text()
+									+'</div>'
+									+'<div class="bookmarkdata">'
+										+$("#"+currentNodeId+" title").text()
+									+'</div>'
+								+'</div>');
+						AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,
+							$("#"+currentSelectedBookmark+" .editcolor").val());	
+						bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={};
+						bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={
+							color:$("#"+currentSelectedBookmark+" .editcolor").val()
+						};
+						
+						if(!bookmarkDict.nodes.hasOwnProperty(currentNodeId)){
+							bookmarkDict.nodes[currentNodeId]={};
+						}
+						bookmarkDict.nodes[currentNodeId][currentSelectedBookmark] = null;	
+							
+
+					}else{
+						//delete bookmark element
+						$("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId).remove();
+						DeleteBookMarkFromGraph(currentNodeId,currentSelectedBookmark);
+						
+						delete bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId];
+	
+						delete bookmarkDict.nodes[currentNodeId][currentSelectedBookmark];
+						
+						if(bookmarkDict.nodes[currentNodeId].length == 0){
+							delete bookmarkDict.nodes.currentNodeId;
+						}
+					}
 				}
-			}
+			}	
 		}
 	}
 };
@@ -137,7 +223,7 @@ var BuildControls = function(){
 	
 	
 	//set slider work , min max values.
-	console.log(historyData);
+	//console.log(historyData);
 	if(historyData.length < 5){
 		sliderMin = 0;
 		sliderMax = 0;

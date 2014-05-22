@@ -44,7 +44,11 @@ var DrawGraph = function(){
 					cluster:{name:"clus_"+uniqueNodeName,distance:30/*55*/,active:true}})
 				.To.SubElement()
 					.Add(resultNodeName,"svgtext","text")
-					.Change(resultNodeName,"svgtext",{attr:{},text:TextCutter(titleData,10,9)})
+					.Change(resultNodeName,"svgtext",{
+						attr:{},
+						text:TextCutter(titleData,10,9),
+						event:{action:"click",func:"WorkWithResultNode",param:JSON.stringify({nodeName:resultNodeName})}
+					})
 					.Change(resultNodeName,"svgcircle",{
 						attr:{fill:"yellow",r:10},
 						event:{action:"click",func:"WorkWithResultNode",param:JSON.stringify({nodeName:resultNodeName})}
@@ -56,6 +60,29 @@ var DrawGraph = function(){
 				
 			oC.ResultNodeEvent(resultNodeName);
 			//console.log(oC);
+			
+			
+			//add the bookmarks
+			//todo
+			//...
+			if(bookmarkDict.nodes.hasOwnProperty(resultNodeName)){
+				var bookmarkValues = bookmarkDict.nodes[resultNodeName];
+				Object.keys(bookmarkValues).forEach(function(bookmarkElement){
+					/////////////
+					AddBookMarkInGraph(
+						resultNodeName,
+						bookmarkElement,
+						bookmarkDict.bookmarks[bookmarkElement][resultNodeName].color);
+
+					/////////////
+				});
+				
+
+			}
+			//var bookmarkValues = bookmarkDict.nodes[resultNodeName];
+			//console.log(bookmarkDict);
+			//console.log(bookmarkValues);
+			
 		}
 
 	}
@@ -159,12 +186,22 @@ var DrawGraph = function(){
 			var resultLinks = FilterTextList(graphData.dict.node[uniqueNodeId].connections,"ResultLinkID_"+ uniqueNodeId + "_");
 			//console.log(resultLinks);
 			
-			var resultLinkName = "";
+			var resultNodeName = "";
 			resultLinks.forEach(function(element){
 				//console.log(element);
-				resultLinkName = "ResultNodeID_"+element.substring(13,element.length);
+				resultNodeName = "ResultNodeID_"+element.substring(13,element.length);
+				
+				//delete bookmarks
+				//console.log(resultNodeName);//resultnode
+				var resultLinkBookmarks = FilterTextList(graphData.dict.node[resultNodeName].connections,"LinkBookmark_");
+				//console.log(resultLinkBookmarks);
+				resultLinkBookmarks.forEach(function(element){
+					forceGraph.To.Object().To.Node()
+						.Delete(element.substring(4,element.length));
+				});
+				
 				forceGraph.To.Object().To.Node()
-					.Delete(resultLinkName);
+					.Delete(resultNodeName);
 			});
 		
 			//delete unique query node
