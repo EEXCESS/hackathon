@@ -30,12 +30,13 @@ function FilterTextList(objectVar,stringVal){
     });
 }
 
-function ChangeResultNodes(properties){
+function ChangeResultNodes(circleProperties,textProperties){
 	var changeNodes = FilterTextList(forceGraph.Graph.GetGraphData().data.dict.node,"ResultNodeID_UniqueNodeID_");
 	
 	changeNodes.forEach(function(element){
 		forceGraph.To.Object().To.Node().To.SubElement()
-			.Change(element,"svgcircle",properties);
+			.Change(element,"svgcircle",circleProperties)
+			.Change(element,"svgtext",textProperties);
 	});
 
 }
@@ -91,17 +92,6 @@ function AddBookMarkInGraph(nodeId,bookmarkId,color){
 	
 	forceGraph.To.Object().To.Graph().ReDraw();
 	
-	/*
-	bookmarkDict.bookmarks[bookmarkId][nodeId] ={};
-	bookmarkDict.bookmarks[bookmarkId][nodeId] ={
-		color:color
-	};
-	
-	if(!bookmarkDict.nodes.hasOwnProperty(nodeId)){
-		bookmarkDict.nodes[nodeId]={};
-	}
-	bookmarkDict.nodes[nodeId][bookmarkId] = null;
-	*/
 }
 
 function DeleteBookMarkFromGraph(nodeId,bookmarkId){
@@ -111,76 +101,94 @@ function DeleteBookMarkFromGraph(nodeId,bookmarkId){
 	forceGraph.To.Object().To.Node()
 		.Delete(bookmarkNodeId);
 	forceGraph.To.Object().To.Graph().ReDraw();
-	/*
-	delete bookmarkDict.bookmarks[bookmarkId][nodeId];
-	
-	delete bookmarkDict.nodes[nodeId][bookmarkId];
-	
-	if(bookmarkDict.nodes.nodeId.length == 0){
-		delete bookmarkDict.nodes.nodeId;
-	}
-	*/
 }
 
 
 
 var funcStore =	{
 	"WorkWithResultNode":function(param){
-		var appModus = "bookmark";
-		if(appModus == "bookmark"){
-			if($("#workbookmark").text() == "(de)select"){
-				console.log(JSON.parse(param).nodeName + " - " +currentSelectedBookmark);
-				var currentNodeId = JSON.parse(param).nodeName;
-				//var test = forceGraph.Graph.GetGraphData();
+		//var appModus = "bookmark";
+		//if(appModus == "bookmark"){
+		if($("#workbookmark").text() == "(de)select"){
+			//console.log(JSON.parse(param).nodeName + " - " +currentSelectedBookmark);
+			
+			var currentNodeId = JSON.parse(param).nodeName;
+			//var test = forceGraph.Graph.GetGraphData();
+			
+			if(currentSelectedBookmark == null){
+				console.log("no bookmark selected");
+			}else{
+				var bookmarkElement = $("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId);
 				
-				if(currentSelectedBookmark == null){
-					console.log("no bookmark selected");
-				}else{
-					var bookmarkElement = $("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId);
+				if(bookmarkElement.length == 0){
+					//add new bookmark element
 					
-					if(bookmarkElement.length == 0){
-						//add new bookmark element
-						
-						var queryNodePartNames = currentNodeId.split("_");
-						$("#"+currentSelectedBookmark+" .bookmarkelement")
-							.append(
-								'<div class="bookmark_element_'+currentNodeId+'">'
-									+'<div class="bookmarkdata">'
-										+"Query: "+$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text()
-									+'</div>'
-									+'<div class="bookmarkdata">'
-										+$("#"+currentNodeId+" title").text()
-									+'</div>'
-								+'</div>');
-						AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,
-							$("#"+currentSelectedBookmark+" .editcolor").val());	
-						bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={};
-						bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={
-							color:$("#"+currentSelectedBookmark+" .editcolor").val()
-						};
-						
-						if(!bookmarkDict.nodes.hasOwnProperty(currentNodeId)){
-							bookmarkDict.nodes[currentNodeId]={};
-						}
-						bookmarkDict.nodes[currentNodeId][currentSelectedBookmark] = null;	
-							
+					var queryNodePartNames = currentNodeId.split("_");
+					$("#"+currentSelectedBookmark+" .bookmarkelement")
+						.append(
+							'<div class="bookmark_element_'+currentNodeId+'">'
+								+'<div class="bookmarkdata">'
+									+"Query: "+$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text()
+								+'</div>'
+								+'<div class="bookmarkdata">'
+									+$("#"+currentNodeId+" title").text()
+								+'</div>'
+							+'</div>');
+					AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,
+						$("#"+currentSelectedBookmark+" .editcolor").val());	
+					bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={};
+					bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={
+						color:$("#"+currentSelectedBookmark+" .editcolor").val()
+					};
+					
+					if(!bookmarkDict.nodes.hasOwnProperty(currentNodeId)){
+						bookmarkDict.nodes[currentNodeId]={};
+					}
+					bookmarkDict.nodes[currentNodeId][currentSelectedBookmark] = null;
+				}else{
+					//delete bookmark element
+					$("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId).remove();
+					DeleteBookMarkFromGraph(currentNodeId,currentSelectedBookmark);
+					
+					delete bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId];
 
-					}else{
-						//delete bookmark element
-						$("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId).remove();
-						DeleteBookMarkFromGraph(currentNodeId,currentSelectedBookmark);
-						
-						delete bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId];
-	
-						delete bookmarkDict.nodes[currentNodeId][currentSelectedBookmark];
-						
-						if(bookmarkDict.nodes[currentNodeId].length == 0){
-							delete bookmarkDict.nodes.currentNodeId;
-						}
+					delete bookmarkDict.nodes[currentNodeId][currentSelectedBookmark];
+					
+					if(bookmarkDict.nodes[currentNodeId].length == 0){
+						delete bookmarkDict.nodes.currentNodeId;
 					}
 				}
-			}	
-		}
+			}
+		}	
+		//}
+	},
+	"MoreResult":function(param){
+		// get data from graph
+		var graphData = forceGraph.Graph.GetGraphData().data;	
+		var uniqueNodeId = JSON.parse(param).nodeName;
+		
+		drawGraphObj.DeleteResultNode(uniqueNodeId,graphData);
+		drawGraphObj.AddResultNodes(uniqueNodeId,JSON.parse(param).query,1000);
+		
+		forceGraph.To.Object().To.Graph().ReDraw();
+	},
+	"LessResult":function(param){
+		//console.log(JSON.parse(param).nodeName);
+		var graphData = forceGraph.Graph.GetGraphData().data;	
+		var uniqueNodeId = JSON.parse(param).nodeName;
+		
+		drawGraphObj.DeleteResultNode(uniqueNodeId,graphData);
+		drawGraphObj.AddResultNodes(uniqueNodeId,JSON.parse(param).query,5);
+		
+		forceGraph.To.Object().To.Graph().ReDraw();
+	},
+	"AddNewTextForSearch":function(param){
+		//console.log(JSON.parse(param).nodeName);
+		//console.log($("#"+JSON.parse(param).nodeName +" title").text());
+		var searchText = $("#searchtext").val();
+		searchText += " " +$("#"+JSON.parse(param).nodeName +" title").text();
+		$("#searchtext").val(searchText);
+		
 	}
 };
 
@@ -242,6 +250,7 @@ var BuildControls = function(){
 				//console.log("min: " + d3.round(s[0]) + " - max: " + d3.round(s[1]));
 
 				drawGraphObj.ReDrawGraph(d3.round(s[0]),d3.round(s[1]),sliderMin,sliderMax);
+				//drawGraphObj.ReDrawGraphNew(d3.round(s[0]),d3.round(s[1]),sliderMin,sliderMax);
 				
 				sliderMin = d3.round(s[0]);
 				sliderMax = d3.round(s[1]);
@@ -267,6 +276,7 @@ var BuildControls = function(){
 	//draw a graph in first time
 
 	drawGraphObj.ReDrawGraph(sliderMin,sliderMax,sliderMin,sliderMax);
+	//drawGraphObj.ReDrawGraphNew(sliderMin,sliderMax,sliderMin,sliderMax);
 	drawGraphObj.ChangeGraph(sliderMin,sliderMax);
 	
 	forceGraph.To.Object().To.Graph().ReDraw();	
@@ -280,7 +290,7 @@ var BuildControls = function(){
 	$("#go").click(function(){
 		$("#searchstatus").text("searching");
 		
-		var textinput = $("#serachtext").val();
+		var textinput = $("#searchtext").val();
 		var query_terms = textinput.split(' ');
 		var query = [];
 		for (var i = 0; i < query_terms.length; i++) {
@@ -365,8 +375,55 @@ var BuildControls = function(){
 		//});
 		
 	});
+	
+	//hack......................only test
+	var toggleAddSearch = false;
 	$("#add_search").click(function(){
-		//$("#UniqueNodeID_9f7ca7b1088e57abb9e129858507c760").off("click.aa");
+		if(!toggleAddSearch){
+			drawGraphObj.ResultNodeEvent = function(resultNodeName){
+				forceGraph.To.Object().To.Node().To.SubElement()
+					.Change(resultNodeName,"svgcircle",{
+						attr:{stroke:"blue","stroke-width":5},
+						event:{action:"click",func:"AddNewTextForSearch",param:JSON.stringify({nodeName:resultNodeName})}
+					}).Change(resultNodeName,"svgtext",{
+						event:{action:"click",func:"AddNewTextForSearch",param:JSON.stringify({nodeName:resultNodeName})}
+						});
+			
+			};
+			//ChangeResultNodes({attr:{stroke:"blue","stroke-width":5}});
+			
+			var changeNodes = FilterTextList(forceGraph.Graph.GetGraphData().data.dict.node,"ResultNodeID_UniqueNodeID_");
+
+			changeNodes.forEach(function(element){
+				forceGraph.To.Object().To.Node().To.SubElement()
+					.Change(element,"svgcircle",{
+						attr:{stroke:"blue","stroke-width":5},
+						event:{action:"click",func:"AddNewTextForSearch",param:JSON.stringify({nodeName:element})}
+					})
+					.Change(element,"svgtext",{
+						event:{action:"click",func:"AddNewTextForSearch",param:JSON.stringify({nodeName:element})}
+					});
+			});	
+			
+			
+			forceGraph.To.Object().To.Graph().ReDraw();
+			toggleAddSearch = true;
+		}else{
+			drawGraphObj.ResultNodeEvent = function(resultNodeName){
+				forceGraph.To.Object().To.Node().To.SubElement()
+					.Change(resultNodeName,"svgcircle",{attr:{stroke:"","stroke-width":""}})
+					.Change(resultNodeName,"svgcircle",{
+						event:{action:"",func:"",param:""}
+					});
+			
+			};
+			ChangeResultNodes({attr:{stroke:"","stroke-width":""},event:{action:"",func:"",param:""}},
+			{event:{action:"",func:"",param:""}});
+			
+			forceGraph.To.Object().To.Graph().ReDraw();
+			toggleAddSearch = false;
+		}
+		
 	});
 	
 };
