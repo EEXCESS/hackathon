@@ -89,6 +89,11 @@ function display_querycrumbs(domElem) {
 
     var INTERACTION = {
         onClick: function(d, i) {
+
+            // TODO: log backnavigation
+            var termsOfPreviouslyVisitedNode = currentNode.query;
+            // end
+
             var weightedTerms = [];
             for(var term in d.query) {
                 var weightedTerm = {
@@ -101,6 +106,11 @@ function display_querycrumbs(domElem) {
             currentIdx = i;
 
             fWait_BackNaviResults = true;
+
+            // TODO: log nacknavigation
+            var termsOfCurrentNode = d.query;
+            // end
+
             EEXCESS.searchResults.loading();
             EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: weightedTerms});
         },
