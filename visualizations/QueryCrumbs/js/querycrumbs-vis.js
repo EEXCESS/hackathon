@@ -107,7 +107,6 @@ function display_querycrumbs(domElem) {
         onMouseOverNode: function(d, i) {
             var infoBox = svgContainer.select("g").append("g").attr("class", "infoBoxNode");
             d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", true).style("cursor","pointer");
-            console.log(d);
             infoBox.append("text")
                 .text(d.query.toString())
                 .attr("class", "nodeInfo")
@@ -391,7 +390,6 @@ function display_querycrumbs(domElem) {
         generateVisualData: function(history, similarities) {
             var visualDataNodes = [];
             var visualDataEdges = [];
-            console.log(history);
             for(var nodeIdx = 0; nodeIdx < history.length; nodeIdx++) {
                 var vNode = {};
                 vNode.query = history[nodeIdx].query;
@@ -508,7 +506,7 @@ function display_querycrumbs(domElem) {
                 .attr("width", function (d) { return d.width + 2 * rectBorderWidth; })
                 .attr("height", function (d) { return d.height + 2 * rectBorderWidth; })
                 .classed("queryRectBg", true)
-                .classed("queryRectBg-selected", function(d,i) { console.log("me: "+i+" curIdx: "+currentIdx);return (i == currentIdx);});
+                .classed("queryRectBg-selected", function(d,i) { return (i == currentIdx);});
             queryNodesSel.select("rect.queryRect").attr("x", function (d) { return d.x_pos; })
                 .attr("y", function (d) { return d.y_pos; } )
                 .attr("width", function (d) { return d.width; })

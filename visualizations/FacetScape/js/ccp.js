@@ -98,7 +98,6 @@ var PROVIDER = (function() {
                     } else {
                         var queryTerms = response.query;
                         var data = response.results;
-                        console.log(data);
                         var facets = internal.EEXCESS.preprocessFacets(data);
                         var results = internal.EEXCESS.preprocessResults(data);
                         internal.onReceiveData(queryTerms, facets, results);
@@ -131,17 +130,26 @@ var PROVIDER = (function() {
                         facets[key][tag] = (typeof facets[key][tag] == "undefined" ? 1 : ++facets[key][tag]);
                     }
                 }
-                for(var facet in facets) {
-                    if(typeof facets[facet] != "undefined") {
-                        var tags = [];
-                        for(var tag in facets[facet]) {
-                            if(tag != "") {
-                                tags.push({"word":tag, "frequency": facets[facet][tag]});
-                            }
+                for(var facetName in facets) {
+                    var facet = {"name": facetName, "color":"#D6D0C4", "tags": []};
+                    var tags = [];
+                    var unknownFreq = 0;
+                    for(var i = 0; i < data.results.length; i++) {
+                        if(!data.results[i].facets.hasOwnProperty(facetName)) {
+                            unknownFreq += 1;
                         }
-                        if(tags.length > 0) {
-                            processedData.push({"name": facet, "type":0, "color": "#D6D0C4", "tags": tags});
+                    }
+                    for(var tag in facets[facetName]) {
+                        if(tag != "") {
+                            tags.push({"word": tag, "frequency":facets[facetName][tag]});
                         }
+                    }
+                    if(tags.length > 0) {
+                        if(unknownFreq > 0) {
+                            tags.push({"word": "unknown", "frequency": unknownFreq});
+                        }
+                        facet.tags = tags;
+                        processedData.push(facet);
                     }
                 }
                 delete facets;
@@ -181,60 +189,68 @@ var PROVIDER = (function() {
                 "type_genre"
             ],
             request: function(term) {
-                var xhr = new XMLHttpRequest();
                 var facetString = '';
                 for(var i = 0; i < internal.econbiz.fields.length; i++) {
                     facetString += internal.econbiz.fields[i];
                     facetString += (i < internal.econbiz.fields.length-1) ? '+' : '';
                 }
-                xhr.open('GET', internal.econbiz.url + '?q=' + term + '&size=' + internal.econbiz.size + '&facets=' + facetString, true);
-                xhr.onload = function() {
-                    var data = JSON.parse(xhr.response);
-                    var ppFacets = internal.econbiz.preprocessFacets(data);
-                    var ppResults = internal.econbiz.preprocessResults(data);
-                    internal.onReceiveData(term, ppFacets, ppResults);
-                };
-                xhr.onerror = function() {
-                    console.log("error");
-                };
-                xhr.send();
+                $.ajax({
+                    url: internal.econbiz.url + '?q=' + term + '&size=' + internal.econbiz.size + '&facets=' + facetString,
+                    cache: false,
+                    dataType: 'jsonp',
+                    success: function(data){
+                        var ppFacets = internal.econbiz.preprocessFacets(data);
+                        var ppResults = internal.econbiz.preprocessResults(data);
+                        internal.onReceiveData(term, ppFacets, ppResults);
+                    }
+                });
             },
             preprocessFacets: function(data) {
-                var processedData = [];
-                for(var key in data.facets) {
-                    if(data.facets.hasOwnProperty(key)) {
-                        var tags = [];
-                        for(var t = 0; t < data.facets[key].length-1; t+=2) {
-                            if(typeof data.facets[key][t] === "string") {
-                                var frequency = 0;
-                                for(var i = 0; i < data.hits.hits.length; i++) {
-                                    if(data.hits.hits[i].hasOwnProperty(key)) {
-                                        if(data.hits.hits[i][key] instanceof Array) {
-                                            for(var tt = 0; tt < data.hits.hits[i][key].length; tt++) {
-                                                var canonTag = PROVIDER.getCanonicalString(data.hits.hits[i][key][tt]);
-                                                if(canonTag == PROVIDER.getCanonicalString(data.facets[key][t])){
-                                                    frequency++;
-                                                }
-                                            }
-                                        } else {
-                                            var canonTag = PROVIDER.getCanonicalString(data.hits.hits[i][key]);
-                                            if(canonTag == PROVIDER.getCanonicalString(data.facets[key][t])){
-                                                frequency++;
-                                            }
-                                        }
-                                    }
-                                }
-                                if(frequency > 0) {
-                                    tags.push({"word":data.facets[key][t], "frequency":frequency});
-                                }
-                            }
+                var processed = [];
+                var pdata = {}
+                for(var result in data.hits.hits) {
+                    for(var facet in data.hits.hits[result]) {
+                        if(!pdata[facet]) {
+                            pdata[facet] = {};
                         }
-                        if(tags.length > 1) {
-                            processedData.push({"name":key, "color": '#cccccc', "tags":tags});
+                        if(data.hits.hits[result][facet] instanceof Array) {
+                            for(var tt = 0; tt < data.hits.hits[result][facet].length; tt++) {
+                                var value = data.hits.hits[result][facet][tt];
+                                if(!pdata[facet][value]) {
+                                    pdata[facet][value] = 1;
+                                }
+                                pdata[facet][value] += 1;
+                            }
+                        } else {
+                            if(!pdata[facet][data.hits.hits[result][facet]]) {
+                                pdata[facet][data.hits.hits[result][facet]] = 1;
+                            }
+                            pdata[facet][data.hits.hits[result][facet]] += 1;
                         }
                     }
                 }
-                return processedData;
+                for(var fIdx in internal.econbiz.fields) {
+                    var facetName = internal.econbiz.fields[fIdx];
+                    var facet = {"name": facetName, "color":'#cccccc', "tags": []};
+                    var tags = [];
+                    var unknownFreq = 0;
+                    for(var result in data.hits.hits) {
+                        if(!data.hits.hits[result].hasOwnProperty(facetName)) {
+                            unknownFreq += 1;
+                        }
+                    }
+                    for(var tag in pdata[facetName]) {
+                        tags.push({"word": tag, "frequency": pdata[facetName][tag]})
+                    }
+                    if(tags.length > 0) {
+                        if(unknownFreq > 0) {
+                            tags.push({"word": "unknown", "frequency": unknownFreq});
+                        }
+                        facet.tags = tags;
+                        processed.push(facet);
+                    }
+                }
+                return processed;
             },
             preprocessResults: function(data) {
                 return data.hits.hits;
@@ -281,18 +297,19 @@ var PROVIDER = (function() {
             return internal.econbiz.recordURL;
         },
         getCanonicalString: function(str) {
-            var arrOfStr = str.toLowerCase().split(" ");
-            var canonStr = "";
-            if(str.match("http") || str.match("www")) {
-                return str;
-            }
-            for(var i = 0; i < arrOfStr.length; i++) {
-                canonStr += arrOfStr[i].charAt(0).toUpperCase() + arrOfStr[i].slice(1);
-                if(i < arrOfStr.length - 1) {
-                    canonStr += " ";
-                }
-            }
-            return canonStr;
+            return str;
+//            var arrOfStr = str.toLowerCase().split(" ");
+//            var canonStr = "";
+//            if(str.match("http") || str.match("www")) {
+//                return str;
+//            }
+//            for(var i = 0; i < arrOfStr.length; i++) {
+//                canonStr += arrOfStr[i].charAt(0).toUpperCase() + arrOfStr[i].slice(1);
+//                if(i < arrOfStr.length - 1) {
+//                    canonStr += " ";
+//                }
+//            }
+//            return canonStr;
         }
     }
 })();

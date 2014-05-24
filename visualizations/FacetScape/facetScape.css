@@ -152,8 +152,6 @@ input {
 
 
 
-
-
 .facetHeader {
     position: absolute;
     font-family: Arial;
@@ -161,10 +159,9 @@ input {
     font-weight: bold;
     text-anchor: middle;
     color: #494949;
-    letter-spacing: 3;
-    opacity: .9;
+    letter-spacing: 1px;
+    opacity: .6;
     fill: #FFFFFF;
-    alignment-baseline: central;
     cursor: all-scroll;
 }
 .facetHeader:hover {
@@ -185,7 +182,9 @@ input {
     position: absolute;
     font-family: Verdana;
     font-weight:normal;
+    text-anchor:middle;
 }
+.tag-text {}
 .tag-zero-frequency {
     fill: #cccccc;
 }
@@ -214,18 +213,19 @@ input {
     text-anchor: middle;
     fill: #000000;
 }
-.tag-selected-text {
-    fill: #ffffff;
-}
-.tag-selected {
-    fill: #1f914f;
-}
+
 .tag-bg {
     fill: none;
 }
 .tag-bg-hovered {
     fill: #ebebeb;
     stroke: #686868;
+}
+.tag-selected {
+    fill: #1f914f;
+}
+.tag-selected-text {
+    fill: #ffffff;
 }
 
 .spareArea {
@@ -246,13 +246,10 @@ input {
 }
 
 
-
-
-
 .resultList {
-    /*width:100%;*/
+    width:100%;
     max-height: 300px;
-    /*margin-top:-6px;*/
+    margin-top:-6px;
     overflow: auto;
     border:solid #ebebeb 1px;
 }

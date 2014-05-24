@@ -13,7 +13,6 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     var facets = ifacets;
 
     // Internal Variables
-    var provider = "europeana";
     var voronoi;
     var facetCentroids;
     var facetPolygons;
@@ -31,7 +30,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     // Main Data Object holding a users current selection
     var tagSelection = {};
     // Main Data Object holding currently selected items
-    var selectedResults = [];
+    var selectedResults = queryResultItems;
 
     // Strings
     var STR_DROP_HERE = "Drop Facet Here!";
@@ -45,14 +44,12 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     // configuration parameters for facets
     var MAX_FACETS_HORIZONTAL = 4;
     var STEP_WEIGHT = 30;
-    var SPARE_AREA_TOLERANCE_WIDTH = 30;
 
     // configuration parameters for tag clouds
-    var MIN_FONT_SIZE = 10;
+    var MIN_FONT_SIZE = 11;
     var MAX_FONT_SIZE = 16;
     var TAG_PADDING_X = 2;
     var TAG_PADDING_Y = 1;
-    var NUMBER_OF_SHADOW_GROUPS = 4;
     var SPIRAL_FERMAT_SCALE = 40;
     var MAX_LENGTH = 15;
     var maxFrequency;
@@ -74,6 +71,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
             // Animation
             facetResizeHandle: null,
             resizingFacet: null,
+            recentlyHoveredTag: null,
 
             resizeFacet: function(d) {
                 if(typeof internal.resizingFacet != "undefined") {
@@ -81,6 +79,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                 }
                 internal.resizingFacet = d;
                 var minDist = Number.MAX_VALUE;
+                var minFacet = null;
                 var distance = 0.0;
                 for(var i = 0; i < facetData.length; i++) {
                     if(facetData[i] != d) {
@@ -88,6 +87,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                         distance = Math.sqrt(Math.pow(d.centroid.X - facetData[i].centroid.X, 2) + Math.pow(d.centroid.Y - facetData[i].centroid.Y, 2));
                         if(distance < minDist) {
                             minDist = distance;
+                            minFacet = facetData[i];
                         }
                     }
                 }
@@ -114,6 +114,9 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                     facet.weight = maxWeight;
                     RENDERING.refreshFacetScape();
                     window.clearInterval(internal.facetResizeHandle);
+                    var collFacet = d3.select("g#"+facet.name).select("path");
+                    collFacet.style("stroke", FACET_POLYGON_COLLISION_COLOR).style("stroke-width", FACET_POLYGON_COLLISION_WIDTH +"px").transition().duration(1000).style("stroke", FACET_POLYGON_COLOR).style("stroke-width", FACET_POLYGON_WIDTH + "px");
+
                 }
             },
             getOverlapedFacets: function(facet, newWeight) {
@@ -130,31 +133,38 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                     }
                 }
                 return overlappingFacets;
+            },
+            setHoveredElement: function(D3OBJ_Tag) {
+                if(internal.recentlyHoveredTag) {
+                    INTERACTION.hideHoverTooltip(internal.recentlyHoveredTag);
+                }
+                internal.recentlyHoveredTag = D3OBJ_Tag;
             }
         }
         return {
-            onMouseOverFunction: function(d,i) {
-                this.parentNode.parentNode.appendChild(this.parentNode);
-                this.parentNode.appendChild(this);
-                d3.select(this).style("cursor", "pointer");
-                d3.select(this).select("text.tag-freq").text("");
-                var tagHovered = d3.select(this).select("text#tag_text").text(d.word);
-                var selRect = d3.select(this).select("rect#tag_bg");
+            showHoverTooltip: function(D3OBJ_Tag) {
+                var targetTagGroup = d3.select(D3OBJ_Tag);
+                var d = D3OBJ_Tag.__data__;
+                D3OBJ_Tag.parentNode.appendChild(D3OBJ_Tag);
+                D3OBJ_Tag.parentNode.parentNode.appendChild(D3OBJ_Tag.parentNode);
+                targetTagGroup.style("cursor", "pointer");
+                targetTagGroup.select("text.tag-freq").text("");
+                var tagHovered = targetTagGroup.select("text.tag-text").text(d.word);
+                var selRect = targetTagGroup.select("rect.tag-bg");
                 var nBBWidth = tagHovered.node().getBBox().width + 2 * TAG_PADDING_X;
                 var nBBHeight = selRect.node().getBBox().height + TAG_PADDING_Y;
-                selRect.attr("x", d.x - nBBWidth/2).attr("y", d.y - nBBHeight/2).attr("width", nBBWidth).attr("height", nBBHeight);
+                selRect.attr("x", d.x - nBBWidth/2).attr("y", d.y - nBBHeight * 0.75).attr("width", nBBWidth).attr("height", nBBHeight);
                 var gain = 0;
-                var facetName = this.parentNode.__data__.name;
+                var facetName = D3OBJ_Tag.parentNode.__data__.name;
                 if(!d.isSelected) {
-                    selRect.attr("class", "tag-bg-hovered");//selRect.style("fill", "#D9D3C7");//.style("fill", "#E1EDF2");
+                    selRect.classed("tag-bg", true)
+                        .classed("tag-bg-hovered", true);//selRect.style("fill", "#D9D3C7");//.style("fill", "#E1EDF2");
                     if(tagSelection.hasOwnProperty(facetName)) {
                         tagSelection[facetName].push(d.word);
                     } else {
                         tagSelection[facetName] = [d.word];
                     }
                     var hypoResults = QUERYING.evaluateSelection(tagSelection);
-                    console.log(hypoResults);
-                    console.log(selectedResults);
                     gain = hypoResults.length - selectedResults.length;
                     var id = tagSelection[facetName].indexOf(d.word);
                     tagSelection[facetName].splice(id, 1);
@@ -162,7 +172,9 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                         delete tagSelection[facetName];
                     }
                 } else {
-                    selRect.attr("class", "tag-bg-hovered, tag-selected");
+                    selRect.classed("tag-bg", true)
+                        .classed("tag-bg-hovered", true)
+                        .classed("tag-selected", true);
                     var id = tagSelection[facetName].indexOf(d.word);
                     tagSelection[facetName].splice(id, 1);
                     if(tagSelection[facetName].length == 0) {
@@ -176,50 +188,66 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                         tagSelection[facetName] = [d.word];
                     }
                 }
-                d3.select(this).append("rect").attr("id", "tag_Quantity_bg").attr("class", "tag-quantity-bg")
+                var info = targetTagGroup.append("g").attr("class", "hoverInfo");
+                info.append("rect").attr("class", "tag-quantity-bg")
                     .attr("x", d.x + nBBWidth / 2 - 46)
-                    .attr("y", d.y - nBBHeight / 2 - 10)
+                    .attr("y", d.y - nBBHeight * 0.75 - 10)
                     .attr("width", 38)
                     .attr("height", 13)
                     .attr("rx", 5)
                     .attr("ry", 5)
-                d3.select(this).append("rect").attr("id", "tag_Quantity_bg")
+                info.append("rect")
                     .attr("class", function() { if(gain<0) { return "tag-quantity-bg-loss"} else if(gain == 0) { return "tag-quantity-bg-neutral"} else { return "tag-quantity-bg-gain"}})
                     .attr("x", d.x + nBBWidth / 2 - 10)
-                    .attr("y", d.y - nBBHeight / 2 - 10)
+                    .attr("y", d.y - nBBHeight * 0.75 - 10)
                     .attr("width", 20)
                     .attr("height", 13)
                     .attr("rx", 5)
                     .attr("ry", 5);
-                d3.select(this).append("text").attr("id", "tag_Quantity_text")
+                info.append("text")
                     .attr("class", "tag-quantity-text")
                     .attr("x", d.x + nBBWidth / 2)
-                    .attr("y", d.y - nBBHeight / 2-1)
+                    .attr("y", d.y - nBBHeight * 0.75 -1)
                     .text(function() { if(gain>0) { return "+"+gain;} else { return gain;}});
-                d3.select(this).append("text").attr("id", "tag_Quantity_text")
+                info.append("text")
                     .attr("class", "tag-quantity-text")
                     .attr("x", d.x + nBBWidth / 2-27)
-                    .attr("y", d.y - nBBHeight / 2-1)
-                    .text(function(d) { return d.frequency + "/"+selectedResults.length; });
+                    .attr("y", d.y - nBBHeight * 0.75 - 1)
+                    .text(function(d) { return d.frequency + "/" + selectedResults.length; });
             },
-            onMouseOutFunction: function(d) {
-                var selectedTag = d3.select(this).select("rect#tag_bg");
-                selectedTag.attr("x", d.x - d.bbWidth/2).attr("y", d.y - d.bbHeight/2).attr("width", d.bbWidth).attr("height", d.bbHeight);
-                d3.select(this).select("text").text(d.wordShort);
+            hideHoverTooltip: function(D3OBJ_Tag) {
+                var targetTagGroup = d3.select(D3OBJ_Tag);
+                var d = D3OBJ_Tag.__data__;
+                var selectedTag = targetTagGroup.select("rect.tag-bg");
+                selectedTag.attr("x", d.x - d.bbWidth/2)/*.attr("y", d.y - d.bbHeight/2)*/.attr("width", d.bbWidth).attr("height", d.bbHeight);
+                targetTagGroup.select("text.tag-text").text(d.wordShort);
                 if(!d.isSelected) {
                     selectedTag.attr("class", "tag-bg");
                 } else {
-                    selectedTag.attr("class", "tag-selected");
+                    selectedTag.attr("class", "tag-bg tag-selected");
                 }
-                d3.select(this).selectAll("rect#tag_Quantity_bg").remove();
-                d3.select(this).selectAll("text#tag_Quantity_text").remove();
-                d3.select(this).select("text.tag-freq").text(function(d) { return d.frequency;});
+                targetTagGroup.selectAll("g.hoverInfo").remove();
+                targetTagGroup.select("text.tag-freq").text(function(d) { return d.frequency;});
+            },
+            onMouseOverFunction: function(d, i) {
+                if (d.isHovered) {
+                    return;
+                }
+                d.isHovered = true;
+                internal.setHoveredElement(this);
+                INTERACTION.showHoverTooltip(this);
+            },
+            onMouseOutFunction: function(d) {
+                d.isHovered = false;
+                INTERACTION.hideHoverTooltip(this);
             },
             onMouseClickFunction: function(d, i) {
-                var selectedTag = d3.select(this).select("rect#tag_bg");
+                var targetTag = d3.select(this);
+                var selectedTag = targetTag.select("rect.tag-bg");
                 d.isSelected = !d.isSelected;
                 var facetName = this.parentNode.__data__.name;
                 if(d.isSelected) {
+                    LOGGING.logInteraction({'mode': 'selection', 'facetName': facetName, 'facetValue': d.word});
                     recentSelectedFacet = facetName;
                     if(tagSelection.hasOwnProperty(facetName)) {
                         tagSelection[facetName].push(d.word);
@@ -227,6 +255,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                         tagSelection[facetName] = [d.word];
                     }
                 } else {
+                    LOGGING.logInteraction({'mode': 'deselection', 'facetName': facetName, 'facetValue': d.word});
                     var id = tagSelection[facetName].indexOf(d.word);
                     tagSelection[facetName].splice(id, 1);
                     if(tagSelection[facetName].length == 0) {
@@ -236,29 +265,37 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                 RENDERING.drawResultList();
                 QUERYING.updateFrequencies();
                 RENDERING.drawTagCloud();
+                d.isHovered = false;
+                INTERACTION.showHoverTooltip(this);
             },
             onMouseClickFacetName: function(d, i) {
                 if(d3.event.defaultPrevented == false) {
                     var selTag = d3.select(this).select("rect");
-                    var nrSelTags = this.__data__.tags.filter(function(d) { return d.isSelected;}).length;
-                    if(nrSelTags == this.__data__.tags.length) {d.isSelected = true;}
+                    var nrSelTags = this.__data__.tags.filter(function (d) {
+                        return d.isSelected;
+                    }).length;
+                    if (nrSelTags == this.__data__.tags.length) {
+                        d.isSelected = true;
+                    }
                     d.isSelected = !d.isSelected;
                     var facetName = this.__data__.name;
-                    if(d.isSelected) {
-                        if(tagSelection.hasOwnProperty(facetName)) {
-                            this.__data__.tags.forEach(function(d,i) {
+                    if (d.isSelected) {
+                        LOGGING.logInteraction({'mode': 'selection', 'facetName': facetName, 'facetValue': null});
+                        if (tagSelection.hasOwnProperty(facetName)) {
+                            this.__data__.tags.forEach(function (d, i) {
                                 d.isSelected = true;
                                 tagSelection[facetName].push(d.word);
                             });
                         } else {
                             tagSelection[facetName] = [];
-                            this.__data__.tags.forEach(function(d,i) {
+                            this.__data__.tags.forEach(function (d, i) {
                                 d.isSelected = true;
                                 tagSelection[facetName].push(d.word);
                             });
                         }
                     } else {
-                        this.__data__.tags.forEach(function(d,i) {
+                        LOGGING.logInteraction({'mode': 'deselection', 'facetName': facetName, 'facetValue': null});
+                        this.__data__.tags.forEach(function (d, i) {
                             d.isSelected = false;
                         });
                         delete tagSelection[facetName];
@@ -269,6 +306,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                 }
             },
             onMouseDragStartFacetName: function(d, i) {
+                LOGGING.logInteraction({'mode': 'move', 'facetName': d.name, 'facetValue': null});
                 d.weight = 1;
                 spareArea.select("rect#spareArea").attr("class", "spareArea spareArea-highlighted");
                 var txt = spareArea.append("text").attr("id", "spareArea_text").attr("class", "spareArea-text");
@@ -276,9 +314,16 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                     .attr("y", parseInt(spareArea.attr("height") / 2) + "px")
                     .text(STR_DROP_HERE);
             },
+            startFacetResizing: function(D3OBJ_Facet) {
+                var data = D3OBJ_Facet.__data__;
+                if(internal.resizingFacet != data) {
+                    internal.resizeFacet(data);
+                    D3OBJ_Facet.parentNode.appendChild(D3OBJ_Facet);
+                }
+            },
             onFacetEntered: function(d) {
-                internal.resizeFacet(d);
-                this.parentNode.parentNode.appendChild(this.parentNode);
+
+                INTERACTION.startFacetResizing(this);
             },
             onMouseDragEndFacetName: function(d, i) {
                 var facet = this.parentNode.__data__;
@@ -293,6 +338,8 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                                 break;
                             }
                         }
+
+                        LOGGING.logInteraction({'mode': 'exclude', 'facetName': facet.name, 'facetValue': null});
                         facet.centroid.X = width + widthSpare/2;
                         facet.centroid.Y = freeSlot * 30 + 20;
                         facet.facetHeader.x = facet.centroid.X;
@@ -304,7 +351,6 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                             .attr("x", facet.centroid.X)
                             .attr("y", facet.centroid.Y);
                         groupSel.append("rect")
-                            .attr("id", "facet_Header_bg")
                             .attr("class", "facetHeader-bg")
                             .attr("width", facet.facetHeader.bbWidth)
                             .attr("height",facet.facetHeader.bbHeight)
@@ -314,7 +360,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                             .attr("ry",3)
                             .attr("stroke", "#ffffff");
                         //.style("filter", "url(#drop-shadow0)");
-                        groupSel.append("rect").attr("id", "facet_Header_selectionBar")
+                        groupSel.append("rect")
                             .attr("class", "facetHeader-selectionBar")
                             .attr("width", function(d) {
                                 var nrSelTags = facet.tags.filter(function(d) { return d.isSelected; }).length;
@@ -326,11 +372,10 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                             .attr("rx", 5)
                             .attr("ry", 3);
                         groupSel.append("text")
-                            .attr("id", "facet_Header")
                             .attr("class", "facetHeader")
                             .text(facet.facetHeader.word)
                             .attr("x", facet.centroid.X)
-                            .attr("y", facet.centroid.Y);
+                            .attr("y", facet.centroid.Y + facet.facetHeader.bbHeight/4);
                         var idx = facetData.indexOf(facet);
                         facetData.splice(idx, 1);
                         RENDERING.refreshFacetScape();
@@ -362,13 +407,17 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
             onMouseDragEndInFacetName: function(d, i) {
                 var dragTarget = d3.select(this);
                 var name = dragTarget.attr("name");
+
                 // A newly inserted facet may overlap with existing ones.
                 // Iteratively reduce weights to provide enough space for the new facet
                 var i;
                 spareFacets.forEach(function(d,i) {
                     var facetToDrop = d.__data__;
+
                     if(typeof facetToDrop !== "undefined") {
                         if(facetToDrop.name === name) {
+                            LOGGING.logInteraction({'mode': 'move', 'facetName': facetToDrop.name, 'facetValue': null});
+                            LOGGING.logInteraction({'mode': 'include', 'facetName': facetToDrop.name, 'facetValue': null});
                             var olfs = internal.getOverlapedFacets(facetToDrop, facetToDrop.weight);
                             while(olfs.length > 0) {
                                 facetToDrop.weight *= 0.5;
@@ -600,7 +649,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                         var l = fData[f].tags[t].word.length;
                         fData[f].tags[t].wordShort = (l > MAX_LENGTH) ? fData[f].tags[t].word.substring(0, MAX_LENGTH-1) + ".." : fData[f].tags[t].word;
                         var fontSize = internal.mapFreqToFontSize(fData[f].tags[t].frequency);
-                        var rTag = d3.select("body").append('div').attr("id","tag").attr("class", "tag").style("font-size",fontSize+"px").text(facetData[f].tags[t].wordShort);
+                        var rTag = d3.select("body").append('div').attr("class", "tag").style("font-size",fontSize+"px").text(facetData[f].tags[t].wordShort);
                         fData[f].tags[t].id = t;
                         fData[f].tags[t].facetName = fData[f].name;
                         fData[f].tags[t].bbWidth = parseInt(rTag.style("width"), 10) + 2 * TAG_PADDING_X;
@@ -610,9 +659,9 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                         fData[f].tags[t].y = fData[f].centroid.Y;
                         fData[f].tags[t].isFixed = false;
                         fData[f].tags[t].isSelected = false;
-                        d3.selectAll("#tag").remove();
+                        d3.selectAll(".tag").remove();
                     }
-                    var fHeader = d3.select("body").append('div').attr("id","facet_Header").attr("class", "facetHeader").text(fData[f].name.toUpperCase());
+                    var fHeader = d3.select("body").append('div').attr("class", "facetHeader").text(fData[f].name.toUpperCase());
                     fData[f]['visibleTags'] = 0;
                     fData[f]['facetHeader'] = {
                         "word":fData[f].name.toUpperCase(),
@@ -623,14 +672,12 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                         "x":fData[f].centroid.X,
                         "y":fData[f].centroid.Y
                     }
-                    d3.selectAll("#facet_Header").remove();
+                    d3.selectAll(".facetHeader").remove();
                 }
                 return fData;
             }
         }
     })();
-
-
 
     /*
      Create Layout with MAX_FACETS_HORIZONTAL facets per row and arbitrary number of rows.
@@ -667,7 +714,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         return facetCentroids;
     }
     function FSQueryPanel() {
-        var resultList = root.append("div").attr("id","RS_Panel").attr("class", "theme");//.style("width", svgWidth+"px");
+        var resultList = root.append("div").attr("id","RS_Panel").attr("class", "theme").style("width", svgWidth+"px");
         var resultHeader = resultList.append("div").attr("id", "RS_Header");
         var resultHeaderSearch = resultHeader.append("div").attr("id", "RS_Header_Search").attr("class", "queryPanel-search");
         resultHeaderSearch.append("input").attr("id", "RS_Query").attr("class", "queryPanel-searchField").attr("type", "text").attr("name", "query").attr("value",searchTerm);
@@ -754,37 +801,36 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                     path += "Z";
                     return path;
                 })
-                    .on("mousewheel.zoom", INTERACTION.onMouseWheel)
-                    .on("mouseenter", INTERACTION.onFacetEntered);
+                    .on("mousewheel.zoom", INTERACTION.onMouseWheel);
 
-                var facets = svg.selectAll("g.facetGroup");
-                var facetNameSelection = facets.selectAll("g#facet_Header_group").data(function(d) { return [d]; });
+                var facets = svg.selectAll("g.facetGroup").on("mouseenter", INTERACTION.onFacetEntered);
+                var facetNameSelection = facets.selectAll("g.facetHeader-group").data(function(d) { return [d]; });
 
-                var groupSel = facetNameSelection.enter().append("g").attr("id", "facet_Header_group")
+                var groupSel = facetNameSelection.enter().append("g").attr("class", "facetHeader-group")
                     .call(d3.behavior.drag().on("drag", INTERACTION.move)
                         .on("dragstart", INTERACTION.onMouseDragStartFacetName)
                         .on("dragend", INTERACTION.onMouseDragEndFacetName))
                     .on("click", INTERACTION.onMouseClickFacetName)
                     .on("mousewheel.zoom", INTERACTION.onMouseWheel);
 
-                groupSel.append("rect").attr("id", "facet_Header_bg")
+                groupSel.append("rect")
                     .attr("class", "facetHeader-bg")
                     .attr("width", function(d) { return d.facetHeader.bbWidth; })
                     .attr("height", function(d) { return d.facetHeader.bbHeight; })
                     .attr("rx",5)
                     .attr("ry",3)
-                groupSel.append("rect").attr("id", "facet_Header_selectionBar")
+                groupSel.append("rect")
                     .attr("class", "facetHeader-selectionBar")
                     .attr("width", 0)
                     .attr("height", function(d) { return d.facetHeader.bbHeight;})
                     .attr("rx", 5)
                     .attr("ry", 3);
-                groupSel.append("text").attr("id", "facet_Header").attr("class", "facetHeader");
+                groupSel.append("text").attr("class", "facetHeader");
 
-                facetNameSelection.select("rect#facet_Header_bg")
+                facetNameSelection.select("rect.facetHeader-bg")
                     .attr("x", function(d) { return d.facetHeader.x - d.facetHeader.bbWidth/2; })
-                    .attr("y", function(d) { return d.facetHeader.y - d.facetHeader.bbHeight/2; });
-                facetNameSelection.select("text#facet_Header")
+                    .attr("y", function(d) { return d.facetHeader.y - d.facetHeader.bbHeight * 0.75; });
+                facetNameSelection.select("text.facetHeader")
                     .attr("x", function(d) { return d.facetHeader.x; })
                     .attr("y", function(d) { return d.facetHeader.y; })
                     .text(function(d) { return d.facetHeader.word;});
@@ -796,52 +842,62 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                 var clouds = svg.selectAll("g.facetGroup");
 
                 // Bind Data to Tags
-                var tagsSelection = clouds.selectAll("g#tag").data(function(d) { return d.tags.filter(function(d) { return d.isFixed});});
+                var tagsSelection = clouds.selectAll("g.tag").data(
+                    function(d) {
+                        return d.tags.filter(function(d) {
+                                return d.isFixed;
+                            }
+                        );
+                    },
+                    function(d) {
+                        return d.word;
+                    }
+                );
 
                 // Create Tags
-                var groupSel = tagsSelection.enter().append("g").attr("id", "tag")
+                var groupSel = tagsSelection.enter().append("g")
                     .attr("class", "tag")
-                    .on("mouseover", INTERACTION.onMouseOverFunction)
-                    .on("mouseout", INTERACTION.onMouseOutFunction)
+                    .on("mouseenter", INTERACTION.onMouseOverFunction)
+                    .on("mouseleave", INTERACTION.onMouseOutFunction)
                     .on("mousewheel.zoom", INTERACTION.onMouseWheel)
                     .on("click", INTERACTION.onMouseClickFunction);
                 groupSel.append("rect")
-                    .attr("id", "tag_bg")
+                    .attr("class", "tag-bg")
                     .attr("rx", 5)
                     .attr("ry", 5);
                 groupSel.append("text")
-                    .attr("id", "tag_text")
                     .attr("class", "tag-text");
                 groupSel.append("text")
                     .attr("class", "tag-freq");
 
                 // Update Tags
-                tagsSelection.select("rect#tag_bg")
-                    .attr("class", function(d,i) {return (d.isSelected ? "tag-selected" : "tag-bg"); })
+                tagsSelection.select("rect.tag-bg")
+                    .classed("tag-bg", true)
+                    .classed("tag-bg-hovered", false)
                     .attr("x", function(d) { return d.x - d.bbWidth/2; })
-                    .attr("y", function(d) { return d.y - d.bbHeight/2; })
+                    .attr("y", function(d) { return d.y - d.bbHeight * 0.75; })
                     .attr("width", function(d) { return d.bbWidth; })
                     .attr("height", function(d) { return d.bbHeight; })
-                tagsSelection.select("text#tag_text")
+                    .classed("tag-selected", function(d) { return d.isSelected; });
+                tagsSelection.select("text.tag-text")
                     .attr("x", function(d) { return d.x; })
                     .attr("y", function(d) { return (d.y); })
-                    .style("text-anchor", "middle")
-                    .style("font-size",function(d) { return d.fontSize;})
-                    .attr("alignment-baseline", "central")
+                    .style("font-size",function(d) { return d.fontSize + "px";})
+//                    .attr("alignment-baseline", "central")
                     .text(function(d) { return d.wordShort;})
                     .attr("class", function(d) {
-                        var myClass = "tag";
+                        var myClass = "tag-text";
                         myClass += (!tagSelection[d.facetName] && d.frequency == 0) ? " tag-zero-frequency" : "";
                         myClass += (d.isSelected) ? " tag-selected-text" : "";
                         return myClass;
                     });
                 tagsSelection.select("text.tag-freq")
                     .text(function(d) { return d.frequency;})
-                    .attr("x", function(d) { return d.x+d.bbWidth/2;})
-                    .attr("y", function(d) { return d.y- d.bbHeight/4;});
+                    .attr("x", function(d) { return d.x + (d.bbWidth/2) +3;})
+                    .attr("y", function(d) { return d.y- d.bbHeight/2;});
                 tagsSelection.exit().remove();
 
-                clouds.select("rect#facet_Header_selectionBar")
+                clouds.select("rect.facetHeader-selectionBar")
                     .attr("width", function(d) {
                         var nrSelTags = d.tags.filter(function(d) { return d.isSelected; }).length;
                         return d.facetHeader.bbWidth / d.tags.length * nrSelTags;
@@ -850,7 +906,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                         return d.facetHeader.x - d.facetHeader.bbWidth / 2;
                     })
                     .attr("y", function(d) {
-                        return d.facetHeader.y - d.facetHeader.bbHeight / 2;
+                        return d.facetHeader.y - d.facetHeader.bbHeight * 0.75;
                     });
             },
             refreshFacetScape: function() {
@@ -859,10 +915,12 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                 facetData.forEach(function(d,i) { centrds.push(d.centroid);});
                 facetData.forEach(function(d,i) { weights.push(d.weight);});
                 var polys = voronoi.layout(centrds, weights);
-                facetData.forEach(function(d,i) { d.polygon = polys[i];});
-                RENDERING.drawVoronoi();
-                facetData.forEach(function(d) { TAGLAYOUT.cloudLayout(d);});
-                RENDERING.drawTagCloud();
+                if(polys.length > 0) {
+                    facetData.forEach(function(d,i) { d.polygon = polys[i];});
+                    RENDERING.drawVoronoi();
+                    facetData.forEach(function(d) { TAGLAYOUT.cloudLayout(d);});
+                    RENDERING.drawTagCloud();
+                }
             }
         }
     })();
@@ -879,8 +937,8 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
             testTagPosition: function(tag, singleFacet, x, y) {
                 var minx = x - tag.bbWidth/2;
                 var maxx = x + tag.bbWidth/2;
-                var miny = y - tag.bbHeight/2;
-                var maxy = y + tag.bbHeight/2;
+                var miny = y - tag.bbHeight * 0.75;
+                var maxy = y + tag.bbHeight * 0.25;
                 tag.x = x;
                 tag.y = y;
                 if(internal.isWithinBounds(minx, miny, singleFacet.polygon) && internal.isWithinBounds(maxx, miny, singleFacet.polygon)
@@ -952,6 +1010,12 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         }
         return {
             cloudLayout: function(singleFacetData) {
+                var globMax = Number.MIN_VALUE;
+                var p = 0;
+                for(p; p < singleFacetData.polygon.length; p++) {
+                    var myMax = Math.sqrt(Math.pow(singleFacetData.polygon[p].X - singleFacetData.centroid.X, 2) + Math.pow(singleFacetData.polygon[p].Y - singleFacetData.centroid.Y, 2));
+                    globMax = myMax > globMax ? myMax : globMax;
+                }
                 singleFacetData.tags.forEach(function(d,i) {d.isFixed = false;});
                 singleFacetData.facetHeader.x = singleFacetData.centroid.X;
                 singleFacetData.facetHeader.y = singleFacetData.centroid.Y;
@@ -959,8 +1023,10 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                 var tagIndex = 0;
                 var cumWithin = false;
                 var cumValidTagPos = false;
-                for(var i = 0; i < 500; i++) {
-                    pos = internal.fermatSpiral(i);
+                var i = 0;
+                pos = internal.fermatSpiral(i);
+                while(Math.sqrt((pos.dx * pos.dx) + (pos.dy * pos.dy)) < globMax) {
+
                     pos.dx += singleFacetData.centroid.X;
                     pos.dy += singleFacetData.centroid.Y;
 
@@ -977,6 +1043,8 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                             }
                         }
                     }
+                    i++;
+                    pos = internal.fermatSpiral(i);
                 }
                 singleFacetData.visibleTags = tagIndex;
             }
@@ -1009,7 +1077,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                         }
                     }
                 } else {
-                    return false;
+                    return (tag == "unknown") ? true : false;
                 }
             }
         }
@@ -1041,7 +1109,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                         if(facet !== "filter") {
                             var booleanOR = false;
                             for(var i = 0; i < tagSelection[facet].length; i++) {
-                                booleanOR |= internal.hasAttribute(d, facet, tagSelection[facet][i]);;
+                                booleanOR |= internal.hasAttribute(d, facet, tagSelection[facet][i]);
                             }
                             booleanAND = booleanAND && booleanOR;
                         }
@@ -1059,6 +1127,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                     var tags = facetData[f].tags;
                     for(var t = 0; t < facetData[f].tags.length; t++) {
                         facetData[f].tags[t].frequency = 0;
+                        var unknownFreq = 0;
                         for(var i = 0; i < selectedResults.length; i++) {
                             if(selectedResults[i].hasOwnProperty(key)) {
                                 if(selectedResults[i][key] instanceof Array) {
@@ -1074,7 +1143,12 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                                         facetData[f].tags[t].frequency++;
                                     }
                                 }
+                            } else {
+                                unknownFreq += 1;
                             }
+                        }
+                        if(facetData[f].tags[t].word == "unknown") {
+                            facetData[f].tags[t].frequency = unknownFreq;
                         }
                     }
                 }
@@ -1158,13 +1232,15 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         }
         facetPolygons = voronoi.layout(facetCentroids, facetWeights);
         facetData = DATA.createFacetData(facets, facetCentroids, facetPolygons, facetWeights);
-        svg.selectAll("g#facetGroup").data(facetData).enter().append("g").attr("class", "facetGroup").attr("id", function(d) { return d.name; });
+        svg.selectAll("g.facetGroup").data(facetData).enter().append("g").attr("class", "facetGroup").attr("id", function(d) { return d.name; });
         DATA.enrichWithLayoutInfo(facetData);
+        QUERYING.updateFrequencies();
         for(var i = 0; i < facetData.length; i++) {
             TAGLAYOUT.cloudLayout(facetData[i]);
         }
         RENDERING.drawVoronoi();
         RENDERING.drawTagCloud();
+
         FSResultLayout();
     }
 
@@ -1174,9 +1250,9 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     facetScapeObject.Rendering = RENDERING;
 
     facetScapeObject.draw = function(terms, facetData, resultData) {
-        root.select("div#RS_Panel").remove();
-        root.select("svg#facetScape").remove();
-        root.select("div#RS_ResultList").remove();
+        d3.select("div#RS_Panel").remove();
+        d3.select("svg#facetScape").remove();
+        d3.select("div#RS_ResultList").remove();
         facetScape(root, svgWidth, height, facetData, resultData, terms);
     }
 
