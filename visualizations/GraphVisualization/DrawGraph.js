@@ -57,7 +57,7 @@ function MakeGraph(){
 	if(wordHistory.length == 0){
 		return;
 	}
-	console.log(wordsWithResults);
+	//console.log(wordsWithResults);/////////////////////////////////////////////////
 	//console.log(uniqueWordsResult);
 
 	

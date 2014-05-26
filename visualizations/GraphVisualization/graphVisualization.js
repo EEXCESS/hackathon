@@ -82,7 +82,7 @@ d3.select('#gotoresults').on("click", function () {
 EEXCESS.messageListener(
 	function(request, sender, sendResponse) {
 		if (request.method === 'newSearchTriggered') {
-			console.log(request.data);
+			//console.log(request.data);//////////////////////
 			var maxResultOutput = $("#results_per_keywords").val();
 			
 			Object.keys(request.data.results.results).forEach(function(arrayIndex){
@@ -249,7 +249,8 @@ $("#redraw").click(function(){
 	wordsWithResults = {};
 	wordHistory = [];
 	uniqueWordsResult =[];
-
+	
+	g.build.show.force.stop();
 	db.onsuccess();
 	
 });
