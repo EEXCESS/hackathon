@@ -84,7 +84,7 @@ EEXCESS.annotation = (function() {
          * @param {Boolean} beenRecommended Flag for indicating if the resource was recommended by the EEXCESS framework
          * @param {String} type The type of the resource (represented by a dctypes value)
          */
-        rating: function(resource, score, context, beenRecommended, type) {
+        rating: function(resource, score, context, beenRecommended) {
             var entryExists = false;
             // create json-ld format
             var rating = {
@@ -97,8 +97,7 @@ EEXCESS.annotation = (function() {
                     '@context': 'http://www.w3.org/ns/oa-context-20130208.json',
                     '@type': 'oa:Annotation',
                     'hasTarget': {
-                        '@id': resource,
-                        '@type': 'dctypes:' + type
+                        '@id': resource
                     },
                     'hasBody': {
                         'http://purl.org/stuff/rev#rating': score,
@@ -107,6 +106,14 @@ EEXCESS.annotation = (function() {
                     }
                 }
             };
+
+            var xhr = $.ajax({
+                url: localStorage['PP_BASE_URI'] + 'api/v1/log/rating',
+                data: JSON.stringify({"uuid":EEXCESS.profile.getUUID(),"rating":rating}),
+                type: 'POST',
+                contentType: 'application/json; charset=UTF-8',
+                dataType: 'json'
+            });
 
             var tx = EEXCESS.DB.transaction('resource_relations', 'readwrite');
             var store = tx.objectStore('resource_relations');
@@ -254,7 +261,7 @@ EEXCESS.annotation = (function() {
          * @param {Integer} annotation.id The annation's identifier (may be
          * undefined)
          * @param {String} annotation.quote The text, the annotation is about
-          */
+         */
         deleteAnnotation: function(tabID, annotation) {
             var tx = EEXCESS.DB.transaction('resource_relations', 'readwrite');
             var store = tx.objectStore('resource_relations');

@@ -17,7 +17,7 @@ EEXCESS.model = (function() {
     var results = {
         query: 'search text...',
         data: null,
-        weightedTerms:null,
+        weightedTerms: null,
         scroll: 0
     };
     // Represents the current task
@@ -74,14 +74,21 @@ EEXCESS.model = (function() {
          */
         toggleVisibility: function() {
             params.visible = !params.visible;
+            var xhr = $.ajax({
+                url: localStorage['PP_BASE_URI'] + 'api/v1/log/show_hide',
+                data: JSON.stringify({visible:params.visible, uuid:EEXCESS.profile.getUUID()}),
+                type: 'POST',
+                contentType: 'application/json; charset=UTF-8',
+                dataType: 'json'
+            });
             return params.visible;
         },
         quietQuery: function(tabID, data, callback) {
             _queryTimestamp = new Date().getTime();
             var simpleQuery = '';
-            for(var i=0,len=data.length; i<len;i++) {
+            for (var i = 0, len = data.length; i < len; i++) {
                 simpleQuery += data[i].text;
-                if(i < len-1) {
+                if (i < len - 1) {
                     simpleQuery += ' ';
                 }
             }
@@ -99,7 +106,7 @@ EEXCESS.model = (function() {
                 }
             };
             var error = function(error) { // error callback
-                EEXCESS.sendMessage(tabID, {method: {parent:'results',func:'error'}, data: error});
+                EEXCESS.sendMessage(tabID, {method: {parent: 'results', func: 'error'}, data: error});
             };
             // call provider (resultlist should start with first item)
             EEXCESS.backend.getCall()(data, 1, success, error);
@@ -114,7 +121,7 @@ EEXCESS.model = (function() {
                 }
             };
             var error = function(error) { // error callback
-                EEXCESS.sendMessage(tabID, {method: {parent:'results',func:'error'}, data: error});
+                EEXCESS.sendMessage(tabID, {method: {parent: 'results', func: 'error'}, data: error});
             };
             // call provider (resultlist should start with first item)
             EEXCESS.backend.getCall()(data, 1, success, error);
@@ -135,18 +142,23 @@ EEXCESS.model = (function() {
          * @param {String} data The query term 
          */
         query: function(tabID, data) {
+            console.log(data);
             _queryTimestamp = new Date().getTime();
-            results.weightedTerms = data;
+            if (data.hasOwnProperty('reason')) {
+                results.weightedTerms = data['terms'];
+            } else {
+                results.weightedTerms = data;
+            }
             results.query = '';
-            for(var i=0,len=data.length; i<len;i++) {
-                results.query += data[i].text;
-                if(i < len-1) {
+            for (var i = 0, len = results.weightedTerms.length; i < len; i++) {
+                results.query += results.weightedTerms[i].text;
+                if (i < len - 1) {
                     results.query += ' ';
                 }
             }
             params.tab = 'results';
             results.scroll = 0;
-            EEXCESS.logging.logQuery(tabID, data, _queryTimestamp);
+            EEXCESS.logging.logQuery(tabID, results.weightedTerms, _queryTimestamp);
             var success = function(data) { // success callback
                 // TODO: search may return no results (although successful)
                 results.data = data;
@@ -164,7 +176,7 @@ EEXCESS.model = (function() {
                 });
             };
             var error = function(error) { // error callback
-                EEXCESS.sendMessage(tabID, {method: {parent:'results',func:'error'}, data: error});
+                EEXCESS.sendMessage(tabID, {method: {parent: 'results', func: 'error'}, data: error});
             };
             // call provider (resultlist should start with first item)
             EEXCESS.backend.getCall()(data, 1, success, error);
@@ -198,7 +210,7 @@ EEXCESS.model = (function() {
                 EEXCESS.logging.logRecommendations(data.results, context, _queryTimestamp);
             };
             var error = function(error) {
-                EEXCESS.sendMessage(tabID, {method: {parent:'results',func:'error'}, data: error});
+                EEXCESS.sendMessage(tabID, {method: {parent: 'results', func: 'error'}, data: error});
             };
             EEXCESS.backend.getCall()(results.weightedTerms, data, success, error);
         },

@@ -15,7 +15,7 @@
             },
     "content_scripts": [
         {
-            "matches": ["http://en.wikipedia.org/*","http://de.wikipedia.org/*","http://www.europeana1914-1918.eu/*","https://en.wikipedia.org/*","https://de.wikipedia.org/*"],
+            "matches": ["<all_urls>"],
             "run_at":"document_end",
             "js": [
                 "libs/jquery-1.10.1.min.js",

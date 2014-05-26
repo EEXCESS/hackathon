@@ -499,10 +499,10 @@ EEXCESS.topKcorpus = function(corpus, k) {
     return topK;
 };
 
-EEXCESS.triggerQuery = function(textElements) {
+EEXCESS.triggerQuery = function(textElements, reason) {
     EEXCESS.callBG({method: {parent: 'corpus', func: 'getCorpus'}, data: textElements}, function(result) {
         var query = EEXCESS.topKcorpus(result, 10);
-        EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
+        EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: {reason:reason,terms:query}});
     });
 };
 
@@ -538,7 +538,7 @@ EEXCESS.initiateQuery = function() {
             elements.push({text: node.nodeValue, parent: parent});
         }
     }
-    EEXCESS.triggerQuery(elements);
+    EEXCESS.triggerQuery(elements, 'page');
 }();
 
 EEXCESS.selectedText = '';
@@ -550,7 +550,7 @@ $(document).mouseup(function() {
             EEXCESS.selectedText = text;
             var elements = [];
             elements.push({text: text});
-            EEXCESS.triggerQuery(elements);
+            EEXCESS.triggerQuery(elements, 'selection');
         }
     }
 });
