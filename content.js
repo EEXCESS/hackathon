@@ -538,7 +538,7 @@ EEXCESS.initiateQuery = function() {
             elements.push({text: node.nodeValue, parent: parent});
         }
     }
-    EEXCESS.triggerQuery(elements, 'page');
+    EEXCESS.triggerQuery(elements, {reason:'page',page: document.URL});
 }();
 
 EEXCESS.selectedText = '';
@@ -550,7 +550,7 @@ $(document).mouseup(function() {
             EEXCESS.selectedText = text;
             var elements = [];
             elements.push({text: text});
-            EEXCESS.triggerQuery(elements, 'selection');
+            EEXCESS.triggerQuery(elements, {reason:'selection',selectedText: document.getSelection().toString()});
         }
     }
 });

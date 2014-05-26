@@ -88,7 +88,7 @@ EEXCESS.init = function(widget) {
             };
             query.push(tmp);
         }
-        EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: {reason:'manual',terms:query}});
+        EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: {reason:{reason:'manual',text:$('#eexcess_query').val()},terms:query}});
         return false;
     });
 
