@@ -7,7 +7,7 @@ var LOGGING = (function() {
         return {
             timestamp: 0,
             term: "",
-            interactions: { }
+            interactions: {}
         }
     }
 
@@ -27,21 +27,31 @@ var LOGGING = (function() {
             var mode = logAtom.mode;
             var facetName = logAtom.facetName;
             var facetValue = logAtom.facetValue;
+            // log interaction on server
+            var tmp = logAtom;
+            tmp['uuid'] = localStorage['profile.uuid'];
+            var xhr = $.ajax({
+                url: localStorage['PP_BASE_URI'] + 'api/v1/log/facetScape',
+                data: JSON.stringify(tmp),
+                type: 'POST',
+                contentType: 'application/json; charset=UTF-8',
+                dataType: 'json'
+            });
             console.log(logAtom);
-            if(!activeSearch.interactions[mode]) {
+            if (!activeSearch.interactions[mode]) {
                 activeSearch.interactions[mode] = {};
             }
-            if(!activeSearch.interactions[mode][facetName]) {
+            if (!activeSearch.interactions[mode][facetName]) {
                 activeSearch.interactions[mode][facetName] = 1;
             } else {
                 activeSearch.interactions[mode][facetName] += 1;
             }
         },
         logRating: function(score) {
-            if(score == 1) {
+            if (score == 1) {
                 // positive rating
                 rating = 1;
-            } else if(score == 2) {
+            } else if (score == 2) {
                 // negative rating
                 rating = -1;
             } else {
