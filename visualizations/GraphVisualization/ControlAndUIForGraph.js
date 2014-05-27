@@ -30,16 +30,12 @@ function FilterTextList(objectVar,stringVal){
     });
 }
 
-function ChangeResultNodes(circleProperties,textProperties){
+function ChangeResultNodes(Func){
+	drawGraphObj.ResultNodeEvent = Func;
 	var changeNodes = FilterTextList(forceGraph.Graph.GetGraphData().data.dict.node,"ResultNodeID_UniqueNodeID_");
-	
-	changeNodes.forEach(function(element){
-		forceGraph.To.Object().To.Node().To.SubElement()
-			.Change(element,"svgcircle",circleProperties)
-			.Change(element,"svgtext",textProperties);
-	});
-
+	changeNodes.forEach(Func);
 }
+
 
 
 //only test function
@@ -96,7 +92,6 @@ function AddBookMarkInGraph(nodeId,bookmarkId,color){
 
 function DeleteBookMarkFromGraph(nodeId,bookmarkId){
 
-
 	var bookmarkNodeId = "Bookmark_"+nodeId+"_"+bookmarkId;
 	forceGraph.To.Object().To.Node()
 		.Delete(bookmarkNodeId);
@@ -105,62 +100,62 @@ function DeleteBookMarkFromGraph(nodeId,bookmarkId){
 
 
 
+
 var funcStore =	{
 	"WorkWithResultNode":function(param){
-		//var appModus = "bookmark";
-		//if(appModus == "bookmark"){
-		if($("#workbookmark").text() == "(de)select"){
-			//console.log(JSON.parse(param).nodeName + " - " +currentSelectedBookmark);
-			
-			var currentNodeId = JSON.parse(param).nodeName;
-			//var test = forceGraph.Graph.GetGraphData();
-			
-			if(currentSelectedBookmark == null){
-				console.log("no bookmark selected");
-			}else{
-				var bookmarkElement = $("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId);
-				
-				if(bookmarkElement.length == 0){
-					//add new bookmark element
-					
-					var queryNodePartNames = currentNodeId.split("_");
-					$("#"+currentSelectedBookmark+" .bookmarkelement")
-						.append(
-							'<div class="bookmark_element_'+currentNodeId+'">'
-								+'<div class="bookmarkdata">'
-									+"Query: "+$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text()
-								+'</div>'
-								+'<div class="bookmarkdata">'
-									+$("#"+currentNodeId+" title").text()
-								+'</div>'
-							+'</div>');
-					AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,
-						$("#"+currentSelectedBookmark+" .editcolor").val());	
-					bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={};
-					bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={
-						color:$("#"+currentSelectedBookmark+" .editcolor").val()
-					};
-					
-					if(!bookmarkDict.nodes.hasOwnProperty(currentNodeId)){
-						bookmarkDict.nodes[currentNodeId]={};
-					}
-					bookmarkDict.nodes[currentNodeId][currentSelectedBookmark] = null;
-				}else{
-					//delete bookmark element
-					$("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId).remove();
-					DeleteBookMarkFromGraph(currentNodeId,currentSelectedBookmark);
-					
-					delete bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId];
 
-					delete bookmarkDict.nodes[currentNodeId][currentSelectedBookmark];
-					
-					if(bookmarkDict.nodes[currentNodeId].length == 0){
-						delete bookmarkDict.nodes.currentNodeId;
-					}
+		//if(toggleBookmark){
+		//console.log(JSON.parse(param).nodeName + " - " +currentSelectedBookmark);
+		
+		var currentNodeId = JSON.parse(param).nodeName;
+		//var test = forceGraph.Graph.GetGraphData();
+		
+		if(currentSelectedBookmark == null){
+			console.log("no bookmark selected");
+		}else{
+			var bookmarkElement = $("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId);
+			
+			if(bookmarkElement.length == 0){
+				//add new bookmark element
+				
+				var queryNodePartNames = currentNodeId.split("_");
+				$("#"+currentSelectedBookmark+" .bookmarkelement")
+					.append(
+						'<div class="bookmark_element_'+currentNodeId+'">'
+							+'<div class="bookmarkdata">'
+								+"Query: "+$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text()
+							+'</div>'
+							+'<div class="bookmarkdata">'
+								+$("#"+currentNodeId+" title").text()
+							+'</div>'
+						+'</div>');
+				AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,
+					$("#"+currentSelectedBookmark+" .editcolor").val());	
+				bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={};
+				bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={
+					color:$("#"+currentSelectedBookmark+" .editcolor").val()
+				};
+				
+				if(!bookmarkDict.nodes.hasOwnProperty(currentNodeId)){
+					bookmarkDict.nodes[currentNodeId]={};
+				}
+				bookmarkDict.nodes[currentNodeId][currentSelectedBookmark] = null;
+			}else{
+				//delete bookmark element
+				$("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId).remove();
+				DeleteBookMarkFromGraph(currentNodeId,currentSelectedBookmark);
+				
+				delete bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId];
+
+				delete bookmarkDict.nodes[currentNodeId][currentSelectedBookmark];
+				
+				if(bookmarkDict.nodes[currentNodeId].length == 0){
+					delete bookmarkDict.nodes.currentNodeId;
 				}
 			}
-		}	
-		//}
+		}
+		//}	
+
 	},
 	"MoreResult":function(param){
 		// get data from graph
@@ -183,11 +178,14 @@ var funcStore =	{
 		forceGraph.To.Object().To.Graph().ReDraw();
 	},
 	"AddNewTextForSearch":function(param){
-		//console.log(JSON.parse(param).nodeName);
-		//console.log($("#"+JSON.parse(param).nodeName +" title").text());
 		var searchText = $("#searchtext").val();
 		searchText += " " +$("#"+JSON.parse(param).nodeName +" title").text();
 		$("#searchtext").val(searchText);
+		
+	},
+	"ShowDetails":function(param){
+		console.log("gg "+ param);
+		var test = forceGraph.Graph.GetGraphData();
 		
 	}
 };
@@ -200,11 +198,128 @@ var drawGraphObj = new DrawGraph();
 var slidercontrol = new SilderControl();
 
 
-// build Controls
-//function BuildControls(){
+// show the Details
+var DetailsFunction = function(){
+	if(!toggleDetails){
+		function EventDetailsParam(resultNodeName){
+			return {action:"click",func:"ShowDetails",param:JSON.stringify({nodeName:resultNodeName})};
+		};
+		var ShowDetailsNode = function(resultNodeName){
+			forceGraph.To.Object().To.Node().To.SubElement()
+				.Change(resultNodeName,"svgcircle",{event:EventDetailsParam(resultNodeName)})
+				.Change(resultNodeName,"svgtext",{event:EventDetailsParam(resultNodeName)});
+		};
+		
+		ChangeResultNodes(ShowDetailsNode);
+		
+		forceGraph.To.Object().To.Graph().ReDraw();	
+		toggleDetails = true;
+	}else{
+		function EventEmptyParam(){
+			return {action:"",func:"",param:""};
+		}
+		var ShowNotDetailsNode = function(resultNodeName){
+			forceGraph.To.Object().To.Node().To.SubElement()
+				.Change(resultNodeName,"svgcircle",{event:EventEmptyParam()})
+				.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
+		};
+		
+		ChangeResultNodes(ShowNotDetailsNode);
+
+		forceGraph.To.Object().To.Graph().ReDraw();	
+		toggleDetails = false;
+	}
+};
+
+
+//work with bookmark
+var BookmarkFunction = function(){
+	if(!toggleBookmark){
+
+		//$(".editbookmarkname,.editcolor,#newcolor,#addbookmark").prop("disabled",true);
+		
+		function EventBookmarkParam(resultNodeName){
+			return {action:"click",func:"WorkWithResultNode",param:JSON.stringify({nodeName:resultNodeName})};
+		};
+		var AddBookmarkNode = function(resultNodeName){
+			forceGraph.To.Object().To.Node().To.SubElement()
+				.Change(resultNodeName,"svgcircle",{
+					attr:{stroke:"red","stroke-width":3},event:EventBookmarkParam(resultNodeName)
+				}).Change(resultNodeName,"svgtext",{event:EventBookmarkParam(resultNodeName)});
+		};
+		
+		ChangeResultNodes(AddBookmarkNode);
+		
+		forceGraph.To.Object().To.Graph().ReDraw();	
+		toggleBookmark = true;
+	}else {
+		//$(".editbookmarkname,.editcolor,#newcolor,#addbookmark").prop("disabled",false);
+		
+		function EventEmptyParam(){
+			return {action:"",func:"",param:""};
+		}
+		var DeleteBookmarkNode = function(resultNodeName){
+			forceGraph.To.Object().To.Node().To.SubElement()
+				.Change(resultNodeName,"svgcircle",{attr:{stroke:"","stroke-width":""},event:EventEmptyParam()})
+				.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
+		};
+		
+		ChangeResultNodes(DeleteBookmarkNode);
+
+		forceGraph.To.Object().To.Graph().ReDraw();	
+		toggleBookmark = false;
+	}
+
+};
 
 
 
+var AddSearchFunction = function(){
+	if(!toggleAddSearch){
+		function EventSearchParam(resultNodeName){
+			return {action:"click",func:"AddNewTextForSearch",param:JSON.stringify({nodeName:resultNodeName})};
+		};
+		var AddSearch = function(resultNodeName){
+			forceGraph.To.Object().To.Node().To.SubElement()
+				.Change(resultNodeName,"svgcircle",{
+					attr:{stroke:"blue","stroke-width":5},event:EventSearchParam(resultNodeName)
+				})
+				.Change(resultNodeName,"svgtext",{event:EventSearchParam(resultNodeName)});
+		
+		};
+
+		ChangeResultNodes(AddSearch);
+
+		forceGraph.To.Object().To.Graph().ReDraw();
+		toggleAddSearch = true;
+	}else{
+		function EventEmptyParam(){
+			return {action:"",func:"",param:""};
+		}
+		var DeleteSearch = function(resultNodeName){
+			forceGraph.To.Object().To.Node().To.SubElement()
+				.Change(resultNodeName,"svgcircle",{attr:{stroke:"","stroke-width":""},event:EventEmptyParam()})
+				.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
+		
+		};
+		ChangeResultNodes(DeleteSearch);
+
+		forceGraph.To.Object().To.Graph().ReDraw();
+		toggleAddSearch = false;
+
+	}
+	
+};
+
+
+
+
+var toggleBookmark = false;
+var toggleAddSearch = false;
+var toggleDetails = false;
+
+
+//main function // important
 var BuildControls = function(){
 	var sliderMin = 0;
 	var sliderMax = 0;
@@ -341,14 +456,31 @@ var BuildControls = function(){
 					}else{
 						slidercontrol.brush.extent([sliderMin,sliderMax]);
 					}
-					
 
-					
 					slidercontrol.ChangeSilderControl();
 				});
 			}
 		}
 	);
+	
+	//remove searchtext
+	$("#removetext").click(function(){
+		$("#searchtext").val("");
+	});
+	
+	///////////////////////////////////////////////////////////////////////////
+	$("#result_btn").click(function(){
+		$("#result_panel").show();
+		$("#work_panel").hide();
+		
+	});
+	
+	$("#work_btn").click(function(){
+		$("#work_panel").show();
+		$("#result_panel").hide();
+	});
+	
+	///////////////////////////////////////////////////////////////////////////
 	
 	
 	
@@ -369,62 +501,77 @@ var BuildControls = function(){
 		}
 	});
 	
-	$("#explore_graph").click(function(){
-		//$("#UniqueNodeID_9f7ca7b1088e57abb9e129858507c760").on("click.aa",function(){
-		//	console.log("123 ################## 123");
-		//});
-		
-	});
 	
-	//hack......................only test
-	var toggleAddSearch = false;
-	$("#add_search").click(function(){
-		if(!toggleAddSearch){
-			drawGraphObj.ResultNodeEvent = function(resultNodeName){
-				forceGraph.To.Object().To.Node().To.SubElement()
-					.Change(resultNodeName,"svgcircle",{
-						attr:{stroke:"blue","stroke-width":5},
-						event:{action:"click",func:"AddNewTextForSearch",param:JSON.stringify({nodeName:resultNodeName})}
-					}).Change(resultNodeName,"svgtext",{
-						event:{action:"click",func:"AddNewTextForSearch",param:JSON.stringify({nodeName:resultNodeName})}
-						});
-			
-			};
-			//ChangeResultNodes({attr:{stroke:"blue","stroke-width":5}});
-			
-			var changeNodes = FilterTextList(forceGraph.Graph.GetGraphData().data.dict.node,"ResultNodeID_UniqueNodeID_");
 
-			changeNodes.forEach(function(element){
-				forceGraph.To.Object().To.Node().To.SubElement()
-					.Change(element,"svgcircle",{
-						attr:{stroke:"blue","stroke-width":5},
-						event:{action:"click",func:"AddNewTextForSearch",param:JSON.stringify({nodeName:element})}
-					})
-					.Change(element,"svgtext",{
-						event:{action:"click",func:"AddNewTextForSearch",param:JSON.stringify({nodeName:element})}
-					});
-			});	
-			
-			
-			forceGraph.To.Object().To.Graph().ReDraw();
-			toggleAddSearch = true;
-		}else{
-			drawGraphObj.ResultNodeEvent = function(resultNodeName){
-				forceGraph.To.Object().To.Node().To.SubElement()
-					.Change(resultNodeName,"svgcircle",{attr:{stroke:"","stroke-width":""}})
-					.Change(resultNodeName,"svgcircle",{
-						event:{action:"",func:"",param:""}
-					});
-			
-			};
-			ChangeResultNodes({attr:{stroke:"","stroke-width":""},event:{action:"",func:"",param:""}},
-			{event:{action:"",func:"",param:""}});
-			
-			forceGraph.To.Object().To.Graph().ReDraw();
-			toggleAddSearch = false;
+	DetailsFunction();
+	
+	//explore graph
+	$("#explore_graph").click(function(){
+		$("#add_search, #bookmarks").removeClass("searchmodus");
+		$("#explore_graph").addClass("searchmodus");
+		
+		$("#bookmark_panel").hide();
+		$("#detail_panel").show();
+		
+
+		
+		
+		
+		
+		if(toggleAddSearch){
+			AddSearchFunction();
+		}
+		if(toggleBookmark){
+			BookmarkFunction();
+		}
+		
+		if(!toggleDetails){
+			DetailsFunction();
 		}
 		
 	});
+	
+
+	$("#add_search").click(function(){
+		$("#explore_graph, #bookmarks").removeClass("searchmodus");
+		$("#add_search").addClass("searchmodus");
+		
+		$("#bookmark_panel").hide();
+		$("#detail_panel").hide();
+		if(toggleBookmark){
+			BookmarkFunction();
+		}
+		
+		
+
+		
+		if(!toggleAddSearch){
+			AddSearchFunction();
+		}		
+
+
+	});
+	
+	$("#bookmarks").click(function(){
+		$("#add_search, #explore_graph").removeClass("searchmodus");
+		$("#bookmarks").addClass("searchmodus");
+		$("#detail_panel").hide();
+		$("#bookmark_panel").show();
+		
+		
+		if(toggleAddSearch){
+			AddSearchFunction();
+		}
+		
+
+		
+		if(!toggleBookmark){
+			BookmarkFunction();
+		}	
+
+	});
+	
+
 	
 };
 

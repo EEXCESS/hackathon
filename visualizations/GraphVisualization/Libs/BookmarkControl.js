@@ -1,84 +1,10 @@
 //bookmark control
 
-//deselect
-/*
-$("#bookmark-header").click(function(){
-    $(".bookmark").css("background","");
-    
-});
-*/
-
 var currentSelectedBookmark = null;
 var bookmarkDict = {
 	bookmarks:{},
 	nodes:{}
 };
-
-//work with bookmark
-$("#workbookmark").click(function(event){
-    
-	////////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////////
-	
-    if($("#workbookmark").text() == "explore"){
-        //work modus
-        $("#workbookmark").text("(de)select");
-
-        //$(".editbookmarkname,.editcolor,#newcolor,#addbookmark").prop("disabled",true);
-		
-		drawGraphObj.ResultNodeEvent = function(resultNodeName){
-			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(resultNodeName,"svgcircle",{
-					attr:{stroke:"red","stroke-width":3},
-					event:{action:"click",func:"WorkWithResultNode",param:JSON.stringify({nodeName:resultNodeName})}
-				}).Change(resultNodeName,"svgcircle",{
-					event:{action:"click",func:"WorkWithResultNode",param:JSON.stringify({nodeName:resultNodeName})}
-				});
-		};
-
-		var changeNodes = FilterTextList(forceGraph.Graph.GetGraphData().data.dict.node,"ResultNodeID_UniqueNodeID_");
-
-		changeNodes.forEach(function(element){
-			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(element,"svgcircle",{
-					attr:{stroke:"red","stroke-width":3},
-					event:{action:"click",func:"WorkWithResultNode",param:JSON.stringify({nodeName:element})}
-				})
-				.Change(element,"svgtext",{
-					event:{action:"click",func:"WorkWithResultNode",param:JSON.stringify({nodeName:element})}
-				});
-		});	
-			
-		forceGraph.To.Object().To.Graph().ReDraw();	
-		
-		
-    }else if($("#workbookmark").text() == "(de)select"){
-        //explore modus
-        $("#workbookmark").text("explore");
-        //$(".editbookmarkname,.editcolor,#newcolor,#addbookmark").prop("disabled",false);
-		drawGraphObj.ResultNodeEvent = function(resultNodeName){
-			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(resultNodeName,"svgcircle",{attr:{stroke:"","stroke-width":""}})
-				.Change(resultNodeName,"svgcircle",{
-					event:{action:"",func:"",param:""}
-				});
-		
-		};
-		ChangeResultNodes({attr:{stroke:"","stroke-width":""},event:{action:"",func:"",param:""}},
-		{event:{action:"",func:"",param:""}});
-		forceGraph.To.Object().To.Graph().ReDraw();	
-		
-    }
-	////////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////////////
-	
-});
-
-
-
-
 
 //add new book mark
 $("#addbookmark").click(function(){
