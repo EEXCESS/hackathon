@@ -42,8 +42,9 @@ EEXCESS.searchResultList = function(divContainer, options) {
     var _dialog = $('<div style="display:none"><div>').append('<p></p>');
     var _error = $('<p style="display:none">sorry, something went wrong...<p>');
     var _link = function(url, img, title) {
-        var link = $('<a href="#">' + title + '</a>');
-        link.click(function() {
+        var link = $('<a href="'+url+'">' + title + '</a>');
+        link.click(function(evt) {
+            evt.preventDefault();
             settings.previewHandler(url);
         });
         _thumbnail(link, img);
