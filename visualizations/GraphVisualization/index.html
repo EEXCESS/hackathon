@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script type="text/javascript" src="../../libs/jquery-1.10.1.min.js"></script>
+        <script type="text/javascript" src="../../libs/d3.v3.js"></script>
+		<script type="text/javascript" src="../../libs/md5.js"></script>
+        <script type="text/javascript" src="../../common_js/message_wrapper.js"></script>
+		<link rel="stylesheet" type="text/css" href="graphVisualization.css">
+		<link rel="stylesheet" type="text/css" href="../../eexcess.css">
+		
+		<style>
+		
+		</style>
+    </head>
+    <body>
+
+		<!-- 
+			Content. Graph and sidebar
+		-->
+		<div class="eexcess_vis">
+			<input id="searchtext" type="text" class="margin_box" size="80"></input>
+			<button id="removetext">x</button>
+			<button id="go" class="margin_box">Go!</button>
+			<span>|</span><span id="searchstatus">search finish</span><span>|</span>
+			<button id="explore_graph" class="margin_box searchmodus">Explore graph</button>
+			<button id="add_search" class="margin_box">Add to search</button>
+			<button id="bookmarks" class="margin_box">Bookmarks</button>
+		</div>
+		<div style="display:inline-flex;">
+			<div>
+				<!-- Graph-->
+				<div id="D3graph" class="eexcess_vis" style="margin:5px;">
+				</div>
+				<!--
+				<svg width="800" height="400" >
+
+				</svg>
+				-->
+				<div class="eexcess_vis">
+					<input id="growgraph" value="growgraph" type="checkbox" > grow graph</input>
+					<svg  id="d3_slider" style="margin:5px;" height="80">
+
+					</svg>
+				</div>
+			</div>
+
+					<!-- 
+			border:solid 1px;
+			float:right;
+			 style="border:solid 1px grey;"
+			 
+			-->
+			
+
+			<!-- show details, results and bookmark export -->
+			<div class="eexcess_vis" style="margin:5px;width:300px;height:620px;overflow-y:auto;">
+
+				<header id="graph_header" class="header_sidebar">
+					<button id="result_btn" class="eexcess_submit_btn margin_box grey_round_box">result</button>
+					<button id="work_btn" class="eexcess_submit_btn margin_box grey_round_box">work</button>
+				</header>
+
+				<div id="result_panel" style="display:none">
+				</div>
+				<div id="work_panel">
+					
+					<!-- show details panel-->
+					<div id="detail_panel" class="grey_round_box" >
+						<!--
+						<button id="cleardata" class="margin_box">clear data</button>
+						-->
+						<div class="margin_box type_bold">
+						title:
+						</div>
+						<textarea id="title_data" class="grey_round_box margin_box"></textarea>
+						<div  class="margin_box type_bold">
+						link:
+						</div>
+						<div  class="margin_box" style="overflow-x:auto">
+							<a target="_blank" id="link_data"></a>
+						</div>
+						<div  class="margin_box type_bold">
+						image:
+						</div>   
+						 
+						
+						<div width="100px" height="150px" style="resize:both;overflow:auto;" class="grey_round_box margin_box">
+							<img width="100%" height="100%" id="image_data"></img>
+						</div>
+						<div class="margin_box type_bold">
+						id:
+						</div>  
+						<div id="id_data" style="overflow-x:auto;" class="margin_box">
+							
+						</div>
+						<div class="margin_box type_bold">
+						facets:
+						</div>  
+						<div class="grey_round_box margin_box">
+							<div>
+								<span class="type_bold margin_box">
+									language:
+								</span>
+								<span id="language_data">
+									
+								</span>
+							</div>
+							<div>
+								<span class="type_bold margin_box">
+									partner:
+								</span>
+								<span id="partner_data">
+									
+								</span>
+							</div>
+							<div style="overflow-x:auto">
+								<span class="type_bold margin_box">
+									provider:
+								</span>
+								<span id="provider_data" >
+									
+								</span>
+							</div>
+							<div>
+								<span class="type_bold margin_box">
+									type:
+								</span>
+								<span id="type_data">
+									
+								</span>
+							</div>
+							<div>
+								<span class="type_bold margin_box">
+									year:
+								</span>
+								<span  id="year_data">
+									
+								</span>
+							</div>
+						</div>
+					</div>
+				
+					<!-- show bookmark panel -->
+						<!--	
+						class="grey_round_box"
+					-->
+					<div id="bookmark_panel"  style="display:none">
+						<div id="bookmark-header">
+							<input id="newbookmarkname" type="text"></input>
+							<input id="newcolor" type="color"></input>
+							<button id="addbookmark">+</button>
+							<button id="exportbookmark" class="margin_box">export</button>
+							<div id="message">  
+							</div>
+						</div>
+						<div id="bookmark-body"></div>
+					</div>
+				</div>	
+			</div>
+			
+		</div>
+ 
+ 
+		 <!-- 
+			bottom Controls
+		 -->
+		 
+		<div class="eexcess_vis">
+			<!-- databutton -->
+			<!--
+			<a id="getdata">getData</a></br>
+		-->
+			<!--
+			<button id="redraw" class="margin_box">redraw</button>
+			-->
+			
+
+
+			
+		</div>
+		<script src="Libs/SliderControl.js" lang="javascript"></script>
+		<script src="Libs/BookmarkControl.js" lang="javascript"></script>
+		
+		<script src="Libs/core.js" lang="javascript"></script>
+		<script src="Libs/ForceGraph.js" lang="javascript"></script>
+		<script src="Libs/links&marker.js" lang="javascript"></script>
+		<script src="Libs/nodes&cluster.js" lang="javascript"></script>
+		<script src="Libs/work.js" lang="javascript"></script>
+		
+		
+
+		<script src="GetDataFromIndexedDB.js" lang="javascript"></script>
+		<script src="DrawGraph.js" lang="javascript"></script>
+		
+		
+		<script src="ControlAndUIForGraph.js" lang="javascript"></script>
+		
+		
+    </body>
+</html>
