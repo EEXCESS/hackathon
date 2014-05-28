@@ -184,8 +184,39 @@ var funcStore =	{
 		
 	},
 	"ShowDetails":function(param){
-		console.log("gg "+ param);
-		var test = forceGraph.Graph.GetGraphData();
+		//console.log("gg "+ param);
+		var nameArray = JSON.parse(param).nodeName.split("_");
+		
+		var queryNodeTitle = $("#UniqueNodeID_" + nameArray[2] +" title").text();
+		var currentQueryNodeObj = getDataFromIndexedDB.wordsWithResults[queryNodeTitle];
+		
+		var currentArrayResult = currentQueryNodeObj.resultList[parseInt(nameArray[3])];
+		//var currentResult = currentQueryNodeObj.results[currentArrayResult];
+		//console.log(currentResult);
+		
+		function ClearDetailData(){
+			$("#title_data").val("");
+			$("#link_data").text("").attr("href","");
+			$("#image_data").attr("src","");
+			$("#id_data, #language_data, #partner_data, #provider_data, #type_data, #year_data").text("");
+		};
+		ClearDetailData();
+
+		var detailData = currentQueryNodeObj.results[currentArrayResult];
+		//console.log(detailData);
+		
+		$("#title_data").val(detailData.title);
+		$("#link_data").text(detailData.uri).attr("href",detailData.uri);//.val(TextCutter(detailData.uri,20,19));
+		$("#image_data").attr("src",detailData.previewImage);
+		$("#id_data").text(detailData.id);
+		
+		$("#language_data").text(detailData.facets.language);
+		$("#partner_data").text(detailData.facets.partner);
+		$("#provider_data").text(detailData.facets.provider);
+		$("#type_data").text(detailData.facets.type);
+		$("#year_data").text(detailData.facets.year);
+
+		//var test = forceGraph.Graph.GetGraphData();
 		
 	}
 };
@@ -541,7 +572,9 @@ var BuildControls = function(){
 		if(toggleBookmark){
 			BookmarkFunction();
 		}
-		
+		if(toggleDetails){
+			DetailsFunction();
+		}
 		
 
 		
@@ -562,7 +595,9 @@ var BuildControls = function(){
 		if(toggleAddSearch){
 			AddSearchFunction();
 		}
-		
+		if(toggleDetails){
+			DetailsFunction();
+		}
 
 		
 		if(!toggleBookmark){
