@@ -47,7 +47,12 @@ and open the template in the editor.
 				<div class="eexcess_vis">
 					<input id="growgraph" value="growgraph" type="checkbox" > grow graph</input>
 					<svg  id="d3_slider" style="margin:5px;" height="80">
-
+						<defs>
+							<linearGradient id="redblue" x1="0%" y1="0%" x2="100%" y2="0%">
+								<stop offset="0%" style="stop-color:red;stop-opacity:1" />
+								<stop offset="100%" style="stop-color:blue;stop-opacity:1" />
+							</linearGradient>
+						</defs>
 					</svg>
 				</div>
 			</div>
