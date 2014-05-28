@@ -1,5 +1,5 @@
 
-/*
+
 
 var db = indexedDB.open("eexcess_db");
 
@@ -8,10 +8,13 @@ var wordHistory = [];
 var uniqueWordsResult =[];
 
 
+var data = null;
 
 //start automatically async method if the script start.
 db.onsuccess = function() {
 
+data = GetDataFromIndexedDB();
+data.Init();
 
 //var GetDataFromDB = function(evt) {
 
@@ -21,14 +24,14 @@ db.onsuccess = function() {
 	var idx = store.index('timestamp'); // get timestamp index 
 
 	//number of elements -------------------------------------------------------------------------
-	
-	//var cursor2 = idx.openCursor(IDBKeyRange.lowerBound(0),"prev");
-	////async method
-	//cursor2.onsuccess = function(evt1) {
-	//	var res = evt1.target.result.value;
-	//	console.log(res);
-	//}
-	
+	/*
+	var cursor2 = idx.openCursor(IDBKeyRange.lowerBound(0),"prev");
+	//async method
+	cursor2.onsuccess = function(evt1) {
+		var res = evt1.target.result.value;
+		console.log(res);
+	}
+	*/
 	//number of elements -------------------------------------------------------------------------
 
 	var cursor = idx.openCursor(IDBKeyRange.lowerBound(0)); // open cursor, starting at "0" (every timestamp is larger)
@@ -57,9 +60,7 @@ db.onsuccess = function() {
 			//console.log(">");
 			//console.log(wordHistory);
 			$("#keywordnumber").text(wordHistory.length);
-			wordHistory = wordHistory.reverse().splice(0,
-				10//Number.MAX_VALUE//GetValueNumber($("#last_keywords").val(),"All")
-				);
+			wordHistory = wordHistory.reverse().splice(0,GetValueNumber($("#last_keywords").val(),"All"));
 			wordHistory = wordHistory.reverse();
 			//console.log(wordHistory);
 			
@@ -94,7 +95,7 @@ function AsyncGetResultData(keywords,func){
 	var cursor = idx.openCursor(IDBKeyRange.only(keyword));
 	
 	var resultObject = {};
-	var maxResultCount = 5;//GetValueNumber($("#results_per_keywords").val(),"All");
+	var maxResultCount = GetValueNumber($("#results_per_keywords").val(),"All");
 	
 	cursor.onsuccess = function(evt) {
 		
@@ -148,7 +149,6 @@ function AsyncGetUserAction(func){
 		
 	};
 }
-*/
 
 //new Code -------------------------------------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------------------------------------------
@@ -209,7 +209,7 @@ var GetDataFromIndexedDB = function(){
 				oC.uniqueWords = d3.set(oC.wordHistory).values();
 
 				oC.uniqueWords.forEach(function(d){
-					oC.wordsWithResults[d] = {results:{},userActions:{},resultList:[]};//userActions ??
+					oC.wordsWithResults[d] = {results:{},userActions:{}};//userActions ??
 				});
 				//console.log(oC.uniqueWords);
 				
@@ -220,23 +220,18 @@ var GetDataFromIndexedDB = function(){
 				index++;
 				var keyword = oC.uniqueWords[index];
 				var resultObject ={};
-				var resultList = [];
+				
 				AsyncGetSubData(database,'recommendations','query',IDBKeyRange.only(keyword),
 					function(evt){
 						var res = evt.target.result;
 						resultObject[res.value.result.uri] = res.value.result;
-						resultList.push(res.value.result.uri);
-						
+
 					},function(){
 						oC.wordsWithResults[keyword].results = resultObject;
-						oC.wordsWithResults[keyword].resultList = resultList;
-						
 						if(oC.uniqueWords.length-1 == index){
 							// async call posible;
 							//console.log("--finish--");
-							//LastTestAction();
-							//BuildSlider();
-							oC.asyncCall();
+							LastTestAction();
 							//console.log("--finish--");
 						
 						}else{
@@ -253,42 +248,29 @@ var GetDataFromIndexedDB = function(){
 	};
 	
 	var oC = {
-		asyncCall:function(){},
-	
 		queryObjHistory:[],
 		wordHistory:[],
 		uniqueWords:[],
 		
 		wordsWithResults :{},
-		Init:function(asyncCall){
-			oC.asyncCall = asyncCall;
+		Init:function(){
 			database.onsuccess = GetData;
-		},
-		GetNewData:function(asyncCall){
-		
-			oC.asyncCall = function(){};
-			oC.queryObjHistory=[];
-			oC.wordHistory=[];
-			oC.uniqueWords=[];
-			
-			oC.wordsWithResults ={};
-			
-			//console.log(oC);
-			
-			oC.asyncCall = asyncCall;
-			database.onsuccess();
-			//LastTestAction();
-
-			//BuildControls();
-				//forceGraph.InitGraph("#D3graph");
-			
-			
 		}
 	};
 	return oC;
 };
 
 
+
+function LastTestAction(){
+	console.log(data.queryObjHistory);
+	console.log({"wl":data.uniqueWords});
+
+	console.log(data.wordsWithResults);
+	console.log({"wl":data.wordHistory});
+	
+	console.log("---------");
+}
 
 //------------------------------------------------------------------------------------------------------------------------
 
