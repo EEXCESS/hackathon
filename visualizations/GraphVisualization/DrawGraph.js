@@ -114,7 +114,10 @@ var DrawGraph = function(){
 					.Add("clus_"+uniqueNodeName,uniqueNodeName)
 					.To.Node()	
 				.To.SubElement()
-					.Change(uniqueNodeName,"svgcircle",{attr:{fill:"green","stroke":"black","stroke-width":4,r:120}})//10	
+					.Change(uniqueNodeName,"svgcircle",{
+						attr:{fill:"green","stroke":"black","stroke-width":4,r:120},
+						event:{action:"click",func:"GetResults",param:JSON.stringify({query:queries})}
+					})//10	
 					//rect with title
 					.Add(uniqueNodeName,"textForRect","rect")
 					.Change(uniqueNodeName,"textForRect",{

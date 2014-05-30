@@ -99,7 +99,7 @@ function DeleteBookMarkFromGraph(nodeId,bookmarkId){
 }
 
 
-
+var rList = null;
 
 var funcStore =	{
 	"WorkWithResultNode":function(param){
@@ -218,6 +218,32 @@ var funcStore =	{
 
 		//var test = forceGraph.Graph.GetGraphData();
 		
+	},
+	"GetResults":function(param){
+		//console.log(JSON.parse(param).queries);
+		
+		rList.loading(); // show loading bar, will be removed when new results arrive
+		
+		//$("#searchstatus").text("searching");
+		
+		var textinput = JSON.parse(param).query;
+		var query_terms = textinput.split(' ');
+		var query = [];
+		for (var i = 0; i < query_terms.length; i++) {
+			var tmp = {
+				weight: 1,
+				text: query_terms[i]
+			};
+			query.push(tmp);
+		}
+		//console.log("start search");
+	
+
+	
+		//begin search
+		EEXCESS.callBG({
+			method: {parent: 'model', func: 'query'}, data:query //data: [{weight:1,text:dataParameter.text}]
+		});
 	}
 };
 
@@ -433,7 +459,58 @@ var BuildControls = function(){
 	///////////////////////////////////////////////////////////////////////////
 
 	
-	$("#go").click(function(){
+	/**
+	 * Create custom handlers for the results' preview
+	 * In this case, open a fancybox with the url provided in the result.
+	 * Please make sure to log opening/closing the preview properly (methods:
+	 * EEXCESS.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
+	 * EEXCESS.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
+	 */
+	var previewHandler = function(url) {
+	/*
+                var myFacetScape = $("#result_panel");
+                var previewPanel = $('<div style="width:100%;height:100%;"></div>');
+                var backPanel = $('<div class="back_panel"></div>');
+                var backButton = $('<img src="../../../media/icons/back.png" style="width:100%;">');
+                var previewFrame = $('<iframe src="' + url + '" frameborder="0" hspace="0" vspace="0" style="width:97%;height:100%;position:absolute;">');
+
+                EEXCESS.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
+
+                myFacetScape.hide();
+                backPanel.click(function() {
+                    previewPanel.remove();
+                    myFacetScape.show();
+                    EEXCESS.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
+                });
+                backPanel.append(backButton);
+                previewPanel.append(backPanel);
+                previewPanel.append(previewFrame);
+                $('body').append(previewPanel);
+				*/
+	};
+	/*
+	 * Creates a result list in the provided div-element with the provided handler
+	 * defined above and sets the correct paths (pathToMedia & pathToLibs)
+	 */
+	 
+	rList = EEXCESS.searchResultList($('#result_panel'),{
+		previewHandler: previewHandler, 
+		pathToMedia: '../../media/', 
+		pathToLibs: '../../libs/'
+		});
+		
+		
+		
+	// populate query field initially
+	EEXCESS.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(res) {
+		$('#searchtext').val(res.query);
+	});
+		
+	
+	$("#go").click(function(evt){
+
+		rList.loading(); // show loading bar, will be removed when new results arrive
+		
 		$("#searchstatus").text("searching");
 		
 		var textinput = $("#searchtext").val();
@@ -447,14 +524,20 @@ var BuildControls = function(){
 			query.push(tmp);
 		}
 		console.log("start search");
-		
+	
+
+	
 		//begin search
 		EEXCESS.callBG({
 			method: {parent: 'model', func: 'query'}, data:query //data: [{weight:1,text:dataParameter.text}]
 		});
 
+		
+		
 	});
 	
+	
+
 	//search finished with results, asynchronous call
 	EEXCESS.messageListener(
 		function(request, sender, sendResponse) {
