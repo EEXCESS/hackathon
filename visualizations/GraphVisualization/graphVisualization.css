@@ -1,14 +1,16 @@
-/*css for graph*/
+/*css for graph ??????????????*/
+/*
 rect {
 
 	fill:none;
 	stroke: #999;
 	
-  /*
+  
   fill: none;
-  */
+ 
   pointer-events: all;
 }
+ */
 /*
 .node {
   fill: #000;
@@ -67,6 +69,7 @@ body {
 }
 
 /* css for expander control*/
+/*old ??*/
 .expanderControl{
     border:1px solid lightgrey;
     border-radius:2px 2px 2px 2px; 
@@ -103,6 +106,73 @@ body {
     padding:2px;
 }
 
+/*css for slider control*/
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.brush .extent{
+/*
+  fill-opacity: .125;
+  */
+  fill-opacity: 0.7;/*.5;*/
+  
+  fill:url(#redblue);/*green;*/
+  
+  shape-rendering: crispEdges;
+}
+
+/*css booknark control*/
+.searchmodus{
+	outline:green solid 2px;
+}
+
+.bookmark{
+	border:1px solid green;
+	height:60px;
+}
+
+.bookmarkdata{
+	border:1px solid blue;
+}
+.bookmarkelement{
+	border:1px solid green;
+	/*
+	height:150px;
+	*/
+}
+
+#message{
+	border:1px solid green;
+	height:20px;
+}
+
+#bookmark_panel{
+	border:1px solid blue;
+	height:400px;
+	width:290px;
+}
+
+#bookmark-header{
+	height:50px;
+	border:1px solid green;
+}
+#bookmark-body{
+	border:1px solid red;
+	height:340px;
+	overflow-y:auto;
+}
+
+.deletebookmark, .expanderbookmark{
+	width:22px;    
+	height:22px;
+	margin:2px;
+}
 
 
-
+input[type=color]{
+	width:20px;    
+	height:16px; 
+	margin:2px;
+}
