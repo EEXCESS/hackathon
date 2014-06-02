@@ -156,6 +156,10 @@ EEXCESS.model = (function() {
                     results.query += ' ';
                 }
             }
+            if(results.query === '') {
+                EEXCESS.sendMessage(tabID, {method: {parent: 'results', func: 'error'}, data: 'query is empty...'});
+                return;
+            }
             params.tab = 'results';
             results.scroll = 0;
             EEXCESS.logging.logQuery(tabID, results.weightedTerms, _queryTimestamp);
