@@ -57,6 +57,7 @@ var getDataFromIndexedDB = null;
 getDataFromIndexedDB = new GetDataFromIndexedDB();
 
 getDataFromIndexedDB.Init(function(){
+	
 	LastTestAction();
 	forceGraph.InitGraph("#D3graph");
 	forceGraph.To.Object().Graph.GetGraphData().data.funcDict = funcStore;
@@ -64,7 +65,7 @@ getDataFromIndexedDB.Init(function(){
 	//start the jQuery library
 	$(BuildControls);
 	
-	//BuildControls();
+	
 });
 
 
@@ -100,6 +101,7 @@ function DeleteBookMarkFromGraph(nodeId,bookmarkId){
 
 
 var rList = null;
+var onlyResult = false;
 
 var funcStore =	{
 	"WorkWithResultNode":function(param){
@@ -121,11 +123,13 @@ var funcStore =	{
 				var queryNodePartNames = currentNodeId.split("_");
 				$("#"+currentSelectedBookmark+" .bookmarkelement")
 					.append(
-						'<div class="bookmark_element_'+currentNodeId+'">'
-							+'<div class="bookmarkdata">'
-								+"Query: "+$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text()
+						'<div class="bookmark_element_'+currentNodeId+' grey_round_box">'
+							+'<div>'
+								+'<span class="type_bold">query: </span>'
+								+$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text()
 							+'</div>'
-							+'<div class="bookmarkdata">'
+							+'<div>'
+								+'<span class="type_bold">title:</span>'
 								+$("#"+currentNodeId+" title").text()
 							+'</div>'
 						+'</div>');
@@ -133,7 +137,9 @@ var funcStore =	{
 					$("#"+currentSelectedBookmark+" .editcolor").val());	
 				bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={};
 				bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={
-					color:$("#"+currentSelectedBookmark+" .editcolor").val()
+					color:$("#"+currentSelectedBookmark+" .editcolor").val(),
+					query:$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text(),
+					title:$("#"+currentNodeId+" title").text()
 				};
 				
 				if(!bookmarkDict.nodes.hasOwnProperty(currentNodeId)){
@@ -149,8 +155,8 @@ var funcStore =	{
 
 				delete bookmarkDict.nodes[currentNodeId][currentSelectedBookmark];
 				
-				if(bookmarkDict.nodes[currentNodeId].length == 0){
-					delete bookmarkDict.nodes.currentNodeId;
+				if(Object.keys(bookmarkDict.nodes[currentNodeId]).length == 0){
+					delete bookmarkDict.nodes[currentNodeId];
 				}
 			}
 		}
@@ -184,8 +190,9 @@ var funcStore =	{
 		
 	},
 	"ShowDetails":function(param){
-		//console.log("gg "+ param);
-		var nameArray = JSON.parse(param).nodeName.split("_");
+		console.log("gg "+ param);
+		var nodeName = JSON.parse(param).nodeName;
+		var nameArray = nodeName.split("_");
 		
 		var queryNodeTitle = $("#UniqueNodeID_" + nameArray[2] +" title").text();
 		var currentQueryNodeObj = getDataFromIndexedDB.wordsWithResults[queryNodeTitle];
@@ -195,6 +202,7 @@ var funcStore =	{
 		//console.log(currentResult);
 		
 		function ClearDetailData(){
+			$("#bookmarklist *").remove();
 			$("#title_data").val("");
 			$("#link_data").text("").attr("href","");
 			$("#image_data").attr("src","");
@@ -204,6 +212,19 @@ var funcStore =	{
 
 		var detailData = currentQueryNodeObj.results[currentArrayResult];
 		//console.log(detailData);
+		
+		//bookmarkDict
+		if(Object.keys(bookmarkDict.nodes).length > 0){
+			if(bookmarkDict.nodes.hasOwnProperty(nodeName)){
+				Object.keys(bookmarkDict.nodes[nodeName]).forEach(function(bookmarkName){
+					var bookmarkdata = bookmarkDict.bookmarks[bookmarkName][nodeName];
+					$("#bookmarklist").append(
+						'<li class="bookmark_box">'
+						+'<span style="background-color:'+bookmarkdata.color+';">&nbsp;&nbsp;</span>'
+						+bookmarkName+'</li>');
+				});
+			}
+		}
 		
 		$("#title_data").val(detailData.title);
 		$("#link_data").text(detailData.uri).attr("href",detailData.uri);//.val(TextCutter(detailData.uri,20,19));
@@ -221,7 +242,7 @@ var funcStore =	{
 	},
 	"GetResults":function(param){
 		//console.log(JSON.parse(param).queries);
-		
+		onlyResult = true;
 		rList.loading(); // show loading bar, will be removed when new results arrive
 		
 		//$("#searchstatus").text("searching");
@@ -236,7 +257,7 @@ var funcStore =	{
 			};
 			query.push(tmp);
 		}
-		//console.log("start search");
+		console.log("start search go");
 	
 
 	
@@ -401,13 +422,15 @@ var BuildControls = function(){
 		)
 		.rangePoints([0, sliderWidth], 0);//slider scale width
 	
-	
+
 	//set slider work , min max values.
 	//console.log(historyData);
 	if(historyData.length < 5){
 		sliderMin = 0;
 		sliderMax = 0;
 	}else{
+		//sliderMin = 400;
+		//sliderMax = 410;
 		sliderMin = historyData.length-5;
 		sliderMax = historyData.length-1;
 	}
@@ -459,34 +482,10 @@ var BuildControls = function(){
 	///////////////////////////////////////////////////////////////////////////
 
 	
-	/**
-	 * Create custom handlers for the results' preview
-	 * In this case, open a fancybox with the url provided in the result.
-	 * Please make sure to log opening/closing the preview properly (methods:
-	 * EEXCESS.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
-	 * EEXCESS.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
-	 */
+
 	var previewHandler = function(url) {
-	/*
-                var myFacetScape = $("#result_panel");
-                var previewPanel = $('<div style="width:100%;height:100%;"></div>');
-                var backPanel = $('<div class="back_panel"></div>');
-                var backButton = $('<img src="../../../media/icons/back.png" style="width:100%;">');
-                var previewFrame = $('<iframe src="' + url + '" frameborder="0" hspace="0" vspace="0" style="width:97%;height:100%;position:absolute;">');
-
-                EEXCESS.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
-
-                myFacetScape.hide();
-                backPanel.click(function() {
-                    previewPanel.remove();
-                    myFacetScape.show();
-                    EEXCESS.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
-                });
-                backPanel.append(backButton);
-                previewPanel.append(backPanel);
-                previewPanel.append(previewFrame);
-                $('body').append(previewPanel);
-				*/
+		console.log(url);
+	
 	};
 	/*
 	 * Creates a result list in the provided div-element with the provided handler
@@ -502,10 +501,12 @@ var BuildControls = function(){
 		
 		
 	// populate query field initially
+	/*
 	EEXCESS.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(res) {
 		$('#searchtext').val(res.query);
 	});
-		
+		*/
+	
 	
 	$("#go").click(function(evt){
 
@@ -532,8 +533,6 @@ var BuildControls = function(){
 			method: {parent: 'model', func: 'query'}, data:query //data: [{weight:1,text:dataParameter.text}]
 		});
 
-		
-		
 	});
 	
 	
@@ -541,9 +540,18 @@ var BuildControls = function(){
 	//search finished with results, asynchronous call
 	EEXCESS.messageListener(
 		function(request, sender, sendResponse) {
+			
 			if (request.method === 'newSearchTriggered') {
+				if(onlyResult){
+					onlyResult = false;
+					//console.log("finish search match");
+					return;
+				}
 				console.log("finish search XX");
+
+				
 				getDataFromIndexedDB.GetNewData(function(){
+					
 					LastTestAction();
 					$("#searchstatus").text("search finish");
 					

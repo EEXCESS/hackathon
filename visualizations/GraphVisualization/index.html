@@ -88,13 +88,18 @@ and open the template in the editor.
 						<button id="cleardata" class="margin_box">clear data</button>
 						-->
 						<div class="margin_box type_bold">
+						bookmarks:
+						</div>
+						<ul id="bookmarklist" class="grey_round_box margin_box">
+						</ul>
+						<div class="margin_box type_bold">
 						title:
 						</div>
 						<textarea id="title_data" class="grey_round_box margin_box"></textarea>
 						<div  class="margin_box type_bold">
 						link:
 						</div>
-						<div  class="margin_box" style="overflow-x:auto">
+						<div class="grey_round_box margin_box" class="margin_box" style="overflow-x:auto">
 							<a target="_blank" id="link_data"></a>
 						</div>
 						<div  class="margin_box type_bold">
@@ -108,7 +113,7 @@ and open the template in the editor.
 						<div class="margin_box type_bold">
 						id:
 						</div>  
-						<div id="id_data" style="overflow-x:auto;" class="margin_box">
+						<div class="grey_round_box margin_box" id="id_data" style="overflow-x:auto;" class="margin_box">
 							
 						</div>
 						<div class="margin_box type_bold">
@@ -162,16 +167,16 @@ and open the template in the editor.
 						<!--	
 						class="grey_round_box"
 					-->
-					<div id="bookmark_panel"  style="display:none">
-						<div id="bookmark-header">
+					<div id="bookmark_panel" class="grey_round_box" style="display:none">
+						<div id="bookmark-header" class="green_round_box margin_box">
 							<input id="newbookmarkname" type="text"></input>
 							<input id="newcolor" type="color"></input>
 							<button id="addbookmark">+</button>
-							<button id="exportbookmark" class="margin_box">export</button>
-							<div id="message">  
+							<a id="exportbookmark" >export</a>
+							<div id="message" class="grey_round_box">  
 							</div>
 						</div>
-						<div id="bookmark-body"></div>
+						<div id="bookmark-body" class="green_round_box margin_box"></div>
 					</div>
 				</div>	
 			</div>

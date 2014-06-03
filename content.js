@@ -85,11 +85,22 @@ chrome.runtime.onMessage.addListener(
                         afterShow: function() {
                             // log opening the page's preview in the background script
                             chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'logging', func: 'openedRecommendation'}, data: request.data});
-                        },
+							console.log("test go");
+							console.log(request.data);
+						},
+						beforeClose:function(){
+							// log closing the page's preview in the background script
+							console.log("test");
+							console.log(request.data);
+							console.log(EEXCESS.extID);
+					
+                            //chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'logging', func: 'closedRecommendation'}, data: request.data});
+
+						},
                         afterClose: function(evt) {
                             // log closing the page's preview in the background script
                             chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'logging', func: 'closedRecommendation'}, data: request.data});
-                        }
+						}
                     }).trigger('click');
                     break;
                 case 'useResource':

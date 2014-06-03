@@ -61,11 +61,19 @@ body {
 	margin:1px;
 	padding:1px;
 }
+
 .margin_box{
 	margin:4px;
 }
 .type_bold{
 	font-weight: bold;
+}
+
+.bookmark_box{
+	margin:1px;
+}
+.searchmodus{
+	outline: green solid 2px;
 }
 
 /* css for expander control*/
@@ -124,43 +132,26 @@ body {
 }
 
 /*css booknark control*/
-.searchmodus{
-	outline:green solid 2px;
-}
-
-.bookmark{
-	border:1px solid green;
-	height:60px;
-}
-
-.bookmarkdata{
-	border:1px solid blue;
-}
-.bookmarkelement{
-	border:1px solid green;
-	/*
-	height:150px;
-	*/
-}
 
 #message{
+/*
 	border:1px solid green;
-	height:20px;
-}
+	*/
+	height:15px;
 
-#bookmark_panel{
-	border:1px solid blue;
-	height:400px;
-	width:290px;
 }
 
 #bookmark-header{
 	height:50px;
+	/*
 	border:1px solid green;
+	*/
 }
 #bookmark-body{
+/*
 	border:1px solid red;
 	height:340px;
+	*/
 	overflow-y:auto;
 }
 
