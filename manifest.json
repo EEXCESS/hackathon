@@ -20,7 +20,8 @@
             "run_at":"document_end",
             "js": [
                 "libs/jquery-1.10.1.min.js",
-                "content.js"
+                "content.js",
+                "ContextDetector.js"
             ],
             "css": ["media/css/sidebar.css"]
         }
