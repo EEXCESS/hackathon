@@ -7,7 +7,7 @@ var DrawGraph = function(){
 		return "UniqueNodeID_"+MD5(getDataFromIndexedDB.wordHistory[index]);
 	};
 
-	function AddResultNode(count,manyResult,uniqueNodeName){
+	function AddResultNode(count,manyResult,uniqueNodeName,clusterDistance){
 	
 		var currentResult = {};
 		var resultNodeName = "";
@@ -24,28 +24,38 @@ var DrawGraph = function(){
 		}
 		
 		
+
 		forceGraph.To.Object().To.Node()
 			.Add(resultNodeName)
 			.Change(resultNodeName,{
 				//drag:true,
 				title:titleData,
-				cluster:{name:"clus_"+uniqueNodeName,distance:30,active:true}})//55
+				cluster:{name:"clus_"+uniqueNodeName,distance:clusterDistance,active:true},
+				})//55
+				
 			.To.SubElement()
 				.Add(resultNodeName,"svgtext","text")
+				.Add(resultNodeName,"svghiddencircle","circle")
 				.Change(resultNodeName,"svgtext",{
 					attr:{},
-					text:TextCutter(titleData,10,9),
+					text:TextCutter(titleData,10,9)
+					//event2:{action:"mouseout",func:"GrowShrinkCircle",param:JSON.stringify({nodeName:resultNodeName,radius:10})}
 					//event:{action:"click",func:"WorkWithResultNode",param:JSON.stringify({nodeName:resultNodeName})}
 				})
 				.Change(resultNodeName,"svgcircle",{
 					attr:{fill:"yellow",r:10},
-					//event:{action:"click",func:"WorkWithResultNode",param:JSON.stringify({nodeName:resultNodeName})}
+					event1:{action:"mouseover",func:"GrowCircle",param:JSON.stringify({nodeName:resultNodeName})},
+				})
+				.Change(resultNodeName,"svghiddencircle",{
+					event1:{action:"mouseout",func:"ShrinkCircle",param:JSON.stringify({nodeName:resultNodeName})},
+
+					attr:{fill:"yellow",r:15,visibility:"hidden" }
 				})
 		.To.Object().To.Link()	
 			//draw a connection link	
 			.Add(uniqueNodeName,resultNodeName,resultLinkName)
 			.Change(resultLinkName,{strength:0,attr:{fill:"none",stroke:"none"}});
-			;
+			
 			
 		oC.ResultNodeEvent(resultNodeName);
 		//console.log(oC);
@@ -88,15 +98,34 @@ var DrawGraph = function(){
 		if(maxLength > manyResult.resultList.length){
 			maxLength = manyResult.resultList.length;
 		}
-		
+		console.log("### " + maxLength);
 		
 		var currentResult = {};
 		var resultNodeName = "";
 		var resultLinkName = "";
+		
+		var clusterDistancdArray = [
+			{count:5,distance:30,radius:120},
+			{count:10,distance:60,radius:150},
+			{count:20,distance:80,radius:200},
+			{count:40,distance:90,radius:250},
+			{count:80,distance:100,radius:370},
+			{count:160,distance:105,radius:400}
+			];
+		var currentCount = 0;
 		//draw a result node
 		for(var count=0;count<maxLength;count++){
-			AddResultNode(count,manyResult,uniqueNodeName);
+			if(clusterDistancdArray[currentCount].count == count){
+				currentCount++;
+			}
+			AddResultNode(count,manyResult,uniqueNodeName,clusterDistancdArray[currentCount].distance);
 		}
+
+		forceGraph.To.Object().To.Node()
+			.To.SubElement()
+				.Change(uniqueNodeName,"svgcircle",{
+					attr:{r:clusterDistancdArray[currentCount].radius}
+				});
 
 	}
 
@@ -115,7 +144,7 @@ var DrawGraph = function(){
 					.To.Node()	
 				.To.SubElement()
 					.Change(uniqueNodeName,"svgcircle",{
-						attr:{fill:"green","stroke":"black","stroke-width":4,r:120},
+						attr:{fill:"green","stroke":"darkgreen","stroke-width":4,r:120},
 						event:{action:"click",func:"GetResults",param:JSON.stringify({query:queries})}
 					})//10	
 					//rect with title
@@ -150,7 +179,7 @@ var DrawGraph = function(){
 					.Add(uniqueNodeName,"svgtext1","text")
 					.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(0,-150)"},text:10});
 					
-			oC.AddResultNodes(uniqueNodeName,queries,5);
+			oC.AddResultNodes(uniqueNodeName,queries,5,30);
 		}else{
 			return true;
 		}
@@ -233,6 +262,12 @@ var DrawGraph = function(){
 			forceGraph.To.Object().To.Node()
 				.Delete(resultNodeName);
 		});
+		forceGraph.To.Object().To.Node()
+			.To.SubElement()
+				.Change(uniqueNodeId,"svgcircle",{
+					attr:{r:120}
+				});
+		
 	};
 	
 	function DeleteHistoryQueryNode(index){

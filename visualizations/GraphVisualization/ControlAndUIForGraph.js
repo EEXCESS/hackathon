@@ -102,7 +102,14 @@ function DeleteBookMarkFromGraph(nodeId,bookmarkId){
 
 var rList = null;
 var onlyResult = false;
+var currentResultClick = {
+	resultNode:null,
+	queryNode:null
+	};
 
+var currentHover = null;
+
+//storefunction for graph	
 var funcStore =	{
 	"WorkWithResultNode":function(param){
 
@@ -123,7 +130,7 @@ var funcStore =	{
 				var queryNodePartNames = currentNodeId.split("_");
 				$("#"+currentSelectedBookmark+" .bookmarkelement")
 					.append(
-						'<div class="bookmark_element_'+currentNodeId+' grey_round_box">'
+						'<div style="user-select: text;" class="bookmark_element_'+currentNodeId+' grey_round_box">'
 							+'<div>'
 								+'<span class="type_bold">query: </span>'
 								+$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text()
@@ -190,16 +197,41 @@ var funcStore =	{
 		
 	},
 	"ShowDetails":function(param){
-		console.log("gg "+ param);
+
+		//console.log("gg "+ param);
 		var nodeName = JSON.parse(param).nodeName;
+		
 		var nameArray = nodeName.split("_");
 		
-		var queryNodeTitle = $("#UniqueNodeID_" + nameArray[2] +" title").text();
+		var queryNode = "UniqueNodeID_" + nameArray[2];
+		var queryNodeTitle = $("#"+queryNode +" title").text();
 		var currentQueryNodeObj = getDataFromIndexedDB.wordsWithResults[queryNodeTitle];
 		
+		console.log(currentQueryNodeObj);
 		var currentArrayResult = currentQueryNodeObj.resultList[parseInt(nameArray[3])];
 		//var currentResult = currentQueryNodeObj.results[currentArrayResult];
-		//console.log(currentResult);
+		//console.log(currentResult);		
+		
+		
+		//change nodes properties
+		if(currentResultClick.resultNode != null){
+			forceGraph.To.Object().To.Node().To.SubElement()
+				.Change(currentResultClick.resultNode,"svgcircle",{
+					attr:{"stroke":"","stroke-width":""}
+				}).Change(currentResultClick.queryNode,"svgcircle",{attr:{"fill-opacity":1.0}});
+			forceGraph.To.Object().To.Graph().ReDraw();
+		}
+		currentResultClick.resultNode = nodeName;
+		currentResultClick.queryNode = queryNode;
+		forceGraph.To.Object().To.Node().To.SubElement()
+			.Change(nodeName,"svgcircle",{
+				attr:{"stroke":"black","stroke-width":3}
+			}).Change(queryNode,"svgcircle",{attr:{"fill-opacity":0.5}});
+		forceGraph.To.Object().To.Graph().ReDraw();	
+		
+		
+		//get to details
+
 		
 		function ClearDetailData(){
 			$("#bookmarklist *").remove();
@@ -265,8 +297,53 @@ var funcStore =	{
 		EEXCESS.callBG({
 			method: {parent: 'model', func: 'query'}, data:query //data: [{weight:1,text:dataParameter.text}]
 		});
+	},
+	"ShrinkCircle":function(param){
+		var paramObj = JSON.parse(param);
+		forceGraph.To.Object().To.Node()
+			.To.SubElement()
+				.Change(paramObj.nodeName,"svgcircle",{
+					attr:{visibility:"visible"}
+				})
+				.Change(paramObj.nodeName,"svghiddencircle",{
+					attr:{visibility:"hidden"}
+				});
+				
+		forceGraph.To.Object().To.Graph().ReDraw();	
+
+	},
+	"GrowCircle":function(param){
+		var paramObj = JSON.parse(param);
+		
+		if(currentHover != null){
+			try{
+				forceGraph.To.Object().To.Node()
+					.To.SubElement()
+						.Change(currentHover,"svgcircle",{
+							attr:{visibility:"visible"}
+						})
+						.Change(currentHover,"svghiddencircle",{
+							attr:{visibility:"hidden"}
+						});
+			}catch(ex){}
+		}
+		currentHover = paramObj.nodeName;
+		
+		
+		forceGraph.To.Object().To.Node()
+			.To.SubElement()
+				.Change(paramObj.nodeName,"svgcircle",{
+					attr:{visibility:"hidden"}
+				})
+				.Change(paramObj.nodeName,"svghiddencircle",{
+					attr:{visibility:"visible"}
+				});
+				
+		forceGraph.To.Object().To.Graph().ReDraw();	
 	}
 };
+
+
 
 
 
@@ -284,8 +361,11 @@ var DetailsFunction = function(){
 		};
 		var ShowDetailsNode = function(resultNodeName){
 			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(resultNodeName,"svgcircle",{event:EventDetailsParam(resultNodeName)})
-				.Change(resultNodeName,"svgtext",{event:EventDetailsParam(resultNodeName)});
+				.Change(resultNodeName,"svghiddencircle",{
+					event:EventDetailsParam(resultNodeName)//,
+					//attr:{"stroke":"black","stroke-width":3}
+				})
+				;//.Change(resultNodeName,"svgtext",{event:EventDetailsParam(resultNodeName)});
 		};
 		
 		ChangeResultNodes(ShowDetailsNode);
@@ -298,8 +378,11 @@ var DetailsFunction = function(){
 		}
 		var ShowNotDetailsNode = function(resultNodeName){
 			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(resultNodeName,"svgcircle",{event:EventEmptyParam()})
-				.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
+				.Change(resultNodeName,"svghiddencircle",{
+					event:EventEmptyParam()//,
+					//attr:{"stroke":"","stroke-width":""}
+				})
+				;//.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
 		};
 		
 		ChangeResultNodes(ShowNotDetailsNode);
@@ -321,9 +404,19 @@ var BookmarkFunction = function(){
 		};
 		var AddBookmarkNode = function(resultNodeName){
 			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(resultNodeName,"svgcircle",{
-					attr:{stroke:"red","stroke-width":3},event:EventBookmarkParam(resultNodeName)
-				}).Change(resultNodeName,"svgtext",{event:EventBookmarkParam(resultNodeName)});
+				.Change(resultNodeName,"svgcircle",{attr:{stroke:"red","stroke-width":3}})
+				.Change(resultNodeName,"svghiddencircle",{
+					attr:{stroke:"red","stroke-width":3},
+					event:EventBookmarkParam(resultNodeName),
+					//event1:{action:"mouseover",func:"GrowCircle",param:JSON.stringify({nodeName:resultNodeName})},
+					//event2:{action:"mouseout",func:"ShrinkCircle",param:JSON.stringify({nodeName:resultNodeName})}
+				
+					
+				});/*.Change(resultNodeName,"svgtext",{
+					event:EventBookmarkParam(resultNodeName)//,
+					//event1:{action:"mouseover",func:"GrowShrinkCircle",param:JSON.stringify({nodeName:resultNodeName,radius:15})},
+					//event2:{action:"mouseout",func:"GrowShrinkCircle",param:JSON.stringify({nodeName:resultNodeName,radius:10})}
+				});*/
 		};
 		
 		ChangeResultNodes(AddBookmarkNode);
@@ -338,8 +431,9 @@ var BookmarkFunction = function(){
 		}
 		var DeleteBookmarkNode = function(resultNodeName){
 			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(resultNodeName,"svgcircle",{attr:{stroke:"","stroke-width":""},event:EventEmptyParam()})
-				.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
+				.Change(resultNodeName,"svgcircle",{attr:{stroke:"","stroke-width":""}})
+				.Change(resultNodeName,"svghiddencircle",{attr:{stroke:"","stroke-width":""},event:EventEmptyParam()})
+				;//.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
 		};
 		
 		ChangeResultNodes(DeleteBookmarkNode);
@@ -359,10 +453,11 @@ var AddSearchFunction = function(){
 		};
 		var AddSearch = function(resultNodeName){
 			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(resultNodeName,"svgcircle",{
-					attr:{stroke:"blue","stroke-width":5},event:EventSearchParam(resultNodeName)
+				.Change(resultNodeName,"svgcircle",{attr:{stroke:"blue","stroke-width":3}})
+				.Change(resultNodeName,"svghiddencircle",{
+					attr:{stroke:"blue","stroke-width":3},event:EventSearchParam(resultNodeName)
 				})
-				.Change(resultNodeName,"svgtext",{event:EventSearchParam(resultNodeName)});
+				;//.Change(resultNodeName,"svgtext",{event:EventSearchParam(resultNodeName)});
 		
 		};
 
@@ -376,8 +471,9 @@ var AddSearchFunction = function(){
 		}
 		var DeleteSearch = function(resultNodeName){
 			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(resultNodeName,"svgcircle",{attr:{stroke:"","stroke-width":""},event:EventEmptyParam()})
-				.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
+				.Change(resultNodeName,"svgcircle",{attr:{stroke:"","stroke-width":""}})
+				.Change(resultNodeName,"svghiddencircle",{attr:{stroke:"","stroke-width":""},event:EventEmptyParam()})
+				;//.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
 		
 		};
 		ChangeResultNodes(DeleteSearch);
@@ -458,7 +554,38 @@ var BuildControls = function(){
 				
 				var test = forceGraph.Graph.GetGraphData();
 			}
-			
+			//hack
+			/*
+			var hackFunc = function(e){
+				e.stopPropagation();
+
+				if(e.currentTarget.id.split("_")[0] == "ResultNodeID"){
+					if(currentResultHover != null){
+						forceGraph.To.Object().To.Node()
+							.To.SubElement()
+								.Change(currentResultHover,"svgcircle",{
+									attr:{r:10}
+								});
+						forceGraph.To.Object().To.Graph().ReDraw();	
+						//$(".node").on("mouseover",{radius:15},hackFunc);
+					}
+					currentResultHover = e.currentTarget.id;
+
+				
+					forceGraph.To.Object().To.Node()
+						.To.SubElement()
+							.Change(e.currentTarget.id,"svgcircle",{
+								attr:{r:e.data.radius}
+							});
+					forceGraph.To.Object().To.Graph().ReDraw();	
+					$(".node").on("mouseover",{radius:15},hackFunc);
+					
+					console.log(e);
+				}
+				
+			};
+			$(".node").on("mouseover",{radius:15},hackFunc);
+			*/
 		})
 		.on("brushend",function() {
 			var graphForce = forceGraph.To.Object().To.Graph().GetForceObj();
@@ -697,8 +824,10 @@ var BuildControls = function(){
 
 	});
 	
+	
 
 	
+
 };
 
 
