@@ -104,6 +104,12 @@ function DeleteBookMarkFromGraph(nodeId,bookmarkId){
 }
 
 
+// make graph and control objects.
+var forceGraph = new FGraph();
+var drawGraphObj = new DrawGraph();
+var slidercontrol = new SilderControl();
+
+
 var rList = null;
 var onlyResult = false;
 var currentResultClick = {
@@ -137,7 +143,9 @@ var funcStore =	{
 						'<div style="user-select: text;" class="bookmark_element_'+currentNodeId+' grey_round_box">'
 							+'<div>'
 								+'<span class="type_bold">query: </span>'
+								+'<span class="querycontent">'
 								+$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text()
+								+'</span>'
 							+'</div>'
 							+'<div>'
 								+'<span class="type_bold">title:</span>'
@@ -160,7 +168,67 @@ var funcStore =	{
 						nodeId:currentNodeId,
 						color:"black"}));
 				});
+				$(".bookmark_element_"+currentNodeId).on("click",function(){
+					var searchText = 
+						$("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId+" .querycontent").text();
+					//console.log("|"+searchText+"|");
+					
+					var historyNumber = [];
+					getDataFromIndexedDB.wordHistory.forEach(function(query,index){
+						if(searchText == query){
+							historyNumber.push(index);
+						}
+					});
+					//console.log(historyNumber);
+					//console.log(sliderMin+ " , "+sliderMax);
+					var binaryContent ={number:0,min:false,max:false};
+					var vmin = null;
+					var vmax = null;
+					
+					for(var icount=0;icount<historyNumber.length;icount++){
+						binaryContent ={number:historyNumber[icount],min:false,max:false};
 						
+						if(sliderMin<=historyNumber[icount]){
+							binaryContent.min = true;
+						}
+						if(historyNumber[icount]<=sliderMax){
+							binaryContent.max = true;
+						}
+						
+						if(binaryContent.min == true && binaryContent.max == true){
+							//bookmark are here
+							vmin = null; vmax = null;
+							break;
+						//bookmark not here
+						}else if(binaryContent.min == false && binaryContent.max == true){
+							vmin = binaryContent.number;
+						}else if(binaryContent.min == true && binaryContent.max == false){
+							vmax = binaryContent.number;
+							break;
+						}
+
+					}
+					
+					if(vmin != null && vmax != null){
+						if((sliderMin - vmin)<(vmax-sliderMax)){
+							sliderMin = vmin;
+						}else{
+							sliderMax = vmax;
+						}
+					}else if(vmin != null && vmax == null){
+						sliderMin = vmin;
+					}else if(vmax != null && vmin == null){
+						sliderMax = vmax;
+					}
+					
+					slidercontrol.brush.extent([sliderMin, sliderMax]);
+					
+					drawGraphObj.ReDrawGraph(sliderMin,sliderMax,sliderMin,sliderMax);
+					drawGraphObj.ChangeGraph(sliderMin,sliderMax);
+					forceGraph.To.Object().To.Graph().ReDraw();
+					
+					slidercontrol.ChangeSilderControl();
+				});	
 				AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,
 					$("#"+currentSelectedBookmark+" .editcolor").val());	
 				bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={};
@@ -401,10 +469,7 @@ var funcStore =	{
 
 
 
-// make graph and control objects.
-var forceGraph = new FGraph();
-var drawGraphObj = new DrawGraph();
-var slidercontrol = new SilderControl();
+
 
 
 // show the Details
@@ -545,12 +610,12 @@ var AddSearchFunction = function(){
 var toggleBookmark = false;
 var toggleAddSearch = false;
 var toggleDetails = false;
-
+var sliderMin = 0;
+var sliderMax = 0;
 
 //main function // important
 var BuildControls = function(){
-	var sliderMin = 0;
-	var sliderMax = 0;
+
 
 	//console.log("build slider");
 	//console.log({"wl":getDataFromIndexedDB.queryObjHistory});

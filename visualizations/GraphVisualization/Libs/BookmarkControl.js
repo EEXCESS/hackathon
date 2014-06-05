@@ -31,10 +31,10 @@ $("#addbookmark").click(function(){
 			
                 +'<div>'
                     +'<input class="bookmarktext" type="text" readonly value="'+bookmarkname+'"></input>'
-                   // +'<button class="editbookmarkname">edit</button>'
-                    +'<input class="editcolor" disabled type="color" value="'+$("#newcolor").val()+'"></input>'
+                   // +'<button class="editbookmarkname">edit</button>'   
                 +'</div>'
                 +'<div class="workbookmarkshow" >'
+					+'<input class="editcolor" disabled type="color" value="'+$("#newcolor").val()+'"></input>'
                     +'<button class="expanderbookmark">+</button>'        
                     +'<button class="deletebookmark">x</button>'
                 +'</div>'

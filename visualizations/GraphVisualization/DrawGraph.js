@@ -344,8 +344,10 @@ var DrawGraph = function(){
 	function AddFirstNode(firstNode,uniqueNode){
 		DrawNode(firstNode,uniqueNode,"StartNodeID","StartConnectionID","StartLinkID");
 		forceGraph.To.Object().To.Node().To.SubElement()
-			.Change("StartNodeID","svgcircle",{attr:{fill:"red"}})
-			.Change("StartNodeID","svgtext",{attr:{},text:"start"})
+			//.Change("StartNodeID","svgcircle",{attr:{fill:"red"}})
+			.Change("StartNodeID","svgcircle",{attr:{fill:"none"}})
+			
+			//.Change("StartNodeID","svgtext",{attr:{},text:"start"})
 		.To.Object().To.Link()
 			.Change("StartLinkID",{attr:{stroke:"red"}});
 			
@@ -354,8 +356,10 @@ var DrawGraph = function(){
 	function AddLastNode(lastNode,uniqueNode){
 		DrawNode(lastNode,uniqueNode,"EndNodeID","EndConnectionID","EndLinkID");
 		forceGraph.To.Object().To.Node().To.SubElement()
-			.Change("EndNodeID","svgcircle",{attr:{fill:"blue"}})
-			.Change("EndNodeID","svgtext",{attr:{},text:"finish"})
+			//.Change("EndNodeID","svgcircle",{attr:{fill:"blue"}})
+			.Change("EndNodeID","svgcircle",{attr:{fill:"none"}})
+			
+			//.Change("EndNodeID","svgtext",{attr:{},text:"finish"})
 		.To.Object().To.Link()
 			.Change("EndLinkID",{attr:{stroke:"blue"}});	
 	}
@@ -484,14 +488,14 @@ var DrawGraph = function(){
 				currentLinkName = "HistoryLinkID_"+(index+1);
 				if(forceGraph.Graph.GetGraphData().data.dict.link.hasOwnProperty(currentLinkName)){/////////////
 					forceGraph.To.Object().To.Link()
-					.Change(currentLinkName,{attr:{
-						stroke:color(count),
-						"stroke-linecap":"round",
-						"stroke-opacity":transparent(index),
-						"stroke-width":lineWidth(index)
-					}})
-					.To.SubElement()
-					.Change(currentLinkName,"svgtext",{text:count,attr:{fill:"purple"}});
+						.Change(currentLinkName,{attr:{
+							stroke:color(count),
+							"stroke-linecap":"round",
+							"stroke-opacity":transparent(index),
+							"stroke-width":lineWidth(index)
+						}})
+						;//.To.SubElement()
+						//.Change(currentLinkName,"svgtext",{text:count,attr:{fill:"purple"}});
 					
 				}////////
 
