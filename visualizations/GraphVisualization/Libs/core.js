@@ -25,12 +25,12 @@ var oC = {
 			options:{
 				svg:{
 					chartId:"#chart",
-					width:960,
-					height:500
+					width:750,//960,
+					height:400//500
 				},
 				size:{
-					width:960,
-					height:500
+					width:750,//960,
+					height:400//500
 				},
 				force:{
 					chargeValue: -100,//-400,//-200

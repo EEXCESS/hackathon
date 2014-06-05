@@ -503,7 +503,8 @@ var BuildControls = function(){
 	
 	var historyData = getDataFromIndexedDB.queryObjHistory;
 	var intalvalResults = GetSamePartOfArray(historyData.length,4);
-	var sliderWidth = 900;
+	//var sliderWidth = 900;
+	var sliderWidth = 720;
 	
 
 	
@@ -554,38 +555,7 @@ var BuildControls = function(){
 				
 				var test = forceGraph.Graph.GetGraphData();
 			}
-			//hack
-			/*
-			var hackFunc = function(e){
-				e.stopPropagation();
 
-				if(e.currentTarget.id.split("_")[0] == "ResultNodeID"){
-					if(currentResultHover != null){
-						forceGraph.To.Object().To.Node()
-							.To.SubElement()
-								.Change(currentResultHover,"svgcircle",{
-									attr:{r:10}
-								});
-						forceGraph.To.Object().To.Graph().ReDraw();	
-						//$(".node").on("mouseover",{radius:15},hackFunc);
-					}
-					currentResultHover = e.currentTarget.id;
-
-				
-					forceGraph.To.Object().To.Node()
-						.To.SubElement()
-							.Change(e.currentTarget.id,"svgcircle",{
-								attr:{r:e.data.radius}
-							});
-					forceGraph.To.Object().To.Graph().ReDraw();	
-					$(".node").on("mouseover",{radius:15},hackFunc);
-					
-					console.log(e);
-				}
-				
-			};
-			$(".node").on("mouseover",{radius:15},hackFunc);
-			*/
 		})
 		.on("brushend",function() {
 			var graphForce = forceGraph.To.Object().To.Graph().GetForceObj();
