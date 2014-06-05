@@ -26,11 +26,11 @@ var oC = {
 				svg:{
 					chartId:"#chart",
 					width:750,//960,
-					height:400//500
+					height:350//500
 				},
 				size:{
 					width:750,//960,
-					height:400//500
+					height:350//500
 				},
 				force:{
 					chargeValue: -100,//-400,//-200

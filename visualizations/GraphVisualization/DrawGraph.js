@@ -334,11 +334,12 @@ var DrawGraph = function(){
 			.Add(startNodeID,firstOrlastNode,startLinkID)	
 			.Change(startLinkID,{strength:0,
 				attr:{
+					fill:"none",stroke:"none"
 					//stroke:"blue"
 					}
 			})
 			.Add(startNodeID,uniqueNode,startConnectionID)
-			.Change(startConnectionID,{strength:0});		
+			.Change(startConnectionID,{strength:0,attr:{fill:"none",stroke:"none"}});		
 	}
 	
 	function AddFirstNode(firstNode,uniqueNode){
@@ -349,7 +350,9 @@ var DrawGraph = function(){
 			
 			//.Change("StartNodeID","svgtext",{attr:{},text:"start"})
 		.To.Object().To.Link()
-			.Change("StartLinkID",{attr:{stroke:"red"}});
+			//.Change("StartLinkID",{attr:{stroke:"red"}});
+			.Change("StartLinkID",{attr:{fill:"none",stroke:"none"}});
+			
 			
 	}
 	
@@ -361,7 +364,9 @@ var DrawGraph = function(){
 			
 			//.Change("EndNodeID","svgtext",{attr:{},text:"finish"})
 		.To.Object().To.Link()
-			.Change("EndLinkID",{attr:{stroke:"blue"}});	
+			//.Change("EndLinkID",{attr:{stroke:"blue"}});
+			.Change("EndLinkID",{attr:{fill:"none",stroke:"none"}});			
+			
 	}
 
 
