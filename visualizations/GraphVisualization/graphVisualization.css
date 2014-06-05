@@ -96,7 +96,7 @@ body {
 .expanderbutton{
     border:1px solid grey;
     border-radius:2px 2px 2px 2px; 
-    margin:0px;1px;0px;1px;
+    margin:0px 1px 0px 1px;
     padding:1px;
 }
 

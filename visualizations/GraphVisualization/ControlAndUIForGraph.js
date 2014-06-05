@@ -81,7 +81,11 @@ function AddBookMarkInGraph(nodeId,bookmarkId,color){
 			.Delete(bookmarkNodeId,"svgcircle")
 			.Add(bookmarkNodeId,"svgrect","rect")
 			.Change(bookmarkNodeId,"svgrect",{
-				attr:{"fill":color,x:-5,y:-5,width:10,height:10}
+				attr:{"fill":color,x:-5,y:-5,width:10,height:10},
+				event:{action:"mouseover",func:"MouseOverBookmark",param:JSON.stringify({
+					nodeName:bookmarkNodeId,bookmarkName:bookmarkId,nodeId:nodeId,color:color})},
+				event1:{action:"mouseout",func:"MouseOutBookmark",param:JSON.stringify({
+					nodeName:bookmarkNodeId,bookmarkName:bookmarkId,nodeId:nodeId,color:color})}
 			})
 	.To.Object().To.Link()
 		.Add(nodeId,bookmarkNodeId,"LinkBookmark_"+nodeId+"_"+bookmarkId)
@@ -140,6 +144,23 @@ var funcStore =	{
 								+$("#"+currentNodeId+" title").text()
 							+'</div>'
 						+'</div>');
+				
+				//add bookmark hover
+				$(".bookmark_element_"+currentNodeId).on("mouseover",function(){
+					funcStore["MouseOverBookmark"](JSON.stringify({
+						nodeName:"Bookmark_"+currentNodeId+"_"+currentSelectedBookmark,
+						bookmarkName:currentSelectedBookmark,
+						nodeId:currentNodeId,
+						color:"black"}));
+				});
+				$(".bookmark_element_"+currentNodeId).on("mouseout",function(){
+					funcStore["MouseOutBookmark"](JSON.stringify({
+						nodeName:"Bookmark_"+currentNodeId+"_"+currentSelectedBookmark,
+						bookmarkName:currentSelectedBookmark,
+						nodeId:currentNodeId,
+						color:"black"}));
+				});
+						
 				AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,
 					$("#"+currentSelectedBookmark+" .editcolor").val());	
 				bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={};
@@ -273,6 +294,7 @@ var funcStore =	{
 		
 	},
 	"GetResults":function(param){
+		$("#result_btn").trigger("click");
 		//console.log(JSON.parse(param).queries);
 		onlyResult = true;
 		rList.loading(); // show loading bar, will be removed when new results arrive
@@ -340,6 +362,38 @@ var funcStore =	{
 				});
 				
 		forceGraph.To.Object().To.Graph().ReDraw();	
+	},
+	"MouseOverBookmark":function(param){
+		var bookmarkNodeId = JSON.parse(param);
+		
+		try{
+			forceGraph.To.Object().To.Node()
+				.To.SubElement()
+					.Change(bookmarkNodeId.nodeName,"svgrect",{
+						attr:{transform:"scale(2)"}});
+			
+			forceGraph.To.Object().To.Graph().ReDraw();	
+		}catch(e){}
+		$("#"+bookmarkNodeId.bookmarkName+", "
+			+"#"+bookmarkNodeId.bookmarkName+" .bookmark_element_"+bookmarkNodeId.nodeId).css({
+			"outline-width":2,"outline-color":bookmarkNodeId.color,"outline-style":"dashed"});
+	
+		
+	},
+	"MouseOutBookmark":function(param){
+		var bookmarkNodeId = JSON.parse(param);
+		
+		try{
+			forceGraph.To.Object().To.Node()
+				.To.SubElement()
+					.Change(bookmarkNodeId.nodeName,"svgrect",{
+						attr:{transform:"scale(1)"}});
+			
+			forceGraph.To.Object().To.Graph().ReDraw();	
+		}catch(e){}
+		
+		$("#"+bookmarkNodeId.bookmarkName+", "+".bookmark_element_"+bookmarkNodeId.nodeId).css({
+			"outline-width":"","outline-color":"","outline-style":""});
 	}
 };
 
@@ -726,6 +780,8 @@ var BuildControls = function(){
 	
 	//explore graph
 	$("#explore_graph").click(function(){
+		$("#work_btn").trigger("click");
+		
 		$("#add_search, #bookmarks").removeClass("searchmodus");
 		$("#explore_graph").addClass("searchmodus");
 		
@@ -752,6 +808,8 @@ var BuildControls = function(){
 	
 
 	$("#add_search").click(function(){
+		$("#work_btn").trigger("click");
+		
 		$("#explore_graph, #bookmarks").removeClass("searchmodus");
 		$("#add_search").addClass("searchmodus");
 		
@@ -774,6 +832,8 @@ var BuildControls = function(){
 	});
 	
 	$("#bookmarks").click(function(){
+		$("#work_btn").trigger("click");
+	
 		$("#add_search, #explore_graph").removeClass("searchmodus");
 		$("#bookmarks").addClass("searchmodus");
 		$("#detail_panel").hide();

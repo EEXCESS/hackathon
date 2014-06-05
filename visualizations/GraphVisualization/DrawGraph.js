@@ -120,13 +120,18 @@ var DrawGraph = function(){
 			}
 			AddResultNode(count,manyResult,uniqueNodeName,clusterDistancdArray[currentCount].distance);
 		}
-
+		var distance = clusterDistancdArray[currentCount].distance;
 		forceGraph.To.Object().To.Node()
 			.To.SubElement()
 				.Change(uniqueNodeName,"svgcircle",{
 					attr:{r:clusterDistancdArray[currentCount].radius}
-				});
-
+				})
+				.Change(uniqueNodeName,"textForRect",{attr:{transform:"translate(-80,"+(135+distance)+")"}})
+				.Change(uniqueNodeName,"moreResult",{attr:{transform:"translate(30,"+(137+distance)+")"}})
+				.Change(uniqueNodeName,"moreResultText",{attr:{transform:"translate(33,"+(148+distance)+")"}})
+				.Change(uniqueNodeName,"lessResult",{attr:{transform:"translate(50,"+(137+distance)+")"}})
+				.Change(uniqueNodeName,"lessResultText",{attr:{transform:"translate(53,"+(150+distance)+")"}})
+				.Change(uniqueNodeName,"svgtext",{attr:{transform:"translate(-75,"+(150+distance)+")"}});
 	}
 
 
@@ -176,8 +181,9 @@ var DrawGraph = function(){
 						event:{action:"click",func:"LessResult",param:JSON.stringify({nodeName:uniqueNodeName,query:queries})},
 						text:"-"})
 					//visit keyword, query
-					.Add(uniqueNodeName,"svgtext1","text")
-					.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(0,-150)"},text:10});
+					//.Add(uniqueNodeName,"svgtext1","text")
+					//.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(0,-150)"},text:10})
+					;
 					
 			oC.AddResultNodes(uniqueNodeName,queries,5,30);
 		}else{
@@ -220,7 +226,7 @@ var DrawGraph = function(){
 				//.Change(uniqueNodeName,{cluster:{distance:clusterDistance}})//grow node
 				.To.SubElement()
 					//.Change(uniqueNodeName,"svgcircle",{attr:{r:radius}})//grow node
-					.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(0,-150)"},text:radius});
+					//.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(0,-150)"},text:radius});
 			
 			var lineProperty = {strength:0};
 			if(!isQueryNode){
@@ -266,8 +272,13 @@ var DrawGraph = function(){
 			.To.SubElement()
 				.Change(uniqueNodeId,"svgcircle",{
 					attr:{r:120}
-				});
-		
+				})				
+				.Change(uniqueNodeId,"textForRect",{attr:{transform:"translate(-80,135)"}})
+				.Change(uniqueNodeId,"moreResult",{attr:{transform:"translate(30,137)"}})
+				.Change(uniqueNodeId,"moreResultText",{attr:{transform:"translate(33,148)"}})
+				.Change(uniqueNodeId,"lessResult",{attr:{transform:"translate(50,137)"}})
+				.Change(uniqueNodeId,"lessResultText",{attr:{transform:"translate(53,150)"}})
+				.Change(uniqueNodeId,"svgtext",{attr:{transform:"translate(-75,150)"}});
 	};
 	
 	function DeleteHistoryQueryNode(index){
@@ -303,7 +314,7 @@ var DrawGraph = function(){
 				//.Change(uniqueNodeId,{cluster:{distance:clusterDistance}})
 				.To.SubElement()//shrink node
 					//.Change(uniqueNodeId,"svgcircle",{attr:{r:radius}})
-					.Change(uniqueNodeId,"svgtext1",{attr:{transform:"translate(-20,-20)"},text:radius});
+					//.Change(uniqueNodeId,"svgtext1",{attr:{transform:"translate(-20,-20)"},text:radius});
 					
 		}
 	};
