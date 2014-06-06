@@ -131,7 +131,8 @@ var DrawGraph = function(){
 				.Change(uniqueNodeName,"moreResultText",{attr:{transform:"translate(33,"+(148+distance)+")"}})
 				.Change(uniqueNodeName,"lessResult",{attr:{transform:"translate(50,"+(137+distance)+")"}})
 				.Change(uniqueNodeName,"lessResultText",{attr:{transform:"translate(53,"+(150+distance)+")"}})
-				.Change(uniqueNodeName,"svgtext",{attr:{transform:"translate(-75,"+(150+distance)+")"}});
+				.Change(uniqueNodeName,"svgtext",{attr:{transform:"translate(-75,"+(150+distance)+")"}})
+				.Change(uniqueNodeName,"resultText",{attr:{transform:"translate(-75,"+(170+distance)+")"}});
 	}
 
 
@@ -180,6 +181,10 @@ var DrawGraph = function(){
 						attr:{transform:"translate(53,150)"},
 						event:{action:"click",func:"LessResult",param:JSON.stringify({nodeName:uniqueNodeName,query:queries})},
 						text:"-"})
+					.Add(uniqueNodeName,"resultText","text")
+					.Change(uniqueNodeName,"resultText",{
+						attr:{transform:"translate(-75,170)"},
+						text:getDataFromIndexedDB.wordsWithResults[queries].resultList.length + " Results"})
 					//visit keyword, query
 					//.Add(uniqueNodeName,"svgtext1","text")
 					//.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(0,-150)"},text:10})
@@ -278,7 +283,8 @@ var DrawGraph = function(){
 				.Change(uniqueNodeId,"moreResultText",{attr:{transform:"translate(33,148)"}})
 				.Change(uniqueNodeId,"lessResult",{attr:{transform:"translate(50,137)"}})
 				.Change(uniqueNodeId,"lessResultText",{attr:{transform:"translate(53,150)"}})
-				.Change(uniqueNodeId,"svgtext",{attr:{transform:"translate(-75,150)"}});
+				.Change(uniqueNodeId,"svgtext",{attr:{transform:"translate(-75,150)"}})
+				.Change(uniqueNodeId,"resultText",{attr:{transform:"translate(-75,170)"}});
 	};
 	
 	function DeleteHistoryQueryNode(index){
