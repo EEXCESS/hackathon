@@ -197,7 +197,7 @@ EEXCESS.logging = (function() {
                                 cursor.continue();
                             }
                         } else {
-							store.put({result:recommendations[i],uri: recommendations[i].uri, context: context, timestamp:timestamp}).onsuccess = handleNext;
+                            store.put({result: recommendations[i], uri: recommendations[i].uri, context: context, timestamp: timestamp}).onsuccess = handleNext;
                             //store.put({uri: recommendations[i].uri, context: context, timestamp:new Date().getTime()}).onsuccess = handleNext;
                             i++;
                         }
@@ -234,12 +234,22 @@ EEXCESS.logging = (function() {
         openedRecommendation: function(tabID, resource) {
             var tx = EEXCESS.DB.transaction('resource_relations', 'readwrite');
             var store = tx.objectStore('resource_relations');
-            store.add({
+            var tmp = {
                 resource: resource,
                 timestamp: new Date().getTime(),
                 type: 'view',
                 context: EEXCESS.model.getContext(),
                 beenRecommended: true
+            };
+            store.add(tmp);
+            tmp['action'] = 'result-view';
+            tmp['uuid'] = EEXCESS.profile.getUUID();
+            var xhr = $.ajax({
+                url: localStorage['PP_BASE_URI'] + 'api/v1/log/rview',
+                data: JSON.stringify(tmp),
+                type: 'POST',
+                contentType: 'application/json; charset=UTF-8',
+                dataType: 'json'
             });
 
         },
@@ -261,6 +271,16 @@ EEXCESS.logging = (function() {
                     if (cursor.value.type === 'view' && typeof cursor.value.duration === 'undefined') {
                         cursor.value.duration = new Date().getTime() - cursor.value.timestamp;
                         cursor.update(cursor.value);
+                        var tmp = cursor.value;
+                        tmp['action'] = 'result-close';
+                        tmp['uuid'] = EEXCESS.profile.getUUID();
+                        var xhr = $.ajax({
+                            url: localStorage['PP_BASE_URI'] + 'api/v1/log/rclose',
+                            data: JSON.stringify(tmp),
+                            type: 'POST',
+                            contentType: 'application/json; charset=UTF-8',
+                            dataType: 'json'
+                        });
                     } else {
                         cursor.continue();
                     }
@@ -439,6 +459,7 @@ EEXCESS.logging.history = (function() {
                     item.referrer = '';
                 }
                 store.add(item);
+                item['uuid'] = EEXCESS.profile.getUUID();
             };
         });
     };

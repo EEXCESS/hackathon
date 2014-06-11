@@ -24,7 +24,13 @@ var EEXCESS = EEXCESS || {};
  * @param {querySuccess} success callback on success
  * @param {queryError} error callback on error
  */
-EEXCESS.euCall = function(weightedTerms, start, success, error) {
+EEXCESS.euCall = function(queryData, start, success, error) {
+    var weightedTerms;
+    if (queryData.hasOwnProperty('reason')) {
+        weightedTerms = queryData['terms'];
+    } else {
+        weightedTerms = queryData;
+    }
     var query = '';
     for (i = 0; i < 3; i++) {
         if (typeof weightedTerms[i] !== 'undefined') {
@@ -92,36 +98,36 @@ EEXCESS.euCall = function(weightedTerms, start, success, error) {
     });
 };
 
-EEXCESS.frCall_impl = function(weightedTerms, start, success, error) {
-    console.log('start:' + start + 'query: ');
-    console.log(weightedTerms);
-    var profile = {
-        "eexcess-user-profile": {
-            "interests": {
-                "interest": []
-            },
-            "context-list": {
-                "context": weightedTerms
-            }
+EEXCESS.frCall_impl = function(queryData, start, success, error) {
+    var weightedTerms;
+    if (queryData.hasOwnProperty('reason')) {
+        weightedTerms = queryData['terms'];
+    } else {
+        weightedTerms = queryData;
+    }
+    EEXCESS.profile.getProfile(function(profile) {
+        profile['eexcess-user-profile']['context-list']['context'] = weightedTerms;
+        if (queryData.hasOwnProperty('reason')) {
+            profile['eexcess-user-profile']['context-list']['reason'] = queryData['reason'];
         }
-    };
-    console.log(profile);
-    var xhr = $.ajax({
-        url: EEXCESS.backend.getURL(),
-        data: JSON.stringify(profile),
-        type: 'POST',
-        contentType: 'application/json; charset=UTF-8',
-        dataType: 'json'
-    });
-    xhr.done(function(data) {
-        console.log(data);
-        success(data);
-    });
-    xhr.fail(function(jqXHR, textStatus, errorThrown) {
-        console.log(jqXHR);
-        console.log(textStatus);
-        console.log(errorThrown);
-        error(textStatus);
+        console.log(profile);
+        var xhr = $.ajax({
+            url: EEXCESS.backend.getURL(),
+            data: JSON.stringify(profile),
+            type: 'POST',
+            contentType: 'application/json; charset=UTF-8',
+            dataType: 'json'
+        });
+        xhr.done(function(data) {
+            console.log(data);
+            success(data);
+        });
+        xhr.fail(function(jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR);
+            console.log(textStatus);
+            console.log(errorThrown);
+            error(textStatus);
+        });
     });
 };
 
@@ -182,7 +188,7 @@ EEXCESS.backend = (function() {
             fr_url = urls.fr;
         },
         getURL: function() {
-            if(backend === 'self') {
+            if (backend === 'self') {
                 return (url + '?fr_url=' + fr_url);
             }
             return url;

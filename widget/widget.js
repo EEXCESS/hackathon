@@ -78,17 +78,20 @@ EEXCESS.init = function(widget) {
 //        $('#eexcess_content').scrollTop(0);
 //        $('#eexcess_content').append($('<div id="eexcess_loading"><img id="eexcess_loading" src="../media/loading.gif" /></div>'));
         //evt.preventDefault();
-        EEXCESS.searchResults.loading();
-        var query_terms = $('#eexcess_query').val().split(' ');
-        var query = [];
-        for (var i = 0; i < query_terms.length; i++) {
-            var tmp = {
-                weight: 1,
-                text: query_terms[i]
-            };
-            query.push(tmp);
+        var query_string = $('#eexcess_query').val();
+        if (query_string) {
+            EEXCESS.searchResults.loading();
+            var query_terms = query_string.split(' ');
+            var query = [];
+            for (var i = 0; i < query_terms.length; i++) {
+                var tmp = {
+                    weight: 1,
+                    text: query_terms[i]
+                };
+                query.push(tmp);
+            }
+            EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: {reason: {reason: 'manual', text: $('#eexcess_query').val()}, terms: query}});
         }
-        EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
         return false;
     });
 

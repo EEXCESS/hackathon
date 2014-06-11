@@ -58,8 +58,9 @@ EEXCESS.sendMsgOthers = function(tabID, msg, callback) {
  * Toggle visibility of eexcess widget by clicks on the eexcess icon
  */
 chrome.browserAction.onClicked.addListener(
-        function() {
-            EEXCESS.sendMsgAll({method: 'visibility', data: EEXCESS.model.toggleVisibility()});
+        function(tab) {
+            console.log(tab);
+            EEXCESS.sendMsgAll({method: 'visibility', data: EEXCESS.model.toggleVisibility(tab.url)});
         }
 );
 
