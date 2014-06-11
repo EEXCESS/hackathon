@@ -4,6 +4,8 @@ var EEXCESS = EEXCESS || {};
 
 var globals = {};
 var visTemplate = new Visualization( EEXCESS );
+visTemplate.init();
+
 
 var onDataReceived = function(dataReceived, status, action) {
 	
@@ -16,10 +18,10 @@ var onDataReceived = function(dataReceived, status, action) {
 	
 	console.log(globals);
 
-	charts = getCharts( globals.mappingcombination );
+	var charts = getCharts( globals.mappingcombination );
 	
-	visTemplate.init( globals.data.query, globals.data.results.results, charts, globals.mappingcombination, globals.groupedBy, action );
-}
+	visTemplate.refresh( globals.data.query, globals.data.results.results, charts, globals.mappingcombination, globals.groupedBy, action );
+};
 
 
 
@@ -38,7 +40,7 @@ function requestPlugin() {
         }
         else {
             
-        	var dataToSend = pluginResponse;s//fixMissingAndMalformattedValues( pluginResponse );
+        	var dataToSend = pluginResponse;//fixMissingAndMalformattedValues( pluginResponse );
             var host = "http://eexcess.know-center.tugraz.at/";
             var cmd = "getMappings";
             
@@ -80,18 +82,6 @@ function requestPlugin() {
 /**
  * ************************************************************************************************************************************************
  */
-
-
-function fixMissingAndMalformattedValues( data ){
-	
-	data.results.results.forEach(function(d){
-		d.facets.language = d.facets.language || "en";
-		d.facets.year = parseDate(String(d.facets.year));
-	});
-	console.log(data);
-	return data;
-}  
-
 
 
 
