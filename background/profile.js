@@ -118,12 +118,45 @@ EEXCESS.profile = (function() {
             return _uuid;
         },
         getHistorySize: function(tabID,data,callback) {
-        	chrome.history.search({'text': '', 'maxResults': 999999999}, function(results) {
-        		callback(results);
-        	});
+        	if (data) {
+        		chrome.history.search({'text': '', 'startTime': data, 'maxResults': 1999999999}, function(results) {
+        			callback(results);
+        		});
+        	} else {
+        		chrome.history.search({'text': '', 'startTime': 0, 'maxResults': 1999999999}, function(results) {
+        			console.log(data);
+        			callback(results);
+        		});
+        	}
         },
         getProfile: function(callback) {
-            chrome.history.search({'text': '', 'maxResults': parseInt(localStorage['privacy.policy.history'])}, function(results) {
+    		var today = new Date();
+        	var startTime = 0;
+        	var maxResults = 1999999999;
+        	switch(localStorage["privacy.policy.history"]) {
+        	case '1':
+        		startTime = 0
+        		maxResults = 1
+        		break;
+        	case '2':
+        		startTime = today.getTime() - 1000*60*60;
+        		break;
+        	case '3':
+        		startTime = today.getTime() - 1000*60*60*24;
+        		break;
+        	case '4':
+        		startTime = today.getTime() - 1000*60*60*24*7;
+        	case '5':
+        		startTime = today.getTime() - 1000*60*60*24*30;
+        		break;
+        	case '6':
+        		startTime = today.getTime() - 1000*60*60*24*365;
+        		break;
+        	case '7':
+        		startTime = 0;
+    			break;
+        	}
+            chrome.history.search({'text': '', 'startTime': startTime, 'maxResults': maxResults}, function(results) {
                 var profile = {
                     "eexcess-user-profile": {
                         "history": results,
