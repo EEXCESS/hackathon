@@ -78,7 +78,7 @@ $('#topicInput').tagit({// tagit plugin for topics
         if(jsonTopics) {
             topics = JSON.parse(jsonTopics);
         }
-        topics.push({label:ui.tagLabel,uri:ui.tag.data('uri')});
+        topics.push({label:ui.tagLabel,uri:ui.tag.data('uri'),policy:0});
         localStorage['privacy.profile.topics'] = JSON.stringify(topics);
         }
     },

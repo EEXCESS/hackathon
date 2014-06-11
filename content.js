@@ -240,7 +240,6 @@ EEXCESS.callBG = function(message, callback) {
  * privacy initialization stuff
  */
 EEXCESS.handlePrivacyBoxVisibility = function() {
-    console.log("We get here");
     var visible = !$('#eexcess_privacy').is(':visible');
     if (EEXCESS.privacyVisible !== visible) {
         if (visible) {

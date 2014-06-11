@@ -6,6 +6,11 @@
 	cursor: pointer !important;
 }
 
+.progress-label {
+	float: left;
+    margin-right: 1em;
+}
+
 .label-container span.label {
 	margin: 3px;
 }
