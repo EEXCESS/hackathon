@@ -57,6 +57,7 @@ var getDataFromIndexedDB = null;
 getDataFromIndexedDB = new GetDataFromIndexedDB();
 
 getDataFromIndexedDB.Init(function(){
+	
 	LastTestAction();
 	forceGraph.InitGraph("#D3graph");
 	forceGraph.To.Object().Graph.GetGraphData().data.funcDict = funcStore;
@@ -64,7 +65,7 @@ getDataFromIndexedDB.Init(function(){
 	//start the jQuery library
 	$(BuildControls);
 	
-	//BuildControls();
+	
 });
 
 
@@ -80,7 +81,11 @@ function AddBookMarkInGraph(nodeId,bookmarkId,color){
 			.Delete(bookmarkNodeId,"svgcircle")
 			.Add(bookmarkNodeId,"svgrect","rect")
 			.Change(bookmarkNodeId,"svgrect",{
-				attr:{"fill":color,x:-5,y:-5,width:10,height:10}
+				attr:{"fill":color,x:-5,y:-5,width:10,height:10},
+				event:{action:"mouseover",func:"MouseOverBookmark",param:JSON.stringify({
+					nodeName:bookmarkNodeId,bookmarkName:bookmarkId,nodeId:nodeId,color:color})},
+				event1:{action:"mouseout",func:"MouseOutBookmark",param:JSON.stringify({
+					nodeName:bookmarkNodeId,bookmarkName:bookmarkId,nodeId:nodeId,color:color})}
 			})
 	.To.Object().To.Link()
 		.Add(nodeId,bookmarkNodeId,"LinkBookmark_"+nodeId+"_"+bookmarkId)
@@ -99,8 +104,22 @@ function DeleteBookMarkFromGraph(nodeId,bookmarkId){
 }
 
 
-var rList = null;
+// make graph and control objects.
+var forceGraph = new FGraph();
+var drawGraphObj = new DrawGraph();
+var slidercontrol = new SilderControl();
 
+
+var rList = null;
+var onlyResult = false;
+var currentResultClick = {
+	resultNode:null,
+	queryNode:null
+	};
+
+var currentHover = null;
+
+//storefunction for graph	
 var funcStore =	{
 	"WorkWithResultNode":function(param){
 
@@ -121,19 +140,102 @@ var funcStore =	{
 				var queryNodePartNames = currentNodeId.split("_");
 				$("#"+currentSelectedBookmark+" .bookmarkelement")
 					.append(
-						'<div class="bookmark_element_'+currentNodeId+'">'
-							+'<div class="bookmarkdata">'
-								+"Query: "+$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text()
+						'<div style="user-select: text;" class="bookmark_element_'+currentNodeId+' grey_round_box">'
+							+'<div>'
+								+'<span class="type_bold">query: </span>'
+								+'<span class="querycontent">'
+								+$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text()
+								+'</span>'
 							+'</div>'
-							+'<div class="bookmarkdata">'
+							+'<div>'
+								+'<span class="type_bold">title:</span>'
 								+$("#"+currentNodeId+" title").text()
 							+'</div>'
 						+'</div>');
+				
+				//add bookmark hover
+				$(".bookmark_element_"+currentNodeId).on("mouseover",function(){
+					funcStore["MouseOverBookmark"](JSON.stringify({
+						nodeName:"Bookmark_"+currentNodeId+"_"+currentSelectedBookmark,
+						bookmarkName:currentSelectedBookmark,
+						nodeId:currentNodeId,
+						color:"black"}));
+				});
+				$(".bookmark_element_"+currentNodeId).on("mouseout",function(){
+					funcStore["MouseOutBookmark"](JSON.stringify({
+						nodeName:"Bookmark_"+currentNodeId+"_"+currentSelectedBookmark,
+						bookmarkName:currentSelectedBookmark,
+						nodeId:currentNodeId,
+						color:"black"}));
+				});
+				$(".bookmark_element_"+currentNodeId).on("click",function(){
+					var searchText = 
+						$("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId+" .querycontent").text();
+					//console.log("|"+searchText+"|");
+					
+					var historyNumber = [];
+					getDataFromIndexedDB.wordHistory.forEach(function(query,index){
+						if(searchText == query){
+							historyNumber.push(index);
+						}
+					});
+					//console.log(historyNumber);
+					//console.log(sliderMin+ " , "+sliderMax);
+					var binaryContent ={number:0,min:false,max:false};
+					var vmin = null;
+					var vmax = null;
+					
+					for(var icount=0;icount<historyNumber.length;icount++){
+						binaryContent ={number:historyNumber[icount],min:false,max:false};
+						
+						if(sliderMin<=historyNumber[icount]){
+							binaryContent.min = true;
+						}
+						if(historyNumber[icount]<=sliderMax){
+							binaryContent.max = true;
+						}
+						
+						if(binaryContent.min == true && binaryContent.max == true){
+							//bookmark are here
+							vmin = null; vmax = null;
+							break;
+						//bookmark not here
+						}else if(binaryContent.min == false && binaryContent.max == true){
+							vmin = binaryContent.number;
+						}else if(binaryContent.min == true && binaryContent.max == false){
+							vmax = binaryContent.number;
+							break;
+						}
+
+					}
+					
+					if(vmin != null && vmax != null){
+						if((sliderMin - vmin)<(vmax-sliderMax)){
+							sliderMin = vmin;
+						}else{
+							sliderMax = vmax;
+						}
+					}else if(vmin != null && vmax == null){
+						sliderMin = vmin;
+					}else if(vmax != null && vmin == null){
+						sliderMax = vmax;
+					}
+					
+					slidercontrol.brush.extent([sliderMin, sliderMax]);
+					
+					drawGraphObj.ReDrawGraph(sliderMin,sliderMax,sliderMin,sliderMax);
+					drawGraphObj.ChangeGraph(sliderMin,sliderMax);
+					forceGraph.To.Object().To.Graph().ReDraw();
+					
+					slidercontrol.ChangeSilderControl();
+				});	
 				AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,
 					$("#"+currentSelectedBookmark+" .editcolor").val());	
 				bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={};
 				bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={
-					color:$("#"+currentSelectedBookmark+" .editcolor").val()
+					color:$("#"+currentSelectedBookmark+" .editcolor").val(),
+					query:$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text(),
+					title:$("#"+currentNodeId+" title").text()
 				};
 				
 				if(!bookmarkDict.nodes.hasOwnProperty(currentNodeId)){
@@ -149,8 +251,8 @@ var funcStore =	{
 
 				delete bookmarkDict.nodes[currentNodeId][currentSelectedBookmark];
 				
-				if(bookmarkDict.nodes[currentNodeId].length == 0){
-					delete bookmarkDict.nodes.currentNodeId;
+				if(Object.keys(bookmarkDict.nodes[currentNodeId]).length == 0){
+					delete bookmarkDict.nodes[currentNodeId];
 				}
 			}
 		}
@@ -184,17 +286,44 @@ var funcStore =	{
 		
 	},
 	"ShowDetails":function(param){
+
 		//console.log("gg "+ param);
-		var nameArray = JSON.parse(param).nodeName.split("_");
+		var nodeName = JSON.parse(param).nodeName;
 		
-		var queryNodeTitle = $("#UniqueNodeID_" + nameArray[2] +" title").text();
+		var nameArray = nodeName.split("_");
+		
+		var queryNode = "UniqueNodeID_" + nameArray[2];
+		var queryNodeTitle = $("#"+queryNode +" title").text();
 		var currentQueryNodeObj = getDataFromIndexedDB.wordsWithResults[queryNodeTitle];
 		
+		console.log(currentQueryNodeObj);
 		var currentArrayResult = currentQueryNodeObj.resultList[parseInt(nameArray[3])];
 		//var currentResult = currentQueryNodeObj.results[currentArrayResult];
-		//console.log(currentResult);
+		//console.log(currentResult);		
+		
+		
+		//change nodes properties
+		if(currentResultClick.resultNode != null){
+			forceGraph.To.Object().To.Node().To.SubElement()
+				.Change(currentResultClick.resultNode,"svgcircle",{
+					attr:{"stroke":"","stroke-width":""}
+				}).Change(currentResultClick.queryNode,"svgcircle",{attr:{"fill-opacity":1.0}});
+			forceGraph.To.Object().To.Graph().ReDraw();
+		}
+		currentResultClick.resultNode = nodeName;
+		currentResultClick.queryNode = queryNode;
+		forceGraph.To.Object().To.Node().To.SubElement()
+			.Change(nodeName,"svgcircle",{
+				attr:{"stroke":"black","stroke-width":3}
+			}).Change(queryNode,"svgcircle",{attr:{"fill-opacity":0.5}});
+		forceGraph.To.Object().To.Graph().ReDraw();	
+		
+		
+		//get to details
+
 		
 		function ClearDetailData(){
+			$("#bookmarklist *").remove();
 			$("#title_data").val("");
 			$("#link_data").text("").attr("href","");
 			$("#image_data").attr("src","");
@@ -204,6 +333,19 @@ var funcStore =	{
 
 		var detailData = currentQueryNodeObj.results[currentArrayResult];
 		//console.log(detailData);
+		
+		//bookmarkDict
+		if(Object.keys(bookmarkDict.nodes).length > 0){
+			if(bookmarkDict.nodes.hasOwnProperty(nodeName)){
+				Object.keys(bookmarkDict.nodes[nodeName]).forEach(function(bookmarkName){
+					var bookmarkdata = bookmarkDict.bookmarks[bookmarkName][nodeName];
+					$("#bookmarklist").append(
+						'<li class="bookmark_box">'
+						+'<span style="background-color:'+bookmarkdata.color+';">&nbsp;&nbsp;</span>'
+						+bookmarkName+'</li>');
+				});
+			}
+		}
 		
 		$("#title_data").val(detailData.title);
 		$("#link_data").text(detailData.uri).attr("href",detailData.uri);//.val(TextCutter(detailData.uri,20,19));
@@ -220,8 +362,9 @@ var funcStore =	{
 		
 	},
 	"GetResults":function(param){
+		$("#result_btn").trigger("click");
 		//console.log(JSON.parse(param).queries);
-		
+		onlyResult = true;
 		rList.loading(); // show loading bar, will be removed when new results arrive
 		
 		//$("#searchstatus").text("searching");
@@ -236,7 +379,7 @@ var funcStore =	{
 			};
 			query.push(tmp);
 		}
-		//console.log("start search");
+		console.log("start search go");
 	
 
 	
@@ -244,15 +387,89 @@ var funcStore =	{
 		EEXCESS.callBG({
 			method: {parent: 'model', func: 'query'}, data:query //data: [{weight:1,text:dataParameter.text}]
 		});
+	},
+	"ShrinkCircle":function(param){
+		var paramObj = JSON.parse(param);
+		forceGraph.To.Object().To.Node()
+			.To.SubElement()
+				.Change(paramObj.nodeName,"svgcircle",{
+					attr:{visibility:"visible"}
+				})
+				.Change(paramObj.nodeName,"svghiddencircle",{
+					attr:{visibility:"hidden"}
+				});
+				
+		forceGraph.To.Object().To.Graph().ReDraw();	
+
+	},
+	"GrowCircle":function(param){
+		var paramObj = JSON.parse(param);
+		
+		if(currentHover != null){
+			try{
+				forceGraph.To.Object().To.Node()
+					.To.SubElement()
+						.Change(currentHover,"svgcircle",{
+							attr:{visibility:"visible"}
+						})
+						.Change(currentHover,"svghiddencircle",{
+							attr:{visibility:"hidden"}
+						});
+			}catch(ex){}
+		}
+		currentHover = paramObj.nodeName;
+		
+		
+		forceGraph.To.Object().To.Node()
+			.To.SubElement()
+				.Change(paramObj.nodeName,"svgcircle",{
+					attr:{visibility:"hidden"}
+				})
+				.Change(paramObj.nodeName,"svghiddencircle",{
+					attr:{visibility:"visible"}
+				});
+				
+		forceGraph.To.Object().To.Graph().ReDraw();	
+	},
+	"MouseOverBookmark":function(param){
+		var bookmarkNodeId = JSON.parse(param);
+		
+		try{
+			forceGraph.To.Object().To.Node()
+				.To.SubElement()
+					.Change(bookmarkNodeId.nodeName,"svgrect",{
+						attr:{transform:"scale(2)"}});
+			
+			forceGraph.To.Object().To.Graph().ReDraw();	
+		}catch(e){}
+		$("#"+bookmarkNodeId.bookmarkName+", "
+			+"#"+bookmarkNodeId.bookmarkName+" .bookmark_element_"+bookmarkNodeId.nodeId).css({
+			"outline-width":2,"outline-color":bookmarkNodeId.color,"outline-style":"dashed"});
+	
+		
+	},
+	"MouseOutBookmark":function(param){
+		var bookmarkNodeId = JSON.parse(param);
+		
+		try{
+			forceGraph.To.Object().To.Node()
+				.To.SubElement()
+					.Change(bookmarkNodeId.nodeName,"svgrect",{
+						attr:{transform:"scale(1)"}});
+			
+			forceGraph.To.Object().To.Graph().ReDraw();	
+		}catch(e){}
+		
+		$("#"+bookmarkNodeId.bookmarkName+", "+".bookmark_element_"+bookmarkNodeId.nodeId).css({
+			"outline-width":"","outline-color":"","outline-style":""});
 	}
 };
 
 
 
-// make graph and control objects.
-var forceGraph = new FGraph();
-var drawGraphObj = new DrawGraph();
-var slidercontrol = new SilderControl();
+
+
+
 
 
 // show the Details
@@ -263,8 +480,11 @@ var DetailsFunction = function(){
 		};
 		var ShowDetailsNode = function(resultNodeName){
 			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(resultNodeName,"svgcircle",{event:EventDetailsParam(resultNodeName)})
-				.Change(resultNodeName,"svgtext",{event:EventDetailsParam(resultNodeName)});
+				.Change(resultNodeName,"svghiddencircle",{
+					event:EventDetailsParam(resultNodeName)//,
+					//attr:{"stroke":"black","stroke-width":3}
+				})
+				;//.Change(resultNodeName,"svgtext",{event:EventDetailsParam(resultNodeName)});
 		};
 		
 		ChangeResultNodes(ShowDetailsNode);
@@ -277,8 +497,11 @@ var DetailsFunction = function(){
 		}
 		var ShowNotDetailsNode = function(resultNodeName){
 			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(resultNodeName,"svgcircle",{event:EventEmptyParam()})
-				.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
+				.Change(resultNodeName,"svghiddencircle",{
+					event:EventEmptyParam()//,
+					//attr:{"stroke":"","stroke-width":""}
+				})
+				;//.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
 		};
 		
 		ChangeResultNodes(ShowNotDetailsNode);
@@ -300,9 +523,19 @@ var BookmarkFunction = function(){
 		};
 		var AddBookmarkNode = function(resultNodeName){
 			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(resultNodeName,"svgcircle",{
-					attr:{stroke:"red","stroke-width":3},event:EventBookmarkParam(resultNodeName)
-				}).Change(resultNodeName,"svgtext",{event:EventBookmarkParam(resultNodeName)});
+				.Change(resultNodeName,"svgcircle",{attr:{stroke:"red","stroke-width":3}})
+				.Change(resultNodeName,"svghiddencircle",{
+					attr:{stroke:"red","stroke-width":3},
+					event:EventBookmarkParam(resultNodeName),
+					//event1:{action:"mouseover",func:"GrowCircle",param:JSON.stringify({nodeName:resultNodeName})},
+					//event2:{action:"mouseout",func:"ShrinkCircle",param:JSON.stringify({nodeName:resultNodeName})}
+				
+					
+				});/*.Change(resultNodeName,"svgtext",{
+					event:EventBookmarkParam(resultNodeName)//,
+					//event1:{action:"mouseover",func:"GrowShrinkCircle",param:JSON.stringify({nodeName:resultNodeName,radius:15})},
+					//event2:{action:"mouseout",func:"GrowShrinkCircle",param:JSON.stringify({nodeName:resultNodeName,radius:10})}
+				});*/
 		};
 		
 		ChangeResultNodes(AddBookmarkNode);
@@ -317,8 +550,9 @@ var BookmarkFunction = function(){
 		}
 		var DeleteBookmarkNode = function(resultNodeName){
 			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(resultNodeName,"svgcircle",{attr:{stroke:"","stroke-width":""},event:EventEmptyParam()})
-				.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
+				.Change(resultNodeName,"svgcircle",{attr:{stroke:"","stroke-width":""}})
+				.Change(resultNodeName,"svghiddencircle",{attr:{stroke:"","stroke-width":""},event:EventEmptyParam()})
+				;//.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
 		};
 		
 		ChangeResultNodes(DeleteBookmarkNode);
@@ -338,10 +572,11 @@ var AddSearchFunction = function(){
 		};
 		var AddSearch = function(resultNodeName){
 			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(resultNodeName,"svgcircle",{
-					attr:{stroke:"blue","stroke-width":5},event:EventSearchParam(resultNodeName)
+				.Change(resultNodeName,"svgcircle",{attr:{stroke:"blue","stroke-width":3}})
+				.Change(resultNodeName,"svghiddencircle",{
+					attr:{stroke:"blue","stroke-width":3},event:EventSearchParam(resultNodeName)
 				})
-				.Change(resultNodeName,"svgtext",{event:EventSearchParam(resultNodeName)});
+				;//.Change(resultNodeName,"svgtext",{event:EventSearchParam(resultNodeName)});
 		
 		};
 
@@ -355,8 +590,9 @@ var AddSearchFunction = function(){
 		}
 		var DeleteSearch = function(resultNodeName){
 			forceGraph.To.Object().To.Node().To.SubElement()
-				.Change(resultNodeName,"svgcircle",{attr:{stroke:"","stroke-width":""},event:EventEmptyParam()})
-				.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
+				.Change(resultNodeName,"svgcircle",{attr:{stroke:"","stroke-width":""}})
+				.Change(resultNodeName,"svghiddencircle",{attr:{stroke:"","stroke-width":""},event:EventEmptyParam()})
+				;//.Change(resultNodeName,"svgtext",{event:EventEmptyParam()});
 		
 		};
 		ChangeResultNodes(DeleteSearch);
@@ -374,19 +610,20 @@ var AddSearchFunction = function(){
 var toggleBookmark = false;
 var toggleAddSearch = false;
 var toggleDetails = false;
-
+var sliderMin = 0;
+var sliderMax = 0;
 
 //main function // important
 var BuildControls = function(){
-	var sliderMin = 0;
-	var sliderMax = 0;
+
 
 	//console.log("build slider");
 	//console.log({"wl":getDataFromIndexedDB.queryObjHistory});
 	
 	var historyData = getDataFromIndexedDB.queryObjHistory;
 	var intalvalResults = GetSamePartOfArray(historyData.length,4);
-	var sliderWidth = 900;
+	//var sliderWidth = 900;
+	var sliderWidth = 720;
 	
 
 	
@@ -401,13 +638,15 @@ var BuildControls = function(){
 		)
 		.rangePoints([0, sliderWidth], 0);//slider scale width
 	
-	
+
 	//set slider work , min max values.
 	//console.log(historyData);
 	if(historyData.length < 5){
 		sliderMin = 0;
 		sliderMax = 0;
 	}else{
+		//sliderMin = 400;
+		//sliderMax = 410;
 		sliderMin = historyData.length-5;
 		sliderMax = historyData.length-1;
 	}
@@ -435,7 +674,7 @@ var BuildControls = function(){
 				
 				var test = forceGraph.Graph.GetGraphData();
 			}
-			
+
 		})
 		.on("brushend",function() {
 			var graphForce = forceGraph.To.Object().To.Graph().GetForceObj();
@@ -459,34 +698,10 @@ var BuildControls = function(){
 	///////////////////////////////////////////////////////////////////////////
 
 	
-	/**
-	 * Create custom handlers for the results' preview
-	 * In this case, open a fancybox with the url provided in the result.
-	 * Please make sure to log opening/closing the preview properly (methods:
-	 * EEXCESS.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
-	 * EEXCESS.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
-	 */
+
 	var previewHandler = function(url) {
-	/*
-                var myFacetScape = $("#result_panel");
-                var previewPanel = $('<div style="width:100%;height:100%;"></div>');
-                var backPanel = $('<div class="back_panel"></div>');
-                var backButton = $('<img src="../../../media/icons/back.png" style="width:100%;">');
-                var previewFrame = $('<iframe src="' + url + '" frameborder="0" hspace="0" vspace="0" style="width:97%;height:100%;position:absolute;">');
-
-                EEXCESS.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
-
-                myFacetScape.hide();
-                backPanel.click(function() {
-                    previewPanel.remove();
-                    myFacetScape.show();
-                    EEXCESS.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
-                });
-                backPanel.append(backButton);
-                previewPanel.append(backPanel);
-                previewPanel.append(previewFrame);
-                $('body').append(previewPanel);
-				*/
+		console.log(url);
+	
 	};
 	/*
 	 * Creates a result list in the provided div-element with the provided handler
@@ -502,10 +717,12 @@ var BuildControls = function(){
 		
 		
 	// populate query field initially
+	/*
 	EEXCESS.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(res) {
 		$('#searchtext').val(res.query);
 	});
-		
+		*/
+	
 	
 	$("#go").click(function(evt){
 
@@ -532,8 +749,6 @@ var BuildControls = function(){
 			method: {parent: 'model', func: 'query'}, data:query //data: [{weight:1,text:dataParameter.text}]
 		});
 
-		
-		
 	});
 	
 	
@@ -541,9 +756,18 @@ var BuildControls = function(){
 	//search finished with results, asynchronous call
 	EEXCESS.messageListener(
 		function(request, sender, sendResponse) {
+			
 			if (request.method === 'newSearchTriggered') {
+				if(onlyResult){
+					onlyResult = false;
+					//console.log("finish search match");
+					return;
+				}
 				console.log("finish search XX");
+
+				
 				getDataFromIndexedDB.GetNewData(function(){
+					
 					LastTestAction();
 					$("#searchstatus").text("search finish");
 					
@@ -621,6 +845,8 @@ var BuildControls = function(){
 	
 	//explore graph
 	$("#explore_graph").click(function(){
+		$("#work_btn").trigger("click");
+		
 		$("#add_search, #bookmarks").removeClass("searchmodus");
 		$("#explore_graph").addClass("searchmodus");
 		
@@ -647,6 +873,8 @@ var BuildControls = function(){
 	
 
 	$("#add_search").click(function(){
+		$("#work_btn").trigger("click");
+		
 		$("#explore_graph, #bookmarks").removeClass("searchmodus");
 		$("#add_search").addClass("searchmodus");
 		
@@ -669,6 +897,8 @@ var BuildControls = function(){
 	});
 	
 	$("#bookmarks").click(function(){
+		$("#work_btn").trigger("click");
+	
 		$("#add_search, #explore_graph").removeClass("searchmodus");
 		$("#bookmarks").addClass("searchmodus");
 		$("#detail_panel").hide();
@@ -689,8 +919,10 @@ var BuildControls = function(){
 
 	});
 	
+	
 
 	
+
 };
 
 

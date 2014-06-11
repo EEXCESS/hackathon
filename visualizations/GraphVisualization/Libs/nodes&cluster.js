@@ -52,6 +52,16 @@ var NodeClass = function(core){
 										action:null,
 										func:null,
 										param:null
+									},
+									event1:{
+										action:null,
+										func:null,
+										param:null
+									},
+									event2:{
+										action:null,
+										func:null,
+										param:null
 									}
 								}
 							}
@@ -139,6 +149,16 @@ var NodeClass = function(core){
 					attr:{},
 					text:null,
 					event:{
+						action:null,
+						func:null,
+						param:null
+					},
+					event1:{
+						action:null,
+						func:null,
+						param:null
+					},
+					event2:{
 						action:null,
 						func:null,
 						param:null

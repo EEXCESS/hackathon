@@ -25,12 +25,12 @@ var oC = {
 			options:{
 				svg:{
 					chartId:"#chart",
-					width:960,
-					height:500
+					width:750,//960,
+					height:350//500
 				},
 				size:{
-					width:960,
-					height:500
+					width:750,//960,
+					height:350//500
 				},
 				force:{
 					chargeValue: -100,//-400,//-200
@@ -371,6 +371,12 @@ var oC = {
 						.text(currentElement.text)
 						.on(currentElement.event.action,function(d){
 							return oC.graphData.data.funcDict[innerCurrentElement.event.func](innerCurrentElement.event.param);
+						})
+						.on(currentElement.event1.action,function(d){
+							return oC.graphData.data.funcDict[innerCurrentElement.event1.func](innerCurrentElement.event1.param);
+						})
+						.on(currentElement.event2.action,function(d){
+							return oC.graphData.data.funcDict[innerCurrentElement.event2.func](innerCurrentElement.event2.param);
 						});
 						
 					if(currentNode.parameter.drag){

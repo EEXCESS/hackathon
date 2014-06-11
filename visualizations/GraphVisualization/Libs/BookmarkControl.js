@@ -26,13 +26,15 @@ $("#addbookmark").click(function(){
     // add new bookmark
     $("#bookmark-body").append(
         '<div id="'+bookmarkname+'">'
-            +'<div class="bookmark">'
+            //+'<div class="bookmark">'
+			+'<div class="green_round_box bookmark">'
+			
                 +'<div>'
                     +'<input class="bookmarktext" type="text" readonly value="'+bookmarkname+'"></input>'
-                   // +'<button class="editbookmarkname">edit</button>'
-                    +'<input class="editcolor" disabled type="color" value="'+$("#newcolor").val()+'"></input>'
+                   // +'<button class="editbookmarkname">edit</button>'   
                 +'</div>'
                 +'<div class="workbookmarkshow" >'
+					+'<input class="editcolor" disabled type="color" value="'+$("#newcolor").val()+'"></input>'
                     +'<button class="expanderbookmark">+</button>'        
                     +'<button class="deletebookmark">x</button>'
                 +'</div>'
@@ -41,7 +43,7 @@ $("#addbookmark").click(function(){
                     +'<button class="cancelbookmarkname">cancel</button>'
                 +'</div>'
             +'</div>'
-            +'<div class="bookmarkelement" style="display:none;">'
+            +'<div class="bookmarkelement grey_round_box" style="display:none;">'
                // +"No result"
             +'</div>'
         +'</div>'
@@ -247,8 +249,22 @@ $("#addbookmark").click(function(){
 
 
 //delete content from the message text
-
 $("#newbookmarkname,#newcolor,#message")
     .on("focus click",function(){
     $("#message").text("");
 });
+
+
+//export bookmark
+$("#exportbookmark").click(function(){
+	window.URL = window.URL || window.webkitURL;
+
+	var logString = JSON.stringify(bookmarkDict);//.join("\r\n");
+	var downloadBlob = new Blob([logString], {type: 'text/plain'});
+
+	$("#exportbookmark").attr("href", window.URL.createObjectURL(downloadBlob));
+	$("#exportbookmark").attr("download", "bookmarkdata.txt");
+
+
+});
+
