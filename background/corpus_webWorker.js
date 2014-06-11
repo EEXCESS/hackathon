@@ -120,13 +120,16 @@ EEXCESS.createToken = function(text, parent) {
 EEXCESS.tokenize = function(text, parent, language) {
     var tokens = [];
 
+    if(this.stopwords(language).indexOf(text.trim().toLowerCase()) !== -1) {
+        text = '';
+    }
     // remove stopwords
-    var innerRegexp = this.stopwords(language).join('\\b|\\b');
-    var regexp = new RegExp('\\b' + innerRegexp + '\\b', 'gi');
+    var innerRegexp = this.stopwords(language).join('\\b|[^a-zA-ZäöüßÄÖÜ]');
+    var regexp = new RegExp('[^a-zA-ZäöüßÄÖÜ]' + innerRegexp + '\\b', 'gi');
     text = text.replace(regexp, '');
 
     // tokenize
-    var words = text.match(/([äöüÄÖÜß\w-_äöuÄÖÜ]{3,})/g);
+    var words = text.match(/([äöüÄÖÜß\w-_]{3,})/g);
     if (words) {
         for (var i = 0, len = words.length; i < len; i++) {
             // TODO: save position in the text? (stopwors already removed, thuss not really correct)
