@@ -1,5 +1,16 @@
 function display_querycrumbs(domElem) {
 
+
+    var QueryCrumbsConfiguration = {
+        /*
+        The qualitative color palette used to color the background of the query rectangles.
+        - Colors should be easily distinguishable.
+        - Colors should allow to construct a lighter and a darker version and be still distinguishable from all other colors.
+        - Using colorbrewer library (http://colorbrewer2.org/). Color Set1 is suitable for colorblind people.
+         */
+        baseColors:  colorbrewer["Set1"]["8"]
+    }
+
     // Query Crumbs dimensions
     var HISTORY_LENGTH = 11;
     var DENSE_PIXELS = 16;
@@ -51,38 +62,37 @@ function display_querycrumbs(domElem) {
         .attr("id", "queryCrumbs-svg");
 
     /*
-        Several basic distinct colors can be defined here. When appending a new node to the QueryCrumbs, we assign
+        Uses the base colors defined in QueryCrumbsConfiguration.base_colors. Several basic distinct colors can be defined here. When appending a new node to the QueryCrumbs, we assign
         one of these colors to the node. If the similarity of the new node compared to the previous node is below a
         certain threshold 'color_threshold', we assign the color which comes next in this list to the new node. Otherwise
         the new node gets the same color as the previous nod.
      */
-    var BaseColors = {
+    var BaseColorManager = {
         current: 0,
         currentFirstBaseColor: null,
-        base_colors: [
-            d3.rgb("hsl(240,50%,50%)"),  // blue
-            d3.rgb("hsl(0,50%, 50%)"),   // red
-            d3.rgb("hsl(180,50%, 50%)"), // cyan
-            d3.rgb("hsl(30,50%, 50%)"),  // orange
-            d3.rgb("hsl(120,50%, 50%)") // green
-        ],
         getColor: function(preNodeColor, similarity) {
+            console.log(QueryCrumbsConfiguration.baseColors)
+            console.log(preNodeColor)
+            console.log("similarity " + similarity)
+            console.log(color_threshold)
+
             if(preNodeColor) {
                 if(similarity > color_threshold) {
                     return preNodeColor;
                 } else {
-                    var cIdx = (BaseColors.base_colors.indexOf(preNodeColor) + 1) % BaseColors.base_colors.length;
-                    return BaseColors.base_colors[cIdx];
+                    var cIdx = (QueryCrumbsConfiguration.baseColors.indexOf(preNodeColor) + 1) % QueryCrumbsConfiguration.baseColors.length;
+                    console.log(cIdx)
+                    return QueryCrumbsConfiguration.baseColors[cIdx];
                 }
             } else {
-                return BaseColors.base_colors[0];
+                return QueryCrumbsConfiguration.baseColors[0];
             }
         },
         getFirstColor: function() {
-            if(BaseColors.currentFirstBaseColor) {
-                return BaseColors.currentFirstBaseColor;
+            if(BaseColorManager.currentFirstBaseColor) {
+                return BaseColorManager.currentFirstBaseColor;
             } else {
-                return BaseColors.base_colors[0];
+                return QueryCrumbsConfiguration.baseColors[0];
             }
         }
     };
@@ -291,7 +301,7 @@ function display_querycrumbs(domElem) {
                     } else {
                         if(currentIdx == HISTORY_LENGTH-1) {
                             historyData.splice(-HISTORY_LENGTH,1);
-                            BaseColors.currentFirstBaseColor = visualData.visualDataNodes[1].base_color;
+                            BaseColorManager.currentFirstBaseColor = visualData.visualDataNodes[1].base_color;
                         } else {
                             currentIdx += 1;
                             historyData = historyData.splice(0, currentIdx);
@@ -405,7 +415,7 @@ function display_querycrumbs(domElem) {
                 vNode.query = history[nodeIdx].query;
                 vNode.timestamp = history[nodeIdx].timestamp;
                 vNode.sim = similarities[nodeIdx].rsSimScore.sim;
-                vNode.base_color = (visualDataNodes[nodeIdx-1]) ? BaseColors.getColor(visualDataNodes[nodeIdx-1].base_color, vNode.sim) : BaseColors.getFirstColor();
+                vNode.base_color = (visualDataNodes[nodeIdx-1]) ? BaseColorManager.getColor(visualDataNodes[nodeIdx-1].base_color, vNode.sim) : BaseColorManager.getFirstColor();
                 vNode.x_pos = nodeIdx * (rectWidth + edgeWidth);
                 vNode.y_pos = 0;
                 vNode.width = rectWidth;
