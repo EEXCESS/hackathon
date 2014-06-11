@@ -118,7 +118,7 @@ EEXCESS.profile = (function() {
             return _uuid;
         },
         getHistorySize: function(tabID,data,callback) {
-        	chrome.history.search({'text': '', 'maxResults': '999999999'}, function(results) {
+        	chrome.history.search({'text': '', 'maxResults': 999999999}, function(results) {
         		callback(results);
         	});
         },
