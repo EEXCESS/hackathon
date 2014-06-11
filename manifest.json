@@ -1,6 +1,6 @@
 {
     "name": "EEXCESS",
-    "version": "0.28",
+    "version": "0.29",
     "update_url": "http://eexcess.joanneum.at/extension/updates.xml",
     "background": {
         "page": "background/background.html"
