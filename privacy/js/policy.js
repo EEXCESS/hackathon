@@ -102,7 +102,47 @@ function updateDisclosedValue(fieldName) {
 		}
     	break;
     case "history":
-    	$("div[data-eexcess-policy-field='history']").find("#disclosed").html(localStorage["privacy.policy.history"]);
+		var today = new Date();
+    	switch(localStorage["privacy.policy.history"]) {
+    	case '1':
+			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(1);
+			break;
+    	case '2':
+    		var data = today.getTime() - 1000*60*60;
+    		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
+    			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(results.length);
+    		});
+    		break;
+    	case '3':
+    		var data = today.getTime() - 1000*60*60*24;
+    		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
+    			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(results.length);
+    		});
+    		break;
+    	case '4':
+    		var data = today.getTime() - 1000*60*60*24*7;
+    		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
+    			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(results.length);
+    		});
+    		break;
+    	case '5':
+    		var data = today.getTime() - 1000*60*60*24*30;
+    		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
+    			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(results.length);
+    		});
+    		break;
+    	case '6':
+    		var data = today.getTime() - 1000*60*60*24*365;
+    		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
+    			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(results.length);
+    		});
+    		break;
+    	case '7':
+    		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: null	}, function(results) {
+    			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(results.length);
+    		});
+			break;
+    	}
         break;
     case "address":
 		var value = '<address>\n';
@@ -238,7 +278,7 @@ function initAvailableValue(fieldName) {
   		  $("div[data-eexcess-policy-field='address']").find("#available").html(value);
 		break;
 	case "history":
-		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}}, function(results) {
+		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: null}, function(results) {
 			$("div[data-eexcess-policy-field='history']").find("#available").html(results.length);
 		});
 		break;
@@ -255,6 +295,7 @@ function initAvailableValue(fieldName) {
 function initPolicyPanel() {
 	var fieldName = $(this).closest(".panel").attr("data-eexcess-policy-field");
 	var value =	localStorage["privacy.policy."+fieldName];
+    // init policy
 	if (!value) {
 		value = 0;
 	}
@@ -286,6 +327,10 @@ function initPolicyPanel() {
 			$(this).find(".progress-bar").eq(value).each(doProgressClick);
 		}
 	} else {
+	    // init policy
+		if (value == 0) {
+			value = 1;
+		}
 		$(this).find(".progress-bar").eq(value-1).each(doProgressClick);
 	}
 	initAvailableValue(fieldName);

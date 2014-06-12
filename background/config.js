@@ -8,8 +8,4 @@ var EEXCESS = EEXCESS || {};
         localStorage['profile.uuid'] = randomUUID();
     }
 
-    // init policy
-    localStorage['privacy.policy.geolocation'] = 6;
-    localStorage['privacy.policy.gender'] = 1;
-    localStorage['privacy.policy.history'] = 20;
 }());
