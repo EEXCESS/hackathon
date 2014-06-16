@@ -1,5 +1,5 @@
 
-function Barchart( domRoot, visTemplate, Settings ){
+function Barchart( domRoot, visTemplate, Settings ) {
 	
 	var BARCHART = {};
 	
@@ -47,10 +47,11 @@ function Barchart( domRoot, visTemplate, Settings ){
 					.attr( "id", "tooltip" )
 					.style("width", "auto");
 
+        var message;
 		if(d[yAxisChannel] > 1)
-			var message = d[yAxisChannel] + ' recommendations for ' + xAxisChannel + ' = ' + d[xAxisChannel];
+			message = d[yAxisChannel] + ' recommendations for ' + xAxisChannel + ' = ' + d[xAxisChannel];
 		else
-			var message = d[yAxisChannel] + ' recommendation for ' + xAxisChannel + ' = ' + d[xAxisChannel];
+			message = d[yAxisChannel] + ' recommendation for ' + xAxisChannel + ' = ' + d[xAxisChannel];
 		
 		tooltip.append("p")
 			.attr("id", "value")
@@ -149,11 +150,11 @@ function Barchart( domRoot, visTemplate, Settings ){
 		*	Define canvas dimensions
 		******************************************************/
 		BARCHART.Dimensions = Settings.getDimensions( domRoot, iWidth, iHeight, 'barchart' );
-		width           = BARCHART.Dimensions.width;
-		height     = BARCHART.Dimensions.height;
-		margin     = BARCHART.Dimensions.margin;
-		centerOffset    = BARCHART.Dimensions.centerOffset;
-		verticalOffset  = BARCHART.Dimensions.verticalOffset;
+		width          = BARCHART.Dimensions.width;
+		height         = BARCHART.Dimensions.height;
+		margin         = BARCHART.Dimensions.margin;
+		centerOffset   = BARCHART.Dimensions.centerOffset;
+		verticalOffset = BARCHART.Dimensions.verticalOffset;
 		
 		
 		/******************************************************
@@ -161,12 +162,12 @@ function Barchart( domRoot, visTemplate, Settings ){
 		******************************************************/
 
 		BARCHART.Input = Settings.getInitData( 'barchart', recomData, mappings );
-		data = BARCHART.Input.data;
+		data         = BARCHART.Input.data;
+        recomList    = BARCHART.Input.recomData;
 		xAxisChannel = BARCHART.Input.xAxisChannel;
 		yAxisChannel = BARCHART.Input.yAxisChannel;
 		colorChannel = BARCHART.Input.colorChannel;
 
-		recomList = recomData;
 		
 		/******************************************************
 		*	Define scales
@@ -245,7 +246,7 @@ function Barchart( domRoot, visTemplate, Settings ){
 	    		.text("Score");
     	
 		bars = focus.selectAll(".bar");	
-		BARCHART.Render.drawBars();
+		BARCHART.Render.drawBars( 'animate_bars' );
 		
 		
 		
@@ -292,26 +293,36 @@ function Barchart( domRoot, visTemplate, Settings ){
 	*	Reusable function. Invoked either from 'draw' or 'redraw'
 	* 
 	* ***************************************************************************************************************/
-	BARCHART.Render.drawBars = function( brushedKeywords ){
+	BARCHART.Render.drawBars = function( action ){
 		
 		bars.remove();
 		
 		focus.selectAll(".bar")
 			.data( data )
 			.enter().append("rect")
-				.attr("class", "bar")
+                .attr("class", "bar")
 				.attr("x", function(d) { return x(d[xAxisChannel]); })
 				.attr("width", x.rangeBand())
-				.attr("y", function(d) { return y(0); })
-				.attr("height", function(d) { return  0; })
-				.style("fill", function(d){ return color(d[colorChannel]); })
-				.transition().delay(function (d,i){ return i * 10;})
-					.duration(800)
-					.attr("height", function(d) { return height - y(d[yAxisChannel]); })
-					.attr("y", function(d) { return y(d[yAxisChannel]); });
-
+			    .style("fill", function(d){ return color(d[colorChannel]); });
 		
-		bars = focus.selectAll(".bar");	
+        bars = focus.selectAll(".bar");	        
+        
+        if( action == 'animate_bars' ){
+            
+            bars
+                .attr("y", function(d) { return y(0); })
+				.attr("height", function(d) { return  0; })
+                .transition()
+                    .delay(function (d,i){ return i * 10;})
+			        .duration(800)
+			        .attr("height", function(d) { return height - y(d[yAxisChannel]); })
+			        .attr("y", function(d) { return y(d[yAxisChannel]); });
+        }
+        else{
+            bars
+                .attr("height", function(d) { return height - y(d[yAxisChannel]); })
+			    .attr("y", function(d) { return y(d[yAxisChannel]); });
+        }
 
 		bars
 			.on("click", BARCHART.Evt.onBarMouseClicked)
@@ -325,11 +336,12 @@ function Barchart( domRoot, visTemplate, Settings ){
 	
 	/******************************************************************************************************************
 	* 
-	*	Reset barchart
+	*	Highlight bar and color legend selected
 	* 
 	* ***************************************************************************************************************/
 	BARCHART.Render.HighlightFilteredFacet = function( facetValue, facetIndex, isSelected ){
 		
+        
 		// retrieve indices to highlight in list panel (vis-template)
 		var indicesToHighlight = [];
 		
@@ -340,6 +352,7 @@ function Barchart( domRoot, visTemplate, Settings ){
 					indicesToHighlight.push(i);
 			});
 		}
+        
 		Vis.selectItems( indicesToHighlight );
 		
 		// update legends' and bars' domains
@@ -385,10 +398,10 @@ function Barchart( domRoot, visTemplate, Settings ){
 	*	Reset barchart
 	* 
 	* ***************************************************************************************************************/
-	BARCHART.Render.reset = function(){
+	BARCHART.Render.reset = function( action ){
 
         BARCHART.Render.clearLegends();
-		BARCHART.Render.drawBars();
+		BARCHART.Render.drawBars( action );
 	};
 
 
@@ -410,6 +423,17 @@ function Barchart( domRoot, visTemplate, Settings ){
             .style("width", "1.5em")
             .style("height", "1.5em");
     };
+    
+    
+    
+    /******************************************************************************************************************
+    *
+    *	Clear selected bar and legend when a list item is clickend on in vis-template
+    *
+    * ***************************************************************************************************************/
+    BARCHART.Render.clearSelection = function(){
+        BARCHART.Render.reset( 'do_not_animate_bars' );
+    };
 
 	
 
@@ -419,12 +443,13 @@ function Barchart( domRoot, visTemplate, Settings ){
 	
 	BARCHART.Ext = {
 			
-			draw: function( mappings, recomData, iWidth, iHeight, selectededListIndex ){
-				BARCHART.Render.draw( mappings, recomData ); 
-			},
-			
-			reset: function(){ BARCHART.Render.reset();	}
-			
+		draw: function( mappings, recomData, iWidth, iHeight, selectededListIndex ){
+		  BARCHART.Render.draw( mappings, recomData, iWidth, iHeight ); 
+		},
+		
+		reset: function(){ BARCHART.Render.reset( 'animate_bars' );	},
+        
+        clearSelection: function(){ BARCHART.Render.clearSelection(); }
 	};
 	
 	

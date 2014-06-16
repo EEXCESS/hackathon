@@ -76,7 +76,6 @@ function Settings (){
 		var INITDATA = {};
         var preprocessedData = fixMissingAndMalformattedValues( data );
 
-		
 		switch( senderStr ){
             case "timeline" : INITDATA = getTimelineInitData( preprocessedData, mappings ); break;
 			case "barchart": INITDATA = getBarchartInitData( preprocessedData, mappings, arg ); break;
@@ -106,7 +105,6 @@ function Settings (){
             obj['facets']['year'] = parseDate(String(d.facets.year));
             obj['facets']['country'] = d.facets.country || "";
             obj['facets']['keywords'] = d.facets.keywords || [];
-            obj['isHighlighted'] = false;
 
             dataArray.push(obj);
         });
@@ -166,7 +164,7 @@ function Settings (){
 
 
 
-	function getBarchartInitData( data, mappings, yearRange ){
+	function getBarchartInitData( processedData, mappings, yearRange ){
 
 		var xAxis, yAxis, color;
 		
@@ -180,13 +178,13 @@ function Settings (){
 		yAxis = 'count';
 			
 		// domain and counter are parallel arrays
-		var domain = d3.set( data.map(function(d){ return d.facets[xAxis]; }) ).values();
+		var domain = d3.set( processedData.map(function(d){ return d.facets[xAxis]; }) ).values();
 		var counter = Array();
 		domain.forEach(function(d, i){
 			counter.push( parseInt(0) );
 		});
 		
-		data.forEach(function(d){
+		processedData.forEach(function(d){
 			var index = domain.indexOf( d.facets[xAxis] );
 			counter[index]++;
 		});
@@ -202,7 +200,7 @@ function Settings (){
 		});
 		
 		// INITDATA
-		return {'data': array, 'xAxisChannel': xAxis, 'yAxisChannel': yAxis, 'colorChannel': color};
+		return {'data': array, 'recomData': processedData, 'xAxisChannel': xAxis, 'yAxisChannel': yAxis, 'colorChannel': color};
 		
 	}
 	

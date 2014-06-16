@@ -738,6 +738,7 @@ function Visualization( EEXCESSobj ) {
 				var arrayIndices = arg;
 				switch(VISPANEL.chartName){
 					case "timeline": timeVis.selectNodes( arrayIndices, self ); break;
+                    case "barchart": barVis.clearSelection(); break;
 				}
 				break;
 
