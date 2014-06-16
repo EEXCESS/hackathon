@@ -71,11 +71,12 @@ function display_querycrumbs(domElem) {
         current: 0,
         currentFirstBaseColor: null,
         getColor: function(preNodeColor, similarity) {
+            /*
             console.log(QueryCrumbsConfiguration.baseColors)
             console.log(preNodeColor)
             console.log("similarity " + similarity)
             console.log(color_threshold)
-
+    */
             if(preNodeColor) {
                 if(similarity > color_threshold) {
                     return preNodeColor;
