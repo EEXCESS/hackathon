@@ -50,7 +50,7 @@ EEXCESS.profile = (function() {
     };
 
     var applyGenderPolicy = function() {
-        if (localStorage['privacy.policy.gender'] === 1) {
+        if (localStorage['privacy.policy.gender'] === 1 || "1") {
             return localStorage['privacy.profile.gender'];
         }
         return "";
