@@ -59,7 +59,7 @@ EEXCESS.newSearchTriggered = function(data) {
  */
 EEXCESS.init = function(widget) {
 
-    $('#eexcess_tab a.fancybox_link').click(function(evt) {
+    $('a.fancybox_link').click(function(evt) {
         evt.preventDefault();
         EEXCESS.callBG({method: 'fancybox', data: 'chrome-extension://' + EEXCESS.extID + '/' + $(evt.target).parent('a').attr('href')});
     });
