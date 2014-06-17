@@ -118,8 +118,6 @@ footer a{
     color: #E4785C;
 }
 
-
-
 .ui-dialog {
     font-size: 0.8em;
 }
@@ -141,6 +139,10 @@ footer a{
 
 .block_list li:hover{
     border: 2px solid #E4A55C;
+}
+
+.buttons-bottom img {
+    vertical-align: middle;
 }
 
 #eexcess_powered_by{
