@@ -17,21 +17,19 @@ and open the template in the editor.
 		<script type="text/javascript" src="../../common_js/searchResultList.js"></script>
 		<script type="text/javascript" src="../../libs/rating/jquery.raty.min.js"></script>
 		
-		<link rel="stylesheet" type="text/css" href="graphVisualization.css">
+		<link rel="stylesheet" type="text/css" href="../../media/css/graphVisualization.css">
 		<link rel="stylesheet" type="text/css" href="../../media/css/eexcess.css">
-		<link rel="stylesheet" href="../../media/css/searchResultList.css" />
+		<link rel="stylesheet" type="text/css" href="../../media/css/searchResultList.css" />
 
-		<style>
-		
-		</style>
     </head>
     <body>
 
 		<!-- 
 			Content. Graph and sidebar
+			
 		-->
 
-		<header class="header_sidebar eexcess_vis" style="height:12px;">
+		<header id="header" class="header_sidebar eexcess_vis">
 			<input id="searchtext" type="text" class="margin_box" size="80"></input>
 			<button id="removetext" class="eexcess_submit_btn">x</button>
 			<button id="go" class="eexcess_submit_btn margin_box">Go!</button>
@@ -44,10 +42,10 @@ and open the template in the editor.
 	<!--
 	
 		-->
-		<div style="display:inline-flex;">
+		<div id="content">
 			<div>
 				<!-- Graph-->
-				<div id="D3graph" class="eexcess_vis" style="margin:5px;">
+				<div id="D3graph" class="eexcess_vis">
 				</div>
 				<!--
 				<svg width="800" height="400" >
@@ -63,11 +61,11 @@ and open the template in the editor.
 					&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 					
 					search history</span>
-					<svg  id="d3_slider" style="margin:5px;" height="80">
+					<svg  id="d3_slider" >
 						<defs>
 							<linearGradient id="redblue" x1="0%" y1="0%" x2="100%" y2="0%">
-								<stop offset="0%" style="stop-color:red;stop-opacity:1" />
-								<stop offset="100%" style="stop-color:blue;stop-opacity:1" />
+								<stop id="redgradient" offset="0%"  />
+								<stop id="bluegradient" offset="100%"  />
 							</linearGradient>
 						</defs>
 					</svg>
@@ -84,7 +82,7 @@ and open the template in the editor.
 
 			<!-- show details, results and bookmark export -->
 			<!-- width:300px; height:620px;-->
-			<div class="eexcess_vis" style="margin:5px;width:300px;height:470px;overflow-y:auto;">
+			<div id="sidebar" class="eexcess_vis">
 
 				<header id="graph_header" class="header_sidebar">
 					<button id="result_btn" class="eexcess_submit_btn margin_box grey_round_box">result</button>
@@ -112,7 +110,7 @@ and open the template in the editor.
 						<div  class="margin_box type_bold">
 						link:
 						</div>
-						<div class="grey_round_box margin_box" class="margin_box" style="overflow-x:auto">
+						<div class="grey_round_box margin_box" class="margin_box xoverflowauto" >
 							<a target="_blank" id="link_data"></a>
 						</div>
 						<div  class="margin_box type_bold">
@@ -120,13 +118,13 @@ and open the template in the editor.
 						</div>   
 						 
 						
-						<div width="100px" height="150px" style="resize:both;overflow:auto;" class="grey_round_box margin_box">
+						<div width="100px" height="150px" class="grey_round_box margin_box xoverflowauto resize">
 							<img width="100%" height="100%" id="image_data"></img>
 						</div>
 						<div class="margin_box type_bold">
 						id:
 						</div>  
-						<div class="grey_round_box margin_box" id="id_data" style="overflow-x:auto;" class="margin_box">
+						<div class="grey_round_box margin_box" id="id_data" class="margin_box xoverflowauto">
 							
 						</div>
 						<div class="margin_box type_bold">
@@ -149,7 +147,7 @@ and open the template in the editor.
 									
 								</span>
 							</div>
-							<div style="overflow-x:auto">
+							<div class="xoverflowauto">
 								<span class="type_bold margin_box">
 									provider:
 								</span>

@@ -186,9 +186,9 @@ var DrawGraph = function(){
 						attr:{transform:"translate(-75,170)"},
 						text:getDataFromIndexedDB.wordsWithResults[queries].resultList.length + " Results"})
 					//visit keyword, query
-					//.Add(uniqueNodeName,"svgtext1","text")
-					//.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(0,-150)"},text:10})
-					;
+					.Add(uniqueNodeName,"svgtext1","text")
+					//.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(0,-150)"},text:120})
+					.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(0,-150)"},text:1});
 					
 			oC.AddResultNodes(uniqueNodeName,queries,5,30);
 		}else{
@@ -207,8 +207,10 @@ var DrawGraph = function(){
 		if(forceGraph.Graph.GetGraphData().data.dict.node[historyNodeID] == undefined){
 		
 			var graphData = forceGraph.Graph.GetGraphData();
-			var radius = graphData.data.dict.node[uniqueNodeName].object.nodeContent.subElements["svgcircle"].attr.r;
-			radius = radius +2;
+			//var radius = graphData.data.dict.node[uniqueNodeName].object.nodeContent.subElements["svgcircle"].attr.r;
+			//radius = radius +2;
+			var radius = graphData.data.dict.node[uniqueNodeName].object.nodeContent.subElements["svgtext1"].text;
+			radius++;
 			var clusterDistance = graphData.data.clusters["clus_"+uniqueNodeName].nodeContent.parameter.cluster.distance;
 			clusterDistance = clusterDistance +2;
 			
@@ -231,11 +233,13 @@ var DrawGraph = function(){
 				//.Change(uniqueNodeName,{cluster:{distance:clusterDistance}})//grow node
 				.To.SubElement()
 					//.Change(uniqueNodeName,"svgcircle",{attr:{r:radius}})//grow node
-					//.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(0,-150)"},text:radius});
+					.Change(uniqueNodeName,"svgtext1",{
+						attr:{transform:"translate(0,-150)",style:"font-size:70px;"},text:radius});
 			
 			var lineProperty = {strength:0};
 			if(!isQueryNode){
-				//lineProperty = {strength:0.3,distance:300};
+
+				//lineProperty = {strength:0.5,distance:300};
 			}
 			//draw a histrory link	
 			if(isPreviousNode){
@@ -470,6 +474,7 @@ var DrawGraph = function(){
 			
 			console.log(min +" - "+ max);
 
+			
 			if((max-min)==0){
 				return;
 			}
@@ -516,7 +521,35 @@ var DrawGraph = function(){
 				count++;
 			//}while(index <= max);
 			}while(index < max);
-			//forceGraph.To.Object().To.Graph().ReDraw();	
+			//forceGraph.To.Object().To.Graph().ReDraw();
+
+			
+			//change the line strength
+			var graphData = forceGraph.Graph.GetGraphData().data.dict;
+			var queryNodes = Object.keys(graphData.node).filter(function(element){
+			    if(element.substring(0,"UniqueNodeID_".length) == "UniqueNodeID_"){
+					return element;
+				}
+			}).map(function(element){
+				return {
+					count:Object.keys(graphData.node[element].connections).filter(function(nodeElement){
+						if(nodeElement.substring(0,"HistoryConnectionID_".length) == "HistoryConnectionID_"){
+							return nodeElement;
+						}
+					}).length,
+					data:element
+				};
+			}).sort(function(a,b){
+				if (a.count > b.count)
+					return 1;
+				if (a.count < b.count)
+					return -1;
+				// a must be equal to b
+				return 0;
+			}).reverse();
+			console.log(graphData);
+			console.log(queryNodes);
+			
 		};
 		
 		oC.ReDrawGraphNew=function(min,max,sliderMin,sliderMax){
