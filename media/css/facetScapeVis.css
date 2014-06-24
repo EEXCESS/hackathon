@@ -7,7 +7,7 @@ body,html {
 }
 
 body {
-    background-image: url('../../media/watermark.png') ;
+    background-image: url('../watermark.png') ;
     background-size: auto 80%;
     font-size:0.7em;
     background-repeat: no-repeat;
