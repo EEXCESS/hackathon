@@ -7,7 +7,7 @@ function Visualization( EEXCESSobj ) {
     var height;	// Screen height
     
     // DOM Selectors
-    var root = "div#tabs";														// String to select the area where the visualization should be displayed
+    var root = "div#eexcess_canvas";														// String to select the area where the visualization should be displayed
 	var searchField = "#eexcess_search_field";									// String to select search field in the header
 	var btnSearch = "#eexcess_search_button";									// Selector for search button on left side of the header
 	var headerText = "#eexcess_header_text";									// String to select the text container in the middle of the header
@@ -435,8 +435,6 @@ function Visualization( EEXCESSobj ) {
 		var listItem = content.enter()
 							.append("li")
 								.attr("class", "eexcess_list")
-								//.append("div")
-								//.attr("class", "eexcess_ritem")
 								.attr("id", function(d, i){ return "data-pos-"+i; })
 								.on("click", EVTHANDLER.listItemClicked);
 		
