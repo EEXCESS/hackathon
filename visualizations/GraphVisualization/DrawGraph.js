@@ -186,9 +186,9 @@ var DrawGraph = function(){
 						attr:{transform:"translate(-75,170)"},
 						text:getDataFromIndexedDB.wordsWithResults[queries].resultList.length + " Results"})
 					//visit keyword, query
-					//.Add(uniqueNodeName,"svgtext1","text")
-					//.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(0,-150)"},text:10})
-					;
+					.Add(uniqueNodeName,"svgtext1","text")
+					//.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(0,-150)"},text:120})
+					.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(0,-150)",style:"font-size:70px;"},text:""});
 					
 			oC.AddResultNodes(uniqueNodeName,queries,5,30);
 		}else{
@@ -207,8 +207,10 @@ var DrawGraph = function(){
 		if(forceGraph.Graph.GetGraphData().data.dict.node[historyNodeID] == undefined){
 		
 			var graphData = forceGraph.Graph.GetGraphData();
-			var radius = graphData.data.dict.node[uniqueNodeName].object.nodeContent.subElements["svgcircle"].attr.r;
-			radius = radius +2;
+			//var radius = graphData.data.dict.node[uniqueNodeName].object.nodeContent.subElements["svgcircle"].attr.r;
+			//radius = radius +2;
+			//var radius = graphData.data.dict.node[uniqueNodeName].object.nodeContent.subElements["svgtext1"].text;
+			//radius++;
 			var clusterDistance = graphData.data.clusters["clus_"+uniqueNodeName].nodeContent.parameter.cluster.distance;
 			clusterDistance = clusterDistance +2;
 			
@@ -225,17 +227,22 @@ var DrawGraph = function(){
 			.To.Object().To.Link()	
 				//draw a connection link	
 				.Add(uniqueNodeName,historyNodeID,historyConnectionNameID)
-				.Change(historyConnectionNameID,{strength:0,attr:{fill:"none",stroke:"none"}})
+				.Change(historyConnectionNameID,{strength:1,attr:{fill:"none",stroke:"none"}})
 			// grow a query node //????????????????
-			.To.Object().To.Node()
+			;/*.To.Object().To.Node()
 				//.Change(uniqueNodeName,{cluster:{distance:clusterDistance}})//grow node
 				.To.SubElement()
 					//.Change(uniqueNodeName,"svgcircle",{attr:{r:radius}})//grow node
-					//.Change(uniqueNodeName,"svgtext1",{attr:{transform:"translate(0,-150)"},text:radius});
+					.Change(uniqueNodeName,"svgtext1",{
+						attr:{transform:"translate(0,-150)",style:"font-size:70px;"},text:radius});
+						*/
 			
+			//var lineProperty = {strength:0.5,distance:2000};
 			var lineProperty = {strength:0};
+			
 			if(!isQueryNode){
-				//lineProperty = {strength:0.3,distance:300};
+
+				//lineProperty = {strength:0.5,distance:300};
 			}
 			//draw a histrory link	
 			if(isPreviousNode){
@@ -470,6 +477,7 @@ var DrawGraph = function(){
 			
 			console.log(min +" - "+ max);
 
+			
 			if((max-min)==0){
 				return;
 			}
@@ -493,11 +501,16 @@ var DrawGraph = function(){
 			var currentLinkName = "";
 			var currentNodeName = "";
 			
+			var graphData = forceGraph.Graph.GetGraphData().data.dict;
+			
+			var neightborNodes = {};
+			
+			
 			var count = 0;
 			do{
 				//console.log(index);
 				currentLinkName = "HistoryLinkID_"+(index+1);
-				if(forceGraph.Graph.GetGraphData().data.dict.link.hasOwnProperty(currentLinkName)){/////////////
+				if(graphData.link.hasOwnProperty(currentLinkName)){/////////////
 					forceGraph.To.Object().To.Link()
 						.Change(currentLinkName,{attr:{
 							stroke:color(count),
@@ -508,15 +521,138 @@ var DrawGraph = function(){
 						;//.To.SubElement()
 						//.Change(currentLinkName,"svgtext",{text:count,attr:{fill:"purple"}});
 					
-				}////////
+					
+					// get data for neigtbor table
+					var currentNumber = parseInt(currentLinkName.split("_")[1]);
+					var source = graphData.link["HistoryConnectionID_" + (currentNumber-1)].source.elementId;
+					var target = graphData.link["HistoryConnectionID_" + currentNumber].source.elementId;
+					
+					if(!neightborNodes.hasOwnProperty(source)){
+						neightborNodes[source] ={neightbors:[]};
+					}
+					if(target != source){
+						neightborNodes[source].neightbors.push({node:target,line:currentLinkName});
+					}
+					
+					if(!neightborNodes.hasOwnProperty(target)){
+						neightborNodes[target] ={neightbors:[]};
+					}
+					if(target != source){
+						neightborNodes[target].neightbors.push({node:source,line:currentLinkName});
+					}
+					
+				}
 
-				
-				
+
 				index++;
 				count++;
 			//}while(index <= max);
 			}while(index < max);
-			//forceGraph.To.Object().To.Graph().ReDraw();	
+			//forceGraph.To.Object().To.Graph().ReDraw();
+
+
+			
+			
+			//build table for neightbor table
+			var sortedLinknumbers = Object.keys(neightborNodes).map(function(element){
+				return {
+					name:element,
+					length:neightborNodes[element].neightbors.length
+				};
+			}).sort(function(a,b){
+			    if (a.length > b.length)
+				  return 1;
+				if (a.length < b.length)
+				  return -1;
+				// a must be equal to b
+				return 0;
+			}).reverse();
+
+			console.log(graphData);
+			var gg = JSON.parse(JSON.stringify(neightborNodes));
+			console.log(gg);
+			
+			//change the neightbor table
+			sortedLinknumbers.forEach(function(element){
+				forceGraph.To.Object().To.Node()
+					.To.SubElement()
+						.Change(element.name,"svgtext1",{attr:{transform:"translate(0,-150)"},text:""});
+				if(neightborNodes.hasOwnProperty(element.name)){
+					neightborNodes[element.name].neightbors.forEach(function(neightbor){
+						if(element.name != neightbor.node){
+							if(neightborNodes.hasOwnProperty(neightbor.node)){
+								delete neightborNodes[neightbor.node];
+							}
+						}else{
+						
+						}
+					});
+				}
+			});
+
+			
+			//optimize the querynode with most links
+			var optimizedNeightborNodes = Object.keys(neightborNodes).sort(function(a,b){
+				function NeightborNodesFunc(value){
+					return neightborNodes[value].neightbors.length;
+				};
+			
+			    if (NeightborNodesFunc(a) > NeightborNodesFunc(b) )
+				  return 1;
+				if (NeightborNodesFunc(a) < NeightborNodesFunc(b))
+				  return -1;
+				// a must be equal to b
+				return 0;
+			});
+			console.log("--------");
+			console.log(neightborNodes);
+			console.log(optimizedNeightborNodes);
+			
+			optimizedNeightborNodes.forEach(function(element){
+				forceGraph.To.Object().To.Node()
+					.To.SubElement()
+						.Change(element,"svgtext1",{
+							attr:{transform:"translate(0,-150)"},
+							text:neightborNodes[element].neightbors.length});
+			/*
+				neightborNodes[element].neightbors.forEach(function(neightbor){
+					forceGraph.To.Object().To.Link()
+						.Change(neightbor.line,{strength:0.1,distance:500});
+				
+					
+				});*/		
+					
+			});
+			
+			Object.keys(graphData.link).filter(function(element){
+				if(element.substr(0,"forceline_".length) == "forceline_"){
+					forceGraph.To.Object().To.Link().Delete(element);
+					return element;
+				}
+			});
+			
+			if(optimizedNeightborNodes.length > 1){
+				var centralNode = optimizedNeightborNodes.pop();
+				//var previousNode= null;
+				optimizedNeightborNodes.forEach(function(element,index){
+					
+					forceGraph.To.Object().To.Link()		
+						.Add(centralNode,element,"forceline_"+index)
+						.Change("forceline_"+index,{strength:0.95,distance:2000});
+						/*
+					if(index > 0){
+						forceGraph.To.Object().To.Link()		
+							.Add(previousNode,element,"forceline_"+(index-1)+"_"+index)
+							.Change("forceline_"+(index-1)+"_"+index,{strength:0.8,distance:1000});
+					}	
+					previousNode = element;
+					*/
+				});
+			}
+			
+			
+			
+			
 		};
 		
 		oC.ReDrawGraphNew=function(min,max,sliderMin,sliderMax){

@@ -18,7 +18,6 @@ file structure
 * **/widget** The sidebar UI
 * **README.md** This file
 * **content.js** The content script injected into every page which is whitelisted in the manifest-file.
-* **eexcess.css** The basic style. All general definitions (like colors, heading-definitions, line styles, ...) go here. Should not contain definitions below class-level.
 * **manifest.json** Configuration file, defining permissions, icons, paths, ...
 
 (for detailed information on a component, see the readme in the respective folder)

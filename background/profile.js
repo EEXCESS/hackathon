@@ -14,14 +14,14 @@ EEXCESS.profile = (function() {
     }
 
     var applyFirstnamePolicy = function() {
-        if (localStorage['privacy.policy.firstname'] === 1) {
+        if (localStorage['privacy.policy.firstname'] === 1 || "1") {
             return localStorage['privacy.profile.firstname'];
         }
         return "";
     };
     
     var applyLastnamePolicy = function() {
-        if (localStorage['privacy.policy.lastname'] === 1) {
+        if (localStorage['privacy.policy.lastname'] === 1 || "1") {
             return localStorage['privacy.profile.lastname'];
         }
         return "";
@@ -50,7 +50,7 @@ EEXCESS.profile = (function() {
     };
 
     var applyGenderPolicy = function() {
-        if (localStorage['privacy.policy.gender'] === 1) {
+        if (localStorage['privacy.policy.gender'] === 1 || "1") {
             return localStorage['privacy.profile.gender'];
         }
         return "";

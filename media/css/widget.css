@@ -1,3 +1,5 @@
+/* css file for the widget displayed at the right border of a page */
+
 #eexcess_searchForm {
     float:left;
 }
@@ -12,3 +14,25 @@ nav {
 #eexcess_content {
     clear:both;
 }
+
+.header_sidebar {
+    border-radius:10px 0px 0px 0px; 
+    border:1px solid #ccc; ;
+    -webkit-box-shadow:0 0 10px #cdc; 
+    background: #1d904e; 
+}
+
+.content_sidebar {
+    border-left: 2px solid #1d904e;
+    margin-left:auto; margin-right:auto;
+    height: 300px;
+    overflow-y: auto;
+    height:80%;
+}
+
+.footer_sidebar {
+    border-left: 2px solid #1d904e;
+    border-bottom: 2px solid #1d904e;
+    border-radius:0px 0px 0px 10px;
+}
+

@@ -1,6 +1,8 @@
 /** This is a master css file for eexcess pages
     all pages should include first this css, and then
-    their own. The base color for the scheme design is #1d904e */
+    their own. The base color for the scheme design is #1d904e 
+    This file should not contain definitions below class level.
+*/
 
 body,html {
     height:100%;
@@ -11,7 +13,7 @@ body,html {
 }
 
 body {
-    background-image: url('media/watermark.png');
+    background-image: url('../watermark.png');
     background-size: auto 100%;
     font-size:0.7em;
 }
@@ -116,8 +118,6 @@ footer a{
     color: #E4785C;
 }
 
-
-
 .ui-dialog {
     font-size: 0.8em;
 }
@@ -139,6 +139,10 @@ footer a{
 
 .block_list li:hover{
     border: 2px solid #E4A55C;
+}
+
+.buttons-bottom img {
+    vertical-align: middle;
 }
 
 #eexcess_powered_by{

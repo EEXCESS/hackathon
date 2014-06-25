@@ -142,6 +142,10 @@ EEXCESS.model = (function() {
          * @param {String} data The query term 
          */
         query: function(tabID, data) {
+            // send query only if the widget is visible
+            if(!params.visible) {
+                return;
+            }
             console.log(data);
             _queryTimestamp = new Date().getTime();
             if (data.hasOwnProperty('reason')) {

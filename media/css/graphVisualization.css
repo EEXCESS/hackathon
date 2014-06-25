@@ -1,31 +1,13 @@
-/*css for graph ??????????????*/
-/*
-rect {
 
-	fill:none;
-	stroke: #999;
-	
-  
-  fill: none;
- 
-  pointer-events: all;
-}
- */
-/*
-.node {
-  fill: #000;
-}
 
-.link {
-  stroke: #999;
-}
-*/
+/*css for index.html*/
 
+/*background image*/
 body {
     background-image: url('../../media/watermark.png');
     background-size: auto 100%;
 }
-/*css for index.html*/
+
 .eexcess_vis{
 /*
     margin-left:10%;
@@ -44,6 +26,46 @@ body {
 	
 }
 
+#header{
+	height:12px;
+}
+
+#content{
+	display:inline-flex;
+}
+
+#D3graph{
+	margin:5px;
+}
+
+#d3_slider{
+	margin:5px;
+	height:80px;
+}
+
+#redgradient{
+	stop-color:red;stop-opacity:1;
+}
+
+#bluegradient{
+	stop-color:blue;stop-opacity:1;
+}
+
+#sidebar{
+	margin:5px;
+	width:300px;
+	height:470px;
+	overflow-y:auto;
+}
+
+.xoverflowauto{
+	overflow-x:auto;
+}
+.resize{
+	resize:both;
+}
+
+/*style for css optical*/
 #graph_header{
 	padding-bottom: 0px;
 }
@@ -76,44 +98,6 @@ body {
 	outline: green solid 2px;
 }
 
-/* css for expander control*/
-/*old ??*/
-.expanderControl{
-    border:1px solid lightgrey;
-    border-radius:2px 2px 2px 2px; 
-    margin:2px;
-}
-
-.expanderhead{
-    
-    /*border:1px solid lightgrey;*/
-    border-radius:2px 2px 2px 2px; 
-    
-    margin:1px;
-    padding:2px;
-}
-
-.expanderbutton{
-    border:1px solid grey;
-    border-radius:2px 2px 2px 2px; 
-    margin:0px 1px 0px 1px;
-    padding:1px;
-}
-
-.expandertext{
-    /*
-    border:1px solid;
-    border-radius:2px 2px 2px 2px; 
-    */
-    margin:2px;
-}
-
-.expanderbody{
-    /*border:1px solid lightgrey;*/
-    border-radius:2px 2px 2px 2px; 
-    padding:2px;
-}
-
 /*css for slider control*/
 .axis path, .axis line {
   fill: none;
@@ -131,8 +115,8 @@ body {
   shape-rendering: crispEdges;
 }
 
-/*css booknark control*/
 
+/*css booknark control*/
 #message{
 /*
 	border:1px solid green;

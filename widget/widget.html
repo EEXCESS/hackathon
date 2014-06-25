@@ -4,41 +4,40 @@
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="stylesheet" href="../libs/jquery-ui/jquery-ui.css" />
-        <link rel="stylesheet" href="../eexcess.css" />
+        <link rel="stylesheet" href="../media/css/eexcess.css" />
         <link rel="stylesheet" href="../media/css/widget.css" />
         <link rel="stylesheet" href="../media/css/searchResultList.css" />
-        <link rel="stylesheet" href="../media/css/sidebar.css" />
         <script type="text/javascript" src="../libs/d3.v3.js" charset="utf-8"></script>
         <link rel="stylesheet" type="text/css" href="../visualizations/QueryCrumbs/queryhistory.css">
     </head>
     <body>
 
-      <header id="eexcess_main" class="header_sidebar">
-        <form id="eexcess_searchForm">
-          <fieldset>
-            <input type="text" id="eexcess_query"  placeholder="search text..." />
-            <input type="submit" id="search_submit" class="eexcess_submit_btn" value="search" />
-          </fieldset>
-        </form>
-
-	
-	<nav>
-          <ul id="eexcess_tab">
-              <li><a href="visualizations/FacetScape/index.html" class="fancybox_link" title="explore the results"><img src="/media/batchmaster/grid.png" /></a></li>
-            <li><a href="visualizations/GraphVisualization/index.html" class="fancybox_link" title="explore your search history"><img src="/media/batchmaster/map-2.png" /></a></li>
-	        <li><a href="visualizations/Vis-Template/index.html" class="fancybox_link" title="display the results in a timeline"><img src="/media/batchmaster/timeline.png" /></a></li>
-	        <li><a href="privacy/profile.html" class="fancybox_link" title="edit your profile"> <img src="/media/batchmaster/user-4.png" /></a></li>
-	        	        <li><a href="options/options.html" class="fancybox_link"> <img src="/media/batchmaster/options.png" /></a></li>
-          </ul>
-	  
-	</nav>
-          <div id="queryCrumbs"></div>
-          <script type="text/javascript" src="../libs/colorbrewer.v1.min.js" charset="utf-8"></script>
-          <script type="text/javascript" src="../visualizations/QueryCrumbs/js/querycrumbs-vis.js" charset="utf-8"></script>
-      </header>
+        <header id="eexcess_main" class="header_sidebar">
+            <form id="eexcess_searchForm">
+                <fieldset>
+                    <input type="text" id="eexcess_query"  placeholder="search text..." />
+                    <input type="submit" id="search_submit" class="eexcess_submit_btn" value="search" />
+                </fieldset>
+            </form>
 
 
-<div id="eexcess_content" class="content_sidebar"></div>
+            <nav>
+                <ul id="eexcess_tab">
+                    <li><a href="visualizations/FacetScape/index.html" class="fancybox_link" title="explore the results"><img src="/media/batchmaster/grid.png" /></a></li>
+                    <li><a href="visualizations/GraphVisualization/index.html" class="fancybox_link" title="explore your search history"><img src="/media/batchmaster/map-2.png" /></a></li>
+                    <li><a href="visualizations/Vis-Template/index.html" class="fancybox_link" title="display the results in a timeline"><img src="/media/batchmaster/timeline.png" /></a></li>
+                    <li><a href="privacy/profile.html" class="fancybox_link" title="edit your profile"> <img src="/media/batchmaster/user-4.png" /></a></li>
+                    <li><a href="options/options.html" class="fancybox_link"> <img src="/media/batchmaster/options.png" /></a></li>
+                </ul>
+
+            </nav>
+            <div id="queryCrumbs"></div>
+            <script type="text/javascript" src="../libs/colorbrewer.v1.min.js" charset="utf-8"></script>
+            <script type="text/javascript" src="../visualizations/QueryCrumbs/js/querycrumbs-vis.js" charset="utf-8"></script>
+        </header>
+
+
+        <div id="eexcess_content" class="content_sidebar"></div>
 
         <!--<img src="../media/EEXCESS__Logo_RGB.jpg" id="eexcess_logo" />-->
         <script type="text/javascript" src="../libs/jquery-1.10.1.min.js"></script>
@@ -49,13 +48,15 @@
         <script type="text/javascript" src="widget.js"></script>
 
         <footer class="footer_sidebar">
-        <div id="eexcess_privacy">
-        	<a href="#"><img src="/media/batchmaster/key.png" /> Change Privacy Settings</a>
-        </div>
-        <div id="eexcess_powered_by">
-        	<a href="#">Powered by<img src="/media/EEXCESS__Logo_RGB.jpg" /></a>
-        </div>
+            <div class="buttons-bottom">
+                <a href="#" id="eexcess_privacy"><img src="/media/batchmaster/key.png" /> Change Privacy Settings</a>
+                <a href="#" title="report a bug" class="help-button"><img src="../media/batchmaster/spam.png" alt="report a bug" /></a>
+                <a href="help.html" title="get help" class="help-button fancybox_link"><img src="../media/icons/help.png" alt="get help" /></a>
+            </div>
+            <div id="eexcess_powered_by">
+                <a href="http://www.eexcess.eu" target="_blank">Powered by<img src="/media/EEXCESS__Logo_RGB.jpg" /></a>
+            </div>
 
-	</footer>
+        </footer>
     </body>
 </html>
