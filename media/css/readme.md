@@ -17,5 +17,6 @@ rectangles are set in querycrumbs-vis.js and should not be styled)
 included in visualization/FacetScape/index.html
 * **vis-template-style.css** Formats the main structure of the visualization in visualizations/Vis-Template
 * **vis-template-chart-style** Formats the visualization rendered inside the previous one, i.e. both timeline and bar chart. the color encoding for nodes (timeline) and bars (bar chart) should not be modified
+* **popup.css** Formats the popup, displayed when clicking on the extension icon. Included in /popup.html (the popup is only shown on https-pages, to display an error message)
 
 If you add a file to this folder, please add a small description to the list above, indicate where the file is used and if configurations are necessary in the javascript code, please indicate this as well.
