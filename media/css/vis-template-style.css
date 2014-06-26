@@ -4,17 +4,21 @@ header, #eexcess_header, #eexcess_vis, #eexcess_content{
 
 html { font-size: 62.5%; }
 
-@media screen and (max-device-width : 1024px) {
-	
-	html {
-		font-size: 62.5%;
-	}
+
+@media (max-width: 300px) {
+    html { font-size: 80%; }    
 }
 
-@media screen and (max-device-width : 1920px) {
-	html {
-		font-size: 100%;
-	}
+@media (min-width: 500px) {
+    html { font-size: 90%; }
+}
+
+@media (min-width: 700px) {
+    html { font-size: 100%; }
+}
+
+@media (min-width: 1200px) {
+    html { font-size: 110%; }
 }
 
 
@@ -60,27 +64,25 @@ div{
 	display:block;
 }
 
-header {
-    background:white;
-    background-color: rgba(255, 255, 255, 0.85); 
-    margin-left:auto; 
-    margin-right:auto; 
-    border-radius:10px 10px 10px 10px; 
-    border:1px solid #ccc; /*padding-bottom:20px;*/ 
-    -webkit-box-shadow:0 0 10px #cdc; 
-}
 
 
+/********************************************************************************************************************************************
+
+    Header panel (top of screen)
+
+********************************************************************************************************************************************/
+
+
+/*
+    Div wrapping the whole header (green bar on the top of the iFrame)
+*/
 #eexcess_header {
     border-collapse:separate;
     border-spacing:10%;
-    
     float: left;
     height: 40px;
-    /*background-color: rgba(255, 255, 255, 0.8);*/
     background-color: #1F914F;
     margin-left: 0%;
-    with: 90%; 
     border-radius: 10px 10px 10px 10px; 
     border: 1px solid #ccc; /*padding-bottom:20px;*/ 
     -webkit-box-shadow: 0 0 10px #cdc;
@@ -88,12 +90,22 @@ header {
 	line-height: 28px;
 
 }
+
+
+/*
+    Secondaty <div> inside #eexcess_header
+*/
 #eexcess_inner_header{
 	height: 20px;
 	padding-top: 6px;
-	/*background-color: #1F914F;*/
 }
 
+
+/*
+    <div> on the left side of the inner header
+    It wraps the text input and search button
+
+*/
 #eexcess_header_search {
     float:left;
     width: 29%;
@@ -101,11 +113,10 @@ header {
 }
 
 
-#eexcess_searching_message{
-	color: #ffffff;
-}
-
-
+/*
+    <span> inside #eexcess_header_search
+    Displays message like "Query Results : xx"
+*/
 #eexcess_header_text {
 	float: left;
 	width: 40%;
@@ -113,25 +124,14 @@ header {
     font-family:Arial;
     font-size: 1.1em;
     font-weight: bold;
-   /* padding-top: 6px;*/
     text-align:center;
 }
 
 
-
-#eexcess_loading_results{
-	display: block;
-	margin-top: 8em;
-	text-align: center;
-}
-
-
-#eexcess_loading_results span{
-	display: block;'
-	font-size: 1.1em;
-}
-
-
+/*
+    Third and last <div> aligned inside "#eexcess_inner_header"
+    Currently Unused
+*/
 #eexcess_header_filter {
 	width: 29%;
 	float: right;
@@ -140,16 +140,24 @@ header {
 }
 
 
+/*
+    <input> field text on left upper corner of screen
+*/
 .eexcess_query_field{
 	width: 45%;
 	height: 1.2em;
 	border-radius: 0.3em;
 }
 
+/*
 .eexcess_submit_btn_wrapper{
 	display: inline-block
 }
+*/
 
+/*
+    Search button class style
+*/
 .eexcess_submit_btn {
 	display: inline-block;
 	height: 22px; /*1.8em;*/
@@ -159,69 +167,87 @@ header {
 	font-weight: bold;
 	border: solid #70C896 0.1em;
 	border-radius: 0.4em;
-	/*box-shadow: -0.1em 0.1em #70C896;*/
 	margin-top: 0.0em;
-	/*margin-bottom: 0.1em;*/
-	/*margin-left: 0.1em;*/
 }
 
-
+/*
+    Hover style for previous class
+*/
 .eexcess_submit_btn:hover{
-	/*margin-top: 0.1em;*/
-	/*margin-bottom: 0.0em;*/
-	/*margin-left: 0em;*/
 	border: solid yellow 0.1em;
 	box-shadow: none;		
 }
 
 
 
-#eexcess_main_panel{
-	
+
+
+/********************************************************************************************************************************************
+
+        Main Containers
+
+********************************************************************************************************************************************/
+
+
+
+/*
+    <div> containing everything below the header ("#eexcess_header")
+*/
+#eexcess_main_panel{	
 	text-align: center;
 	vertical-align: top;
 	height: 90%;
-	
 }
 
 
-
+/*
+    <div> containinig "#eexcess_controls" (left) and "#eexcess_vis_panel" (center). the first one holds the control Panel and the latter the visualization Panel
+*/
 #eexcess_vis{
-	/*overflow: auto;*/
 	pointer-events: all;
 	float: left;
 	display:inline-block;
 	vertical-align: top;
 	background-color: rgba(241, 241, 230, 0.50);
-	/*background-color: rgba(245, 245, 245, 0.85);*/
-	/*background-color: rgba(241, 248, 244, 0.85);*/
 	top:0;
     margin-left:0%;
     margin-top: 5px;
     margin-bottom: 5px;
     width:80%;
-    height:100%;
-    /*height: 520px;*/
-  
-    border-radius:10px 10px 10px 10px; border:2px solid #1d904e;
-    
+    height:100%;  
+    border-radius:10px 10px 10px 10px; border:2px solid #1d904e;    
 }
 
+
+/********************************************************************************************************************************************
+
+    Control Panel (left of screen)
+
+********************************************************************************************************************************************/
+
+/*
+    Main panel (div) on the left side (green)
+    
+*/
 #eexcess_controls {
 	float: left;
 	vertical-align: middle;
 	width: 18%;
-	/*height: 518px;*/
 	height:99.25%;
 	margin-left: 2px;
 	margin-top: 0.25%;
 	margin-bottom: 0.25%;
 	border-radius:10px 10px 10px 10px;
 	background-color: rgba(29, 144, 78, 0.6);
-	/*background: #1d904e;*/
 	z-index: 2;
 }
 
+
+/*
+    div on the upper side of #eexcess_controls.
+    Wraps #eexcess_controls_chart and #eexcess_controls_chart, which enclose pairs  of span-select DOM elements
+
+*/
 #eexcess_fixed_controls{
 	height: 20%;
 	margin-top: 2em;
@@ -229,23 +255,34 @@ header {
 	border-bottom: 1px solid rgba(255,255,255,0.7);
 }
 
+
+/*
+    Wraps the first pair span-select, e.g. "Chart  timeline")
+*/
 #eexcess_controls_chart {
-	/*margin-top: 30px;*/
 	margin-left: 5px;
 }
 
+/*
+    <div> for wrapping the divs containing the remaining pairs span-select (".eexcess_mapping_container")
+*/
 #eexcess_controls_mappings {
 	margin-top: 10px;
 	margin-left: 5px;
-/*	margin-bottom: 30px;*/
 }
 
 
+/*
+    Contains individual <span>, <select> pairs
+*/
 .eexcess_mapping_container {
 	
 }
 
 
+/*
+    Class for <span> elements labelling the <select> elements
+*/
 .eexcess_controls_title {
 	display: block;
 	float: left;
@@ -256,21 +293,25 @@ header {
 	text-shadow: -0.1em 0.1em 0.5em #eee;
 }
 
+/*
+    All <select> elements
+*/
 #eexcess_select_chart,
 .eexcess_select {
 	margin-left: 40%;
 	width: 58%;
 	display: block;
 	text-align: left;
-	
-	border: 1px solid #aaaaaa;
-	background: #eee url("../../libs/jquery-ui-1.10.4/themes/smoothness/images/ui-bg_glass_55_fbf9ee_1x400.png") 50% 50% repeat-x;
+	/*background: #eee url("../../libs/jquery-ui/images/ui-bg_glass_55_fbf9ee_1x400.png") 50% 50% repeat-x;*/
 	color: #444;
-	border: 0.1em #ccc solid;
-	-webkit-border-radius: 0.3em;;
+	border: 0.1em #ddd solid;
+	-webkit-border-radius: 0.5em;
+    background-color: white;
 }
 
-
+/*
+    Hover effect for all <select>
+*/
 #eexcess_select_chart:hover,
 .eexcess_select:hover {
 	border: 0.1em yellow solid;
@@ -281,20 +322,23 @@ header {
 
 /********************************************************************************************************************************************
 
-Visualization Panel
+Visualization Panel (center of screen)
 
 ********************************************************************************************************************************************/
 
-
+/*
+    Wraps 2 <div> elements: "#eexcess_vis_controls_wrapper" (lower green bar on upper side) and "#eexcess_canvas" (center)
+*/
 #eexcess_vis_panel {
 	margin-left: 18%;
 	width: 82%;
 	height: 100%;
-	/*width: 950px;*/
-	/*height: 524px;*/
 }
 
 
+/*
+    Encloses "#eexcess_vis_controls"
+*/
 #eexcess_vis_controls_wrapper {
 	display: block;
 	width: 99%;
@@ -305,8 +349,10 @@ Visualization Panel
 }
 
 
-#eexcess_vis_controls {
-	
+/*
+    Container for control buttons in Visualization Panel (so far only "Reset")
+*/
+#eexcess_vis_controls {	
 	width: 100%;
 	height: 2.5em;
 	background-color: rgba(29, 144, 78, 0.6);
@@ -314,11 +360,10 @@ Visualization Panel
 	
 }
 
-.eexcess_vis_controls_button-wrapper {
-	position: absolute;
-}
 
-
+/*
+    Reset button style 
+*/
 .eexcess_vis_controls_button {
 
 	display: inline-block;
@@ -339,6 +384,9 @@ Visualization Panel
 }
 
 
+/*
+    Hover style for reset button
+*/
 .eexcess_vis_controls_button:hover {
   box-shadow: 0 0 0.8em rgba(128, 128, 128, 0.6);/*rgba(0, 0, 0, 0.6);*/
 }
@@ -346,49 +394,9 @@ Visualization Panel
 
 
 /*
-#eexcess_div_button{
-	top: 4.1em;;
-	left: 15%;
-	position: absolute;
-	pointer-events: all;
-	text-align: center;
-}
-
-#eexcess_btnreset {
-	display: block;
-	margin-top: 0.5em;
-	margin-bottom: 0.5em;
-	margin-left: auto;
-	margin-right: auto;
-	width: 4.5em;
-	height: 2em;
-	vertical-align: middle;
-	-moz-vertical-align: middle;
-	color: snow;
-	font-size: 1.1em;
-	text-align: center;  		
-	-webkit-border-radius: 8px;
-	-moz-border-radius: 8px;
-	border-radius: 8px;
-	border: 0.1em #ccc solid;		
-	background: rgba(29, 144, 78, 0.7);
-
-	box-shadow: -0.1em 0.2em 0.1em rgba(150, 150, 150, 1);
-	
-	pointer-events: all;
-}
-
-#eexcess_btnreset:hover{
-	margin-top: 0.6em;
-	margin-bottom: 0.4em;
-	background: rgba(29, 144, 78, 0.9);
-	-webkit-box-shadow: -0.05em 0.1em 0em rgba(150, 150, 150, 1);			
-	box-shadow: -0.05em 0.1em 0em rgba(150, 150, 150, 1);
-}
+    <div> where the charts (timeline, bar chart) are actually rendered
 */
-
-
-#tabs {
+#eexcess_canvas {
 	width: 100%;
 	height: 93%;
 	text-align: center;
@@ -396,21 +404,43 @@ Visualization Panel
 
 
 
+/*
+    <div> appended to #eexcess_canvas when a new search is triggered. Contains a <span> ("Searching..." message) and an <img> tag (for loading icon)
+*/
+#eexcess_loading_results{
+	display: block;
+	margin-top: 8em;
+	text-align: center;
+}
+
+
+/*
+    <span> in #eexcess_loading_results
+*/
+#eexcess_loading_results span{
+	display: block;'
+	font-size: 1.1em;
+}
+
+
+
+
 
 /********************************************************************************************************************************************
 
-Content List Panel
+    Content List Panel (right side of screen)
 
 ********************************************************************************************************************************************/
 
 
+/*
+    <div> container for the list of recommendations
+*/
 #eexcess_content{
 	overflow: auto;
 	float: right;
 	display:inline-block;
 	vertical-align: top;
-  	/*border-radius:10px 10px 10px 10px;
-  	border: 2px solid #1d904e;*/
   	margin-top: 5px;
     margin-bottom: 5px;
   	margin-right:0%;
@@ -420,84 +450,72 @@ Content List Panel
 
 
 
-
+/*
+    List body in "#eexcess_content"
+*/
 #eexcess_content ul{
 	clear:both;
     margin: 0;
     padding: 0;
     list-style: none;
-    display:block;
-    
+    display:block;   
     padding-top: 1px;
     padding-bottom: 1px;
 }
 
 
-.eexcess_list {		/*li*/
+/*
+    <li> items in "#eexcess_content ul". Each <li> wraps 2 container <div>s: ".eexcess_item_ctl" and ".eexcess_ritem_container"
+*/
+.eexcess_list {
 	position: relative;
-	
 	padding-left: 5px;
 	padding-top: 2px;
 	margin-top: 1px;
 	margin-right: 4px;
 	background-color: rgba(241, 241, 230, 0.9);
-	/*background: rgba(255,255,255,0.7);*/
 	min-height: 60px;
 	-webkit-border-radius: 0.4em;
 	border: 1px solid rgba(119, 136, 153, 0.8);
-	/*
-	border-bottom: 1px solid rgba(119, 136, 153, 0.8);
-	border-left: 1px solid rgba(119, 136, 153, 0.8);
-	border-right: 1px solid rgba(119, 136, 153, 0.8);
-	*/
 	-webkit-box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);			
 	box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
 }
 
 
+/*
+    <li> itmes' hover style
+*/
 .eexcess_list:hover {
-	/*background: rgba(112,200,150,0.6);*/
-	/*background: rgba(255, 231, 115, 0.7);*/
 	background: rgba(250, 250, 205, 0.7);
 }
 
 
-.top_class {
-	top: 0px;
-}
-
-
-
-
-.eexcess_ritem {
-	display: list-item;
-	/*text-align: -webkit-match-parent;*/
-	text-align: center;
-	vertical-align: top;
-	/*min-height: 40px;*/	
-}
-
-
+/*
+    Holds preview image, partner icon and color icon (matching current color legend in displayed visualization)
+*/
 .eexcess_item_ctl {
 	display: block;
-	/*vertical-align: top;*/
-	/*text-align: center;*/
 	text-align: -webkit-match-parent;;
 	float: left;
     width: 75px;
-    /*height: 65px;*/
 }
 
+
+/*
+    Preview image
+*/
 .eexcess_preview {
 	width: 44px;
 	height: 44px;
 	margin: 2px;
 	float: left;
-    /*width: 60px;*/
 }
 
+
+/*
+    Partner icon
+*/
 .eexcess_partner_icon {
-	/*display: inline;*/
 	margin-right: 0px;
 	margin-top: 2px;
 	width: 16px;
@@ -507,6 +525,9 @@ Content List Panel
 }
 
 
+/*
+    Color icon
+*/
 .color_icon {
 	display: block;
 	width:16px;
@@ -515,10 +536,12 @@ Content List Panel
     margin-left: 54px;
     -webkit-border-radius: 0.2em;
     box-shadow: 0.05em 0.05em 0.05em #ccc;
-    /*background: green;*/
 }
 
 
+/*
+    Encloses title of the recommendation (h1 .eexcess_ritem_title) and short text below ("p.eexcess_ritem_short")
+*/
 .eexcess_ritem_container {
     margin-left: 65px;
     padding-left:5px;
@@ -527,24 +550,28 @@ Content List Panel
     vertical-align: -webkit-match-parent;
 }
 
+
+/*
+    Wraps .eexcess_ritem_title
+*/
 h1 {
 	-webkit-margin-before: 0.5em;
 	-webkit-margin-after: 0.5em;
-/*	margin-left: 65px;
-	width: 110px;
-	*/
-	/*font-size: 1.5em;*/
 }
 
 
+/*
+    Recommendation title contained here
+*/
 .eexcess_ritem_title {
 	/*text-shadow: 0.1em 0.1em 0.5em #ccc;*/	
 }
 
 
+/*
+    Short text below title
+*/
 p.eexcess_ritem_short {
-margin-top: 0em;
-margin-bottom: 0.5em;
+    margin-top: 0em;
+    margin-bottom: 0.5em;
 }
-
-

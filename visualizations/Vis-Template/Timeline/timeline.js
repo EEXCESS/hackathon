@@ -490,7 +490,8 @@ function Timeline( domRoot, visTemplate, Settings ){
 		// Add svg main component
 		var divchart = d3.select( root ).append( "div" )
 			.attr("id", "div-chart")
-			.attr("padding-top", verticalOffset);
+			//.attr("padding-top", verticalOffset)
+        ;
 	
 		var svg = divchart.append("svg")
 			.attr("class", "svg")

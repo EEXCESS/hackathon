@@ -29,7 +29,7 @@ function Settings (){
 	
 	function getTimelineDimensions( domRoot, iWidth, rootWidth, rootHeight, senderStr ){
 
-		var focusMargin = {top: 20, bottom: 100, left: 80, right: 20 };
+		var focusMargin = {top: 0, bottom: 100, left: 80, right: 20 };
 		var focusHeight = rootHeight - focusMargin.top - focusMargin.bottom;
 
 		var cTop = focusHeight + focusMargin.top + 30;
@@ -39,7 +39,7 @@ function Settings (){
 		var contextHeight	= cHeight > 0 ? cHeight : 40; 
 		//rootHeight - this.contextMargin.top - this.contextMargin.bottom;
 
-		var width = rootWidth - focusMargin.left - 120;//this.focusMargin.right;
+		var width = rootWidth - focusMargin.left - 140;//this.focusMargin.right;
 
 		var centerOffset = (iWidth/2) - ((width + focusMargin.left + focusMargin.right)/2);
 		var verticalOffset = (rootHeight < 500) ? 20 : ($(domRoot).height() - 500) / 2;
