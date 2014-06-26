@@ -54,7 +54,7 @@ var DrawGraph = function(){
 		.To.Object().To.Link()	
 			//draw a connection link	
 			.Add(uniqueNodeName,resultNodeName,resultLinkName)
-			.Change(resultLinkName,{strength:0,attr:{fill:"none",stroke:"none"}});
+			.Change(resultLinkName,{strength:0.2,attr:{fill:"none",stroke:"none"}});
 			
 			
 		oC.ResultNodeEvent(resultNodeName);
