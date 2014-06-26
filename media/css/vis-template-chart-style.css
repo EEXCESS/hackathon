@@ -131,7 +131,7 @@ text.shadow {
 }
 		
 		
-.div-wrap-legends {
+#div-wrap-legends {
 	display: inline-block;
 	margin-top: 1em;
     width: 8em;

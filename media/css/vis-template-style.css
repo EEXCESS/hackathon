@@ -4,9 +4,69 @@
 
 
 
-.eexcess_ritem_container h1 {
-    font-size: 0.9em;
+html { font-size: 62.5%; }
+
+
+@media (max-width: 300px) {
+    html { font-size: 80%; }    
 }
+
+@media (min-width: 500px) {
+    html { font-size: 90%; }
+}
+
+@media (min-width: 700px) {
+    html { font-size: 100%; }
+}
+
+@media (min-width: 1200px) {
+    html { font-size: 110%; }
+}
+
+
+body{
+	overflow: hidden;
+	font-size: 1em;
+}
+	
+h1 {
+	font-size: 0.9em;
+}
+
+p {
+	font-size: 0.8em;
+}	
+	
+span {
+	font-size: 1em;
+}
+	
+select {
+	font-size: 1em;
+}
+	
+text {
+	font-size: 0.9em;
+}
+	
+	
+	
+body{
+	background: white;
+	background-image: none !important;
+}
+	
+
+body a{
+    text-decoration:none;
+    color: #529CBF;
+}
+
+div{
+	display:block;
+}
+
+
 
 /********************************************************************************************************************************************
 
@@ -26,7 +86,7 @@
     background-color: #1F914F;
     margin-left: 0%;
     border-radius: 10px 10px 10px 10px; 
-    border: 1px solid #ccc; /*padding-bottom:20px;*/ 
+    border: 1px solid #ccc;
     -webkit-box-shadow: 0 0 10px #cdc;
     vertical-align: middle;
 	line-height: 28px;
@@ -347,9 +407,10 @@ Visualization Panel (center of screen)
 
 
 /*
-    <div> appended to #eexcess_canvas when a new search is triggered. Contains a <span> ("Searching..." message) and an <img> tag (for loading icon)
+    <div> appended to #eexcess_canvas when a message should be displayed. E.g. when a new search is triggered or no data are received. 
+    Contains a <span> for the message and optionally an <img> tag (for the loading icon, only for the case of a new search )
 */
-#eexcess_loading_results{
+#eexcess_message_on_canvas{
 	display: block;
 	margin-top: 8em;
 	text-align: center;
@@ -359,6 +420,12 @@ Visualization Panel (center of screen)
 /*
     <span> in #eexcess_loading_results
 */
+
+#eexcess_message_on_canvas span{
+	display: block;
+}
+
+
 #eexcess_loading_results span{
 	display: block;
 	font-size: 1.1em;
@@ -493,6 +560,13 @@ Visualization Panel (center of screen)
 }
 
 
+/*
+    Wraps .eexcess_ritem_title
+*/
+h1 {
+	-webkit-margin-before: 0.5em;
+	-webkit-margin-after: 0.5em;
+}
 
 
 

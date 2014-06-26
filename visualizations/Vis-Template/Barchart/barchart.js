@@ -259,7 +259,7 @@ function Barchart( domRoot, visTemplate, Settings ) {
 		
 		var legendWrapper = d3.select("#div-chart")
 						.append("div")
-						.attr("class", "div-wrap-legends");
+						.attr("id", "div-wrap-legends");
 		
 		legend = legendWrapper.selectAll(".legend")
 			.data(legendDomain)

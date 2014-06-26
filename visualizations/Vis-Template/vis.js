@@ -28,6 +28,7 @@ function Visualization( EEXCESSobj ) {
 	var LOADING_IMG = "../../media/loading.gif";
 	var NO_IMG = "../../media/no-img.png";
 	var STR_SEARCHING = "Searching...";
+    var STR_NO_DATA_RECEIVED = "No Data Received";
 	
 	
 	// Main variables
@@ -163,16 +164,8 @@ function Visualization( EEXCESSobj ) {
 		
 		if( text == STR_SEARCHING){
 			$( headerText ).find( "span" ).text( "" );
-			$( root ).empty();
-			
-			var loadingDiv = d3.select( root ).append("div")
-				.attr("id", "eexcess_loading_results");
-			
-			loadingDiv.append("span")
-				.text( STR_SEARCHING );	
-			
-			loadingDiv.append("img")
-				.attr("src", LOADING_IMG);
+            
+            VISPANEL.showMessageOnCanvas( STR_SEARCHING );
 		}
 		else{
 			$( headerText ).find( "span" ).text( text );
@@ -743,6 +736,25 @@ function Visualization( EEXCESSobj ) {
 		}
 	
 	};
+    
+    
+    VISPANEL.showMessageOnCanvas = function( message ){
+        
+        $( root ).empty();
+			
+		var messageOnCanvasDiv = d3.select( root ).append("div")
+            .attr("id", "eexcess_message_on_canvas");
+			
+		messageOnCanvasDiv.append("span")
+            .text( message );	
+			
+        if( message == STR_SEARCHING ){
+            messageOnCanvasDiv.append("img")
+                .attr("src", LOADING_IMG);
+        }
+    };
+            
+
 
 	
 
@@ -788,15 +800,15 @@ function Visualization( EEXCESSobj ) {
         QUERY.updateSearchField( query );
         CONTROLS.buildChartSelect();
         LIST.buildContentList( data );
-
- /*       if( action == "load_visualization" ){
-            PREPROCESSING.bindEventHandlers();
-            timeVis = new Timeline(root, width, height, self, VISPANEL.Settings );
-            barVis = new Barchart(root, width, height, self, VISPANEL.Settings );
+        
+        if(data.length > 0){
+            // Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)
+            VISPANEL.drawChart();
         }
-*/
-        // Call method to create the first visualization (empty parameters indicate that a new chart has to be drawn)
-        VISPANEL.drawChart();
+        else{
+            VISPANEL.showMessageOnCanvas( STR_NO_DATA_RECEIVED );
+        }
+
     };
 
 	
