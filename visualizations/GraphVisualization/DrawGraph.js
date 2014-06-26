@@ -54,7 +54,7 @@ var DrawGraph = function(){
 		.To.Object().To.Link()	
 			//draw a connection link	
 			.Add(uniqueNodeName,resultNodeName,resultLinkName)
-			.Change(resultLinkName,{strength:0,attr:{fill:"none",stroke:"none"}});
+			.Change(resultLinkName,{strength:0.2,attr:{fill:"none",stroke:"none"}});
 			
 			
 		oC.ResultNodeEvent(resultNodeName);
@@ -227,7 +227,7 @@ var DrawGraph = function(){
 			.To.Object().To.Link()	
 				//draw a connection link	
 				.Add(uniqueNodeName,historyNodeID,historyConnectionNameID)
-				.Change(historyConnectionNameID,{strength:1,attr:{fill:"none",stroke:"none"}})
+				.Change(historyConnectionNameID,{strength:1,distance:20,attr:{fill:"none",stroke:"none"}})
 			// grow a query node //????????????????
 			;/*.To.Object().To.Node()
 				//.Change(uniqueNodeName,{cluster:{distance:clusterDistance}})//grow node
@@ -614,16 +614,14 @@ var DrawGraph = function(){
 						.Change(element,"svgtext1",{
 							attr:{transform:"translate(0,-150)"},
 							text:neightborNodes[element].neightbors.length});
-			/*
+			
 				neightborNodes[element].neightbors.forEach(function(neightbor){
 					forceGraph.To.Object().To.Link()
-						.Change(neightbor.line,{strength:0.1,distance:500});
-				
-					
-				});*/		
+						.Change(neightbor.line,{strength:0.5,distance:600});
+				});		
 					
 			});
-			
+			/*
 			Object.keys(graphData.link).filter(function(element){
 				if(element.substr(0,"forceline_".length) == "forceline_"){
 					forceGraph.To.Object().To.Link().Delete(element);
@@ -632,87 +630,29 @@ var DrawGraph = function(){
 			});
 			
 			if(optimizedNeightborNodes.length > 1){
-				var centralNode = optimizedNeightborNodes.pop();
-				//var previousNode= null;
+				//var firstNode = optimizedNeightborNodes.pop();
 				optimizedNeightborNodes.forEach(function(element,index){
-					
-					forceGraph.To.Object().To.Link()		
-						.Add(centralNode,element,"forceline_"+index)
-						.Change("forceline_"+index,{strength:0.95,distance:2000});
-						/*
 					if(index > 0){
 						forceGraph.To.Object().To.Link()		
-							.Add(previousNode,element,"forceline_"+(index-1)+"_"+index)
-							.Change("forceline_"+(index-1)+"_"+index,{strength:0.8,distance:1000});
-					}	
-					previousNode = element;
-					*/
+							.Add(optimizedNeightborNodes[index-1],element,"forceline_first_"+index)
+							.Change("forceline_first_"+index,{strength:0.9,distance:1500});
+					}
+			
+					if(index > 1){
+						forceGraph.To.Object().To.Link()		
+							.Add(optimizedNeightborNodes[index-2],element,"forceline_second_"+index)
+							.Change("forceline_second_"+index,{strength:0.9,distance:2000});
+					}
+				
 				});
 			}
+			*/
 			
 			
 			
 			
 		};
 		
-		oC.ReDrawGraphNew=function(min,max,sliderMin,sliderMax){
-		
-			// draw first time a graph
-			var firstDraw = function(){
-				//console.log("slider first time");
-
-				if(min==0 && max==1){
-					return;
-				}
-				//var test1 = getUniqueNodeName(min);
-				var index = min+1;
-				
-				var isNodeVisited = AddUniqueQueryNode(min,getUniqueNodeName(min));
-				
-				while(index <= max){
-					isNodeVisited = AddUniqueQueryNode(index,getUniqueNodeName(index));
-					//console.log(getUniqueNodeName(index));
-					//if(!isNodeVisited){
-						var historyLinkNameID = "HistoryLinkID_"+index;
-						forceGraph.To.Object().To.Link()	
-							//draw a histrory link			
-							.Add(getUniqueNodeName(index),getUniqueNodeName(index-1),historyLinkNameID)
-							.Change(historyLinkNameID,{strength:0,distance:500});
-					//}
-					
-					index++;
-				};
-
-			};
-			var sliderBigJump = function(){};
-			var sliderShrinkLeft = function(){};
-			var sliderGrowLeft = function(){
-				var index = min+1;
-				while(index <= sliderMin-1){
-					//console.log(min+" . " + index + " . " + sliderMin);
-					isNodeVisited = AddUniqueQueryNode(index,getUniqueNodeName(index));
-					//console.log(getUniqueNodeName(index));
-					//if(!isNodeVisited){
-						var historyLinkNameID = "HistoryLinkID_"+index;
-						forceGraph.To.Object().To.Link()	
-							//draw a histrory link			
-							.Add(getUniqueNodeName(index),getUniqueNodeName(index-1),historyLinkNameID)
-							.Change(historyLinkNameID,{strength:0,distance:500});
-					index++;
-				//}while(index < sliderMin);
-				};
-	
-			};
-			var noUpdateGraph = function(){};
-			var sliderShrinkRight = function(){};
-			var drawOneResult = function(){};
-			var sliderGrowRight = function(){};
-			
-			IterateGraph(min,max,sliderMin,sliderMax,
-				firstDraw,sliderBigJump,sliderShrinkLeft,sliderGrowLeft,
-				noUpdateGraph,sliderShrinkRight,sliderGrowRight,
-				drawOneResult);
-		};
 		
 		oC.ReDrawGraph=function(min,max,sliderMin,sliderMax){
 

@@ -2,9 +2,7 @@
 
 
 
-body{
-	background-size: auto 100%;
-}
+
 		
 
 
@@ -75,7 +73,7 @@ rect.pane {
 	
 
 
-}.axis2 .tick > text {
+.axis2 .tick > text {
     font-family: sans-serif;
 	stroke: lightgrey;
 	stroke-width: 0.3;

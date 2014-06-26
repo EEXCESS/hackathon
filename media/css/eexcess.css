@@ -16,6 +16,8 @@ body {
     background-image: url('../watermark.png');
     background-size: auto 100%;
     font-size:0.7em;
+    background-repeat: no-repeat;
+    background-position: right bottom;
 }
 
 body a{
