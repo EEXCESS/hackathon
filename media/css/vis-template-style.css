@@ -1,70 +1,12 @@
-header, #eexcess_header, #eexcess_vis, #eexcess_content{
+#eexcess_header, #eexcess_vis, #eexcess_content{
  width:100%;
 }
 
-html { font-size: 62.5%; }
 
 
-@media (max-width: 300px) {
-    html { font-size: 80%; }    
+.eexcess_ritem_container h1 {
+    font-size: 0.9em;
 }
-
-@media (min-width: 500px) {
-    html { font-size: 90%; }
-}
-
-@media (min-width: 700px) {
-    html { font-size: 100%; }
-}
-
-@media (min-width: 1200px) {
-    html { font-size: 110%; }
-}
-
-
-body{
-	overflow: hidden;
-	font-size: 1em;
-}
-	
-h1 {
-	font-size: 0.9em;
-}
-
-p {
-	font-size: 0.8em;
-}	
-	
-span {
-	font-size: 1em;
-}
-	
-select {
-	font-size: 1em;
-}
-	
-text {
-	font-size: 0.9em;
-}
-	
-	
-	
-body{
-	background: white;
-	background-image: none !important;
-}
-	
-
-body a{
-    text-decoration:none;
-    color: #529CBF;
-}
-
-div{
-	display:block;
-}
-
-
 
 /********************************************************************************************************************************************
 
@@ -418,7 +360,7 @@ Visualization Panel (center of screen)
     <span> in #eexcess_loading_results
 */
 #eexcess_loading_results span{
-	display: block;'
+	display: block;
 	font-size: 1.1em;
 }
 
@@ -551,13 +493,7 @@ Visualization Panel (center of screen)
 }
 
 
-/*
-    Wraps .eexcess_ritem_title
-*/
-h1 {
-	-webkit-margin-before: 0.5em;
-	-webkit-margin-after: 0.5em;
-}
+
 
 
 /*
