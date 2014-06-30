@@ -8,29 +8,29 @@ html { font-size: 62.5%; }
 
 
 @media (max-width: 300px) {
-    html { font-size: 80%; }    
+    html { font-size: 70%; }    
 }
 
 @media (min-width: 500px) {
-    html { font-size: 90%; }
+    html { font-size: 80%; }
 }
 
 @media (min-width: 700px) {
-    html { font-size: 100%; }
+    html { font-size: 90%; }
 }
 
 @media (min-width: 1200px) {
-    html { font-size: 110%; }
+    html { font-size: 100%; }
 }
 
 
 body{
 	overflow: hidden;
-	font-size: 1em;
+    font-size: 0.8em;
 }
 	
 h1 {
-	font-size: 0.9em;
+	font-size: 0.85em;
 }
 
 p {
@@ -46,7 +46,7 @@ select {
 }
 	
 text {
-	font-size: 0.9em;
+	font-size: 0.85em;
 }
 	
 	

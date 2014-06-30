@@ -94,7 +94,7 @@ function Barchart( domRoot, visTemplate, Settings ) {
 			.style("height", "1.4em");
 		
 		d3.select(this).select("text")
-			.style("font-size", "1em");
+			.style("font-size", "0.9em");
 	};
 	
 	
@@ -106,7 +106,7 @@ function Barchart( domRoot, visTemplate, Settings ) {
 			.style("height", function(){ if(d.selected) return "1.4em"; return "1.5em"; });
 		
 		d3.select(this).select("text")
-			.style("font-size", "0.9em");	
+			.style("font-size", "0.85em");	
 	};
 
 	
