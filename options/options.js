@@ -17,8 +17,7 @@ EEXCESS.federated_url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1
 EEXCESS.local_url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
 
 // should first read parameters for backend from local storage
-if(typeof(Storage) !== 'undefined') {
-    var selected_backend = localStorage.getItem('backend');
+    var selected_backend = EEXCESS.storage.local('backend');
     $('#frserver option[value="'+ selected_backend +'"]').prop('selected', true);
     if(selected_backend === 'self') {
         $('#local_url').show();
@@ -26,21 +25,20 @@ if(typeof(Storage) !== 'undefined') {
         $('#local_url').hide();
     }
     // federated recommender local
-    var ls_federated_url = localStorage.getItem('federated_url');
+    var ls_federated_url = EEXCESS.storage.local('federated_url');
     if(typeof ls_federated_url !== 'undefined' && ls_federated_url !== null) {
         EEXCESS.federated_url = ls_federated_url;
     } else {
-        localStorage.setItem('federated_url', EEXCESS.federated_url);
+        EEXCESS.storage.local('federated_url', EEXCESS.federated_url);
     }
     
     // privacy proxy local
-    var ls_local_url = localStorage.getItem('local_url');
+    var ls_local_url = EEXCESS.storage.local('local_url');
     if(typeof ls_local_url !== 'undefined' && ls_local_url !== null) {
         EEXCESS.local_url = ls_local_url;
     } else {
-        localStorage.setItem('local_url', EEXCESS.local_url);
+        EEXCESS.storage.local('local_url', EEXCESS.local_url);
     }
-}
 
 $('#custom_fr_url').val(EEXCESS.federated_url);
 $('#custom_url').val(EEXCESS.local_url);

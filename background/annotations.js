@@ -49,7 +49,7 @@ EEXCESS.annotation = (function() {
 
             // log rating on pp
             var xhr = $.ajax({
-                url: localStorage['PP_BASE_URI'] + 'api/v1/log/rating',
+                url: EEXCESS.storage.local('PP_BASE_URI') + 'api/v1/log/rating',
                 data: JSON.stringify({"uuid":EEXCESS.profile.getUUID(),"rating":rating}),
                 type: 'POST',
                 contentType: 'application/json; charset=UTF-8',

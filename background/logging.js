@@ -71,7 +71,7 @@ EEXCESS.logging = (function() {
             tmp['action'] = 'result-view';
             tmp['uuid'] = EEXCESS.profile.getUUID();
             var xhr = $.ajax({
-                url: localStorage['PP_BASE_URI'] + 'api/v1/log/rview',
+                url: EEXCESS.storage.local('PP_BASE_URI') + 'api/v1/log/rview',
                 data: JSON.stringify(tmp),
                 type: 'POST',
                 contentType: 'application/json; charset=UTF-8',
@@ -90,7 +90,7 @@ EEXCESS.logging = (function() {
                 view['action'] = 'result-close';
                 view['uuid'] = EEXCESS.profile.getUUID();
                 var xhr = $.ajax({
-                    url: localStorage['PP_BASE_URI'] + 'api/v1/log/rclose',
+                    url: EEXCESS.storage.local('PP_BASE_URI') + 'api/v1/log/rclose',
                     data: JSON.stringify(view),
                     type: 'POST',
                     contentType: 'application/json; charset=UTF-8',
