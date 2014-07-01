@@ -212,66 +212,7 @@ function display_querycrumbs(domElem) {
      */
     var QUERYING = {
         loadDataFromIndexedDB: function() {
-            var queries = [];
-            var db;
-            var reqDB = indexedDB.open('eexcess_db', 42);
-            reqDB.onerror = function(event) {
-                console.error("No access to IndexedDB.");
-            };
-            reqDB.onsuccess = function(event) {
-
-                db = reqDB.result;
-
-                var tx1 = db.transaction("queries")
-                var index = tx1.objectStore("queries").index("timestamp");
-                var i = 0;
-
-                index.openCursor(null, "prev").onsuccess = function(event) {
-                    var cursor = event.target.result;
-                    if (cursor && i < HISTORY_LENGTH) {
-                        queries.push(cursor.value);
-                        i += 1;
-                        cursor.continue();
-                    }
-                }
-                tx1.oncomplete = function(event) {
-
-                    var fLoadSuccess = 0;
-
-                    var pushResults = function(q) {
-                        queries[q].results = [];
-                        var tx_sub = db.transaction("recommendations");
-                        var recIndex = tx_sub.objectStore("recommendations").index("query");
-                        var queryString = '';
-                        queries[q].query.forEach(function(d) { queryString += d.text + ' ';});
-                        queryString = queryString.trim();
-                        queries[q].query = queryString.split(' ');
-                        var singleKeyRange = IDBKeyRange.only(queryString);
-                        recIndex.openCursor(singleKeyRange).onsuccess = function(event) {
-                            var cursor2 = event.target.result;
-                            if (cursor2) {
-                                var result = {
-                                    title: cursor2.value.result.title,
-                                    uri: cursor2.value.result.uri
-                                };
-                                queries[q].results.push(result);
-                                cursor2.continue();
-                            }
-                        }
-
-                        tx_sub.oncomplete = function(event) {
-                            fLoadSuccess += 1;
-                            if(fLoadSuccess == queries.length) {
-                                init(queries);
-                            }
-                        }
-                    };
-
-                    for(var q = 0; q < queries.length; q++) {
-                        pushResults(q);
-                    }
-                }
-            };
+            EEXCESS.storage.loadQueryCrumbsData(HISTORY_LENGTH, init);
         },
         /*
             A callback function for the EEXCESS extension's background script. It gets called each time a query is issued.

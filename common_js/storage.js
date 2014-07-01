@@ -64,7 +64,7 @@ EEXCESS.storage = (function() {
             req.onerror = _empty_callback(error);
         }, _empty_callback(error));
     };
-    
+
     var _add = function(objectStore, value, success, error) {
         _getDB(function(db) {
             var tx = db.transaction(objectStore, 'readwrite');
@@ -72,11 +72,11 @@ EEXCESS.storage = (function() {
             var req = store.add(value);
             req.onsuccess = _empty_callback(success);
             req.onerror = _empty_callback(error);
-        }, _empty_callback(error));  
+        }, _empty_callback(error));
     };
-    
+
     var _closedRecommendation = function(resource, success, error) {
-        _getDB(function(db){
+        _getDB(function(db) {
             var tx = db.transaction('resource_relations', 'readwrite');
             var store = tx.objectStore('resource_relations');
             var idx = store.index('resource');
@@ -99,9 +99,9 @@ EEXCESS.storage = (function() {
             curreq.onerror = _empty_callback(error);
         }, _empty_callback(error));
     };
-    
+
     var _setRating = function(rating, success, error) {
-        _getDB(function(db){
+        _getDB(function(db) {
             var entryExists = false;
             var tx = db.transaction('resource_relations', 'readwrite');
             var store = tx.objectStore('resource_relations');
@@ -135,7 +135,7 @@ EEXCESS.storage = (function() {
             tx.onerror = _empty_callback(error);
         }, _empty_callback(error));
     };
-    
+
     var _getRating = function(uri, context, success, error) {
         _getDB(function(db) {
             var tx = db.transaction('resource_relations');
@@ -163,9 +163,9 @@ EEXCESS.storage = (function() {
             curreq.onerror = _optional_callback(error, 'db error');
         }, _empty_callback(error));
     };
-    
+
     var _updateVisit = function(visitItem, referringVisitId) {
-        _getDB(function(db){
+        _getDB(function(db) {
             var tx = db.transaction('history', 'readwrite');
             var store = tx.objectStore('history');
             var idx = store.index('chrome_visitId');
@@ -178,10 +178,10 @@ EEXCESS.storage = (function() {
                     visitItem.referrer = '';
                 }
                 store.add(visitItem);
-            };  
+            };
         });
     };
-    
+
     var _storeRecommendations = function(recommendations, context, timestamp) {
         _getDB(function(db) {
             var tx = db.transaction('recommendations', 'readwrite');
@@ -225,10 +225,10 @@ EEXCESS.storage = (function() {
      */
     var _init = function(success, error, rm_previous) {
         var clear = true;
-        if(typeof rm_previous === 'boolean') {
+        if (typeof rm_previous === 'boolean') {
             clear = rm_previous;
         }
-        
+
         // initialize connection
         var req = indexedDB.open(_name, _version);
 
@@ -310,6 +310,64 @@ EEXCESS.storage = (function() {
         };
     };
 
+    var _loadQueryCrumbsData = function(history_length, success, error) {
+        _getDB(function(db) {
+            var queries = [];
+
+            var tx1 = db.transaction("queries");
+            var index = tx1.objectStore("queries").index("timestamp");
+            var i = 0;
+
+            index.openCursor(null, "prev").onsuccess = function(event) {
+                var cursor = event.target.result;
+                if (cursor && i < history_length) {
+                    queries.push(cursor.value);
+                    i += 1;
+                    cursor.continue();
+                }
+            };
+            tx1.oncomplete = function(event) {
+
+                var fLoadSuccess = 0;
+
+                var pushResults = function(q) {
+                    queries[q].results = [];
+                    var tx_sub = db.transaction("recommendations");
+                    var recIndex = tx_sub.objectStore("recommendations").index("query");
+                    var queryString = '';
+                    queries[q].query.forEach(function(d) {
+                        queryString += d.text + ' ';
+                    });
+                    queryString = queryString.trim();
+                    queries[q].query = queryString.split(' ');
+                    var singleKeyRange = IDBKeyRange.only(queryString);
+                    recIndex.openCursor(singleKeyRange).onsuccess = function(event) {
+                        var cursor2 = event.target.result;
+                        if (cursor2) {
+                            var result = {
+                                title: cursor2.value.result.title,
+                                uri: cursor2.value.result.uri
+                            };
+                            queries[q].results.push(result);
+                            cursor2.continue();
+                        }
+                    };
+
+                    tx_sub.oncomplete = function(event) {
+                        fLoadSuccess += 1;
+                        if (fLoadSuccess === queries.length) {
+                            success(queries);
+                        }
+                    };
+                };
+
+                for (var q = 0; q < queries.length; q++) {
+                    pushResults(q);
+                }
+            };
+        }, _empty_callback(error));
+    };
+
     return {
         local: _local,
         put: _put,
@@ -318,6 +376,7 @@ EEXCESS.storage = (function() {
         storeRecommendations: _storeRecommendations,
         getRating: _getRating,
         setRating: _setRating,
-        closedRecommendation: _closedRecommendation
+        closedRecommendation: _closedRecommendation,
+        loadQueryCrumbsData: _loadQueryCrumbsData
     };
 })();
