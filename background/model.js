@@ -20,23 +20,8 @@ EEXCESS.model = (function() {
         weightedTerms: null,
         scroll: 0
     };
-    // Represents the current task
-    var task = {
-        id: -1,
-        start: 0,
-        options: ['select...', 'annotate webpage', 'write a blog entry', 'other'],
-        selected: '',
-        individual: '',
-        topics: [],
-        sroll: 0,
-        expertise_level: 5,
-        recommendations_desirable: true,
-        topics_language: 'en'
-    };
-    // store the topics used for the last started task
-    var lastTopics = [];
     /**
-     * Update results to a query with ratings from the indexedDB and send each
+     * Update results to a query with ratings from the database and send each
      * updated result to all tabs
      * @memberOf EEXCESS.model
      * @param {Array.<Recommendation>} items The results, for which to retrieve 
@@ -132,7 +117,7 @@ EEXCESS.model = (function() {
          * - set widget's tab to 'results' and reset scroll position
          * - query europeana
          * After a successful query to europeana, the obtained results will be
-         * logged in the indexedDB and enriched with ratings from the indexedDB.
+         * logged in the database and enriched with ratings from the database.
          * Furthermore they are set as the current results in the widget's model.
          * At logging the recommendations, query and active task (if present) are
          * added as context.
@@ -211,9 +196,6 @@ EEXCESS.model = (function() {
                 _updateRatings(data.results);
                 // create context
                 var context = {query: results.query};
-                if (task.id !== -1) {
-                    context.task_id = task.id;
-                }
                 // log results
                 EEXCESS.logging.logRecommendations(data.results, context, _queryTimestamp);
             };
@@ -231,21 +213,7 @@ EEXCESS.model = (function() {
          * @param {Function} callback
          */
         widget: function(tabID, data, callback) {
-            callback({params: params, results: results, task: task});
-        },
-        /**
-         * Changes the model's current widget tab and informs all browsertabs
-         * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request 
-         * originated
-         * @param {String} data The widget tab to set as current
-         */
-        changeTab: function(tabID, data) {
-            params.tab = data;
-            EEXCESS.sendMsgAll({
-                method: 'update',
-                data: {params: params, results: results, task: task}
-            });
+            callback({params: params, results: results});
         },
         /**
          * Sends the current visibility state of the widget to the specified 
@@ -258,194 +226,6 @@ EEXCESS.model = (function() {
          */
         visibility: function(tabID, data, callback) {
             callback(params.visible);
-        },
-        /**
-         * Adds a topic to the model's task and informs all other tabs.
-         * If the current task is active, the topic is added to the task in the 
-         * logs as well.
-         * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request 
-         * originated
-         * @param {Topic} data The topic to add
-         */
-        addTopic: function(tabID, data) {
-            task.topics.push(data);
-            EEXCESS.sendMsgOthers(tabID, {
-                method: {parent: params.tab, func: 'addTopic'},
-                data: data.label
-            });
-            if (task.id !== -1) {
-                // task is active
-                EEXCESS.logging.tasks.addTopic(task.id, data);
-            }
-        },
-        /**
-         * Removes a topic from the model's task and informs all other tabs.
-         * If the current task is active, the topic is removed from the task in 
-         * the logs as well.
-         * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request 
-         * originated
-         * @param {Topic} data The topic to remove
-         */
-        remTopic: function(tabID, data) {
-            for (var i = 0, len = task.topics.length; i < len; i++) {
-                if (task.topics[i].label === data) {
-                    task.topics.splice(i, 1);
-                    EEXCESS.sendMsgOthers(tabID, {
-                        method: {parent: params.tab, func: 'removeTopic'},
-                        data: data
-                    });
-                    break;
-                }
-            }
-            if (task.id !== -1) {
-                // task is active
-                EEXCESS.logging.tasks.removeTopic(task.id, data);
-            }
-        },
-        /**
-         * Sets the 'indivual' option of the model's task to a user specified 
-         * name and informs all other tabs
-         * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request 
-         * originated
-         * @param {String} data The name of the individual task
-         */
-        changeIndividual: function(tabID, data) {
-            task.individual = data;
-            EEXCESS.sendMsgOthers(tabID, {
-                method: {parent: params.tab, func: 'changeIndividual'},
-                data: data
-            });
-        },
-        /**
-         * Sets the value of the currently selected task in the model to the one 
-         * specified by the user and informs all other tabs
-         * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request 
-         * originated
-         * @param {String} data The task name to set as the currently selected
-         */
-        changeOption: function(tabID, data) {
-            task.selected = data;
-            EEXCESS.sendMsgOthers(tabID, {
-                method: {parent: params.tab, func: 'changeOption'},
-                data: data
-            });
-        },
-        /**
-         * Sets the language of the topic input field to the specified value and 
-         * informs all other tabs
-         * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifire of the browsertab, the request 
-         * originated
-         * @param {String} data The country code for the language to set as 
-         * current for the topic input field
-         * @returns {undefined}
-         */
-        changeTopicsLanguage: function(tabID, data) {
-            task.topics_language = data;
-            EEXCESS.sendMsgOthers(tabID, {
-                method: {parent: params.tab, func: 'changeTopicsLanguage'},
-                data: data
-            });
-        },
-        /**
-         * Sets the flag, indicating if recommendations are desirable for the 
-         * current task to the specified value and informs all other tabs. If
-         * the current task is active, flag is updated on the corresponding task 
-         * in the log.
-         * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identfier of the browsertab, the request 
-         * originated
-         * @param {Boolean} data The value, indicating if recommendations are 
-         * desirable
-         */
-        recommendationsDesirable: function(tabID, data) {
-            task.recommendations_desirable = data;
-            EEXCESS.sendMsgOthers(tabID, {
-                method: {parent: params.tab, func: 'recommendationsDesirable'},
-                data: data
-            });
-            if (task.id !== -1) {
-                // task is active
-                EEXCESS.logging.tasks.recommendationsDesirable(task.id, data);
-            }
-        },
-        /**
-         * Changes the user's expertise level on the current task to the 
-         * specified
-         * value and inforrms all other tabs. If the current task is active,
-         * the value is set accordingly in the log.
-         * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request 
-         * originated
-         * @param {Integer} data Expertise level to set (in the range of 0-10)
-         */
-        changeExpertiseLevel: function(tabID, data) {
-            task.expertise_level = data;
-            EEXCESS.sendMsgOthers(tabID, {
-                method: {parent: params.tab, func: 'changeExpertiseLevel'},
-                data: data
-            });
-            if (task.id !== -1) {
-                // task is active
-                EEXCESS.logging.tasks.changeExpertiseLevel(task.id, data);
-            }
-        },
-        /**
-         * Starts the current task, logs it and informs all other tabs.
-         * Sets the id of the current task to the corresponding value in the
-         * indexedDB.
-         * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request 
-         * originated
-         * @param {type} [data] not used
-         */
-        startTask: function(tabID, data) {
-            lastTopics = [];
-            for (var i = 0, len = task.topics.length; i < len; i++) {
-                lastTopics.push(task.topics[i].label);
-            }
-            task.start = new Date().getTime();
-            EEXCESS.sendMsgOthers(tabID, {
-                method: {parent: params.tab, func: 'startTask'}
-            });
-            EEXCESS.sendMsgAll({method: 'taskStarted'});
-            // log start
-            var tmp_task = {
-                name: task.selected,
-                individual: task.individual,
-                topics: task.topics,
-                start: task.start,
-                expertise_level: task.expertise_level,
-                recommendations_desirable: task.recommendations_desirable
-            };
-            if (task.name === 'other') {
-                tmp_task.individual = task.individual;
-            }
-            EEXCESS.logging.tasks.startTask(tmp_task, function(task_id) {
-                task.id = task_id;
-            });
-        },
-        /**
-         * Stops the current task, logs it, informs all other tabs and resets
-         * the current task's id.
-         * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request 
-         * originated
-         * @param {{start:String, end:String}} data start- and end-time of the 
-         * task, encoded as ISO 8601
-         */
-        stopTask: function(tabID, data) {
-            EEXCESS.sendMsgOthers(tabID, {
-                method: {parent: params.tab, func: 'stopTask'}
-            });
-            EEXCESS.sendMsgAll({method: 'taskStopped'});
-            var task_id = task.id;
-            task.id = -1;
-            EEXCESS.logging.tasks.stopTask(task_id, data);
         },
         /**
          * Sets the rating score of a resource in the resultlist to the 
@@ -497,27 +277,6 @@ EEXCESS.model = (function() {
          */
         getVisibility: function() {
             return params.visible;
-        },
-        /**
-         * Hands the topics used with the last task to the provided callback
-         * @param {Integer} tabID Identifier of the browsertab, the request 
-         * originated
-         * @param {Object} data (not used)
-         * @param {Function} callback Function to call with the last topics
-         */
-        getLastTopics: function(tabID, data, callback) {
-            callback(lastTopics);
-        },
-        /**
-         * Hands a boolean flag, indicating, if an active task is present, to
-         * the provided callback
-         * @param {Integer} tabID Identifier of the browsertab, the request
-         * originated
-         * @param {Object} data (not used)
-         * @param {Function} callback (not used)
-         */
-        getTaskActive: function(tabID, data, callback) {
-            callback(task.id !== -1);
         },
         getResults: function(tabID, data, callback) {
             callback({query: results.query, results: results.data});
