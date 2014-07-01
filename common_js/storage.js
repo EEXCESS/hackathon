@@ -83,7 +83,6 @@ EEXCESS.storage = (function() {
             var curreq = idx.openCursor(resource);
 
             curreq.onsuccess = function() {
-                console.log('trulala');
                 var cursor = curreq.result;
                 if (cursor) {
                     if (cursor.value.type === 'view' && typeof cursor.value.duration === 'undefined') {

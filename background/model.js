@@ -119,8 +119,7 @@ EEXCESS.model = (function() {
          * After a successful query to europeana, the obtained results will be
          * logged in the database and enriched with ratings from the database.
          * Furthermore they are set as the current results in the widget's model.
-         * At logging the recommendations, query and active task (if present) are
-         * added as context.
+         * At logging the recommendations, query is added as context.
          * @memberOf EEXCESS.model
          * @param {Integer} tabID Identifier of the browsertab, the request 
          * originated
@@ -230,7 +229,7 @@ EEXCESS.model = (function() {
         /**
          * Sets the rating score of a resource in the resultlist to the 
          * specified value, logs the rating and informs all other tabs.
-         * The query and current task (if active) is added to the rating as 
+         * The query  is added to the rating as 
          * context in the log.
          * @memberOf EEXCESS.model
          * @param {Integer} tabID Identifier of the browsertab, the request 
@@ -243,9 +242,6 @@ EEXCESS.model = (function() {
         rating: function(tabID, data) {
             console.log(data);
             var context = {query: results.query};
-            if (task.id !== -1) {
-                context.task_id = task.id;
-            }
             EEXCESS.annotation.rating(data.uri, data.score, context, true);
             results.data.results[data.pos].rating = data.score;
             EEXCESS.sendMsgOthers(tabID, {
@@ -255,7 +251,7 @@ EEXCESS.model = (function() {
         },
         /**
          * Returns the model's current context. The context contains the current
-         * query (if any) and the currently active task (if any)
+         * query (if any) 
          * @memberOf EEXCESS.model
          * @returns {Object} the context
          */
@@ -263,10 +259,6 @@ EEXCESS.model = (function() {
             var context = {};
             if (results.query !== 'search text...') {
                 context.query = results.query;
-            }
-            if (task.id !== -1) {
-                // task is active
-                context.task_id = task.id;
             }
             return context;
         },
