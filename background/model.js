@@ -11,14 +11,12 @@ EEXCESS.model = (function() {
         tab: 'results'
     };
     /**
-     * Represents the current query, according results and the scroll position 
-     * in the result list
+     * Represents the current query and according results
      */
     var results = {
         query: 'search text...',
         data: null,
-        weightedTerms: null,
-        scroll: 0
+        weightedTerms: null
     };
     /**
      * Update results to a query with ratings from the database and send each
@@ -33,7 +31,7 @@ EEXCESS.model = (function() {
             if (typeof items[i].uri !== 'undefined') {
                 EEXCESS.annotation.getRating(items[i].uri, {query: results.query}, function(score) {
                     results.data.results[this.pos].rating = score;
-                    EEXCESS.sendMsgAll({
+                    EEXCESS.messaging.sendMsgAllTabs({
                         method: {parent: params.tab, func: 'rating'},
                         data: {uri: this.uri, score: score}
                     });
@@ -43,15 +41,6 @@ EEXCESS.model = (function() {
     };
     var _queryTimestamp;
     return {
-        /**
-         * Sets the scroll position of the current resultlist to the specified 
-         * value
-         * @memberOf EEXCESS.model
-         * @param {Integer} value The scroll position
-         */
-        scroll: function(value) {
-            results.scroll = value;
-        },
         /**
          * Toggles the visibility of the widget
          * @memberOf EEXCESS.model
@@ -92,7 +81,7 @@ EEXCESS.model = (function() {
                 }
             };
             var error = function(error) { // error callback
-                EEXCESS.sendMessage(tabID, {method: {parent: 'results', func: 'error'}, data: error});
+                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
             };
             // call provider (resultlist should start with first item)
             EEXCESS.backend.getCall()(data, 1, success, error);
@@ -107,7 +96,7 @@ EEXCESS.model = (function() {
                 }
             };
             var error = function(error) { // error callback
-                EEXCESS.sendMessage(tabID, {method: {parent: 'results', func: 'error'}, data: error});
+                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
             };
             // call provider (resultlist should start with first item)
             EEXCESS.backend.getCall()(data, 1, success, error);
@@ -115,7 +104,7 @@ EEXCESS.model = (function() {
         /**
          * Executes the following functions:
          * - log the query
-         * - set widget's tab to 'results' and reset scroll position
+         * - set widget's tab to 'results'
          * - query API-endpoint
          * After a successful query to the endpoint, the obtained results will be
          * logged in the database and enriched with ratings from the database.
@@ -146,11 +135,10 @@ EEXCESS.model = (function() {
                 }
             }
             if(results.query === '') {
-                EEXCESS.sendMessage(tabID, {method: {parent: 'results', func: 'error'}, data: 'query is empty...'});
+                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: 'query is empty...'});
                 return;
             }
             params.tab = 'results';
-            results.scroll = 0;
             EEXCESS.logging.logQuery(tabID, results.weightedTerms, _queryTimestamp);
             var success = function(data) { // success callback
                 // TODO: search may return no results (although successful)
@@ -163,13 +151,13 @@ EEXCESS.model = (function() {
                     // log results
                     EEXCESS.logging.logRecommendations(data.results, context, _queryTimestamp);
                 }
-                EEXCESS.sendMsgAll({
+                EEXCESS.messaging.sendMsgAllTabs({
                     method: 'newSearchTriggered',
                     data: {query: results.query, results: results.data}
                 });
             };
             var error = function(error) { // error callback
-                EEXCESS.sendMessage(tabID, {method: {parent: 'results', func: 'error'}, data: error});
+                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
             };
             // call provider (resultlist should start with first item)
             EEXCESS.backend.getCall()(data, 1, success, error);
@@ -213,7 +201,7 @@ EEXCESS.model = (function() {
             var context = {query: results.query};
             EEXCESS.annotation.rating(data.uri, data.score, context, true);
             results.data.results[data.pos].rating = data.score;
-            EEXCESS.sendMsgOthers(tabID, {
+            EEXCESS.messaging.sendMsgOtherTabs(tabID, {
                 method: {parent: params.tab, func: 'rating'},
                 data: data
             });

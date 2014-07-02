@@ -32,7 +32,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 chrome.browserAction.onClicked.addListener(
         function(tab) {
             if (!tab['url'].startsWith('https://')) {
-                EEXCESS.sendMsgAll({method: 'visibility', data: EEXCESS.model.toggleVisibility(tab.url)});
+                EEXCESS.messaging.sendMsgAllTabs({method: 'visibility', data: EEXCESS.model.toggleVisibility(tab.url)});
             } 
         }
 );

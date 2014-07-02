@@ -47,7 +47,7 @@ EEXCESS.logging = (function() {
              * request the context from the browsertab, the query was sent and
              * execute database transaction on callback
              */
-            EEXCESS.sendMessage(tabID, {method: 'getTextualContext'}, function(data) {
+            EEXCESS.messaging.sendMsgTab(tabID, {method: 'getTextualContext'}, function(data) {
                 EEXCESS.storage.put('queries', {query: query, timestamp: timestamp, context: data});
             });
         },
