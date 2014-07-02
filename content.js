@@ -54,7 +54,6 @@ chrome.runtime.onMessage.addListener(
                     break;
                 case 'privacySandbox':
                     // change widget's visibility
-                    console.log("Message recieved");
                     EEXCESS.handlePrivacyBoxVisibility(request.data);
                     break;
                 case 'fancybox':
@@ -73,17 +72,6 @@ chrome.runtime.onMessage.addListener(
                             chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'logging', func: 'closedRecommendation'}, data: request.data});
                         }
                     }).trigger('click');
-                    break;
-                case 'useResource':
-                    /*
-                     * Add url of a resource, recommended in the eexcess widget
-                     * to the tags of the current annotation
-                     */
-                    var existingTags = $('#annotator-field-1').val();
-                    if (existingTags.indexOf(request.data) === -1) {
-                        // url is not yet present, add it
-                        $('#annotator-field-1').val(existingTags + ' ' + request.data);
-                    }
                     break;
                 case 'getTextualContext':
                     sendResponse({selectedText: document.getSelection().toString(), url: document.URL});
