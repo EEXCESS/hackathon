@@ -65,11 +65,11 @@ chrome.runtime.onMessage.addListener(
                         'height': '90%',
                         afterShow: function() {
                             // log opening the page's preview in the background script
-                            chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'logging', func: 'openedRecommendation'}, data: request.data});
+                            EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: request.data});
                         },
                         afterClose: function(evt) {
                             // log closing the page's preview in the background script
-                            chrome.runtime.sendMessage(EEXCESS.extID, {method: {parent: 'logging', func: 'closedRecommendation'}, data: request.data});
+                            EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: request.data});
                         }
                     }).trigger('click');
                     break;
@@ -79,22 +79,6 @@ chrome.runtime.onMessage.addListener(
             }
         }
 );
-
-
-/**
- * Wrapper for sending a message to the background script
- * @memberOf EEXCESS
- * @param {Object} message The message to send
- * @param {Function} callback Function to be called after reception of the message
- */
-EEXCESS.callBG = function(message, callback) {
-    if (typeof callback !== 'undefined') {
-        chrome.runtime.sendMessage(EEXCESS.extID, message, callback);
-    } else {
-        chrome.runtime.sendMessage(EEXCESS.extID, message);
-    }
-};
-
 
 /*
  * privacy initialization stuff

@@ -30,7 +30,7 @@ EEXCESS.init = function(widget) {
 
     $('a.fancybox_link').click(function(evt) {
         evt.preventDefault();
-        EEXCESS.callBG({method: 'fancybox', data: 'chrome-extension://' + EEXCESS.extID + '/' + $(evt.target).parent('a').attr('href')});
+        EEXCESS.messaging.callBG({method: 'fancybox', data: 'chrome-extension://' + EEXCESS.extID + '/' + $(evt.target).parent('a').attr('href')});
     });
 
 
@@ -38,7 +38,7 @@ EEXCESS.init = function(widget) {
         console.log("Click sent");
         evt.preventDefault();
         //console.log();
-        EEXCESS.callBG({method: 'privacySandbox', data: 'chrome-extension://' + EEXCESS.extID + '/' + $(evt.target).parent('a').attr('href')});
+        EEXCESS.messaging.callBG({method: 'privacySandbox', data: 'chrome-extension://' + EEXCESS.extID + '/' + $(evt.target).parent('a').attr('href')});
     });
     var form = $('#eexcess_searchForm');
     form.submit(function() {
@@ -54,7 +54,7 @@ EEXCESS.init = function(widget) {
                 };
                 query.push(tmp);
             }
-            EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: {reason: {reason: 'manual', text: $('#eexcess_query').val()}, terms: query}});
+            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason: {reason: 'manual', text: $('#eexcess_query').val()}, terms: query}});
         }
         return false;
     });
@@ -65,10 +65,10 @@ EEXCESS.init = function(widget) {
 
 
 // Initalize the widget with the current state in the background script's model on execution of this script
-EEXCESS.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);
+EEXCESS.messaging.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);
 
 
-EEXCESS.messageListener(function(request, sender, sendResponse) {
+EEXCESS.messaging.listener(function(request, sender, sendResponse) {
     if (request.method !== 'privacySandbox' && request.method !== 'visibility' && request.method !== 'fancybox' && request.method !== 'getTextualContext' && request.method.parent !== 'results') {
         if (typeof request.method.parent !== 'undefined') {
             EEXCESS[request.method.parent][request.method.func](request.data);

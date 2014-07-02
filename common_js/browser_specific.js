@@ -1,6 +1,22 @@
 var EEXCESS = EEXCESS || {};
 
 EEXCESS.messaging = (function() {
+    var _extID = chrome.i18n.getMessage('@@extension_id'); // chrome extension identifier
+
+    /**
+     * Sends a message to the background script
+     * 
+     * @param {Object} message The message to send
+     * @param {Function} callback Function to be called by the receiver
+     */
+    var _callBG = function(message, callback) {
+        if (typeof callback !== 'undefined') {
+            chrome.runtime.sendMessage(_extID, message, callback);
+        } else {
+            chrome.runtime.sendMessage(_extID, message);
+        }
+    };
+
     /**
      * Sends a message to a specific browsertab
      * @param {Integer} tabID Identifier of the tab, the message is to be sent to
@@ -65,7 +81,8 @@ EEXCESS.messaging = (function() {
         sendMsgTab: _sendMsgTab,
         sendMsgAllTabs: _sendMsgAllTabs,
         sendMsgOtherTabs: _sendMsgOtherTabs,
-        listener: _listener
+        listener: _listener,
+        callBG:_callBG
     };
 })();
 
@@ -153,7 +170,7 @@ EEXCESS.tabs = (function() {
     var _activatedListener = function(callback) {
         chrome.tabs.onActivated.addListener(callback);
     };
-    
+
     /**
      * See https://developer.chrome.com/extensions/tabs#method-get for documentation
      * 
@@ -161,9 +178,9 @@ EEXCESS.tabs = (function() {
      * @param {Object} callback
      */
     var _get = function(tabID, callback) {
-        chrome.tabs.get(tabID,callback);
+        chrome.tabs.get(tabID, callback);
     };
-    
+
     /**
      * See https://developer.chrome.com/extensions/tabs#method-query for documentation
      * 
@@ -171,9 +188,9 @@ EEXCESS.tabs = (function() {
      * @param {Function} callback
      */
     var _query = function(queryInfo, callback) {
-        chrome.tabs.query(queryInfo,callback);
+        chrome.tabs.query(queryInfo, callback);
     };
-    
+
     /**
      * Listens to tab removed events
      * 
@@ -185,13 +202,13 @@ EEXCESS.tabs = (function() {
     return {
         updateListener: _updateListener,
         activatedListener: _activatedListener,
-        get:_get,
-        query:_query,
-        removedListener:_removedListener
+        get: _get,
+        query: _query,
+        removedListener: _removedListener
     };
 })();
 
-EEXCESS.windows = (function(){
+EEXCESS.windows = (function() {
     /**
      * Listen to window focus change events
      * 
@@ -200,8 +217,15 @@ EEXCESS.windows = (function(){
     var _focusChangedListener = function(callback) {
         chrome.windows.onFocusChanged.addListener(callback);
     };
+    
+    var _WINDOW_ID_NONE = function() {
+        if(chrome.windows) {
+            return chrome.windows.WINDOW_ID_NONE;
+        }
+        return -1;
+    };
     return {
-        WINDOW_ID_NONE:chrome.windows.WINDOW_ID_NONE,
+        WINDOW_ID_NONE: _WINDOW_ID_NONE,
         focusChangedListener: _focusChangedListener
     };
 })();

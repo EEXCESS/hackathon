@@ -384,7 +384,7 @@ var funcStore =	{
 
 	
 		//begin search
-		EEXCESS.callBG({
+		EEXCESS.messaging.callBG({
 			method: {parent: 'model', func: 'query'}, data:query //data: [{weight:1,text:dataParameter.text}]
 		});
 	},
@@ -718,7 +718,7 @@ var BuildControls = function(){
 		
 	// populate query field initially
 	/*
-	EEXCESS.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(res) {
+	EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(res) {
 		$('#searchtext').val(res.query);
 	});
 		*/
@@ -745,7 +745,7 @@ var BuildControls = function(){
 
 	
 		//begin search
-		EEXCESS.callBG({
+		EEXCESS.messaging.callBG({
 			method: {parent: 'model', func: 'query'}, data:query //data: [{weight:1,text:dataParameter.text}]
 		});
 
@@ -754,7 +754,7 @@ var BuildControls = function(){
 	
 
 	//search finished with results, asynchronous call
-	EEXCESS.messageListener(
+	EEXCESS.messaging.listener(
 		function(request, sender, sendResponse) {
 			
 			if (request.method === 'newSearchTriggered') {

@@ -123,7 +123,7 @@ function display_querycrumbs(domElem) {
             // end
 
             EEXCESS.searchResults.loading();
-            EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: {reason:'queryCrumbs',terms:weightedTerms}});
+            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason:'queryCrumbs',terms:weightedTerms}});
         },
         onMouseOverNode: function(d, i) {
             var infoBox = svgContainer.select("g").append("g").attr("class", "infoBoxNode");
@@ -580,7 +580,7 @@ function display_querycrumbs(domElem) {
         }
     };
 
-    EEXCESS.messageListener(QUERYING.SearchTriggeredListener);
+    EEXCESS.messaging.listener(QUERYING.SearchTriggeredListener);
 
     function init(data) {
         historyData = data.reverse();

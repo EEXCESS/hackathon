@@ -61,11 +61,11 @@ function requestPlugin() {
     }
 
     	
-    EEXCESS.callBG({method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
+    EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
            requestVisualizations(reqResult, "load_visualization");
     });
     
-    EEXCESS.messageListener(
+    EEXCESS.messaging.listener(
     	function(request, sender, sendResponse) {
     		if (request.method === 'newSearchTriggered') {
     			//console.log(request.data);

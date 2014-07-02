@@ -590,13 +590,13 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                 var backButton = $('<img src="../../../media/icons/back.png" style="width:100%;">');
                 var previewFrame = $('<iframe src="' + url + '" frameborder="0" hspace="0" vspace="0" style="width:97%;height:100%;position:absolute;">');
 
-                EEXCESS.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
+                EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
 
                 myFacetScape.hide();
                 backPanel.click(function() {
                     previewPanel.remove();
                     myFacetScape.show();
-                    EEXCESS.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
+                    EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
                 });
                 backPanel.append(backButton);
                 previewPanel.append(backPanel);
@@ -1083,7 +1083,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         }
         return {
             search: function(terms) {
-                EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: [{weight:1,text:terms}]});
+                EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: [{weight:1,text:terms}]});
                 PROVIDER.buildFacetScape(terms, PROVIDER.getRequestedProvider(), root, iwidth, iheight);
             },
             evaluateSelection: function(selection) {

@@ -4,8 +4,8 @@
  * Create custom handlers for the results' preview
  * In this case, open a fancybox with the url provided in the result.
  * Please make sure to log opening/closing the preview properly (methods:
- * EEXCESS.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
- * EEXCESS.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
+ * EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
+ * EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
  */
 var previewHandler = function(url) {
     $('<a href="' + url + '"></a>').fancybox({
@@ -14,11 +14,11 @@ var previewHandler = function(url) {
         'height': '90%',
         afterShow: function() {
             // log opening the page's preview in the background script
-            EEXCESS.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
+            EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
         },
         afterClose: function(evt) {
             // log closing the page's preview in the background script
-            EEXCESS.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
+            EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
         }
     }).trigger('click');
 };
@@ -30,7 +30,7 @@ var previewHandler = function(url) {
 var rList = EEXCESS.searchResultList($('#test'), {previewHandler: previewHandler, pathToMedia: '../../media/', pathToLibs: '../../libs/'});
 
 // populate query field initially
-EEXCESS.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(res) {
+EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(res) {
     $('#query').val(res.query);
 });
 
@@ -57,12 +57,12 @@ $('#testForm').submit(function(evt) {
         query.push(tmp);
     }
     // send query for new results
-    EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query});
+    EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: query});
 });
 
 
 // update search input field on new query
-EEXCESS.messageListener(
+EEXCESS.messaging.listener(
         function(request, sender, sendResponse) {
             if (request.method === 'newSearchTriggered') {
                 $('#query').val(request.data.query);
