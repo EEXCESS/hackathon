@@ -14,7 +14,7 @@ if (typeof String.prototype.startsWith !== 'function') {
 }
 
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+EEXCESS.tabs.updateListener(function(tabId, changeInfo, tab) {
     if (typeof tab['url'] !== 'undefined') {
         if (tab['url'].startsWith('https://')) {
 //            chrome.browserAction.disable(tabId);

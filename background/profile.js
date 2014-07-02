@@ -114,11 +114,11 @@ EEXCESS.profile = (function() {
         },
         getHistorySize: function(tabID, data, callback) {
             if (data) {
-                chrome.history.search({'text': '', 'startTime': data, 'maxResults': 1999999999}, function(results) {
+                EEXCESS.history.search({'text': '', 'startTime': data, 'maxResults': 1999999999}, function(results) {
                     callback(results);
                 });
             } else {
-                chrome.history.search({'text': '', 'startTime': 0, 'maxResults': 1999999999}, function(results) {
+                EEXCESS.history.search({'text': '', 'startTime': 0, 'maxResults': 1999999999}, function(results) {
                     console.log(data);
                     callback(results);
                 });
@@ -152,7 +152,7 @@ EEXCESS.profile = (function() {
                     startTime = 0;
                     break;
             }
-            chrome.history.search({'text': '', 'startTime': startTime, 'maxResults': maxResults}, function(results) {
+            EEXCESS.history.search({'text': '', 'startTime': startTime, 'maxResults': maxResults}, function(results) {
                 var profile = {
                     "eexcess-user-profile": {
                         "history": results,

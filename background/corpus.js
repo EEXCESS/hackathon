@@ -9,7 +9,7 @@ var EEXCESS = EEXCESS || {};
 EEXCESS.corpus = (function() {
     return {
         getCorpus: function(tabID, data, callback) {
-            chrome.tabs.detectLanguage(tabID, function(lang) {
+            EEXCESS.utils.detectLanguage(tabID, function(lang) {
                 var worker = new Worker('corpus_webWorker.js');
                 worker.addEventListener('message', function(e) {
                     // send corpus back to content script

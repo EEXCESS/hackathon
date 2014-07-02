@@ -158,7 +158,7 @@ EEXCESS.logging.history = (function() {
      * @param {Number} item.end End of the visit in milliseconds from the epoch
      */
     var _updateDB = function(item) {
-        chrome.history.getVisits({url: item.url}, function(visitItems) {
+        EEXCESS.history.getVisits(item.url, function(visitItems) {
             var chromeVisit = visitItems[visitItems.length - 1];
             item.transition = chromeVisit.transition;
             item.chrome_visitId = chromeVisit.visitId;
@@ -167,28 +167,28 @@ EEXCESS.logging.history = (function() {
     };
 
     // update the current visit on changes in the active tab
-    chrome.tabs.onUpdated.addListener(function(tabID, changeInfo, tab) {
+    EEXCESS.tabs.updateListener(function(tabID, changeInfo, tab) {
         if (tab.active) {
             _updateChange(tab.url, tab.windowId, tabID);
         }
     });
 
     // tab activated -> start of visit
-    chrome.tabs.onActivated.addListener(function(activeInfo) {
-        chrome.tabs.get(activeInfo.tabId, function(tab) {
+    EEXCESS.tabs.activatedListener(function(activeInfo) {
+        EEXCESS.tabs.get(activeInfo.tabId, function(tab) {
             _updateChange(tab.url, activeInfo.windowId, activeInfo.tabId);
         });
     });
 
     // update/store the current visit on changes of the window focus
-    chrome.windows.onFocusChanged.addListener(function(windowId) {
-        if (windowId === chrome.windows.WINDOW_ID_NONE && current.url !== '') {
+    EEXCESS.windows.focusChangedListener(function(windowId) {
+        if (windowId === EEXCESS.windows.WINDOW_ID_NONE && current.url !== '') {
             // window has lost focus -> end of visit
             _updateDB({url: current.url, start: current.start, end: new Date().getTime()});
             current.reset();
         } else {
             // window has obtained focus -> start of visit with url of currently active tab
-            chrome.tabs.query({currentWindow: true, active: true}, function(tabs) {
+            EEXCESS.tabs.query({currentWindow: true, active: true}, function(tabs) {
                 if (tabs.length > 0) {
                     _updateChange(tabs[0].url, tabs[0].windowId, tabs[0].id);
                 }
@@ -197,7 +197,7 @@ EEXCESS.logging.history = (function() {
     });
 
     // if removed tab corresponds to current visit -> visit ended
-    chrome.tabs.onRemoved.addListener(function(tabID) {
+    EEXCESS.tabs.removedListener(function(tabID) {
         if (current.tabId === tabID) {
             _updateDB({url: current.url, start: current.start, end: new Date().getTime()});
             current.reset();
