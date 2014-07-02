@@ -162,7 +162,7 @@ EEXCESS.logging.history = (function() {
             var chromeVisit = visitItems[visitItems.length - 1];
             item.transition = chromeVisit.transition;
             item.chrome_visitId = chromeVisit.visitId;
-            EEXCESS.storage.updateVisit(item, chromeVisit.referringVisitId);
+            EEXCESS.storage.storeVisit(item, chromeVisit.referringVisitId);
         });
     };
 

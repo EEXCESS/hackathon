@@ -4,11 +4,15 @@ EEXCESS.storage = (function() {
     var _name = 'eexcess_db'; // name of the database
     var _version = 42; // version number of the database
     var _db = {}; // the database (needs to be initalized - DO NOT ACCESS DIRECTLY! use _getDB instead)
+    
+    // checks, if the provided callback is a function and executes it without parameters
     var _empty_callback = function(callback) {
         if (typeof callback === 'function') {
             callback();
         }
     };
+    
+    // checks, if the provided callback is a function and executes it with supplied parameter
     var _optional_callback = function(callback, value) {
         if (typeof callback === 'function') {
             callback(value);
@@ -33,7 +37,7 @@ EEXCESS.storage = (function() {
     };
 
     /**
-     * Returns the database object.
+     * Obtains a connection to the database
      * 
      * @param {function} success success callback, receives the database as parameter
      * @param {function} error (optional) error callback
@@ -65,6 +69,14 @@ EEXCESS.storage = (function() {
         }, _empty_callback(error));
     };
 
+    /**
+     * Adds an object to the desired object store
+     * @param {String} objectStore name of the object store to which an entry should be added
+     * @param {Object} value the object to add
+     * @param {Function} success (optional) success callback without parameters
+     * @param {Function} error (optional) error callback without parameters
+     * @returns {undefined}
+     */
     var _add = function(objectStore, value, success, error) {
         _getDB(function(db) {
             var tx = db.transaction(objectStore, 'readwrite');
@@ -75,6 +87,13 @@ EEXCESS.storage = (function() {
         }, _empty_callback(error));
     };
 
+    /**
+     * Stores the closing of a result with to the database. This means updating
+     * an existing entry for a started view with the duration of the view.
+     * @param {String} resource url of the resource
+     * @param {Function} success (optional) success callback, receives the updated entry as parameter
+     * @param {Function} error (optional) error callback without parameters
+     */
     var _closedRecommendation = function(resource, success, error) {
         _getDB(function(db) {
             var tx = db.transaction('resource_relations', 'readwrite');
@@ -88,7 +107,7 @@ EEXCESS.storage = (function() {
                     if (cursor.value.type === 'view' && typeof cursor.value.duration === 'undefined') {
                         cursor.value.duration = new Date().getTime() - cursor.value.timestamp;
                         cursor.update(cursor.value);
-                        success(cursor.value);
+                        _optional_callback(success, cursor.value);
                     } else {
                         cursor.continue();
                     }
@@ -100,6 +119,14 @@ EEXCESS.storage = (function() {
         }, _empty_callback(error));
     };
 
+    /**
+     * Stores the rating of a resource. If a rating for this resource is already
+     * present within the same context, the rating is updated
+     * 
+     * @param {Object} rating the rating, including the resource and context
+     * @param {Function} success (optional) success callback without parameters
+     * @param {Function} error (optional) error callback without parameters
+     */
     var _setRating = function(rating, success, error) {
         _getDB(function(db) {
             var entryExists = false;
@@ -136,6 +163,17 @@ EEXCESS.storage = (function() {
         }, _empty_callback(error));
     };
 
+    /**
+     * Obtains the rating for a resource from the database. At the moment, the
+     * rating's context is not considered (the same result item may be rated 
+     * different, when retrieved by different queries), but instead, the first 
+     * rating found is returned.
+     * 
+     * @param {String} uri the uri of the resource for which to retrieve the rating
+     * @param {Object} context the context for which to retrieve the rating
+     * @param {Function} success success callback, receiving the rating score as parameter
+     * @param {Function} error (optional) error callback, receiving the error message as parameter
+     */
     var _getRating = function(uri, context, success, error) {
         _getDB(function(db) {
             var tx = db.transaction('resource_relations');
@@ -161,10 +199,16 @@ EEXCESS.storage = (function() {
                 }
             };
             curreq.onerror = _optional_callback(error, 'db error');
-        }, _empty_callback(error));
+        }, _optional_callback(error, 'db error'));
     };
 
-    var _updateVisit = function(visitItem, referringVisitId) {
+    /**
+     * Enriches a visit with its referrer (if any) and stores it in the database
+     * 
+     * @param {Object} visitItem the visit to store
+     * @param {Integere} referringVisitId identifier of the referring visit
+     */
+    var _storeVisit = function(visitItem, referringVisitId) {
         _getDB(function(db) {
             var tx = db.transaction('history', 'readwrite');
             var store = tx.objectStore('history');
@@ -182,6 +226,14 @@ EEXCESS.storage = (function() {
         });
     };
 
+    /**
+     * Stores recommendations in the database, along with the context in which 
+     * they were retrived and a timestamp.
+     * 
+     * @param {Array} recommendations the recommendations to store
+     * @param {Object} context the context in which the recommendations were retrieved
+     * @param {long} timestamp the timestamp
+     */
     var _storeRecommendations = function(recommendations, context, timestamp) {
         _getDB(function(db) {
             var tx = db.transaction('recommendations', 'readwrite');
@@ -372,7 +424,7 @@ EEXCESS.storage = (function() {
         local: _local,
         put: _put,
         add: _add,
-        updateVisit: _updateVisit,
+        storeVisit: _storeVisit,
         storeRecommendations: _storeRecommendations,
         getRating: _getRating,
         setRating: _setRating,
