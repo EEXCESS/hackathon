@@ -1,37 +1,6 @@
 var EEXCESS = EEXCESS || {};
 EEXCESS.extID = chrome.i18n.getMessage('@@extension_id');
 
-///**
-// * Handler to be called on scrolling in the result list. If the end of the result
-// * list is reached, but there are still more results available for the current query, the 
-// * background script is called to retrieve a further set of results.
-// * @memberOf EEXCESS
-// * @param {Boolean} moreResults Indicating, if more results are available for the current query
-// */
-//EEXCESS.scrollalert = function(moreResults) {
-//    var scrolltop = $('#eexcess_content').prop('scrollTop');
-//    var scrollheight = $('#eexcess_content').prop('scrollHeight');
-//    var windowheight = $('#eexcess_content').prop('clientHeight');
-//    var offset = 20;
-//    EEXCESS.callBG({method: 'scroll', data: scrolltop});
-//    if (moreResults && scrolltop > 0 && (scrolltop + windowheight + offset >= scrollheight)) {
-//        $('#eexcess_content').unbind('scroll');
-//        $('#eexcess_content').append($('<div id="eexcess_loading"><img src="../media/loading.gif" /></div>'));
-//        var start = $('#eexcess_content').find('li:last').data('pos') + 2;
-//        EEXCESS.callBG({method: {parent: 'model', func: 'moreResults'}, data: start});
-//    }
-//};
-
-///**
-// * Sets the scroll position of the '#eexcess_content' element to the specified
-// * value.
-// * @memberOf EEXCESS
-// * @param {Integer} value The scroll position to set
-// */
-//EEXCESS.scroll = function(value) {
-//    $('#eexcess_content').scrollTop(value);
-//};
-
 EEXCESS.searchResults = EEXCESS.searchResultList($('#eexcess_content'));
 
 /**
