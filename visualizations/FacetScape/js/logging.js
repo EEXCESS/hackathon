@@ -31,7 +31,7 @@ var LOGGING = (function() {
             var tmp = logAtom;
             tmp['uuid'] = EEXCESS.storage.local('profile.uuid');
             var xhr = $.ajax({
-                url: EEXCESS.storage.local('PP_BASE_URI') + 'api/v1/log/facetScape',
+                url: EEXCESS.config.LOG_FACETSCAPE_URI,
                 data: JSON.stringify(tmp),
                 type: 'POST',
                 contentType: 'application/json; charset=UTF-8',

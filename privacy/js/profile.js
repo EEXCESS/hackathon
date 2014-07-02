@@ -44,7 +44,7 @@ $('#topicInput').tagit({// tagit plugin for topics
                 processData: false,
                 contentType: 'application/json',
                 type: 'POST',
-                url: EEXCESS.storage.local('PP_BASE_URI') + 'api/v1/disambiguate',
+                url: EEXCESS.config.DISAMBIGUATE_URI,
                 dataType: "json",
                 data: '{"input":"' + request.term + '","language":"en"}', // possible language fields: en,de,fr TODO: make selectable
                 success: function(data) {

@@ -50,7 +50,7 @@ EEXCESS.model = (function() {
         toggleVisibility: function(url) {
             params.visible = !params.visible;
             var xhr = $.ajax({
-                url: EEXCESS.storage.local('PP_BASE_URI') + 'api/v1/log/show_hide',
+                url: EEXCESS.config.LOG_SHOW_HIDE_URI,
                 data: JSON.stringify({visible:params.visible, uuid:EEXCESS.profile.getUUID(), currentPage:url}),
                 type: 'POST',
                 contentType: 'application/json; charset=UTF-8',
