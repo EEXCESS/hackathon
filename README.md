@@ -24,7 +24,8 @@ file structure
 
 common methods
 --------------------------
-Please use the message\_wrapper in common\_js to send/receive messages.
+Please use the message\_wrapper in common\_js to send/receive messages.  
+To access local Storage and the indexed database, please use the wrappers in /common_js/storage.js or create a new one in this file if necessary (for details see the readme in /common_js).
  
 ### retrieving current query and results ###
 ```javascript
