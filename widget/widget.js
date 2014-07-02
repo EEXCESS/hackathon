@@ -42,11 +42,6 @@ EEXCESS.init = function(widget) {
     });
     var form = $('#eexcess_searchForm');
     form.submit(function() {
-//        $('#eexcess_content').empty();
-//        $('#eexcess_content').unbind('scroll');
-//        $('#eexcess_content').scrollTop(0);
-//        $('#eexcess_content').append($('<div id="eexcess_loading"><img id="eexcess_loading" src="../media/loading.gif" /></div>'));
-        //evt.preventDefault();
         var query_string = $('#eexcess_query').val();
         if (query_string) {
             EEXCESS.searchResults.loading();
