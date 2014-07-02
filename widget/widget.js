@@ -1,5 +1,4 @@
 var EEXCESS = EEXCESS || {};
-EEXCESS.extID = chrome.i18n.getMessage('@@extension_id');
 
 EEXCESS.searchResults = EEXCESS.searchResultList($('#eexcess_content'));
 
@@ -30,7 +29,7 @@ EEXCESS.init = function(widget) {
 
     $('a.fancybox_link').click(function(evt) {
         evt.preventDefault();
-        EEXCESS.messaging.callBG({method: 'fancybox', data: 'chrome-extension://' + EEXCESS.extID + '/' + $(evt.target).parent('a').attr('href')});
+        EEXCESS.messaging.callBG({method: 'fancybox', data: 'chrome-extension://' + EEXCESS.utils.extID + '/' + $(evt.target).parent('a').attr('href')});
     });
 
 
@@ -38,7 +37,7 @@ EEXCESS.init = function(widget) {
         console.log("Click sent");
         evt.preventDefault();
         //console.log();
-        EEXCESS.messaging.callBG({method: 'privacySandbox', data: 'chrome-extension://' + EEXCESS.extID + '/' + $(evt.target).parent('a').attr('href')});
+        EEXCESS.messaging.callBG({method: 'privacySandbox', data: 'chrome-extension://' + EEXCESS.utils.extID + '/' + $(evt.target).parent('a').attr('href')});
     });
     var form = $('#eexcess_searchForm');
     form.submit(function() {

@@ -50,12 +50,12 @@ $('#frserver').change(function () {
     } else {
         $('#local_url').hide();
     }
-    chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'),{method:{parent:'backend',func:'setProvider'},data:$('#frserver option:selected').val()});
+    EEXCESS.messaging.callBG({method:{parent:'backend',func:'setProvider'},data:$('#frserver option:selected').val()});
 });
 }
 
 $('#local_url').submit(function() {
-    chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'),{method:{parent:'backend',func:'setURL'},data:{pp:$('#custom_url').val(),fr:$('#custom_fr_url').val()}});
+    EEXCESS.messaging.callBG({method:{parent:'backend',func:'setURL'},data:{pp:$('#custom_url').val(),fr:$('#custom_fr_url').val()}});
     $('#info_msg').text('changes applied').show();
     window.setTimeout(function() {$('#info_msg').fadeOut();}, 1000);
     return false;

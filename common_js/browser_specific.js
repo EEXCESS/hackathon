@@ -82,7 +82,7 @@ EEXCESS.messaging = (function() {
         sendMsgAllTabs: _sendMsgAllTabs,
         sendMsgOtherTabs: _sendMsgOtherTabs,
         listener: _listener,
-        callBG:_callBG
+        callBG: _callBG
     };
 })();
 
@@ -118,7 +118,8 @@ EEXCESS.utils = (function() {
         chrome.tabs.detectLanguage(tabID, success);
     };
     return {
-        detectLanguage: _detectLanguage
+        detectLanguage: _detectLanguage,
+        extID: chrome.i18n.getMessage('@@extension_id')
     };
 })();
 
@@ -217,9 +218,9 @@ EEXCESS.windows = (function() {
     var _focusChangedListener = function(callback) {
         chrome.windows.onFocusChanged.addListener(callback);
     };
-    
+
     var _WINDOW_ID_NONE = function() {
-        if(chrome.windows) {
+        if (chrome.windows) {
             return chrome.windows.WINDOW_ID_NONE;
         }
         return -1;
