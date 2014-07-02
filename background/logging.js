@@ -25,7 +25,7 @@ EEXCESS.logging = (function() {
     return {
         /**
          * Stores recommendations which were retrieved from a partner's datastore
-         * into the database along with the context, the items were recommended
+         * into the database along with the context, in which the items were recommended
          * @memberOf EEXCESS.logging
          * @param {Array.<Recommendation>} recommendations Recommendations as returned by a query on a partner's datastore
          * @param {Object} context The context in which the recommendations were provided (can e.g. contain a query term)
@@ -36,12 +36,10 @@ EEXCESS.logging = (function() {
         },
         /**
          * Stores the term of a user-initiated query in the database along with its context.
-         * If the user selected a piece of text, this is assumed to be the context, otherwise
-         * the text currently in the viewport makes the context. (if a paragraph starts in the viewport, 
-         * but ends outside, while still contained in the same DOM-node, the whole paragraph is stored
+         * If the user selected a piece of text for example, this is assumed to be the context.
          * @memberOf EEXCESS.logging
          * @param {Integer} tabID Identifier of the browsertab, the query was executed in
-         * @param {String} query The query term
+         * @param {String} query The query
          * @param {long} timestamp The timestamp, when the recommendations were retrieved
          */
         logQuery: function(tabID, query, timestamp) {

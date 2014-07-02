@@ -1,10 +1,10 @@
 var EEXCESS = EEXCESS || {};
 
 /**
- * Encapsulates functionality for logging user actions.
- * @namespace EEXCESS.logging
+ * Encapsulates functionality for invoking a web worker, in order to create a corpus of terms from an array of text passages
+ * @namespace EEXCESS.corpus
  * @type {Object}
- * @returns {Object} Returns a set of functions for logging user actions
+ * @returns {Object} Returns a set of functions for obtaining a corpus
  */
 EEXCESS.corpus = (function() {
     return {

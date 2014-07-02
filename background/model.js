@@ -55,6 +55,7 @@ EEXCESS.model = (function() {
         /**
          * Toggles the visibility of the widget
          * @memberOf EEXCESS.model
+         * @param {String} url the url of the current page
          * @returns {Boolean} true if visible, otherwise false
          */
         toggleVisibility: function(url) {
@@ -115,15 +116,15 @@ EEXCESS.model = (function() {
          * Executes the following functions:
          * - log the query
          * - set widget's tab to 'results' and reset scroll position
-         * - query europeana
-         * After a successful query to europeana, the obtained results will be
+         * - query API-endpoint
+         * After a successful query to the endpoint, the obtained results will be
          * logged in the database and enriched with ratings from the database.
          * Furthermore they are set as the current results in the widget's model.
          * At logging the recommendations, query is added as context.
          * @memberOf EEXCESS.model
          * @param {Integer} tabID Identifier of the browsertab, the request 
          * originated
-         * @param {String} data The query term 
+         * @param {Object} data The query data 
          */
         query: function(tabID, data) {
             // send query only if the widget is visible
@@ -174,36 +175,6 @@ EEXCESS.model = (function() {
             EEXCESS.backend.getCall()(data, 1, success, error);
         },
         /**
-         * Obtains more results for the current query from europeana.
-         * On success, the obtained results are appended to the model's 
-         * resultlist, with the further steps executed equal to 
-         * {@link EEXCESS.model.query}
-         * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request 
-         * originated
-         * @param {Integer} data Position in the search result list to start 
-         * with (the first is 1)
-         */
-        moreResults: function(tabID, data) {
-            var success = function(data) {
-                results.data.results = results.data.results.concat(data.results);
-                EEXCESS.sendMsgAll({
-                    method: {parent: params.tab, func: 'moreResults'},
-                    data: data.results
-                });
-                // update results with ratings
-                _updateRatings(data.results);
-                // create context
-                var context = {query: results.query};
-                // log results
-                EEXCESS.logging.logRecommendations(data.results, context, _queryTimestamp);
-            };
-            var error = function(error) {
-                EEXCESS.sendMessage(tabID, {method: {parent: 'results', func: 'error'}, data: error});
-            };
-            EEXCESS.backend.getCall()(results.weightedTerms, data, success, error);
-        },
-        /**
          * Sends the current model state to the specified callback
          * @memberOf EEXCESS.model
          * @param {Integer} tabID Identifier of the browsertab, the request 
@@ -228,9 +199,8 @@ EEXCESS.model = (function() {
         },
         /**
          * Sets the rating score of a resource in the resultlist to the 
-         * specified value, logs the rating and informs all other tabs.
-         * The query  is added to the rating as 
-         * context in the log.
+         * specified value, stores the rating and informs all other tabs.
+         * The query  is added to the rating as context.
          * @memberOf EEXCESS.model
          * @param {Integer} tabID Identifier of the browsertab, the request 
          * originated
@@ -240,7 +210,6 @@ EEXCESS.model = (function() {
          * @param {Integer} data.pos Position of the resource in the resultlist
          */
         rating: function(tabID, data) {
-            console.log(data);
             var context = {query: results.query};
             EEXCESS.annotation.rating(data.uri, data.score, context, true);
             results.data.results[data.pos].rating = data.score;
@@ -263,17 +232,15 @@ EEXCESS.model = (function() {
             return context;
         },
         /**
-         * Returns the visibility state of the eexcess widget
-         * @memberOf EEXCESS.model
-         * @returns {Boolean} true if visible, false otherwise
+         * Hands in the current query and corresponding results to the specified callback
+         * @param {Integer} tabID Identifier of the browsertab, the request 
+         * originated
+         * @param {Object} data unused
+         * @param {Function} callback
          */
-        getVisibility: function() {
-            return params.visible;
-        },
         getResults: function(tabID, data, callback) {
             callback({query: results.query, results: results.data});
         }
-
     };
 }());
 
