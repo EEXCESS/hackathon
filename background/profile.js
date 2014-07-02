@@ -131,7 +131,7 @@ EEXCESS.profile = (function() {
             switch (EEXCESS.storage.local("privacy.policy.history")) {
                 case '1':
                     startTime = 0
-                    maxResults = 1
+                    maxResults = 0
                     break;
                 case '2':
                     startTime = today.getTime() - 1000 * 60 * 60;

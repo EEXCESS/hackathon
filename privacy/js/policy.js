@@ -105,7 +105,7 @@ function updateDisclosedValue(fieldName) {
 		var today = new Date();
     	switch(EEXCESS.storage.local("privacy.policy.history")) {
     	case '1':
-			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(1);
+			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(0);
 			break;
     	case '2':
     		var data = today.getTime() - 1000*60*60;
