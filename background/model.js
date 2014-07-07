@@ -14,7 +14,7 @@ EEXCESS.model = (function() {
      * Represents the current query and according results
      */
     var results = {
-        query: 'search text...',
+        query: 'Search',
         data: null,
         weightedTerms: null
     };
@@ -214,7 +214,7 @@ EEXCESS.model = (function() {
          */
         getContext: function() {
             var context = {};
-            if (results.query !== 'search text...') {
+            if (results.query !== 'Search') {
                 context.query = results.query;
             }
             return context;

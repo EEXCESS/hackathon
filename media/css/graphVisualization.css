@@ -20,9 +20,9 @@ body {
 
     height:400px;
 	*/
-    border-radius:10px 10px 10px 10px; 
-	border:2px solid #1d904e;
-	background-color: rgba(255,255,255,0.75);
+    border-radius:0px; 
+	border:1px solid #e4e4e4;
+	background-color: white;
 	
 }
 
@@ -35,7 +35,10 @@ body {
 }
 
 #D3graph{
-	margin:5px;
+		margin-top:5px;
+
+			margin-bottom:5px;
+
 }
 
 #d3_slider{
@@ -85,17 +88,16 @@ body {
 }
 
 .margin_box{
-	margin:4px;
+	margin:7px;
 }
 .type_bold{
-	font-weight: bold;
+
 }
 
 .bookmark_box{
 	margin:1px;
 }
 .searchmodus{
-	outline: green solid 2px;
 }
 
 /*css for slider control*/

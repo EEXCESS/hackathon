@@ -8,7 +8,7 @@ EEXCESS.searchResults = EEXCESS.searchResultList($('#eexcess_content'));
  * @param {Object} widget The current state of the widget model in the background script
  */
 EEXCESS.update = function(widget) {
-    if (widget.results.query === 'search text...') {
+    if (widget.results.query === 'Search') {
         $('#eexcess_query').attr('placeholder', widget.results.query);
     } else {
         $('#eexcess_query').val(widget.results.query);
