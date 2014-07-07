@@ -74,14 +74,12 @@ body {
 }
 
 .green_round_box{
-	border-radius:5px 5px 5px 5px; 
 	border:2px solid #1d904e;
 	background-color: rgba(255,255,255,0.75);
 	padding: 2px;
 }
 
 .grey_round_box{
-	border-radius:3px 3px 3px 3px; 
 	border:1px solid gray;
 	margin:1px;
 	padding:1px;
