@@ -9,7 +9,7 @@ visTemplate.init();
 
 var onDataReceived = function(dataReceived, status, action) {
 	
-	console.log("Post status: "+ status);
+	console.log("Post to EEXCESS/Belgin server status: " + status);
 	console.log(action);
 	
 	globals.mappingcombination = dataReceived[0].mapping;
