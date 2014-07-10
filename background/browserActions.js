@@ -14,7 +14,7 @@ if (typeof String.prototype.startsWith !== 'function') {
 }
 
 
-chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+EEXCESS.tabs.updateListener(function(tabId, changeInfo, tab) {
     if (typeof tab['url'] !== 'undefined') {
         if (tab['url'].startsWith('https://')) {
 //            chrome.browserAction.disable(tabId);
@@ -32,7 +32,7 @@ chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
 chrome.browserAction.onClicked.addListener(
         function(tab) {
             if (!tab['url'].startsWith('https://')) {
-                EEXCESS.sendMsgAll({method: 'visibility', data: EEXCESS.model.toggleVisibility(tab.url)});
+                EEXCESS.messaging.sendMsgAllTabs({method: 'visibility', data: EEXCESS.model.toggleVisibility(tab.url)});
             } 
         }
 );

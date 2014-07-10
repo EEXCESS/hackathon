@@ -45,7 +45,7 @@ function updatePolicy() {
 		}
 		console.log("Updating policy setting for topics '"+fieldName+"' to "+value);
 		
-		var jsonTopicsPolicy = localStorage['privacy.profile.topics'];
+		var jsonTopicsPolicy = EEXCESS.storage.local('privacy.profile.topics');
         var topics = [];
         if(jsonTopicsPolicy) {
             topics = JSON.parse(jsonTopicsPolicy);
@@ -56,7 +56,7 @@ function updatePolicy() {
                 break;
         	}
         }
-        localStorage['privacy.profile.topics'] = JSON.stringify(topics);
+        EEXCESS.storage.local('privacy.profile.topics',JSON.stringify(topics));
         updateDisclosedValue("topics");
 	} else {
 		// general case
@@ -71,12 +71,12 @@ function updatePolicy() {
 		}
 		console.log("Updating policy setting for '"+fieldName+"' to "+value);
 		
-		localStorage["privacy.policy."+fieldName] = value;
+		EEXCESS.storage.local("privacy.policy."+fieldName,value);
 		updateDisclosedValue(fieldName);
 	}
 	
 	
-/* 	var rawValue = localStorage["profile.private."+fieldValue];	
+/* 	var rawValue = EEXCESS.storage.local("profile.private."+fieldValue);	
 	privacy.apply(fieldName,rawValue, value);
 	*/
 }
@@ -85,7 +85,7 @@ function updateDisclosedValue(fieldName) {
 	switch(fieldName) {
     case "topics":
     	if ($("div[data-eexcess-policy-field='topics']").find(".panel-body .progress-bar:eq(0)").hasClass("disable")) {
-    		var jsonTopicsPolicy = localStorage["privacy.profile.topics"];
+    		var jsonTopicsPolicy = EEXCESS.storage.local("privacy.profile.topics");
     		var topics = [];
             if(jsonTopicsPolicy) {
                 topics = JSON.parse(jsonTopicsPolicy);
@@ -103,42 +103,42 @@ function updateDisclosedValue(fieldName) {
     	break;
     case "history":
 		var today = new Date();
-    	switch(localStorage["privacy.policy.history"]) {
+    	switch(EEXCESS.storage.local("privacy.policy.history")) {
     	case '1':
-			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(1);
+			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(0);
 			break;
     	case '2':
     		var data = today.getTime() - 1000*60*60;
-    		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
+    		EEXCESS.messaging.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
     			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(results.length);
     		});
     		break;
     	case '3':
     		var data = today.getTime() - 1000*60*60*24;
-    		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
+    		EEXCESS.messaging.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
     			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(results.length);
     		});
     		break;
     	case '4':
     		var data = today.getTime() - 1000*60*60*24*7;
-    		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
+    		EEXCESS.messaging.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
     			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(results.length);
     		});
     		break;
     	case '5':
     		var data = today.getTime() - 1000*60*60*24*30;
-    		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
+    		EEXCESS.messaging.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
     			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(results.length);
     		});
     		break;
     	case '6':
     		var data = today.getTime() - 1000*60*60*24*365;
-    		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
+    		EEXCESS.messaging.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: data}, function(results) {
     			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(results.length);
     		});
     		break;
     	case '7':
-    		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: null	}, function(results) {
+    		EEXCESS.messaging.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: null	}, function(results) {
     			$("div[data-eexcess-policy-field='history']").find("#disclosed").html(results.length);
     		});
 			break;
@@ -146,28 +146,28 @@ function updateDisclosedValue(fieldName) {
         break;
     case "address":
 		var value = '<address>\n';
-    	if (localStorage["privacy.policy.address"] >= 5) {
-    		if (localStorage["privacy.profile.address.line1"]) {
-    			value += localStorage["privacy.profile.address.line1"] + '<br>\n';
+    	if (EEXCESS.storage.local("privacy.policy.address") >= 5) {
+    		if (EEXCESS.storage.local("privacy.profile.address.line1")) {
+    			value += EEXCESS.storage.local("privacy.profile.address.line1") + '<br>\n';
     		} 
-    		if (localStorage["privacy.profile.address.line2"]) {
-    			value += localStorage["privacy.profile.address.line2"] + '<br>\n';
+    		if (EEXCESS.storage.local("privacy.profile.address.line2")) {
+    			value += EEXCESS.storage.local("privacy.profile.address.line2") + '<br>\n';
     		}
     	}
-    	if (localStorage["privacy.policy.address"] >= 4) {
-    		if (localStorage["privacy.profile.address.zipcode"] && localStorage["privacy.profile.address.city"]) {
-    			value += localStorage["privacy.profile.address.zipcode"] + ' ' + localStorage["privacy.profile.address.city"] + '<br>\n';
-    		} else if (localStorage["privacy.profile.address.city"]){
-    			value += localStorage["privacy.profile.address.city"] + '<br>\n';
+    	if (EEXCESS.storage.local("privacy.policy.address") >= 4) {
+    		if (EEXCESS.storage.local("privacy.profile.address.zipcode") && EEXCESS.storage.local("privacy.profile.address.city")) {
+    			value += EEXCESS.storage.local("privacy.profile.address.zipcode") + ' ' + EEXCESS.storage.local("privacy.profile.address.city") + '<br>\n';
+    		} else if (EEXCESS.storage.local("privacy.profile.address.city")){
+    			value += EEXCESS.storage.local("privacy.profile.address.city") + '<br>\n';
     		}
-    	} else if (localStorage["privacy.policy.address"] >= 3) {
-    		if (localStorage["privacy.profile.address.zipcode"]) {
-    			value += localStorage["privacy.profile.address.zipcode"] + '<br>\n';
+    	} else if (EEXCESS.storage.local("privacy.policy.address") >= 3) {
+    		if (EEXCESS.storage.local("privacy.profile.address.zipcode")) {
+    			value += EEXCESS.storage.local("privacy.profile.address.zipcode") + '<br>\n';
     		}
     	}
-    	if (localStorage["privacy.policy.address"] >= 2) {
-    		if (localStorage["privacy.profile.address.country"]) {
-    			value += localStorage["privacy.profile.address.country"] + '\n';
+    	if (EEXCESS.storage.local("privacy.policy.address") >= 2) {
+    		if (EEXCESS.storage.local("privacy.profile.address.country")) {
+    			value += EEXCESS.storage.local("privacy.profile.address.country") + '\n';
     		}
     	}
     	if (value == '<address>\n') {
@@ -179,34 +179,34 @@ function updateDisclosedValue(fieldName) {
     	break;
     case "birthdate":
     	var value = 'Nothing';;
-    	switch (localStorage["privacy.policy.birthdate"]) {
+    	switch (EEXCESS.storage.local("privacy.policy.birthdate")) {
     	case '2':
-    		if (localStorage["privacy.profile.birthdate"]) {
-    			value = localStorage["privacy.profile.birthdate"].split("-")[0].substr(0, 3) + '0s';
+    		if (EEXCESS.storage.local("privacy.profile.birthdate")) {
+    			value = EEXCESS.storage.local("privacy.profile.birthdate").split("-")[0].substr(0, 3) + '0s';
     		}
     		break;
     	case '3':
-    		if (localStorage["privacy.profile.birthdate"]) { 
-    			value = localStorage["privacy.profile.birthdate"].split("-")[0];
+    		if (EEXCESS.storage.local("privacy.profile.birthdate")) { 
+    			value = EEXCESS.storage.local("privacy.profile.birthdate").split("-")[0];
     		}
     		break;
     	case '4':
-    		if (localStorage["privacy.profile.birthdate"]) {
-    			var tmp = localStorage["privacy.profile.birthdate"].split("-");
+    		if (EEXCESS.storage.local("privacy.profile.birthdate")) {
+    			var tmp = EEXCESS.storage.local("privacy.profile.birthdate").split("-");
     			value = tmp[0] + '-' + tmp[1];
     		}
     		break;
     	case '5':
-    		if (localStorage["privacy.profile.birthdate"]) {
-    			value = localStorage["privacy.profile.birthdate"];
+    		if (EEXCESS.storage.local("privacy.profile.birthdate")) {
+    			value = EEXCESS.storage.local("privacy.profile.birthdate");
     		}
     		break;
     	}
 		$("div[data-eexcess-policy-field='birthdate']").find("#disclosed").html(value);
     	break;
     default:
-    	if (localStorage["privacy.policy."+fieldName] == 1) {
-    		var value = localStorage["privacy.profile."+fieldName];
+    	if (EEXCESS.storage.local("privacy.policy."+fieldName) == 1) {
+    		var value = EEXCESS.storage.local("privacy.profile."+fieldName);
     		if (value) {
         		$("div[data-eexcess-policy-field='" + fieldName + "']").find("#disclosed").html(value);
     		} else {
@@ -219,7 +219,7 @@ function updateDisclosedValue(fieldName) {
 }
 
 function loadTopics(topicList) {
-	var jsonTopics = localStorage['privacy.profile.topics'];
+	var jsonTopics = EEXCESS.storage.local('privacy.profile.topics');
     var topics = [];
     if(jsonTopics) {
         topics = JSON.parse(jsonTopics);
@@ -246,7 +246,7 @@ function loadTopics(topicList) {
 function initAvailableValue(fieldName) {
 	switch (fieldName) {
 	case "topics":
-		var jsonTopics = localStorage['privacy.profile.topics'];
+		var jsonTopics = EEXCESS.storage.local('privacy.profile.topics');
 	    var topics = [];
 	    if(jsonTopics) {
 	        topics = JSON.parse(jsonTopics);
@@ -255,19 +255,19 @@ function initAvailableValue(fieldName) {
 		break;
 	case "address":
 		var value = '<address>\n';
-		  if (localStorage["privacy.profile.address.line1"]) {
-			  value += localStorage["privacy.profile.address.line1"] + '<br>\n';
+		  if (EEXCESS.storage.local("privacy.profile.address.line1")) {
+			  value += EEXCESS.storage.local("privacy.profile.address.line1") + '<br>\n';
 		  } 
-		  if (localStorage["privacy.profile.address.line2"]) {
-			  value += localStorage["privacy.profile.address.line2"] + '<br>\n';
+		  if (EEXCESS.storage.local("privacy.profile.address.line2")) {
+			  value += EEXCESS.storage.local("privacy.profile.address.line2") + '<br>\n';
 		  }
-		  if (localStorage["privacy.profile.address.zipcode"] && localStorage["privacy.profile.address.city"]) {
-			  value += localStorage["privacy.profile.address.zipcode"] + ' ' + localStorage["privacy.profile.address.city"] + '<br>\n';
-		  } else if (localStorage["privacy.profile.address.city"]){
-			  value += localStorage["privacy.profile.address.city"] + '<br>\n';
+		  if (EEXCESS.storage.local("privacy.profile.address.zipcode") && EEXCESS.storage.local("privacy.profile.address.city")) {
+			  value += EEXCESS.storage.local("privacy.profile.address.zipcode") + ' ' + EEXCESS.storage.local("privacy.profile.address.city") + '<br>\n';
+		  } else if (EEXCESS.storage.local("privacy.profile.address.city")){
+			  value += EEXCESS.storage.local("privacy.profile.address.city") + '<br>\n';
 		  }
-		  if (localStorage["privacy.profile.address.country"]) {
-			  value += localStorage["privacy.profile.address.country"] + '\n';
+		  if (EEXCESS.storage.local("privacy.profile.address.country")) {
+			  value += EEXCESS.storage.local("privacy.profile.address.country") + '\n';
 		  }
 		  if (value == '<address>\n') {
 			  value = 'Undefined';
@@ -278,12 +278,12 @@ function initAvailableValue(fieldName) {
   		  $("div[data-eexcess-policy-field='address']").find("#available").html(value);
 		break;
 	case "history":
-		EEXCESS.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: null}, function(results) {
+		EEXCESS.messaging.callBG({method: {parent:'profile', func: 'getHistorySize'}, data: null}, function(results) {
 			$("div[data-eexcess-policy-field='history']").find("#available").html(results.length);
 		});
 		break;
 	default:
-		var value = localStorage["privacy.profile."+fieldName];
+		var value = EEXCESS.storage.local("privacy.profile."+fieldName);
 		if (value) {
 			$("div[data-eexcess-policy-field='" + fieldName + "']").find("#available").html(value);
 		} else {
@@ -294,14 +294,14 @@ function initAvailableValue(fieldName) {
 
 function initPolicyPanel() {
 	var fieldName = $(this).closest(".panel").attr("data-eexcess-policy-field");
-	var value =	localStorage["privacy.policy."+fieldName];
+	var value =	EEXCESS.storage.local("privacy.policy."+fieldName);
     // init policy
 	if (!value) {
 		value = 0;
 	}
 	console.log("Reloadig policy setting for '"+fieldName+"' as "+value);
 	if (fieldName == "topics") {
-		var jsonTopicsPolicy = localStorage['privacy.profile.topics'];
+		var jsonTopicsPolicy = EEXCESS.storage.local('privacy.profile.topics');
         var topics = [];
         if(jsonTopicsPolicy) {
             topics = JSON.parse(jsonTopicsPolicy);

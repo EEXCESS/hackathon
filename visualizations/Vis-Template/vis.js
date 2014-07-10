@@ -187,7 +187,7 @@ function Visualization( EEXCESSobj ) {
 		// Search for new results if the query is different from the current one
 		if(terms != query){
 			this.updateHeaderText( STR_SEARCHING );
-			EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: [{weight:1,text:terms}]});
+			EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: [{weight:1,text:terms}]});
 		}
 	};
 

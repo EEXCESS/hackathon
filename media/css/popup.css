@@ -1,0 +1,9 @@
+/* styles the contents of the browser action's popup window */
+
+#popup_error {
+    font-size: 1.2em;
+    width: 170px;
+    height: 20px;
+    padding:10px;
+    padding-right: 110px;
+}

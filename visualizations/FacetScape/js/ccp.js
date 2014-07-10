@@ -104,11 +104,11 @@ var PROVIDER = (function() {
                     }
                 }
                 if(typeof action == "undefined") {
-                    EEXCESS.callBG({method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
+                    EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
                         updateFacetScape(reqResult);
                     });
                 } else if(action == "refresh") {
-                    EEXCESS.messageListener(
+                    EEXCESS.messaging.listener(
                         function(request, sender, sendResponse) {
                             if (request.method === 'newSearchTriggered') {
                                 updateFacetScape(request.data);

@@ -3,45 +3,40 @@ var EEXCESS = EEXCESS || {};
 EEXCESS.profile = (function() {
     // retrieve UUID from local storage or create a new one
     var _uuid;
-    if (typeof (Storage) !== 'undefined') {
-        _uuid = localStorage.getItem('profile.uuid');
-        if (typeof _uuid === 'undefined' || _uuid === null) {
-            _uuid = randomUUID();
-            localStorage.setItem('profile.uuid', _uuid);
-        }
-    } else {
+    _uuid = EEXCESS.storage.local('profile.uuid');
+    if (typeof _uuid === 'undefined' || _uuid === null) {
         _uuid = randomUUID();
+        EEXCESS.storage.local('profile.uuid', _uuid);
     }
 
     var applyFirstnamePolicy = function() {
-        if (localStorage['privacy.policy.firstname'] === 1 || "1") {
-            return localStorage['privacy.profile.firstname'];
+        if (EEXCESS.storage.local('privacy.policy.firstname') === 1 || "1") {
+            return EEXCESS.storage.local('privacy.profile.firstname');
         }
         return "";
     };
-    
+
     var applyLastnamePolicy = function() {
-        if (localStorage['privacy.policy.lastname'] === 1 || "1") {
-            return localStorage['privacy.profile.lastname'];
+        if (EEXCESS.storage.local('privacy.policy.lastname') === 1 || "1") {
+            return EEXCESS.storage.local('privacy.profile.lastname');
         }
         return "";
     };
-    
+
     var _interests = function() {
-        // TODO: privacy policy
-        if (typeof (Storage) !== 'undefined' && localStorage["privacy.policy.topics"] !== 1) {
-            var interests = JSON.parse(localStorage.getItem('privacy.profile.topics'));
+        if (EEXCESS.storage.local("privacy.policy.topics") !== 1 && typeof EEXCESS.storage.local("privacy.profile.topics") !== 'undefined') {
+            var interests = JSON.parse(EEXCESS.storage.local('privacy.profile.topics'));
             if ($.isArray(interests)) {
                 // TODO: real weights
                 var weighted = [];
                 for (var i = 0, len = interests.length; i < len; i++) {
-                	if (interests[i]['policy'] === 1) {
-                		if (typeof interests[i]['uri'] !== undefined && interests[i]['uri'] !== '') {
-                			weighted.push({"text": interests[i]['label'], "weight": "1.0", "uri": interests[i]['uri']});
-                		} else {
-                			weighted.push({"text": interests[i]['label'], "weight": "1.0"});
-                		}
-                	}
+                    if (interests[i]['policy'] === 1) {
+                        if (typeof interests[i]['uri'] !== undefined && interests[i]['uri'] !== '') {
+                            weighted.push({"text": interests[i]['label'], "weight": "1.0", "uri": interests[i]['uri']});
+                        } else {
+                            weighted.push({"text": interests[i]['label'], "weight": "1.0"});
+                        }
+                    }
                 }
                 return weighted;
             }
@@ -50,41 +45,41 @@ EEXCESS.profile = (function() {
     };
 
     var applyGenderPolicy = function() {
-        if (localStorage['privacy.policy.gender'] === 1 || "1") {
-            return localStorage['privacy.profile.gender'];
+        if (EEXCESS.storage.local('privacy.policy.gender') === 1 || "1") {
+            return EEXCESS.storage.local('privacy.profile.gender');
         }
         return "";
     };
 
     var applyBirthdayPolicy = function() {
-    	switch (localStorage["privacy.policy.birthdate"]) {
-    	case '2':
-    		if (localStorage["privacy.profile.birthdate"]) {
-    			return localStorage["privacy.profile.birthdate"].split("-")[0].substr(0, 3) + '0s';
-    		}
-    		break;
-    	case '3':
-    		if (localStorage["privacy.profile.birthdate"]) { 
-    			return localStorage["privacy.profile.birthdate"].split("-")[0];
-    		}
-    		break;
-    	case '4':
-    		if (localStorage["privacy.profile.birthdate"]) {
-    			var tmp = localStorage["privacy.profile.birthdate"].split("-");
-    			return tmp[0] + '-' + tmp[1];
-    		}
-    		break;
-    	case '5':
-    		if (localStorage["privacy.profile.birthdate"]) {
-    			return localStorage["privacy.profile.birthdate"];
-    		}
-    		break;
-    	}
+        switch (EEXCESS.storage.local("privacy.policy.birthdate")) {
+            case '2':
+                if (EEXCESS.storage.local("privacy.profile.birthdate")) {
+                    return EEXCESS.storage.local("privacy.profile.birthdate").split("-")[0].substr(0, 3) + '0s';
+                }
+                break;
+            case '3':
+                if (EEXCESS.storage.local("privacy.profile.birthdate")) {
+                    return EEXCESS.storage.local("privacy.profile.birthdate").split("-")[0];
+                }
+                break;
+            case '4':
+                if (EEXCESS.storage.local("privacy.profile.birthdate")) {
+                    var tmp = EEXCESS.storage.local("privacy.profile.birthdate").split("-");
+                    return tmp[0] + '-' + tmp[1];
+                }
+                break;
+            case '5':
+                if (EEXCESS.storage.local("privacy.profile.birthdate")) {
+                    return EEXCESS.storage.local("privacy.profile.birthdate");
+                }
+                break;
+        }
         return "";
     };
-    
+
     var setAddressValue = function(field, address) {
-        address[field] = localStorage['privacy.profile.address.' + field];
+        address[field] = EEXCESS.storage.local('privacy.profile.address.' + field);
     };
 
     var applyAddressPolicy = function() {
@@ -95,7 +90,7 @@ EEXCESS.profile = (function() {
             line1: "",
             line2: ""
         };
-        var level = localStorage['privacy.policy.address'];
+        var level = EEXCESS.storage.local('privacy.policy.address');
         if (level > 1) {
             setAddressValue('country', address);
         }
@@ -117,46 +112,47 @@ EEXCESS.profile = (function() {
         getUUID: function() {
             return _uuid;
         },
-        getHistorySize: function(tabID,data,callback) {
-        	if (data) {
-        		chrome.history.search({'text': '', 'startTime': data, 'maxResults': 1999999999}, function(results) {
-        			callback(results);
-        		});
-        	} else {
-        		chrome.history.search({'text': '', 'startTime': 0, 'maxResults': 1999999999}, function(results) {
-        			console.log(data);
-        			callback(results);
-        		});
-        	}
+        getHistorySize: function(tabID, data, callback) {
+            if (data) {
+                EEXCESS.history.search({'text': '', 'startTime': data, 'maxResults': 1999999999}, function(results) {
+                    callback(results);
+                });
+            } else {
+                EEXCESS.history.search({'text': '', 'startTime': 0, 'maxResults': 1999999999}, function(results) {
+                    console.log(data);
+                    callback(results);
+                });
+            }
         },
         getProfile: function(callback) {
-    		var today = new Date();
-        	var startTime = 0;
-        	var maxResults = 1999999999;
-        	switch(localStorage["privacy.policy.history"]) {
-        	case '1':
-        		startTime = 0
-        		maxResults = 1
-        		break;
-        	case '2':
-        		startTime = today.getTime() - 1000*60*60;
-        		break;
-        	case '3':
-        		startTime = today.getTime() - 1000*60*60*24;
-        		break;
-        	case '4':
-        		startTime = today.getTime() - 1000*60*60*24*7;
-        	case '5':
-        		startTime = today.getTime() - 1000*60*60*24*30;
-        		break;
-        	case '6':
-        		startTime = today.getTime() - 1000*60*60*24*365;
-        		break;
-        	case '7':
-        		startTime = 0;
-    			break;
-        	}
-            chrome.history.search({'text': '', 'startTime': startTime, 'maxResults': maxResults}, function(results) {
+            var today = new Date();
+            var startTime = 0;
+            var maxResults = 1999999999;
+            switch (EEXCESS.storage.local("privacy.policy.history")) {
+                case '1':
+                    startTime = 0
+                    maxResults = 0
+                    break;
+                case '2':
+                    startTime = today.getTime() - 1000 * 60 * 60;
+                    break;
+                case '3':
+                    startTime = today.getTime() - 1000 * 60 * 60 * 24;
+                    break;
+                case '4':
+                    startTime = today.getTime() - 1000 * 60 * 60 * 24 * 7;
+                    break;
+                case '5':
+                    startTime = today.getTime() - 1000 * 60 * 60 * 24 * 30;
+                    break;
+                case '6':
+                    startTime = today.getTime() - 1000 * 60 * 60 * 24 * 365;
+                    break;
+                case '7':
+                    startTime = 0;
+                    break;
+            }
+            EEXCESS.history.search({'text': '', 'startTime': startTime, 'maxResults': maxResults}, function(results) {
                 var profile = {
                     "eexcess-user-profile": {
                         "history": results,

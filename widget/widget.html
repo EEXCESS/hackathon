@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="../media/css/widget.css" />
         <link rel="stylesheet" href="../media/css/searchResultList.css" />
         <script type="text/javascript" src="../libs/d3.v3.js" charset="utf-8"></script>
+        <script type="text/javascript" src="../common_js/storage.js"></script>
         <link rel="stylesheet" type="text/css" href="../media/css/queryCrumbsVis.css">
     </head>
     <body>
@@ -15,8 +16,8 @@
         <header id="eexcess_main" class="header_sidebar">
             <form id="eexcess_searchForm">
                 <fieldset>
-                    <input type="text" id="eexcess_query"  placeholder="search text..." />
-                    <input type="submit" id="search_submit" class="eexcess_submit_btn" value="search" />
+                    <input type="text" id="eexcess_query" class="searchfield"  placeholder="Search" />
+                    <input type="submit" id="search_submit" class="eexcess_submit_btn" value="Search" />
                 </fieldset>
             </form>
 
@@ -43,18 +44,16 @@
         <script type="text/javascript" src="../libs/jquery-1.10.1.min.js"></script>
         <script type="text/javascript" src="../libs/rating/jquery.raty.min.js"></script>
         <script type="text/javascript" src="../libs/jquery-ui/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="../common_js/message_wrapper.js"></script>
+        <script type="text/javascript" src="../common_js/browser_specific.js"></script>
         <script type="text/javascript" src="../common_js/searchResultList.js"></script>
         <script type="text/javascript" src="widget.js"></script>
 
         <footer class="footer_sidebar">
             <div class="buttons-bottom">
-                <a href="#" id="eexcess_privacy"><img src="/media/batchmaster/key.png" /> Change Privacy Settings</a>
-                <a href="#" title="report a bug" class="help-button"><img src="../media/batchmaster/spam.png" alt="report a bug" /></a>
-                <a href="help.html" title="get help" class="help-button fancybox_link"><img src="../media/icons/help.png" alt="get help" /></a>
-            </div>
-            <div id="eexcess_powered_by">
-                <a href="http://www.eexcess.eu" target="_blank">Powered by<img src="/media/EEXCESS__Logo_RGB.jpg" /></a>
+                <a href="#" id="eexcess_privacy"><img src="/media/batchmaster/key.png" /> Privacy</a>
+            <a href="#" title="report a bug" class="help-button"><img src="/media/batchmaster/spam.png" alt="provide feedback" /></a>
+                <a href="help.html" title="get help" class="help-button fancybox_link"><img src="/media/icons/help.png" alt="get help" /></a>
+				 <a  href="http://www.eexcess.eu" target="_blank">Powered by<img src="/media/EEXCESS__Logo_RGB.png" /></a>
             </div>
 
         </footer>
