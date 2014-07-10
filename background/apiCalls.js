@@ -113,9 +113,11 @@ EEXCESS.frCall_impl = function(queryData, start, success, error) {
         weightedTerms = queryData;
     }
     EEXCESS.profile.getProfile(function(profile) {
-        profile['eexcess-user-profile']['context-list']['context'] = weightedTerms;
+        profile['contextKeywords'] = weightedTerms;
         if (queryData.hasOwnProperty('reason')) {
-            profile['eexcess-user-profile']['context-list']['reason'] = queryData['reason'];
+            for(var i=0,len= weightedTerms.length; i < len; i++) {
+                profile['contextKeywords'][i]['reason'] = queryData['reason']['reason'];
+            }
         }
         var xhr = $.ajax({
             url: EEXCESS.backend.getURL(),
@@ -126,6 +128,8 @@ EEXCESS.frCall_impl = function(queryData, start, success, error) {
         });
         xhr.done(function(data) {
             console.log(data);
+            data['results'] = data['result'];
+            delete data['result'];
             success(data);
         });
         xhr.fail(function(jqXHR, textStatus, errorThrown) {

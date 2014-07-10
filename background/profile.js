@@ -85,7 +85,7 @@ EEXCESS.profile = (function() {
     var applyAddressPolicy = function() {
         var address = {
             country: "",
-            zipcode: "",
+            zipCode: "",
             city: "",
             line1: "",
             line2: ""
@@ -95,7 +95,7 @@ EEXCESS.profile = (function() {
             setAddressValue('country', address);
         }
         if (level > 2) {
-            setAddressValue('zipcode', address);
+            setAddressValue('zipCode', address);
         }
         if (level > 3) {
             setAddressValue('city', address);
@@ -153,19 +153,19 @@ EEXCESS.profile = (function() {
                     break;
             }
             EEXCESS.history.search({'text': '', 'startTime': startTime, 'maxResults': maxResults}, function(results) {
+                for(var i=0, len=results.length; i<len; ++i) {
+                    delete results[i]['id'];
+                    results[i]['lastVisitTime'] = results[i]['lastVisitTime'].toFixed(0);
+                }
                 var profile = {
-                    "eexcess-user-profile": {
-                        "history": results,
-                        "firstname": applyFirstnamePolicy(),
-                        "lastname": applyLastnamePolicy(),
-                        "gender": applyGenderPolicy(),
-                        "birthdate": applyBirthdayPolicy(),
-                        "address": applyAddressPolicy(),
-                        "interests": {
-                            "interest": _interests()
-                        },
-                        "context-list": {}
-                    },
+                    "history": results,
+                    "firstName": applyFirstnamePolicy(),
+                    "lastName": applyLastnamePolicy(),
+                    "gender": applyGenderPolicy(),
+                    "birthDate": applyBirthdayPolicy(),
+                    "address": applyAddressPolicy(),
+                    "interests": _interests(),
+                    "contextKeywords": {},
                     "uuid": _uuid
                 };
                 callback(profile);
