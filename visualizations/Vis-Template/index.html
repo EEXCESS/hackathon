@@ -11,37 +11,32 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width">
 
         <script type="text/javascript" src="../../libs/jquery-1.10.1.min.js"></script>
-        <script type="text/javascript" src="../../libs/jquery-ui-1.10.4/ui/jquery-ui.js"></script>
-        
-        <script type="text/javascript" src="../../common_js/message_wrapper.js" charset="utf-8"></script>
+        <script type="text/javascript" src="../../libs/jquery-ui/jquery-ui.min.js"></script>
         <script type="text/javascript" src="../../libs/d3.v3.js"></script>
-
+        
+        <script type="text/javascript" src="../../common_js/browser_specific.js" charset="utf-8"></script>
 		
 		<script type="text/javascript" src="vis.js"></script>
 		<script type="text/javascript" src="js/utils.js"></script>
 		<script type="text/javascript" src="js/settings.js"></script>
 		<script type="text/javascript" src="js/dummy.js"></script>
-		
-		<link rel="stylesheet" type="text/css" href="vis.css" />
-        <link rel="stylesheet" type="text/css" href="visualization-style.css" />
+
 		<link rel="stylesheet" type="text/css" href="../../media/css/eexcess.css">
-		
+		<link rel="stylesheet" type="text/css" href="../../media/css/vis-template-style.css" />
+        <link rel="stylesheet" type="text/css" href="../../media/css/vis-template-chart-style.css" />
+
 		<script type="text/javascript" src="Timeline/timeline.js"></script>
 		<script type="text/javascript" src="Timeline/js/geometry.js"></script>
-
-		
 		<script type="text/javascript" src="Barchart/barchart.js"></script>
-
+        
     </head>
     <body>
 		
 		<div id="eexcess_header">
 			<div id="eexcess_inner_header">
 		  		<div id="eexcess_header_search">
-	    			<input id="eexcess_search_field" class="eexcess_query_field" type="text" name="query" value="">
-	    	<!-- 	<div class="eexcess_submit_btn_wrapper">  -->	
-	    				<input id="eexcess_search_button" class="eexcess_submit_btn" type="submit" value="Search">
-	    	<!-- 	</div>	 -->
+	    			<input id="eexcess_search_field" class="eexcess_query_field" type="text" name="query" value="">	
+	    			<input id="eexcess_search_button" class="eexcess_submit_btn" type="submit" value="Search">
 	  			</div>
 	  			<div id="eexcess_header_text">
 	  				<span></span>
@@ -52,8 +47,6 @@ and open the template in the editor.
 	    				<input id="eexcess_filter_button" class="eexcess_submit_btn" type="submit" value="Filter">
 	    		-->
 	  			</div>
-			
-				<!-- <div id="RS_Header_Filter_Tags" style="width: 1060px;"></div> -->
 			</div>
       	</div>
 
@@ -76,35 +69,20 @@ and open the template in the editor.
 				
 					<div id="eexcess_vis_controls_wrapper">
 						<div id="eexcess_vis_controls">
-							
-							<button id="eexcess_btnreset" class="eexcess_vis_controls_button" >Reset</button>
-                            <!-- 	<button id="eexcess_bookmark" class="eexcess_vis_controls_button" >Bookmark</button> -->
-
-                                <!--
-                                <div id="eexcess_div_button" class="eexcess_vis_controls_button">
-                                    <button id="eexcess_btnreset">Reset</button>
-                                </div>
-                                 -->
-							
+							<button id="eexcess_btnreset" class="eexcess_vis_controls_button" >Reset</button>							
 						</div>
 					</div>
-					
-				
-					<div id="tabs"></div>
-
+								
+					<div id="eexcess_canvas"></div>
 				</div>
 				
       		</div>
 
       		<div id="eexcess_content" >
-				<ul class="eexcess_result_list" data-total="10">		
-				</ul>
+				<ul class="eexcess_result_list"></ul>
 			</div>
 		
 		</div>
-		<!--
-		<article class="eexcess_detail"></article>
-		-->
 		
 		
 		

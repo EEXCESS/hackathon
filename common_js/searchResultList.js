@@ -24,10 +24,10 @@ EEXCESS.searchResultList = function(divContainer, options) {
         pathToMedia: '../media/',
         pathToLibs: '../libs/',
         previewHandler: function(url) {
-            EEXCESS.callBG({method: 'fancybox', data: url});
+            EEXCESS.messaging.callBG({method: 'fancybox', data: url});
         },
         ratingHandler: function(uri, score, pos) {
-            EEXCESS.callBG({
+            EEXCESS.messaging.callBG({
                 method: {parent: 'model', func: 'rating'},
                 data: {
                     uri: uri,
@@ -99,12 +99,12 @@ EEXCESS.searchResultList = function(divContainer, options) {
     divContainer.append(_error);
 
     // obtain current results
-    EEXCESS.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(reqResult) {
+    EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(reqResult) {
         showResults(reqResult);
     });
 
     // listen for updates
-    EEXCESS.messageListener(
+    EEXCESS.messaging.listener(
             function(request, sender, sendResponse) {
                 if (request.method.parent === 'results') {
                     if (request.method.func === 'rating') {

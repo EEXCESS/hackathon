@@ -24,11 +24,13 @@ file structure
 
 common methods
 --------------------------
-Please use the message\_wrapper in common\_js to send/receive messages.
+Please wrap browser specifc functions in /common_js/browser_specific.js.  
+Please use EEXCESS.messaging in common\_js/browser_specific to send/receive messages.  
+To access local Storage and the indexed database, please use the wrappers in /common_js/storage.js or create a new one in this file if necessary (for details see the readme in /common_js).
  
 ### retrieving current query and results ###
 ```javascript
-EEXCESS.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(res) {
+EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(res) {
     console.log(res);
 });
 ```
@@ -36,7 +38,7 @@ The current query is contained in res.query and the results in res.results
 
 ### listen for new search events ###
 ```javascript
-EEXCESS.messageListener(
+EEXCESS.messaging.listener(
         function(request, sender, sendResponse) {
             if (request.method === 'newSearchTriggered') {
                 console.log(request.data);
@@ -49,7 +51,7 @@ The issued query is contained in request.data.query and the results in request.d
 ### issue a new query ###
 ```javascript
 SearchResultList.loading() // call loading-method on search result list first (to show loading bar). Adapt variable name of the list!
-EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: query}); // issue query
+EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: query}); // issue query
 ```
 
 The query-object has to contain the query as an array, consisting of terms and weights, for example:
@@ -59,13 +61,13 @@ The query-object has to contain the query as an array, consisting of terms and w
 
 ### issue a new query without informing other components ###
 ```javascript
-EEXCESS.callBG({method: {parent: 'model', func: 'quietQuery'}, data: query}, function(res) {console.log(res);});
+EEXCESS.messaging.callBG({method: {parent: 'model', func: 'quietQuery'}, data: query}, function(res) {console.log(res);});
 ```
 same as above, the "res"-object in the callback contains the query in res.query and the results in res.results
 
 ### issue a new query without informing other components and without logging the query & results ###
 ```javascript
-EEXCESS.callBG({method: {parent: 'model', func: 'quietQueryNoHistory'}, data: query}, function(res) {console.log(res);});
+EEXCESS.messaging.callBG({method: {parent: 'model', func: 'quietQueryNoHistory'}, data: query}, function(res) {console.log(res);});
 ```
 same as above without logging
 

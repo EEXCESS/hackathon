@@ -33,8 +33,8 @@ var oC = {
 					height:350//500
 				},
 				force:{
-					chargeValue: -100,//-400,//-200
-					gravity:0.01, //0.05,
+					chargeValue: -350,//-100,//-400,//-200
+					gravity:0.015, //0.05,
 					friction:0.75, //0.5,
 					theta:0.8,//0.8
 					alpha:0.1//0.01
@@ -70,7 +70,7 @@ var oC = {
 		// init svg
 		oC.outer = d3.select(oC.graphData.options.svg.chartId)
 			.append("svg")
-			.attr("width", oC.graphData.options.svg.width)
+			//.attr("width", oC.graphData.options.svg.width)
 			.attr("height", oC.graphData.options.svg.height);
 			//.attr("pointer-events", "all")
 			//.attr("class","box");
@@ -208,7 +208,7 @@ var oC = {
 		//svg graph
 		oC.outer = d3.select(oC.graphData.options.svg.chartId)
 		  .select("svg")
-			.attr("width", oC.graphData.options.svg.width)
+			//.attr("width", oC.graphData.options.svg.width)
 			.attr("height", oC.graphData.options.svg.height);
 			//.attr("pointer-events", "all")
 			//.attr("class","box");

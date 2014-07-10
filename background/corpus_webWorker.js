@@ -97,8 +97,6 @@ EEXCESS.createToken = function(text, parent) {
     if (text.search(/[\w]+@[\w]+/) !== -1) {
         return new this.Token(text, parent, 'e');
     }
-    // remove special chars (keep umlauts)
-    //text = text.replace(/[^\w\säÄöÖüÜß]/g, '');
     // remove everything with digits in it
     text = text.replace(/.*\d.*/g, '');
     // token has at least 2 chars

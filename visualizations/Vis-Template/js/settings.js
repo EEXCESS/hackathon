@@ -10,6 +10,8 @@ function Settings (){
 		
 		var rootWidth  = $(domRoot).width() - 10;
 		var rootHeight = $(domRoot).height() >= 500 ? 500 : $(domRoot).height();
+        var legendsWidth = $("#div-wrap-legends").css('width');
+        console.log("legends width = " + legendsWidth);
 		
 		switch( senderStr ){
 		
@@ -27,9 +29,9 @@ function Settings (){
 	 * 
 	 * **/
 	
-	function getTimelineDimensions( domRoot, iWidth, rootWidth, rootHeight, senderStr ){
+	function getTimelineDimensions( domRoot, iWidth, rootWidth, rootHeight ){
 
-		var focusMargin = {top: 20, bottom: 100, left: 80, right: 20 };
+		var focusMargin = {top: 0, bottom: 100, left: 80, right: 20 };
 		var focusHeight = rootHeight - focusMargin.top - focusMargin.bottom;
 
 		var cTop = focusHeight + focusMargin.top + 30;
@@ -39,7 +41,7 @@ function Settings (){
 		var contextHeight	= cHeight > 0 ? cHeight : 40; 
 		//rootHeight - this.contextMargin.top - this.contextMargin.bottom;
 
-		var width = rootWidth - focusMargin.left - 120;//this.focusMargin.right;
+		var width = rootWidth - focusMargin.left - 140;//this.focusMargin.right;
 
 		var centerOffset = (iWidth/2) - ((width + focusMargin.left + focusMargin.right)/2);
 		var verticalOffset = (rootHeight < 500) ? 20 : ($(domRoot).height() - 500) / 2;
@@ -49,11 +51,11 @@ function Settings (){
 	}
 	
 	
-	function getBarchartDimensions( domRoot, iWidth, rootWidth, rootHeight, senderStr ){
+	function getBarchartDimensions( domRoot, iWidth, rootWidth, rootHeight ){
 		
 		var margin = { top: 50, bottom: 50, left: 80, right: 20 };
 		var height = rootHeight - margin.top - margin.bottom;
-		var width = rootWidth - margin.left - 120;
+		var width = rootWidth - margin.left - 140;
 
 		var centerOffset = (iWidth/2) - ((width + margin.left + margin.right)/2);
 		var verticalOffset = (rootHeight < 500) ? 20 : ($(domRoot).height() - 500) / 2;

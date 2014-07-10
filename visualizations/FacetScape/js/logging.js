@@ -29,9 +29,9 @@ var LOGGING = (function() {
             var facetValue = logAtom.facetValue;
             // log interaction on server
             var tmp = logAtom;
-            tmp['uuid'] = localStorage['profile.uuid'];
+            tmp['uuid'] = EEXCESS.storage.local('profile.uuid');
             var xhr = $.ajax({
-                url: localStorage['PP_BASE_URI'] + 'api/v1/log/facetScape',
+                url: EEXCESS.config.LOG_FACETSCAPE_URI,
                 data: JSON.stringify(tmp),
                 type: 'POST',
                 contentType: 'application/json; charset=UTF-8',

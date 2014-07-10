@@ -26,7 +26,7 @@ function requestEuropeana(term, dataCallbackFct) {
 function requestPlugin(dataCallbackFct) {
 
     var data, queryTerms;
-    chrome.runtime.sendMessage(chrome.i18n.getMessage('@@extension_id'), {method: {parent: 'model', func: 'getResults'},data: null}, function(query, results) {
+    EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: null}, function(query, results) {
         queryTerms = query;
         data = results;
     });

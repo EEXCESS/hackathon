@@ -16,26 +16,21 @@ nav {
 }
 
 .header_sidebar {
-    border-radius:10px 0px 0px 0px; 
-    border:1px solid #ccc; ;
-    -webkit-box-shadow:0 0 10px #cdc; 
-    background: #1d904e; 
+    border:none; 
+    background: transparent; 
+
 }
 
 .content_sidebar {
-    border-left: 2px solid #1d904e;
     margin-left:auto; margin-right:auto;
     height: 300px;
+	border-top: 1px solid #dbdbdb;
     overflow-y: auto;
-    height:80%;
+    height:82%;
 }
 
 .footer_sidebar {
-    border-left: 2px solid #1d904e;
-    border-bottom: 2px solid #1d904e;
-    border-radius:0px 0px 0px 10px;
+	border-top: 1px solid #dbdbdb;
+	padding: 0.8em;
 }
 
-#eexcess_privacy img {
-    vertical-align:middle;
-}

@@ -29,7 +29,8 @@
 
 .eexcess_raty {
     margin:0;
-    margin-top: 2px;
+    margin-top: 5px;
+	margin-right: 5px;
     padding:0;
     float:right;
     display:block;
