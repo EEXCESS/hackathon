@@ -3,10 +3,10 @@ var EEXCESS = EEXCESS || {};
 EEXCESS.profile = (function() {
     // retrieve UUID from local storage or create a new one
     var _uuid;
-    _uuid = EEXCESS.storage.local('profile.uuid');
+    _uuid = EEXCESS.storage.local('privacy.profile.uuid');
     if (typeof _uuid === 'undefined' || _uuid === null) {
         _uuid = randomUUID();
-        EEXCESS.storage.local('profile.uuid', _uuid);
+        EEXCESS.storage.local('privacy.profile.uuid', _uuid);
     }
 
     var applyFirstnamePolicy = function() {
@@ -47,6 +47,13 @@ EEXCESS.profile = (function() {
     var applyGenderPolicy = function() {
         if (EEXCESS.storage.local('privacy.policy.gender') === 1 || "1") {
             return EEXCESS.storage.local('privacy.profile.gender');
+        }
+        return "";
+    };
+    
+    var applyUuidPolicy = function() {
+        if (EEXCESS.storage.local('privacy.policy.uuid') === 1 || "1") {
+            return _uuid;
         }
         return "";
     };
@@ -166,7 +173,7 @@ EEXCESS.profile = (function() {
                     "address": applyAddressPolicy(),
                     "interests": _interests(),
                     "contextKeywords": {},
-                    "uuid": _uuid
+                    "uuid": applyUuidPolicy()
                 };
                 callback(profile);
             });
