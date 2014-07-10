@@ -32,7 +32,7 @@ body{
 	overflow: hidden;
     font-size: 0.8em;
 }
-	
+
 
 h1 {
 	font-size: 0.85em;
@@ -41,13 +41,13 @@ h1 {
 
 p {
 	font-size: 0.8em;
-}	
-	
+}
+
 
 span {
 	font-size: 1em;
 }
-	
+
 
 select {
 	font-size: 1em;
@@ -57,19 +57,19 @@ select {
 	-webkit-border-radius: 0.5em;
     background-color: white;
 }
-	
+
 
 text {
 	font-size: 0.85em;
 }
-	
-	
-	
+
+
+
 body{
 	background: white;
 	background-image: none !important;
 }
-	
+
 
 body a{
     text-decoration:none;
@@ -459,7 +459,7 @@ button:hover {
 /*
     <div> containing everything below the header ("#eexcess_header")
 */
-#eexcess_main_panel{	
+#eexcess_main_panel{
 	text-align: center;
 	vertical-align: top;
 	height: 90%;
@@ -480,7 +480,7 @@ button:hover {
     margin-top: 5px;
     margin-bottom: 5px;
     width:80%;
-    height:100%;  
+    height:100%;
     border-radius:10px 10px 10px 10px; border:2px solid #1d904e;
 
     /*Warm style*/
@@ -500,7 +500,7 @@ button:hover {
 
 /*
     Main panel (div) on the left side (green)
-    
+
 */
 #eexcess_controls {
 	float: left;
@@ -549,7 +549,7 @@ button:hover {
     Contains individual <span>, <select> pairs
 */
 .eexcess_mapping_container {
-	
+
 }
 
 
@@ -560,7 +560,7 @@ button:hover {
 	display: block;
 	float: left;
 	text-align : left;
-	margin-left: 2%; 
+	margin-left: 2%;
 	width: 35%;
 	z-index: 3;
 	text-shadow: -0.1em 0.1em 0.5em #eee;
@@ -628,17 +628,17 @@ Visualization Panel (center of screen)
 /*
     Container for control buttons in Visualization Panel (so far only "Reset")
 */
-#eexcess_vis_controls {	
+#eexcess_vis_controls {
 	width: 100%;
 	height: 2.5em;
 	background-color: rgba( 59,160,103,.6);
 	border-radius: 0.8em;
-	
+
 }
 
 
 /*
-    Reset button style 
+    Reset button style
 */
 .eexcess_vis_controls_button {
 
@@ -676,7 +676,7 @@ Visualization Panel (center of screen)
 
 
 /*
-    <div> appended to #eexcess_canvas when a message should be displayed. E.g. when a new search is triggered or no data are received. 
+    <div> appended to #eexcess_canvas when a message should be displayed. E.g. when a new search is triggered or no data are received.
     Contains a <span> for the message and optionally an <img> tag (for the loading icon, only for the case of a new search )
 */
 #eexcess_message_on_canvas{
@@ -752,7 +752,7 @@ Visualization Panel (center of screen)
 	margin-right: 4px;
 	min-height: 60px;
 	-webkit-border-radius: 0.4em;
-	-webkit-box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);			
+	-webkit-box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
 	box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
 
     /*Warm style*/
@@ -853,7 +853,7 @@ h1 {
     Recommendation title contained here
 */
 .eexcess_ritem_title {
-	/*text-shadow: 0.1em 0.1em 0.5em #ccc;*/	
+	/*text-shadow: 0.1em 0.1em 0.5em #ccc;*/
 }
 
 
