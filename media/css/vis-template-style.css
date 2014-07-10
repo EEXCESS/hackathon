@@ -8,14 +8,18 @@ html { font-size: 62.5%; }
 
 
 @media (max-width: 300px) {
-    html { font-size: 70%; }    
+    html { font-size: 60%; }
 }
 
 @media (min-width: 500px) {
-    html { font-size: 80%; }
+    html { font-size: 70%; }
 }
 
 @media (min-width: 700px) {
+    html { font-size: 80%; }
+}
+
+@media (min-width: 900px) {
     html { font-size: 90%; }
 }
 
@@ -26,25 +30,35 @@ html { font-size: 62.5%; }
 
 body{
 	overflow: hidden;
-    font-size: 0.7em;
+    font-size: 0.8em;
 }
 	
+
 h1 {
 	font-size: 0.85em;
 }
+
 
 p {
 	font-size: 0.8em;
 }	
 	
+
 span {
 	font-size: 1em;
 }
 	
+
 select {
 	font-size: 1em;
+    text-align: left;
+	color: #444;
+	border: 0.1em #ddd solid;
+	-webkit-border-radius: 0.5em;
+    background-color: white;
 }
 	
+
 text {
 	font-size: 0.85em;
 }
@@ -62,9 +76,257 @@ body a{
     color: #529CBF;
 }
 
+
 div{
 	display:block;
 }
+
+
+button {
+    font-size: 1.05em;
+    display: inline-block;
+    margin-top: .1em;
+    cursor: pointer;
+    text-decoration: none;
+    z-index: 0;
+    text-align: center;
+    border-radius: 0.5em;
+    box-shadow: 0em 0.1em .1em #999;
+
+    /*Warm style*/
+    background: -webkit-linear-gradient(top, rgba(255,208,135,1) ,rgba(244,188, 103,1));
+    background: linear-gradient(top, rgba(255,208,135,1) ,rgba(244,188, 103,1));
+    border: 0.1em solid rgba(255,208,135,1);
+    color: white;
+
+    /* Cold style
+    background: -webkit-linear-gradient(top, #eee, #ddd, #eee);
+    background: linear-gradient(top, #eee, #ddd, #eee);
+    border: 0.1em solid #ddd;
+    color: #777;
+    */
+}
+
+
+/*
+    Hover style for all buttons
+*/
+button:hover {
+    box-shadow: 0 0 0.5em rgba(123, 26, 0, .8);
+}
+
+
+
+/*
+ *   DROPDOWN LIST
+ */
+.wrapper-dropdown {
+
+    /* Size & position */
+    position: relative;
+    font-size: 1em;
+    float: left;
+    padding-left: 0.5em;
+
+    /* Styles */
+    vertical-align: middle;
+    line-height: 1.6em;
+    background: #fff;
+    border-radius: 0.5em;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+    cursor: pointer;
+    outline: none;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+
+
+.wrapper-dropdown span {
+    display: inline-block;
+    float: left;
+    margin-left: 0em !important;
+    margin-top: 0.2em !important;
+    vertical-align: top;
+    line-height: 1.4em;
+    font-size: 1em;
+}
+
+
+.wrapper-dropdown:after {          /* Little arrow */
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    margin-top: -3px;
+    border-width: 6px 6px 0px 6px;;
+    border-style: solid;
+
+    /*Warm style*/
+    border-color: rgba(244,188, 103,1) transparent transparent;
+}
+
+.wrapper-dropdown .dropdown {       /*ul*/
+
+    /* Size & position */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    -webkit-padding-before: 0em;
+    padding-left: 0.4em;
+
+    /* Styles */
+    background: #fff;
+    border-radius: 0 0 0.5em 0.5em;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-top: none;
+    border-bottom: none;
+    list-style: none;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+
+    /* Hiding */
+    max-height: 0;
+    overflow: hidden;
+
+}
+
+.wrapper-dropdown .dropdown li {
+    padding: 0em;
+}
+
+.wrapper-dropdown .dropdown li a {
+    display: block;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease-out;
+    vertical-align: top;
+    line-height: 1.7em;
+}
+
+.wrapper-dropdown .dropdown li:last-of-type a {
+    border: none;
+}
+
+
+/* Hover state */
+.wrapper-dropdown .dropdown li:hover a {
+    color: #57a9d9;
+}
+
+/* Active state */
+.wrapper-dropdown.active {
+    border-radius: 0.5em 0.5em 0 0;
+    background: rgba(244,188, 103,1);
+    box-shadow: none;
+    border-bottom: none;
+    color: white;
+}
+
+.wrapper-dropdown.active:after {
+    border-color: #fff transparent;
+    border-width: 0px 6px 6px 6px;
+}
+
+.wrapper-dropdown.active .dropdown {
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    max-height: 400px;
+}
+
+
+
+/*
+ *  COLOR PICKER
+ */
+
+
+/* colorpicker styles */
+
+
+.colorpicker {
+    display: block;
+    z-index: 1000;
+    background-color: #222222;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 2px 2px 2px #444444;
+    color: #FFFFFF;
+    font-size: 12px;
+    position: absolute;
+    width: 370px;
+}
+
+#picker-container {
+   /* width: 200px;
+    height: 200px;*/
+    float: left;
+    margin: 10px;
+    border: 0;
+}
+
+#picker {
+    cursor: crosshair;
+    /*
+    width: 100%;
+    height: 100%;
+    float: left;
+    margin: 10px;
+    border: 0;
+    */
+}
+
+
+.colorpicker-controls {
+    float: right;
+    margin: 10px;
+}
+
+
+.colorpicker-controls > div {
+    border: 1px solid #2F2F2F;
+    margin-bottom: 5px;
+    overflow: hidden;
+    padding: 5px;
+}
+
+
+.colorpicker-controls label {
+    float: left;
+}
+
+
+.colorpicker-controls > div input {
+    background-color: #121212;
+    border: 1px solid #2F2F2F;
+    color: #DDDDDD;
+    float: right;
+    font-size: 10px;
+    height: 14px;
+    margin-left: 6px;
+    text-align: center;
+    text-transform: uppercase;
+    width: 75px;
+}
+
+
+#preview {
+    height: 14px;
+}
+
+
+
+
+
+
 
 
 
@@ -81,12 +343,13 @@ div{
 #eexcess_header {
     border-collapse:separate;
     float: left;
-    height: 25px;
-    background-color: white;
+    height: 40px;
+    background-color: rgba( 31,145, 81,1);
     margin-left: 0%;
-    border-radius: 0px; 
+    border-radius: .8em;
     vertical-align: middle;
 	line-height: 28px;
+
 }
 
 
@@ -95,7 +358,7 @@ div{
 */
 #eexcess_inner_header{
 	height: 20px;
-	padding: 0px;
+	padding-top: 6px;
 }
 
 
@@ -107,7 +370,7 @@ div{
 #eexcess_header_search {
     float:left;
     width: 29%;
-
+    padding-left: 1%;
 }
 
 
@@ -118,9 +381,10 @@ div{
 #eexcess_header_text {
 	float: left;
 	width: 40%;
-    color: #008746;
+    color: #ffffff;
     font-family:Arial;
     font-size: 1.1em;
+    font-weight: bold;
     text-align:center;
 }
 
@@ -137,54 +401,47 @@ div{
 }
 
 
+
+.eexcess_query_field_wrapper{
+	display: inline-block;
+    vertical-align: top;
+    width: 50%;
+}
+
+
+
 /*
     <input> field text on left upper corner of screen
 */
 .eexcess_query_field{
-    background-color: white;/*494949;*/
-    color:#008746;
-    font-weight:regular;
-	    font-size:1em;
-		height: 20px;
-		margin-top: 0.2em;
-		    border:none;
-
-    padding-left: 0.3em;
-    padding-right: 0.7em;
-
-    border: solid #cdcfd2 1px;
-   -moz-box-shadow:    inset 4px 4px 6px -6px #666666;
-   -webkit-box-shadow: inset 4px 4px 6px -6px #666666;
-   box-shadow:         inset 4px 4px 6px -6px #666666;
+    width: 100%;
+    height: 1.38em;
+    border-radius: 0.4em;
+    box-shadow: 0em 0.1em .1em #999;
+    background: -webkit-linear-gradient(top,#fff 75%, #eee);
+    border: 0.1em #ddd solid;
 }
 
-/*
-.eexcess_submit_btn_wrapper{
-	display: inline-block
-}
-*/
 
 /*
     Search button class style
 */
-.eexcess_submit_btn {
-    background-color: white;/*494949;*/
-    color:#008746;
-    font-weight:regular;
-    height:16px;
-	    font-size:1em;
-    border: solid #cdcfd2 1px;
-   -moz-box-shadow:    inset 4px 4px 6px -6px #666666;
-   -webkit-box-shadow: inset 4px 4px 6px -6px #666666;
-   box-shadow:         inset 4px 4px 6px -6px #666666;
-}
+.eexcess_query_btn {
+	/*
+    display: inline-block;
+	height: 1.8em;
+	width: 5em;
+	background-color: #0A3B53;
+	color: #ffffff;
+	font-weight: bold;
+	border: solid #70C896 0.1em;
+	border-radius: 0.4em;
+	margin-top: 0.0em;
+    */
 
-/*
-    Hover style for previous class
-*/
-.eexcess_submit_btn:hover{
-    box-shadow: -0.1em 0.1em 0.1em green, 0.1em 0.1em 0.1em green, 0.1em -0.1em 0.1em green, -0.1em -0.1em 0.1em green;
-
+    height: 1.7em;
+    width: 5.7em;
+    box-shadow: none;
 }
 
 
@@ -217,13 +474,21 @@ div{
 	float: left;
 	display:inline-block;
 	vertical-align: top;
+
 	top:0;
     margin-left:0%;
     margin-top: 5px;
     margin-bottom: 5px;
     width:80%;
     height:100%;  
- border:1px solid #e4e4e4;    
+    border-radius:10px 10px 10px 10px; border:2px solid #1d904e;
+
+    /*Warm style*/
+    background-color: rgba(241, 241, 230, 0.50);
+
+    /*Cold style
+    background-color: whitesmoke;
+    */
 }
 
 
@@ -245,7 +510,8 @@ div{
 	margin-left: 2px;
 	margin-top: 0.25%;
 	margin-bottom: 0.25%;
-	background-color: white;
+	border-radius:10px 10px 10px 10px;
+	background-color: rgba(29, 144, 78, 0.6);
 	z-index: 2;
 }
 
@@ -256,10 +522,10 @@ div{
 
 */
 #eexcess_fixed_controls{
-	height: 50%;
-	margin-bottom: 100%;
- border:1px solid #e4e4e4; 
-padding-top: 0.8em; 
+	height: 20%;
+	margin-top: 2em;
+	margin-bottom: 1%;
+	border-bottom: 1px solid rgba(255,255,255,0.7);
 }
 
 
@@ -297,6 +563,14 @@ padding-top: 0.8em;
 	margin-left: 2%; 
 	width: 35%;
 	z-index: 3;
+	text-shadow: -0.1em 0.1em 0.5em #eee;
+
+    /*Warm style*/
+    color: rgba(123, 26, 0, 1);
+
+    /*Cold style
+    color: rgba( 6, 41, 80,1);
+    */
 }
 
 /*
@@ -304,14 +578,11 @@ padding-top: 0.8em;
 */
 #eexcess_select_chart,
 .eexcess_select {
-	margin-left: 40%;
-	width: 58%;
-	display: block;
-	text-align: left;
-	/*background: #eee url("../../libs/jquery-ui/images/ui-bg_glass_55_fbf9ee_1x400.png") 50% 50% repeat-x;*/
-	color: #444;
-	border: 0.1em #ddd solid;
-    background-color: white;
+    margin-left: 40%;
+    width: 58%;
+    display: block;
+    box-shadow: 0em 0.1em .1em #999;
+    background: -webkit-linear-gradient(top,#fff, #eee, #fff);
 }
 
 /*
@@ -347,7 +618,7 @@ Visualization Panel (center of screen)
 #eexcess_vis_controls_wrapper {
 	display: block;
 	width: 99%;
-	height: 6%;
+	height: 5%;
 	margin-left: 0.5%;
 	margin-right: 0.5%;
 	margin-top: 0.25%;
@@ -360,7 +631,8 @@ Visualization Panel (center of screen)
 #eexcess_vis_controls {	
 	width: 100%;
 	height: 2.5em;
- border:1px solid #e4e4e4;    
+	background-color: rgba( 59,160,103,.6);
+	border-radius: 0.8em;
 	
 }
 
@@ -370,29 +642,24 @@ Visualization Panel (center of screen)
 */
 .eexcess_vis_controls_button {
 
-	display: inline-block;
-	width: 5em;
-	height: 100%;
-	margin-top: 0em;
-	cursor: pointer;
-	background-color: rgba(29, 144, 78, 0.5);
-	text-decoration: none;
-	color: #666666;
-	z-index: 0;
-	border: none;
+    /*
+    display: inline-block;
+    width: 5em;
+    height: 94%;
+    margin-top: .1em;
+    cursor: pointer;
+    background-color: rgba(255,208,135,1);
+    text-decoration: none;
+    color: rgba(123, 26, 0, 1);
+    z-index: 0;
+    border: none;
+    text-align: center;
+    box-shadow: 0 0 0.1em rgba(123, 26, 0, 0);
+    border-radius: 0.2em;
+    */
 
-	color: white;
-	text-align: center;
-	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-	  box-shadow: 0 0 0.1em rgba(128, 128, 128, 0);/*rgba(0, 0, 0, 0);*/
-}
-
-
-/*
-    Hover style for reset button
-*/
-.eexcess_vis_controls_button:hover {
-  box-shadow: 0 0 0.8em rgba(128, 128, 128, 0.6);/*rgba(0, 0, 0, 0.6);*/
+    height: 1.9em;
+    width: 5.7em;
 }
 
 
@@ -402,7 +669,7 @@ Visualization Panel (center of screen)
 */
 #eexcess_canvas {
 	width: 100%;
-	height: 93%;
+	height: 94%;
 	text-align: center;
 }
 
@@ -455,7 +722,7 @@ Visualization Panel (center of screen)
   	margin-top: 5px;
     margin-bottom: 5px;
   	margin-right:0%;
-  	width:19%;
+  	width:19.5%;
   	height: 100%;
 }
 
@@ -469,9 +736,9 @@ Visualization Panel (center of screen)
     margin: 0;
     padding: 0;
     list-style: none;
-    display:block;   
-    padding-top: 1px;
+    display:block;
     padding-bottom: 1px;
+    width: 100%;
 }
 
 
@@ -480,15 +747,22 @@ Visualization Panel (center of screen)
 */
 .eexcess_list {
 	position: relative;
-	padding-left: 5px;
-	padding-top: 2px;
+	padding-top: 1px;
 	margin-top: 1px;
 	margin-right: 4px;
-	background-color: rgba(241, 241, 230, 0.9);
 	min-height: 60px;
-	border: 1px solid rgba(119, 136, 153, 0.8);
+	-webkit-border-radius: 0.4em;
 	-webkit-box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);			
 	box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
+
+    /*Warm style*/
+    background-color: rgba(241, 241, 230, 0.9);
+    border: 1px solid rgba(255,208,135,.8);
+
+    /*Cold style
+    background-color: rgba(177,218,238,1);
+    border: 1px solid #fff;
+    */
 }
 
 
@@ -504,10 +778,12 @@ Visualization Panel (center of screen)
     Holds preview image, partner icon and color icon (matching current color legend in displayed visualization)
 */
 .eexcess_item_ctl {
-	display: block;
-	text-align: -webkit-match-parent;;
+	display: inline-block;
+    margin-top: 0.3em;
+    margin-left: 1%;
+	text-align: left;
 	float: left;
-    width: 75px;
+    width: 20%;
 }
 
 
@@ -515,10 +791,10 @@ Visualization Panel (center of screen)
     Preview image
 */
 .eexcess_preview {
-	width: 44px;
-	height: 44px;
-	margin: 2px;
+	width: 35px;
+	height: 35px;
 	float: left;
+    margin-bottom: 0.2em;
 }
 
 
@@ -526,10 +802,11 @@ Visualization Panel (center of screen)
     Partner icon
 */
 .eexcess_partner_icon {
-	margin-right: 0px;
-	margin-top: 2px;
+    float: left;
+	margin-left: 0.2em;
 	width: 16px;
 	height: 16px;
+	-webkit-border-radius: 0.2em;
     box-shadow: 0.05em 0.05em 0.05em #ccc;
 }
 
@@ -538,11 +815,14 @@ Visualization Panel (center of screen)
     Color icon
 */
 .color_icon {
-	display: block;
+	float: left;
+    display: block;
 	width:16px;
     height:16px;
+    margin-top: 0.25em;
     margin-right: 0px;
-    margin-left: 54px;
+    margin-left: 0.2em;
+    -webkit-border-radius: 0.2em;
     box-shadow: 0.05em 0.05em 0.05em #ccc;
 }
 
@@ -551,11 +831,11 @@ Visualization Panel (center of screen)
     Encloses title of the recommendation (h1 .eexcess_ritem_title) and short text below ("p.eexcess_ritem_short")
 */
 .eexcess_ritem_container {
-    margin-left: 65px;
-    padding-left:5px;
-    padding-right:5px;
-    min-height: 4em;
-    vertical-align: -webkit-match-parent;
+    display: inline-block;
+    min-height: 3em;
+    vertical-align: middle;
+    width: 70%;
+    margin-right: 8%;
 }
 
 
@@ -563,8 +843,8 @@ Visualization Panel (center of screen)
     Wraps .eexcess_ritem_title
 */
 h1 {
-	-webkit-margin-before: 0.5em;
-	-webkit-margin-after: 0.5em;
+	-webkit-margin-before: 0.3em;
+	-webkit-margin-after: 0.3em;
 }
 
 
@@ -584,3 +864,199 @@ p.eexcess_ritem_short {
     margin-top: 0em;
     margin-bottom: 0.5em;
 }
+
+
+.eexcess_fav_icon {
+    display: inline-block;
+    position: absolute;
+    right: .5em;
+    top: .5em;
+}
+
+
+
+/********************************************************************************************************************************************
+
+    Bookmark addition panel (appears on favicon clicked)
+
+********************************************************************************************************************************************/
+
+
+#eexcess-bookmark-dialog {
+    position: absolute;
+    width: 18em;
+    padding: 0.5em;
+    z-index: 999;
+    border-radius: 1em;
+    box-shadow: -.3em .3em 1em #555;
+    font-size: 0.9em;
+
+    /*Warm style*/
+    background-color: rgba(255,223,186,1);
+
+    /*Cold style
+    background-color: rgba( 97,132,172,1);
+    */
+}
+
+
+#eexcess-bookmark-dialog span {
+    display: inline-block;
+    float: left;
+    width: 19%;
+    margin-left: 0.4em;
+    margin-right: 0.4em;
+    text-align: left;
+
+    /*Warm style*/
+    color: #1f6080;
+
+    /*Cold style
+    color: #fff;
+    */
+}
+
+#eexcess-bookmark-dialog-title {
+    display: block !important;
+    margin-top: 0.2em !important;
+    margin-bottom: 0.5em;
+    margin-left: 0em !important;
+    text-align: center !important;
+    font-size: 1.1em;
+    font-weight: bold;
+    width: inherit !important;
+
+    /*Warm style*/
+    color: #114a66 !important;
+
+    /*cold style
+    color: #ddd !important;
+    */
+}
+
+
+#eexcess-boookmark-dialog-details {
+    width: 100%;
+    margin-top: 1.5em;
+    margin-bottom: 0.6em;
+    vertical-align: top;
+}
+
+
+
+#eexcess-boookmark-dialog-details p {
+    display: inline-block;
+    width: 76%;
+    height: auto;
+    font-size: .95em;
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+}
+
+
+
+#eexcess-bookmark-dialog-settings {
+    width: 100%;
+    min-height: 2em;
+    margin-bottom: .6em;
+}
+
+
+#eexcess-bookmark-dialog-settings span {
+    margin-top: 0.3em;
+}
+
+
+#eexcess-bookmark-dropdown-list {
+    display: inline-block;
+    width: 68%;
+    height: 1.7em;
+}
+
+
+.eexcess-bookmark-dropdown-list-icon {
+    display: inline-block;
+    float: left;
+    width: 14px;
+    height: 14px;
+    margin-top: 0.24em !important;
+    margin-right: 0.4em;
+    border-radius: 0.3em;
+    background-color: #fff;
+}
+
+
+#eexcess-bookmark-dialog-new-options {
+    float: left;
+    width: 100%;
+    margin-top: 0.3em;
+    margin-bottom: .6em;
+    vertical-align: top;
+}
+
+
+/* Color picker */
+#eexcess-bookmak-dialog-color-picker {
+    display: inline-block;
+    width: 1.55em;
+    height: 1.4em;
+    margin-top: 0.4em;
+    margin-left: 2em;
+    margin-right: .3em;
+    border: solid 0.1em #ccc;
+    border-radius: 0.6em;
+    background-color: #fff;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+
+
+
+#eexcess-bookmark-dialog-new-options-input-wrapper{
+    display: inline-block;
+    width: 72%;
+    margin-top: 0.35em;
+    vertical-align: top;
+}
+
+
+#eexcess-bookmark-dialog-new-options input {
+    width: 100%;
+    height: 1.2em;
+    text-align: left;
+	color: #444;
+	border: 0.1em #ddd solid;
+	-webkit-border-radius: 0.5em;
+    background-color: white;
+    font-size: 1.1em;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+
+
+#eexcess-bookmark-dialog-new-options p {
+    display: inline-block;
+    margin-top: 0;
+    margin-left: 5.2em;
+    color: red;
+    font-size: .9em;
+}
+
+
+#eexcess-bookmark-buttons-wrapper {
+    width: 100%;
+    text-align: center;
+}
+
+
+.eexcess-bookmark-button {
+    height: 1.8em;
+    width: 5.7em;
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+}
+
+
+
+
+
+
+

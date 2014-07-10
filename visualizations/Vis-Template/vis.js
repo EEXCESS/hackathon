@@ -4,32 +4,45 @@ function Visualization( EEXCESSobj ) {
 	var EEXCESS = EEXCESSobj || {};
 	
     var width;		// Screen width
-    var height;	// Screen height
+    var height;	    // Screen height
     
     // DOM Selectors
-    var root = "div#eexcess_canvas";														// String to select the area where the visualization should be displayed
-	var searchField = "#eexcess_search_field";									// String to select search field in the header
-	var btnSearch = "#eexcess_search_button";									// Selector for search button on left side of the header
-	var headerText = "#eexcess_header_text";									// String to select the text container in the middle of the header
+    var root = "div#eexcess_canvas";											        // String to select the area where the visualization should be displayed
+	var searchField = "#eexcess_search_field";									        // String to select search field in the header
+	var btnSearch = "#eexcess_search_button";									        // Selector for search button on left side of the header
+	var headerText = "#eexcess_header_text";									        // String to select the text container in the middle of the header
 	var btnFilter = "#eexcess_filter_button";
-	var btnReset = "#eexcess_btnreset";											// Selector for reset button in vis control panel
-	var chartSelect = "#eexcess_select_chart";									// select for chart
-	var divMapping = "#eexcess_controls_mappings";								// div that contains selects for mapping combinations
-	var divMappingInd = "#eexcess_mapping_container_";							// id for the above div
-	var mappingSelect = ".eexcess_select";										// To select all visual channels' <select> elements by class
-	var contentPanel = "#eexcess_content";										// Selector for content div on the right side
-	var contentList = "#eexcess_content .eexcess_result_list";					// ul element within div content
-	var allListItems = "#eexcess_content .eexcess_result_list .eexcess_list";	// String to select all li items by class
-	var listItem = "#eexcess_content .eexcess_result_list #data-pos-";			// String to select individual li items by id
-	var colorIcon = ".color_icon";												// Class selector for div icon colored according to legend categories 
-	
+	var btnReset = "#eexcess_btnreset";											        // Selector for reset button in vis control panel
+	var chartSelect = "#eexcess_select_chart";									        // select for chart
+	var divMapping = "#eexcess_controls_mappings";								        // div that contains selects for mapping combinations
+	var divMappingInd = "#eexcess_mapping_container_";							        // id for the above div
+	var mappingSelect = ".eexcess_select";										        // To select all visual channels' <select> elements by class
+	var contentPanel = "#eexcess_content";										        // Selector for content div on the right side
+	var contentList = "#eexcess_content .eexcess_result_list";					        // ul element within div content
+	var allListItems = "#eexcess_content .eexcess_result_list .eexcess_list";	        // String to select all li items by class
+	var listItem = "#eexcess_content .eexcess_result_list #data-pos-";			        // String to select individual li items by id
+	var colorIcon = ".color_icon";												        // Class selector for div icon colored according to legend categories
+	var bookmarkDialogId = "#eexcess-bookmark-dialog";                                  // Id for dialog poping up upon clicking on a "star" icon
+    var bookmarkSettingsId = "#eexcess-bookmark-dialog-settings";                       // Div containing <select> in bookmark dialog
+    var bookmarkDropdownListId = "#eexcess-bookmark-dropdown-list";                     // Div wrapping drop down list in boofmark dialog
+    var newBookmarkOptionsId = "#eexcess-bookmark-dialog-new-options";                  // Div wrapping color picker and input element in bookmark dialog
+    var colorPickerId = "#eexcess-bookmak-dialog-color-picker";                         // Div tranformed into a colorpicekr in bookmark dialog
+    var bookmarkInputWrapperId = "#eexcess-bookmark-dialog-new-options-input-wrapper";  // Wrapper for input containing new bookmark name
+
 	
 	// Constants
 	var LOADING_IMG = "../../media/loading.gif";
 	var NO_IMG = "../../media/no-img.png";
-	var STR_SEARCHING = "Searching...";
-    var STR_NO_DATA_RECEIVED = "No Data Received";
+    var FAV_ICON_OFF = "../../media/icons/favicon_off.png";
+    var FAV_ICON_ON = "../../media/icons/favicon_on.png";
+    var IMG_COLOR_WHEEL_SMALL = "../../media/icons/color_wheel_16x16.png";
+    var IMG_COLOR_WHEEL_LARGE = "../../media/color-spectrum.jpg";
+    var IMG_COLOR_WHEEL_MEDIUM = "../../media/color-wheel.jpg";
 	
+    var STR_SEARCHING = "Searching...";
+    var STR_NO_DATA_RECEIVED = "No Data Received";
+    var STR_NEW = "New...";
+	var STR_BOOKMARK_NAME_MISSING = "Indicate new bookmark name";
 	
 	// Main variables
 	var data;							// contains the data to be visualized
@@ -43,7 +56,8 @@ function Visualization( EEXCESSobj ) {
 	var visChannelKeys;					// array containing the keys (names) of the visual atributes corresponding to the current chart
 	var mappingSelectors = [];			// Selector array for visual channel <select>. Necessary for event handlers		
 	var indicesToHighlight = [];		// array containing the indices of <li> elements to be highlighted in content list	
-	
+	var isBookmarkDialogOpen = false;
+
 	// Chart objects
 	var timeVis, barVis;
 	
@@ -57,15 +71,30 @@ function Visualization( EEXCESSobj ) {
 	
 	/**
 	 *	Bind event handlers to buttons
-	 *
+	 *$
 	 * */
 	PREPROCESSING.bindEventHandlers = function(){
 		
 		$( btnSearch  ).click( function(){ EVTHANDLER.btnSearchClicked(); });
 		$( btnReset   ).click( function(){ EVTHANDLER.btnResetClicked(); });
+        $( 'html' ).click(function(){ if(isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
 	};
 	
 	
+    PREPROCESSING.markBookmarkedItems = function(){
+
+        var itemIds = data.map(function(d){ return d.id; });
+        var bookmarkedItems = BookmarkingAPI.getBookmarkedItemsByItemId(itemIds, 'item-id');
+
+        data.forEach(function(d){
+            if(bookmarkedItems.getIndexOf(d.id, 'item-id') != -1)
+                d['bookmarked'] = true;
+            else
+                d['bookmarked'] = false;
+        });
+    };
+
+
 	
 	/**
 	 * Format the received mapping combinations so they can be more easily manipulated
@@ -187,7 +216,7 @@ function Visualization( EEXCESSobj ) {
 		// Search for new results if the query is different from the current one
 		if(terms != query){
 			this.updateHeaderText( STR_SEARCHING );
-			EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: [{weight:1,text:terms}]});
+			EEXCESS.callBG({method: {parent: 'model', func: 'query'}, data: [{weight:1,text:terms}]});
 		}
 	};
 
@@ -235,7 +264,8 @@ function Visualization( EEXCESSobj ) {
 	////////	content list item click	////////
 	
 	EVTHANDLER.listItemClicked = function(d, i, isSelectedFromOutside){
-		LIST.selectListItem( d, i);
+		console.log("list item clicked");
+        LIST.selectListItem( d, i);
 	};
 	
 
@@ -251,7 +281,40 @@ function Visualization( EEXCESSobj ) {
 		VISPANEL.updateCurrentChart( "reset_chart" );
 	};
 
-	
+
+	////////	Star Icon clicked on list item    ////////
+
+    EVTHANDLER.faviconClicked = function(d, i){
+
+        d3.event.stopPropagation();
+        BOOKMARKS.buildBookmarkDialog(d, i, this);
+    };
+
+
+    ////////	Value changed in bookmark dropdown list 	////////
+    EVTHANDLER.bookmarkDropdownListChanged = function(value, index){
+
+        if(index == 0)
+            $(newBookmarkOptionsId).slideDown("slow");
+        else
+            $(newBookmarkOptionsId).slideUp("slow");
+
+        $(newBookmarkOptionsId).find('p').fadeOut('fast');
+    };
+
+
+    ////////	'Cancel' button clicked in bookmark dialog 	////////
+    EVTHANDLER.bookmarkCancelButtonClicked = function(){
+        BOOKMARKS.destroyBookmarkDialog();
+    };
+
+
+    ////////	'Save' button clicked in bookmark dialog 	////////
+    EVTHANDLER.bookmarkSaveButtonClicked = function(){
+        BOOKMARKS.saveBookmark();
+    };
+
+
 
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -397,10 +460,6 @@ function Visualization( EEXCESSobj ) {
 				else
 					return indices[0];
 			}
-			
-			
-
-			
 	};
 	
 	
@@ -423,16 +482,16 @@ function Visualization( EEXCESSobj ) {
 		//d3.selectAll(".eexcess_ritem").remove();
 		d3.selectAll( allListItems ).remove();
 		
-		var content = d3.select(contentList).selectAll("li").data(data);
+		var listData = d3.select(contentList).selectAll("li").data(data);
 		
-		var listItem = content.enter()
+		var aListItem = listData.enter()
 							.append("li")
 								.attr("class", "eexcess_list")
 								.attr("id", function(d, i){ return "data-pos-"+i; })
 								.on("click", EVTHANDLER.listItemClicked);
 		
 		// div 1 groups the preview image, partner icon and link icon
-		iconsDiv = listItem.append("div")
+		iconsDiv = aListItem.append("div")
 					.attr("class", "eexcess_item_ctl");
 		
 		iconsDiv.append("a")
@@ -455,9 +514,9 @@ function Visualization( EEXCESSobj ) {
 					}
 					return icon;
 				});
-		
+
 		// div 2 wraps the recommendation title (as a link), a short description and a large description (not used yet)
-		var contentDiv = listItem.append("div")
+		var contentDiv = aListItem.append("div")
 			.attr("class", "eexcess_ritem_container");
 		
 		contentDiv.append("h1")
@@ -478,6 +537,15 @@ function Visualization( EEXCESSobj ) {
 				});
 				return string.substring(0, string.length - 2); 
 			});
+
+        // Before appending favicon, retrieve bookmarked items. These will have the colored star icon, whereas the unbookmarked items keep the icon in 'off' mode
+
+
+        // append fav icon
+        aListItem.append("img")
+            .attr("class", "eexcess_fav_icon")
+            .attr("src", function(d){ if(d.bookmarked) return FAV_ICON_ON; return FAV_ICON_OFF; })
+            .on("click", EVTHANDLER.faviconClicked);
 		
 		$( contentPanel ).scrollTo( "top" );
 	};
@@ -572,6 +640,13 @@ function Visualization( EEXCESSobj ) {
 	};
 	
 	
+
+    LIST.turnFaviconOn = function( index ){
+        d3.select(listItem + '' +index).select('.eexcess_fav_icon').attr("src", FAV_ICON_ON);
+
+        data[index].bookmarked = true;
+    };
+
 	
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -722,8 +797,6 @@ function Visualization( EEXCESSobj ) {
 					case "barchart": barVis.reset(); break;
 				}
 				break;
-			
-				
 			case "highlight_item_selected":
 				
 				var arrayIndices = arg;
@@ -756,6 +829,193 @@ function Visualization( EEXCESSobj ) {
             
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    var BOOKMARKS = {};
+
+
+    BOOKMARKS.internal = {
+
+        currentBookmark :{
+                        'bookmark-name': 'none',
+                        'color': ' none',
+                        'type': 'none'      // new or existing
+                        },
+
+        currentItem : {
+                        'item-name': 'none',
+                        'item-id': 'none',
+                        'query': 'none',
+                        'index': 'none'
+                     },
+
+
+        getCurrentBookmark : function(){
+
+            var bookmarkName = $(bookmarkDropdownListId).find('span').text();
+            var color = '', type = '';
+
+            if( bookmarkName == STR_NEW ){
+                bookmarkName = $(bookmarkInputWrapperId).find('input').val();
+                color = $(colorPickerId).css('backgroundColor');
+                type = 'new';
+            }
+            this.currentBookmark['bookmark-name'] = bookmarkName;
+            this.currentBookmark['color'] = color;
+            this.currentBookmark['type'] = type;
+
+            return this.currentBookmark;
+        },
+
+
+        setCurrentItem : function(itemName, itemId, queryTerm, index){
+            this.currentItem['item-name'] = itemName;
+            this.currentItem['item-id'] = itemId;
+            this.currentItem['query'] = queryTerm;
+            this.currentItem['index'] = index;
+        },
+
+
+        getCurrentItem : function(){ return this.currentItem; },
+
+
+        validateBookmarkToSave : function(){
+            var $message = $(newBookmarkOptionsId).find('p');
+
+            // validation for new bookmark name
+            if(this.currentBookmark['type'] == 'new' && (this.currentBookmark['bookmark-name'] == '' || this.currentBookmark['bookmark-name'] == 'none')) {
+                $message.fadeIn('slow');
+                return false;
+            }
+
+            $message.fadeOut('fast');
+            return true;
+        }
+
+    };
+
+
+
+
+
+    BOOKMARKS.buildBookmarkDialog = function(d, i, sender) {
+
+        BOOKMARKS.destroyBookmarkDialog();
+        isBookmarkDialogOpen = true;
+
+        this.internal.setCurrentItem(d.title, d.id, query, i);
+
+        // Append bookmark form to content item
+        var dialogBookmark = d3.select("body").append("div")
+            .attr("id", "eexcess-bookmark-dialog")
+            .style("top", $(sender).offset().top + 20 + "px" )
+            .style("left", $(sender).offset().left - 215 + "px")
+            .on('click', function(){ d3.event.stopPropagation(); });
+
+        dialogBookmark.append("span")
+            .attr("id", "eexcess-bookmark-dialog-title")
+            .text("Bookmark Item");
+
+        // Append details section
+        var bookmarkDetails = dialogBookmark.append('div')
+            .attr('id', 'eexcess-boookmark-dialog-details');
+
+        bookmarkDetails.append('span').text('Title:');
+        bookmarkDetails.append('p').text(d.title);
+        bookmarkDetails.append('span').text('Query:');
+        bookmarkDetails.append('p').text(query);
+
+        // Append settings section (for bookmark selection or definition of new bookmark)
+        var bookmarkSettings = dialogBookmark.append("div")
+            .attr("id", "eexcess-bookmark-dialog-settings");
+
+        bookmarkSettings.append("span").text("Add to:");
+
+        // array to be sent to plugin building the dropdown list with the list items and the corresponding colors
+        var optionsData = $.merge([{'name': STR_NEW, 'color': ''}], BookmarkingAPI.getAllBookmarkNamesAndColors());
+
+        bookmarkSettings.append("div").attr("id", "eexcess-bookmark-dropdown-list");
+
+        // Create dropdown list to select bookmark
+        $("#eexcess-bookmark-dropdown-list").dropdown({
+            'data' : optionsData,
+            'change' : EVTHANDLER.bookmarkDropdownListChanged
+        });
+
+
+        // Add wrapper div containing icon for color picking, text input and legend
+        var newBookmarkOptions = bookmarkSettings.append("div")
+            .attr("id", "eexcess-bookmark-dialog-new-options");
+
+        newBookmarkOptions.append("div")
+            .attr("id", "eexcess-bookmak-dialog-color-picker")
+            .attr("title", "Select Color");
+
+
+        newBookmarkOptions.append("div")
+            .attr("id", "eexcess-bookmark-dialog-new-options-input-wrapper")
+            .append("input");
+
+        newBookmarkOptions.append('p')
+            .text(STR_BOOKMARK_NAME_MISSING)
+            .style('display', 'none');
+
+
+        // Append save and cancel buttons within container
+        var bookmarkButtonsWrapper = dialogBookmark.append("div")
+            .attr("id", "eexcess-bookmark-buttons-wrapper");
+
+
+        bookmarkButtonsWrapper.append("button")
+            .attr("class", "eexcess-bookmark-button")
+            .text("Save")
+            .on("click", EVTHANDLER.bookmarkSaveButtonClicked);
+
+        bookmarkButtonsWrapper.append("button")
+            .attr("class", "eexcess-bookmark-button")
+            .text("Cancel")
+            .on('click', EVTHANDLER.bookmarkCancelButtonClicked);
+
+
+        // make div icon a color picker
+        $( colorPickerId ).colorpicker({
+            'img' : IMG_COLOR_WHEEL_LARGE,
+            'width' : 200,
+            'height' : 200
+        });
+
+    };
+
+
+
+    BOOKMARKS.destroyBookmarkDialog = function(){
+        $( colorPickerId ).colorpicker('destroy');
+        $( bookmarkDialogId ).remove();
+
+        isBookmarkDialogOpen = false;
+    };
+
+
+
+    BOOKMARKS.saveBookmark = function(){
+
+        var bookmark = this.internal.getCurrentBookmark();
+        var item = this.internal.getCurrentItem();
+
+        if( this.internal.validateBookmarkToSave() ){
+            if(bookmark['type'] == 'new')
+                BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
+
+            BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item['item-name'], item['item-id'], item['query']);
+            BOOKMARKS.destroyBookmarkDialog();
+
+            console.log(BookmarkingAPI.getAllBookmarks());
+
+            LIST.turnFaviconOn( item['index'] );
+        }
+    };
+
 	
 
 	
@@ -772,6 +1032,9 @@ function Visualization( EEXCESSobj ) {
 		PREPROCESSING.bindEventHandlers();
 		timeVis = new Timeline(root, self, VISPANEL.Settings );
 		barVis = new Barchart(root, self, VISPANEL.Settings );
+
+        BookmarkingAPI = new Bookmarking();
+        BookmarkingAPI.init();
 	};
 
 
@@ -795,7 +1058,7 @@ function Visualization( EEXCESSobj ) {
         indicesToHighlight = [];
 
         // Initialize template's elements
-        //PREPROCESSING.bindEventHandlers();
+        PREPROCESSING.markBookmarkedItems();
         QUERY.updateHeaderText( "Query Results : " + data.length );
         QUERY.updateSearchField( query );
         CONTROLS.buildChartSelect();
@@ -809,6 +1072,7 @@ function Visualization( EEXCESSobj ) {
             VISPANEL.showMessageOnCanvas( STR_NO_DATA_RECEIVED );
         }
 
+        //BookmarkingAPI.testBookmarking();
     };
 
 	
