@@ -194,13 +194,27 @@ function Bookmarking() {
 
         attrValues = (Array.isArray(attrValues)) ? attrValues : [attrValues];
 
-        var bookmarkedItems = [];
+        var bookmarkedItems = {};
         var dictionaryEntries = Object.keys(BOOKMARKING.Dictionary);
 
         dictionaryEntries.forEach(function(entry){
             BOOKMARKING.Dictionary[entry].items.forEach(function(item){
 
                 if( attrValues.indexOf(item[attrName]) != -1 ){
+
+                    var bookmarkedEntryValue = bookmarkedItems[item[attrName]];
+                    if(typeof bookmarkedEntryValue != 'undefined' && bookmarkedEntryValue != 'undefined'){
+                        // bookmarkedItems already contains an entry with the value item[attrName]
+
+
+
+                    }
+                    else{
+
+
+
+                    }
+
                     bookmarkedItems.push({
                         'bookmark-name' : entry,
                         'bookmark-id' : BOOKMARKING.Dictionary[entry].id,
@@ -216,6 +230,39 @@ function Bookmarking() {
         return bookmarkedItems;
     };
 
+
+    /**
+    *
+    *   @param attrName could be item-id, item-name or query. It's defined in the EXTERNAL methods
+    */
+    BOOKMARKING.getItemDetailsByAttr = function(attrValue, attrName){
+
+        var secondAttrName = (attrName == 'item-id') ? 'item-name' : 'item-id';
+
+
+        var bookmarkedItems = [];
+        var dictionaryEntries = Object.keys(BOOKMARKING.Dictionary);
+
+        dictionaryEntries.forEach(function(entry){
+            BOOKMARKING.Dictionary[entry].items.forEach(function(item){
+
+                if( item[attrName] == attrValue ){
+                    bookmarkedItems.push({
+                        'bookmark-name' : entry,
+                        'bookmark-id' : BOOKMARKING.Dictionary[entry].id,
+                        'color' : BOOKMARKING.Dictionary[entry].color,
+                        'item-id' : item["item-id"],
+                        'item-name' : item["item-name"],
+                        'query' : item.query
+                    });
+                }
+            });
+        });
+
+        return bookmarkedItems;
+
+
+    };
 
 
 
@@ -285,6 +332,18 @@ function Bookmarking() {
         getBookmarkedItemsByitemName : function( itemName ) {
              return BOOKMARKING.getBookmarkedItemsByAttr( itemName, 'item-name' );
         },
+
+        getItemDetailsByitemId : function(itemId){
+            return BOOKMARKING.getItemDetailsByAttr(itemId, 'item-id');
+        },
+
+        getItemDetailsByitemName : function(itemName){
+            return BOOKMARKING.getItemDetailsByAttr(itemName, 'item-name');
+        },
+
+        getItemDetailsByQuery : function(queryTerm){
+            return BOOKMARKING.getItemDetailsByAttr(queryTerm, 'query');
+        }
 
         // Testing
         testBookmarking : function(){
