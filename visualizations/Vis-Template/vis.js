@@ -84,10 +84,12 @@ function Visualization( EEXCESSobj ) {
     PREPROCESSING.markBookmarkedItems = function(){
 
         var itemIds = data.map(function(d){ return d.id; });
-        var bookmarkedItems = BookmarkingAPI.getBookmarkedItemsByItemId(itemIds, 'item-id');
+        var bookmarkedItems = BookmarkingAPI.getBookmarkedItemsByItemId(itemIds);
+
+        console.log(bookmarkedItems);
 
         data.forEach(function(d){
-            if(bookmarkedItems.getIndexOf(d.id, 'item-id') != -1)
+            if(typeof bookmarkedItems[d.id] != 'undefined' && bookmarkedItems[d.id] != 'undefined')
                 d['bookmarked'] = true;
             else
                 d['bookmarked'] = false;
@@ -916,6 +918,7 @@ function Visualization( EEXCESSobj ) {
         // Append bookmark form to content item
         var dialogBookmark = d3.select("body").append("div")
             .attr("id", "eexcess-bookmark-dialog")
+            .style('display', 'none')
             .style("top", topOffset + "px" );
 
         dialogBookmark.on('click', function(){ d3.event.stopPropagation(); });
@@ -985,22 +988,26 @@ function Visualization( EEXCESSobj ) {
             .on('click', EVTHANDLER.bookmarkCancelButtonClicked);
 
 
+        // show bookmark dialog
+        $(bookmarkDialogId).slideDown('slow');
+
         // make div icon a color picker
         $( colorPickerId ).colorpicker({
             'img' : IMG_COLOR_WHEEL_LARGE,
             'width' : 200,
             'height' : 200
         });
+    };
 
 
-        var dialogHeight = dialogBookmark.attr('height');
 
-        dialogBookmark.style('max-height', '0em')
-            .transition()
-            .duration(1000)
-                .style('max-height', '30em');
+
+    BOOKMARKS.appendBookmarkDialogElemets = function( dialogBookmark, d ) {
+
+
 
     };
+
 
 
 

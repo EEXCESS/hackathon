@@ -874,6 +874,7 @@ p.eexcess_ritem_short {
     position: absolute;
     right: 4.6em;
     width: 18em;
+    max-height: 30em;
     padding: 0.5em;
     z-index: 999;
     border-radius: 1em;

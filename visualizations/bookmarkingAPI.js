@@ -190,9 +190,17 @@ function Bookmarking() {
 
 
 
+    /**
+    *   @param attrValues: array or single item value (id or name) for which all the corresponding bookmarks want to be retrieved
+    *   @param attrName: name of the attribute to be used for comparison
+    *   return: dictionary whose entries correspond to the values included in attrValues that are actually bookmarked.
+    *       Each entry contains an array 'bookmarked', where each item consists of an object specifying bookmark name and id, plus the query within which the item was bookmarked'
+    *       An item representes a recommended documents that can be bookmarked in more than one bookmark (but only once in each bookmark). Hence 'bookmarked' has as many elements as the # of bookmarks
+    *       where an item was included.
+    **/
     BOOKMARKING.getBookmarkedItemsByAttr = function( attrValues, attrName ){
 
-        attrValues = (Array.isArray(attrValues)) ? attrValues : [attrValues];
+        valuesArray = (Array.isArray(attrValues)) ? attrValues : [attrValues];
 
         var bookmarkedItems = {};
         var dictionaryEntries = Object.keys(BOOKMARKING.Dictionary);
@@ -200,69 +208,32 @@ function Bookmarking() {
         dictionaryEntries.forEach(function(entry){
             BOOKMARKING.Dictionary[entry].items.forEach(function(item){
 
-                if( attrValues.indexOf(item[attrName]) != -1 ){
+                if( valuesArray.indexOf(item[attrName]) != -1 ){
 
-                    var bookmarkedEntryValue = bookmarkedItems[item[attrName]];
-                    if(typeof bookmarkedEntryValue != 'undefined' && bookmarkedEntryValue != 'undefined'){
-                        // bookmarkedItems already contains an entry with the value item[attrName]
-
-
-
-                    }
-                    else{
-
-
-
+                    var itemEntry = item[attrName];
+                    if(typeof bookmarkedItems[itemEntry] == 'undefined' || bookmarkedItems[itemEntry] == 'undefined'){
+                        // bookmarkedItems doesn't contain an entry with the value item[attrName] yet. Add new entry
+                        bookmarkedItems[itemEntry] = {
+                            'item-id' : item["item-id"],
+                            'item-name' : item["item-name"],
+                            'bookmarked' : new Array()
+                        };
                     }
 
-                    bookmarkedItems.push({
+                    bookmarkedItems[itemEntry].bookmarked.push({
                         'bookmark-name' : entry,
                         'bookmark-id' : BOOKMARKING.Dictionary[entry].id,
-                        'color' : BOOKMARKING.Dictionary[entry].color,
-                        'item-id' : item["item-id"],
-                        'item-name' : item["item-name"],
                         'query' : item.query
                     });
                 }
             });
         });
 
-        return bookmarkedItems;
+        // If the param attrValues is an array, return the whole dictionary contained in bookmarkedItems, otherwise only the content for the only entry in bookmarkedItems
+        if(Array.isArray(attrValues)) return bookmarkedItems;
+        return bookmarkedItems[attrValues];
     };
 
-
-    /**
-    *
-    *   @param attrName could be item-id, item-name or query. It's defined in the EXTERNAL methods
-    */
-    BOOKMARKING.getItemDetailsByAttr = function(attrValue, attrName){
-
-        var secondAttrName = (attrName == 'item-id') ? 'item-name' : 'item-id';
-
-
-        var bookmarkedItems = [];
-        var dictionaryEntries = Object.keys(BOOKMARKING.Dictionary);
-
-        dictionaryEntries.forEach(function(entry){
-            BOOKMARKING.Dictionary[entry].items.forEach(function(item){
-
-                if( item[attrName] == attrValue ){
-                    bookmarkedItems.push({
-                        'bookmark-name' : entry,
-                        'bookmark-id' : BOOKMARKING.Dictionary[entry].id,
-                        'color' : BOOKMARKING.Dictionary[entry].color,
-                        'item-id' : item["item-id"],
-                        'item-name' : item["item-name"],
-                        'query' : item.query
-                    });
-                }
-            });
-        });
-
-        return bookmarkedItems;
-
-
-    };
 
 
 
@@ -322,10 +293,6 @@ function Bookmarking() {
             return BOOKMARKING.getAllBookmarkedItemsInArray(bookmarkName)  ;
         },
 
-        getBookmarkedItemsByQuery : function( query ) {
-             return BOOKMARKING.getBookmarkedItemsByAttr( query, 'query' );
-        },
-
         getBookmarkedItemsByItemId : function( itemId ) {
              return BOOKMARKING.getBookmarkedItemsByAttr( itemId, 'item-id' );
         },
@@ -333,17 +300,18 @@ function Bookmarking() {
              return BOOKMARKING.getBookmarkedItemsByAttr( itemName, 'item-name' );
         },
 
+        getBookmarkedItemsByQuery : function( query ) {
+             return BOOKMARKING.getBookmarkedItemsByAttr( query, 'query' );
+        },
+
         getItemDetailsByitemId : function(itemId){
-            return BOOKMARKING.getItemDetailsByAttr(itemId, 'item-id');
+            return BOOKMARKING.getBookmarkedItemsByAttr(itemId, 'item-id');
         },
 
         getItemDetailsByitemName : function(itemName){
-            return BOOKMARKING.getItemDetailsByAttr(itemName, 'item-name');
+            return BOOKMARKING.getBookmarkedItemsByAttr(itemName, 'item-name');
         },
 
-        getItemDetailsByQuery : function(queryTerm){
-            return BOOKMARKING.getItemDetailsByAttr(queryTerm, 'query');
-        }
 
         // Testing
         testBookmarking : function(){
