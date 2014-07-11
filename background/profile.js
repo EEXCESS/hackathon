@@ -52,7 +52,6 @@ EEXCESS.profile = (function() {
     };
     
     var applyUuidPolicy = function() {
-        console.log('applying uuid policy');
         if (JSON.parse(EEXCESS.storage.local('privacy.policy.uuid')) === 1) {
             return _uuid;
         }
