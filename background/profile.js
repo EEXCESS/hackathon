@@ -52,7 +52,8 @@ EEXCESS.profile = (function() {
     };
     
     var applyUuidPolicy = function() {
-        if (EEXCESS.storage.local('privacy.policy.uuid') === 1 || "1") {
+        console.log('applying uuid policy');
+        if (JSON.parse(EEXCESS.storage.local('privacy.policy.uuid')) === 1) {
             return _uuid;
         }
         return "";
@@ -117,7 +118,7 @@ EEXCESS.profile = (function() {
 
     return {
         getUUID: function() {
-            return _uuid;
+            return applyUuidPolicy();
         },
         getHistorySize: function(tabID, data, callback) {
             if (data) {
