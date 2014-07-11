@@ -43,7 +43,6 @@ function updatePolicy() {
 		if($(this).find(".progress-bar:eq(0)").hasClass("disable")) {
 			value = 1;
 		}
-		console.log("Updating policy setting for topics '"+fieldName+"' to "+value);
 		
 		var jsonTopicsPolicy = EEXCESS.storage.local('privacy.profile.topics');
         var topics = [];
@@ -69,7 +68,6 @@ function updatePolicy() {
 		} else {
 			value = $(this).find(".progress-bar:not(.disable)").size();
 		}
-		console.log("Updating policy setting for '"+fieldName+"' to "+value);
 		
 		EEXCESS.storage.local("privacy.policy."+fieldName,value);
 		updateDisclosedValue(fieldName);
@@ -215,7 +213,8 @@ function updateDisclosedValue(fieldName) {
     	} else {
     		$("div[data-eexcess-policy-field='" + fieldName + "']").find("#disclosed").html("Nothing");
     	}
-    	break;	}
+    	break;
+    }
 }
 
 function loadTopics(topicList) {
@@ -299,7 +298,6 @@ function initPolicyPanel() {
 	if (!value) {
 		value = 0;
 	}
-	console.log("Reloadig policy setting for '"+fieldName+"' as "+value);
 	if (fieldName == "topics") {
 		var jsonTopicsPolicy = EEXCESS.storage.local('privacy.profile.topics');
         var topics = [];
@@ -317,7 +315,6 @@ function initPolicyPanel() {
         					}
         				}
         			});
-			console.log("Reloadig policy setting for '"+ topics[i]['label'] +"' as "+topics[i]['value']);
         }
 	}
 	if($(this).find(".progress-bar").size() <= 2) {
