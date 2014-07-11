@@ -52,7 +52,6 @@ EEXCESS.profile = (function() {
     };
     
     var applyUuidPolicy = function() {
-        console.log('applying uuid policy');
         if (JSON.parse(EEXCESS.storage.local('privacy.policy.uuid')) === 1) {
             return _uuid;
         }
@@ -63,7 +62,7 @@ EEXCESS.profile = (function() {
         switch (EEXCESS.storage.local("privacy.policy.birthdate")) {
             case '2':
                 if (EEXCESS.storage.local("privacy.profile.birthdate")) {
-                    return EEXCESS.storage.local("privacy.profile.birthdate").split("-")[0].substr(0, 3) + '0s';
+                    return EEXCESS.storage.local("privacy.profile.birthdate").split("-")[0].substr(0, 3) + '0';
                 }
                 break;
             case '3':
@@ -74,7 +73,7 @@ EEXCESS.profile = (function() {
             case '4':
                 if (EEXCESS.storage.local("privacy.profile.birthdate")) {
                     var tmp = EEXCESS.storage.local("privacy.profile.birthdate").split("-");
-                    return tmp[0] + '-' + tmp[1];
+                    return tmp[0] + '-' + tmp[1] + '-01';
                 }
                 break;
             case '5':
