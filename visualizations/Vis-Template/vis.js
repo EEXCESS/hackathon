@@ -910,12 +910,15 @@ function Visualization( EEXCESSobj ) {
 
         this.internal.setCurrentItem(d.title, d.id, query, i);
 
+        var topOffset = $(contentPanel).offset().top;
+        var leftOffset = $(contentPanel).offset().left;
+
         // Append bookmark form to content item
         var dialogBookmark = d3.select("body").append("div")
             .attr("id", "eexcess-bookmark-dialog")
-            .style("top", $(sender).offset().top + 20 + "px" )
-            .style("left", $(sender).offset().left - 215 + "px")
-            .on('click', function(){ d3.event.stopPropagation(); });
+            .style("top", topOffset + "px" );
+
+        dialogBookmark.on('click', function(){ d3.event.stopPropagation(); });
 
         dialogBookmark.append("span")
             .attr("id", "eexcess-bookmark-dialog-title")
@@ -988,6 +991,14 @@ function Visualization( EEXCESSobj ) {
             'width' : 200,
             'height' : 200
         });
+
+
+        var dialogHeight = dialogBookmark.attr('height');
+
+        dialogBookmark.style('max-height', '0em')
+            .transition()
+            .duration(1000)
+                .style('max-height', '30em');
 
     };
 

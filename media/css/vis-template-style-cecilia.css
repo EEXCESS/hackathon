@@ -341,18 +341,17 @@ button:hover {
     Div wrapping the whole header (green bar on the top of the iFrame)
 */
 #eexcess_header {
-    border-collapse:separate;
+    border-collapse: separate;
     float: left;
-    width: 99%;
+    width: 99.49%;
     height: 40px;
-    /*background-color: rgba( 31,145, 81,1);*/
-    background-color: rgba(29, 144, 78, 0.6);
-    border: solid 0.2em rgba( 31,145, 81,1);
+    /* background-color: rgba( 31,145, 81,1); */
+    background-color: rgba(29, 144, 78, 0.5);
+    border: solid 0.1em rgba( 31,145, 81,1);
     margin-left: 0%;
     border-radius: .8em;
     vertical-align: middle;
-	line-height: 28px;
-
+    line-height: 28px;
 }
 
 
@@ -432,6 +431,7 @@ button:hover {
 .eexcess_query_btn {
     height: 1.7em;
     width: 5.7em;
+    margin-left: 0.15em;
 }
 
 
@@ -471,7 +471,7 @@ button:hover {
     margin-bottom: 5px;
     width:80%;
     height:100%;
-    border-radius:10px 10px 10px 10px; border:2px solid #1d904e;
+    border-radius:10px 10px 10px 10px;
 
     /*Warm style*/
     background-color: rgba(241, 241, 230, 0.50);
@@ -493,17 +493,14 @@ button:hover {
 
 */
 #eexcess_controls {
-	float: left;
-	vertical-align: middle;
-	width: 18%;
-	height:99%;
-	margin-left: 2px;
-	margin-top: 0.25%;
-	margin-bottom: 0.25%;
-	border-radius:10px 10px 10px 10px;
-	background-color: rgba(29, 144, 78, 0.6);
+    float: left;
+    vertical-align: middle;
+    width: 18%;
+    height: 99.5%;
+    border-radius: 10px 10px 10px 10px;
+    background-color: rgba(29, 144, 78, 0.5);
     border: solid 0.1em rgba( 31,145, 81,1);
-	z-index: 2;
+    z-index: 2;
 }
 
 
@@ -573,7 +570,7 @@ button:hover {
     width: 58%;
     display: block;
     box-shadow: 0em 0.1em .1em #999;
-    background: -webkit-linear-gradient(top,#fff, #eee, #fff);
+    background: -webkit-linear-gradient(top,#fefefe, #fff , #fefefe);
 }
 
 /*
@@ -875,15 +872,17 @@ p.eexcess_ritem_short {
 
 #eexcess-bookmark-dialog {
     position: absolute;
+    right: 4.6em;
     width: 18em;
     padding: 0.5em;
     z-index: 999;
     border-radius: 1em;
-    box-shadow: -.3em .3em 1em #555;
+    box-shadow: -.3em .3em 1.5em #222;
     font-size: 0.9em;
 
     /*Warm style*/
-    background-color: rgba(255,223,186,1);
+    /*background-color: rgba(255,223,186,1);*/
+    background-color: rgba(241, 241, 230, 1);
 
     /*Cold style
     background-color: rgba( 97,132,172,1);
