@@ -54,7 +54,6 @@ select {
     text-align: left;
     color: #444;
     border: 0.1em #ddd solid;
-    -webkit-border-radius: 0.5em;
 }
 
 
@@ -96,7 +95,6 @@ button {
     color: white;
     background: -webkit-linear-gradient(top, rgba( 61,175, 111,1), rgba( 31,145, 81,1));
     border: 0.1em solid rgba( 51,165, 101,1);
-    border-radius: 0.5em;
 }
 
 
@@ -126,7 +124,7 @@ button:hover {
     vertical-align: middle;
     line-height: 1.6em;
     background: #fff;
-    border-radius: 0.5em;
+   /* border-radius: 0.5em;*/
     box-shadow: 0 1px 0 rgba(0,0,0,0.2);
     cursor: pointer;
     outline: none;
@@ -176,7 +174,7 @@ button:hover {
 
     /* Styles */
     background: #fff;
-    border-radius: 0 0 0.5em 0.5em;
+ /*   border-radius: 0 0 0.5em 0.5em; */
     border: 1px solid rgba(0,0,0,0.2);
     border-top: none;
     border-bottom: none;
@@ -342,9 +340,8 @@ button:hover {
     margin-left: 0%;
     vertical-align: middle;
     line-height: 28px;
-    background-color: rgba(241, 241, 230, 0.50);
+    background-color: rgba(241, 241, 230, 1);
     box-shadow: 0.1em .1em .5em #555;
-    border-radius: .8em;
 }
 
 /*
@@ -380,6 +377,7 @@ button:hover {
     font-weight: bold;
     text-align:center;
     color: rgba( 31,145, 81,1);
+    text-shadow: 0em .1em #ccc;
 }
 
 
@@ -409,11 +407,15 @@ button:hover {
 */
 .eexcess_query_field{
     width: 100%;
-    height: 1.38em;
-    box-shadow: 0em 0.1em .1em #999;
-    background: -webkit-linear-gradient(top,#fff 75%, #eee);
-    border: 0.1em #ddd solid;
-    border-radius: 0.4em;
+    height: 1.4em;
+    margin-top: 0.2em;
+    padding-top: 0.2em;
+    color: #666;
+    font-size: 1em;
+    border: solid #cdcfd2 1px;
+    -moz-box-shadow: inset 4px 4px 6px -6px #666666;
+    -webkit-box-shadow: inset 4px 4px 6px -6px #666666;
+    box-shadow: inset 4px 4px 6px -6px #666666;
 }
 
 
@@ -482,10 +484,9 @@ button:hover {
     height: 99.5%;
     background-color: rgba(29, 144, 78, 0.3);
     border: solid 0.1em rgba( 31,145, 81,1);
-    background-color: rgba(241, 241, 230, 0.50);
+    background-color: rgba(241, 241, 230, 1);
     z-index: 2;
     box-shadow: 0.1em .1em 1em #555;
-    border-radius: .8em;
 }
 
 
@@ -536,7 +537,7 @@ button:hover {
 	margin-left: 2%;
 	width: 35%;
 	z-index: 3;
-    text-shadow: -0.1em 0.1em 0.5em #aaa;
+    text-shadow: 0em 0.1em #ccc;
     color: rgba( 31,145, 81,1);
 }
 
@@ -563,6 +564,12 @@ button:hover {
 }
 
 
+#eexcess_select_chart > option,
+.eexcess_select > option {
+    color: #666;
+}
+
+
 
 
 /********************************************************************************************************************************************
@@ -578,10 +585,9 @@ Visualization Panel (center of screen)
 	margin-left: 18.5%;
     width: 81.5%;
     height: 99.5%;
-    background-color: rgba(241, 241, 230, 0.50);
+    background-color: white;
     box-shadow: 0.1em .1em 1em #555;
     border: solid 0.1em rgba( 31,145, 81,1);
-    border-radius: .8em;
 }
 
 
@@ -725,10 +731,9 @@ Visualization Panel (center of screen)
     margin-top: 1px;
     margin-right: 4px;
     min-height: 60px;
-    background-color: rgba(241, 241, 230, 0.50);
+    background: -webkit-linear-gradient(top, white 75%, rgba(241, 241, 230, 1));
     box-shadow: 0.1em .1em 1em #555;
     border: solid 0.1em rgba( 31,145, 81,1);
-    border-radius: .4em;
 }
 
 
@@ -736,7 +741,7 @@ Visualization Panel (center of screen)
     <li> itmes' hover style
 */
 .eexcess_list:hover {
-	background-color: rgba( 31,145, 81,.3);
+	background: -webkit-linear-gradient(top, rgba( 31,145, 81,.3) 75%, rgba( 31,145, 81,.5));
 }
 
 
@@ -855,7 +860,7 @@ p.eexcess_ritem_short {
     max-height: 30em;
     padding: 0.5em;
     z-index: 999;
-    border-radius: 1em;
+    /* border-radius: 1em; */
     box-shadow: .5em .5em 1.5em #222, -.5em 0em 1.5em #222;
     font-size: 0.9em;
     background-color: rgba(241, 241, 230, 1);
@@ -966,7 +971,7 @@ p.eexcess_ritem_short {
     margin-left: 2em;
     margin-right: .3em;
     border: solid 0.1em #ccc;
-    border-radius: 0.6em;
+  /*  border-radius: 0.6em; */
     background-color: #fff;
     box-shadow: 0 1px 0 rgba(0,0,0,0.2);
 }
@@ -987,7 +992,7 @@ p.eexcess_ritem_short {
     text-align: left;
 	color: #444;
 	border: 0.1em #ddd solid;
-	-webkit-border-radius: 0.5em;
+/*	-webkit-border-radius: 0.5em; */
     background-color: white;
     font-size: 1.1em;
     box-shadow: 0 1px 0 rgba(0,0,0,0.2);
@@ -1006,6 +1011,7 @@ p.eexcess_ritem_short {
 #eexcess-bookmark-buttons-wrapper {
     width: 100%;
     text-align: center;
+    margin-bottom: .3em;
 }
 
 

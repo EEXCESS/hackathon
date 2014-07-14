@@ -68,7 +68,7 @@ function requestPlugin() {
     EEXCESS.messaging.listener(
     	function(request, sender, sendResponse) {
     		if (request.method === 'newSearchTriggered') {
-    			//console.log(request.data);
+    			console.log('data received from plugin');
    				requestVisualizations(request.data, "refresh_visualization");
    			}
    		}
