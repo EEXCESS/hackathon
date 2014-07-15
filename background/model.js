@@ -87,7 +87,7 @@ EEXCESS.model = (function() {
                 });
             } else {
                 cachedResult = res;
-                chrome.browserAction.setBadgeText({text: "" + res.data.totalResults});
+                EEXCESS.browserAction.setBadgeText({text: "" + res.data.totalResults});
             }
         };
 
@@ -277,8 +277,7 @@ EEXCESS.model = (function() {
             callback({query: results.query, results: results.data});
         },
         resultOpened: function(tabID, data, callback) {
-            console.log("opened result: " + data);
-            chrome.windows.getCurrent({populate: true}, function(win) {
+            EEXCESS.windows.getCurrent({populate: true}, function(win) {
                 for (var i = 0; i < win.tabs.length; ++i) {
                     if (win.tabs[i].url === data) {
                         openResult = {id: win.tabs[i].id, url: data};
