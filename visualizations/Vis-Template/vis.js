@@ -22,7 +22,7 @@ function Visualization( EEXCESSobj ) {
 	var allListItems = "#eexcess_content .eexcess_result_list .eexcess_list";	// String to select all li items by class
 	var listItem = "#eexcess_content .eexcess_result_list #data-pos-";			// String to select individual li items by id
 	var colorIcon = ".color_icon";												// Class selector for div icon colored according to legend categories 
-	
+
 	
 	// Constants
 	var LOADING_IMG = "../../media/loading.gif";
@@ -48,6 +48,13 @@ function Visualization( EEXCESSobj ) {
 	var timeVis, barVis;
 	
 		
+    // Constants
+    var ICON_EUROPEANA =  "../../media/icons/Europeana-favicon.ico";
+    var ICON_MENDELEY = "../../media/icons/mendeley-favicon.ico";
+    var ICON_ZBW = "../../media/icons/ZBW-favicon.ico";
+    var ICON_WISSENMEDIA = "../../media/icons/wissenmedia-favicon.ico";
+    var ICON_KIM_COLLECT = "../../media/icons/KIM.Collect-favicon.ico";
+    var ICON_UNKNOWN = "../../media/icons/question-mark.png";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,6 +156,24 @@ function Visualization( EEXCESSobj ) {
 		return formattedMappings;
 	};
 
+
+
+    PREPROCESSING.extendDataWithAncillaryDetails = function(){
+
+        data.forEach(function(d){
+            switch(d.facets.provider){
+                case "Europeana": d['provider-icon'] = ICON_EUROPEANA; break;
+			    case "europeana": d['provider-icon'] = ICON_EUROPEANA; break;
+			    case "mendeley": d['provider-icon'] = ICON_MENDELEY; break;
+                case "ZBW": d['provider-icon'] = ICON_ZBW; break;
+                case "econbiz": d['provider-icon'] = ICON_ZBW; break;
+                case "wissenmedia": d['provider-icon'] = ICON_WISSENMEDIA; break;
+                case "KIM.Collect": d["provider-icon"] = ICON_KIM_COLLECT; break;
+                default: d['provider-icon'] = NO_IMG; break;
+            }
+        });
+    };
+
 	
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
@@ -197,8 +222,8 @@ function Visualization( EEXCESSobj ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	var EVTHANDLER = {};
-	
-	
+
+
 	/**
 	 * Click on search button triggers a new search
 	 * 
@@ -418,7 +443,7 @@ function Visualization( EEXCESSobj ) {
 	 *	Each item represents one recommendation contained in the variable "data"
 	 *
 	 * */	
-	LIST.buildContentList = function(data){
+	LIST.buildContentList = function(){
 	
 		//d3.selectAll(".eexcess_ritem").remove();
 		d3.selectAll( allListItems ).remove();
@@ -444,17 +469,7 @@ function Visualization( EEXCESSobj ) {
 		iconsDiv.append("img")
 				.attr("class", "eexcess_partner_icon")
 				.attr("title", function(d){ return d.facets.provider; })
-				.attr("src", function(d){
-					var icon = "../../media/icons/Europeana-favicon.ico";
-					switch(d.facets.provider){
-						case "Europeana": icon = "../../media/icons/Europeana-favicon.ico"; break;
-						case "europeana": icon = "../../media/icons/Europeana-favicon.ico"; break;
-						case "mendeley": icon = "../../media/icons/mendeley-favicon.ico"; break;
-						case "ZBW": icon = "../../media/icons/ZBW-favicon.ico"; break;
-						case "econbiz": icon = "../../media/icons/ZBW-favicon.ico"; break;
-					}
-					return icon;
-				});
+				.attr("src", function(d){ return d['provider-icon']; });
 		
 		// div 2 wraps the recommendation title (as a link), a short description and a large description (not used yet)
 		var contentDiv = listItem.append("div")
@@ -796,10 +811,11 @@ function Visualization( EEXCESSobj ) {
 
         // Initialize template's elements
         //PREPROCESSING.bindEventHandlers();
+        PREPROCESSING.extendDataWithAncillaryDetails();
         QUERY.updateHeaderText( "Query Results : " + data.length );
         QUERY.updateSearchField( query );
         CONTROLS.buildChartSelect();
-        LIST.buildContentList( data );
+        LIST.buildContentList();
         
         if(data.length > 0){
             // Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)

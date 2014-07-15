@@ -10,11 +10,8 @@ function Settings (){
 		
 		var rootWidth  = $(domRoot).width() - 10;
 		var rootHeight = $(domRoot).height() >= 500 ? 500 : $(domRoot).height();
-        var legendsWidth = $("#div-wrap-legends").css('width');
-        console.log("legends width = " + legendsWidth);
 		
 		switch( senderStr ){
-		
 			case "timeline": DIMENSIONS = getTimelineDimensions( domRoot, iWidth, rootWidth, rootHeight, senderStr ); break;			
 			case "barchart": DIMENSIONS = getBarchartDimensions( domRoot, iWidth, rootWidth, rootHeight, senderStr ); break;		
 
