@@ -886,14 +886,7 @@ p.eexcess_ritem_short {
     border-radius: 1em;
     box-shadow: -.3em .3em 1.5em #222;
     font-size: 0.9em;
-
-    /*Warm style*/
-    /*background-color: rgba(255,223,186,1);*/
     background-color: rgba(241, 241, 230, 1);
-
-    /*Cold style
-    background-color: rgba( 97,132,172,1);
-    */
 }
 
 
@@ -904,13 +897,7 @@ p.eexcess_ritem_short {
     margin-left: 0.4em;
     margin-right: 0.4em;
     text-align: left;
-
-    /*Warm style*/
     color: #1f6080;
-
-    /*Cold style
-    color: #fff;
-    */
 }
 
 #eexcess-bookmark-dialog-title {
@@ -922,13 +909,8 @@ p.eexcess_ritem_short {
     font-size: 1.1em;
     font-weight: bold;
     width: inherit !important;
-
-    /*Warm style*/
     color: #114a66 !important;
 
-    /*cold style
-    color: #ddd !important;
-    */
 }
 
 
