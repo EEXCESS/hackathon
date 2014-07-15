@@ -8,6 +8,7 @@ EEXCESS.config = (function() {
     var _LOG_SHOW_HIDE_URI = _PP_BASE_URI + 'log/show_hide';
     var _LOG_FACETSCAPE_URI = _PP_BASE_URI + 'log/facetScape';
     var _DISAMBIGUATE_URI = _PP_BASE_URI + 'disambiguate';
+    var _LOG_QUERY_ACTIVATED_URI = _PP_BASE_URI + 'log/query_activated';
 
     return {
         PP_BASE_URI: _PP_BASE_URI,
@@ -16,6 +17,7 @@ EEXCESS.config = (function() {
         LOG_RCLOSE_URI: _LOG_RCLOSE_URI,
         LOG_SHOW_HIDE_URI: _LOG_SHOW_HIDE_URI,
         DISAMBIGUATE_URI:_DISAMBIGUATE_URI,
-        LOG_FACETSCAPE_URI:_LOG_FACETSCAPE_URI
+        LOG_FACETSCAPE_URI:_LOG_FACETSCAPE_URI,
+        LOG_QUERY_ACTIVATED_URI: _LOG_QUERY_ACTIVATED_URI
     };
 })();

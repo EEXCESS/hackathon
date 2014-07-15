@@ -3,10 +3,10 @@ var EEXCESS = EEXCESS || {};
 EEXCESS.profile = (function() {
     // retrieve UUID from local storage or create a new one
     var _uuid;
-    _uuid = EEXCESS.storage.local('profile.uuid');
+    _uuid = EEXCESS.storage.local('privacy.profile.uuid');
     if (typeof _uuid === 'undefined' || _uuid === null) {
         _uuid = randomUUID();
-        EEXCESS.storage.local('profile.uuid', _uuid);
+        EEXCESS.storage.local('privacy.profile.uuid', _uuid);
     }
 
     var applyFirstnamePolicy = function() {
@@ -50,12 +50,19 @@ EEXCESS.profile = (function() {
         }
         return "";
     };
+    
+    var applyUuidPolicy = function() {
+        if (JSON.parse(EEXCESS.storage.local('privacy.policy.uuid')) === 1) {
+            return _uuid;
+        }
+        return "";
+    };
 
     var applyBirthdayPolicy = function() {
         switch (EEXCESS.storage.local("privacy.policy.birthdate")) {
             case '2':
                 if (EEXCESS.storage.local("privacy.profile.birthdate")) {
-                    return EEXCESS.storage.local("privacy.profile.birthdate").split("-")[0].substr(0, 3) + '0s';
+                    return EEXCESS.storage.local("privacy.profile.birthdate").split("-")[0].substr(0, 3) + '0';
                 }
                 break;
             case '3':
@@ -66,7 +73,7 @@ EEXCESS.profile = (function() {
             case '4':
                 if (EEXCESS.storage.local("privacy.profile.birthdate")) {
                     var tmp = EEXCESS.storage.local("privacy.profile.birthdate").split("-");
-                    return tmp[0] + '-' + tmp[1];
+                    return tmp[0] + '-' + tmp[1] + '-01';
                 }
                 break;
             case '5':
@@ -110,7 +117,7 @@ EEXCESS.profile = (function() {
 
     return {
         getUUID: function() {
-            return _uuid;
+            return applyUuidPolicy();
         },
         getHistorySize: function(tabID, data, callback) {
             if (data) {
@@ -166,7 +173,7 @@ EEXCESS.profile = (function() {
                     "address": applyAddressPolicy(),
                     "interests": _interests(),
                     "contextKeywords": {},
-                    "uuid": _uuid
+                    "uuid": applyUuidPolicy()
                 };
                 callback(profile);
             });

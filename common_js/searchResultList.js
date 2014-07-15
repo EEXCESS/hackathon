@@ -24,7 +24,8 @@ EEXCESS.searchResultList = function(divContainer, options) {
         pathToMedia: '../media/',
         pathToLibs: '../libs/',
         previewHandler: function(url) {
-            EEXCESS.messaging.callBG({method: 'fancybox', data: url});
+            window.open(url, '_blank');
+            EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:url});
         },
         ratingHandler: function(uri, score, pos) {
             EEXCESS.messaging.callBG({

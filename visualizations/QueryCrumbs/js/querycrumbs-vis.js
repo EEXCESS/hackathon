@@ -82,7 +82,7 @@ function display_querycrumbs(domElem) {
                     return preNodeColor;
                 } else {
                     var cIdx = (QueryCrumbsConfiguration.baseColors.indexOf(preNodeColor) + 1) % QueryCrumbsConfiguration.baseColors.length;
-                    console.log(cIdx)
+//                    console.log(cIdx)
                     return QueryCrumbsConfiguration.baseColors[cIdx];
                 }
             } else {
