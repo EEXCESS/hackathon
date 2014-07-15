@@ -43,7 +43,8 @@
         "<all_urls>",
         "geolocation",
         "history",
-        "background"
+        "background", 
+        "storage"
     ],
     "options_page": "options/options.html",
     "icons": {"16": "media/icons/16.png",
