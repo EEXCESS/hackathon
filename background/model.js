@@ -7,7 +7,7 @@ var EEXCESS = EEXCESS || {};
 EEXCESS.model = (function() {
     // general widget parameters
     var params = {
-        visible: true,
+        visible: false,
         tab: 'results'
     };
     /**

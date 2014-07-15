@@ -60,7 +60,7 @@ EEXCESS.init = function(widget) {
     });
 
     // Move me to a better location
-    display_querycrumbs(d3.select("div#queryCrumbs"));
+    //display_querycrumbs(d3.select("div#queryCrumbs"));
 };
 
 
