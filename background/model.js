@@ -18,6 +18,86 @@ EEXCESS.model = (function() {
         data: null,
         weightedTerms: null
     };
+
+    /*
+     * retrieved results from automatic queries which are cached until the user activates them
+     */
+    var cachedResult = {};
+
+    var openResult = null;
+
+    EEXCESS.browserAction.clickedListener(function(tab) {
+        EEXCESS.browserAction.getBadgeText({}, function(badgeText) {
+            if (badgeText === '') {
+                EEXCESS.messaging.sendMsgAllTabs({method: 'visibility', data: EEXCESS.model.toggleVisibility(tab.url)});
+            } else {
+                results = cachedResult;
+                EEXCESS.browserAction.setBadgeText({text: ""});
+                if (!params.visible) {
+                    EEXCESS.messaging.sendMsgAllTabs({method: 'visibility', data: EEXCESS.model.toggleVisibility(tab.url)});
+                }
+
+                // log activated query
+                EEXCESS.logging.logQuery(tab.id, results['weightedTerms'], new Date().getTime(), '');
+                EEXCESS.messaging.sendMsgAllTabs({
+                    method: 'newSearchTriggered',
+                    data: {query: cachedResult.query, results: cachedResult.data}
+                });
+            }
+        });
+    });
+
+    // --- listeners for closing a result view --- //
+    EEXCESS.tabs.activatedListener(function(activeInfo) {
+        if (openResult !== null && activeInfo.tabId !== openResult.id) {
+            EEXCESS.logging.closedRecommendation(openResult.url);
+            openResult = null;
+        }
+    });
+    EEXCESS.tabs.updateListener(function(tabId, changeInfo, tab) {
+        if (openResult !== null && tabId === openResult.id) {
+            if (typeof changeInfo['url'] !== 'undefined' && changeInfo.url !== openResult.url) {
+                EEXCESS.logging.closedRecommendation(openResult.url);
+                openResult = null;
+            }
+        }
+    });
+    EEXCESS.tabs.removedListener(function(tabId, removeInfo) {
+        if (openResult !== null && tabId === openResult.id) {
+            EEXCESS.logging.closedRecommendation(openResult.url);
+            openResult = null;
+        }
+    });
+    EEXCESS.windows.focusChangedListener(function(windowID) {
+        if (openResult !== null && windowID === EEXCESS.windows.WINDOW_ID_NONE) {
+            EEXCESS.logging.closedRecommendation(openResult.url);
+            openResult = null;
+        }
+    });
+    // -------------------------------------------- //
+
+    var _handleResult = function(res) {
+        var execute = function(items) {
+            res.data.results = items;
+            if (res.hasOwnProperty('reason') && res['reason']['reason'] === 'manual') {
+                results = res;
+                EEXCESS.messaging.sendMsgAllTabs({
+                    method: 'newSearchTriggered',
+                    data: {query: results.query, results: results.data}
+                });
+            } else {
+                cachedResult = res;
+                chrome.browserAction.setBadgeText({text: "" + res.data.totalResults});
+            }
+        };
+
+        // update ratings first
+        EEXCESS.storage.getRatings(res.data.results, execute, function() {
+            execute(res.data.results);
+        });
+    };
+
+
     /**
      * Update results to a query with ratings from the database and send each
      * updated result to all tabs
@@ -51,55 +131,12 @@ EEXCESS.model = (function() {
             params.visible = !params.visible;
             var xhr = $.ajax({
                 url: EEXCESS.config.LOG_SHOW_HIDE_URI,
-                data: JSON.stringify({visible:params.visible, uuid:EEXCESS.profile.getUUID(), currentPage:url}),
+                data: JSON.stringify({visible: params.visible, uuid: EEXCESS.profile.getUUID(), currentPage: url}),
                 type: 'POST',
                 contentType: 'application/json; charset=UTF-8',
                 dataType: 'json'
             });
             return params.visible;
-        },
-        quietQuery: function(tabID, data, callback) {
-            _queryTimestamp = new Date().getTime();
-            var simpleQuery = '';
-            for (var i = 0, len = data.length; i < len; i++) {
-                simpleQuery += data[i].text;
-                if (i < len - 1) {
-                    simpleQuery += ' ';
-                }
-            }
-            EEXCESS.logging.logQuery(tabID, data, _queryTimestamp);
-            var success = function(res) { // success callback
-                if (res.totalResults !== 0) {
-                    // update results with ratings
-                    _updateRatings(res.results);
-                    // provide searchResults to callback
-                    callback(res);
-                    // create context
-                    var context = {query: simpleQuery};
-                    // log results
-                    EEXCESS.logging.logRecommendations(res.results, context, _queryTimestamp);
-                }
-            };
-            var error = function(error) { // error callback
-                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
-            };
-            // call provider (resultlist should start with first item)
-            EEXCESS.backend.getCall()(data, 1, success, error);
-        },
-        quietQueryNoHistory: function(tabID, data, callback) {
-            var success = function(res) { // success callback
-                if (res.totalResults !== 0) {
-                    // update results with ratings
-                    _updateRatings(res.results);
-                    // provide searchResults to callback
-                    callback(res);
-                }
-            };
-            var error = function(error) { // error callback
-                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
-            };
-            // call provider (resultlist should start with first item)
-            EEXCESS.backend.getCall()(data, 1, success, error);
         },
         /**
          * Executes the following functions:
@@ -116,45 +153,46 @@ EEXCESS.model = (function() {
          * @param {Object} data The query data 
          */
         query: function(tabID, data) {
-            // send query only if the widget is visible
-            if(!params.visible) {
-                return;
-            }
             console.log(data);
+            var tmp = {};
             _queryTimestamp = new Date().getTime();
             if (data.hasOwnProperty('reason')) {
-                results.weightedTerms = data['terms'];
+                tmp['weightedTerms'] = data['terms'];
+                tmp['reason'] = data['reason'];
             } else {
-                results.weightedTerms = data;
+                tmp['weightedTerms'] = data;
             }
-            results.query = '';
-            for (var i = 0, len = results.weightedTerms.length; i < len; i++) {
-                results.query += results.weightedTerms[i].text;
+            tmp['query'] = '';
+            for (var i = 0, len = tmp['weightedTerms'].length; i < len; i++) {
+                tmp['query'] += tmp['weightedTerms'][i].text;
                 if (i < len - 1) {
-                    results.query += ' ';
+                    tmp['query'] += ' ';
                 }
             }
-            if(results.query === '') {
+            if (tmp['query'] === '') {
                 EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: 'query is empty...'});
                 return;
             }
             params.tab = 'results';
-            EEXCESS.logging.logQuery(tabID, results.weightedTerms, _queryTimestamp);
+            // log all queries in 'queries_full'
+            EEXCESS.logging.logQuery(tabID, tmp['weightedTerms'], _queryTimestamp, '_full');
+            // add manual queries to 'queries'
+            if (tmp.hasOwnProperty('reason') && tmp['reason']['reason'] === 'manual') {
+                EEXCESS.logging.logQuery(tabID, tmp['weightedTerms'], _queryTimestamp, '', 'manual');
+            }
             var success = function(data) { // success callback
                 // TODO: search may return no results (although successful)
-                results.data = data;
+                tmp['data'] = data;
                 if (data.totalResults !== 0) {
-                    // update results with ratings
-                    _updateRatings(data.results);
+//                    // update results with ratings
+//                    _updateRatings(data.results);
                     // create context
-                    var context = {query: results.query};
+                    var context = {query: tmp['query']};
                     // log results
                     EEXCESS.logging.logRecommendations(data.results, context, _queryTimestamp);
+                    _handleResult(tmp);
                 }
-                EEXCESS.messaging.sendMsgAllTabs({
-                    method: 'newSearchTriggered',
-                    data: {query: results.query, results: results.data}
-                });
+
             };
             var error = function(error) { // error callback
                 EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
@@ -228,6 +266,18 @@ EEXCESS.model = (function() {
          */
         getResults: function(tabID, data, callback) {
             callback({query: results.query, results: results.data});
+        },
+        resultOpened: function(tabID, data, callback) {
+            console.log("opened result: " + data);
+            chrome.windows.getCurrent({populate: true}, function(win) {
+                for (var i = 0; i < win.tabs.length; ++i) {
+                    if (win.tabs[i].url === data) {
+                        openResult = {id: win.tabs[i].id, url: data};
+                        EEXCESS.logging.openedRecommendation(data);
+                        break;
+                    }
+                }
+            });
         }
     };
 }());

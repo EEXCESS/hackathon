@@ -29,7 +29,7 @@ var LOGGING = (function() {
             var facetValue = logAtom.facetValue;
             // log interaction on server
             var tmp = logAtom;
-            tmp['uuid'] = EEXCESS.storage.local('profile.uuid');
+            tmp['uuid'] = EEXCESS.profile.getUUID();
             var xhr = $.ajax({
                 url: EEXCESS.config.LOG_FACETSCAPE_URI,
                 data: JSON.stringify(tmp),

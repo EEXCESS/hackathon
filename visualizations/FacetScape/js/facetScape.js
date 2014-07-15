@@ -581,27 +581,6 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                 RENDERING.drawResultList();
                 QUERYING.updateFrequencies();
                 RENDERING.drawTagCloud();
-            },
-            previewHandler: function(url) {
-
-                var myFacetScape = $(root.node());
-                var previewPanel = $('<div style="width:100%;height:100%;"></div>');
-                var backPanel = $('<div class="back_panel"></div>');
-                var backButton = $('<img src="../../../media/icons/back.png" style="width:100%;">');
-                var previewFrame = $('<iframe src="' + url + '" frameborder="0" hspace="0" vspace="0" style="width:97%;height:100%;position:absolute;">');
-
-                EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
-
-                myFacetScape.hide();
-                backPanel.click(function() {
-                    previewPanel.remove();
-                    myFacetScape.show();
-                    EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
-                });
-                backPanel.append(backButton);
-                previewPanel.append(backPanel);
-                previewPanel.append(previewFrame);
-                $('body').append(previewPanel);
             }
         }
     })();
@@ -746,7 +725,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
 
     function FSResultLayout() {
         root.append("div").attr("id", "RS_ResultList").attr("class", "resultList").style("max-height", svgHeight - 40 +"px");//.style("width", svgWidth-2+"px");
-        var rList = EEXCESS.searchResultList($('#RS_ResultList'),{previewHandler:INTERACTION.previewHandler,pathToMedia:'../../../media/', pathToLibs:'../../../libs/'});
+        var rList = EEXCESS.searchResultList($('#RS_ResultList'),{pathToMedia:'../../../media/', pathToLibs:'../../../libs/'});
         RENDERING.drawResultList();
     }
 
@@ -1083,7 +1062,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
         }
         return {
             search: function(terms) {
-                EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: [{weight:1,text:terms}]});
+                EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {terms:[{weight:1,text:terms}],reason:{reason:'manual'}}});
                 PROVIDER.buildFacetScape(terms, PROVIDER.getRequestedProvider(), root, iwidth, iheight);
             },
             evaluateSelection: function(selection) {
