@@ -218,6 +218,17 @@ EEXCESS.windows = (function() {
     var _focusChangedListener = function(callback) {
         chrome.windows.onFocusChanged.addListener(callback);
     };
+    
+    /**
+     * for documentation see https://developer.chrome.com/extensions/windows#method-getCurrent
+     * 
+     * @param {Object} options
+     * @param {Function} callback
+     * @returns {undefined}
+     */
+    var _getCurrent = function(options, callback) {
+        chrome.windows.getCurrent(options,callback);
+    };
 
     var _WINDOW_ID_NONE = function() {
         if (chrome.windows) {
@@ -227,7 +238,8 @@ EEXCESS.windows = (function() {
     };
     return {
         WINDOW_ID_NONE: _WINDOW_ID_NONE,
-        focusChangedListener: _focusChangedListener
+        focusChangedListener: _focusChangedListener,
+        getCurrent: _getCurrent
     };
 })();
 
