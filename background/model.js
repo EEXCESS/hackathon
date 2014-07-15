@@ -29,12 +29,12 @@ EEXCESS.model = (function() {
     EEXCESS.browserAction.clickedListener(function(tab) {
         EEXCESS.browserAction.getBadgeText({}, function(badgeText) {
             if (badgeText === '') {
-                EEXCESS.messaging.sendMsgAllTabs({method: 'visibility', data: EEXCESS.model.toggleVisibility(tab.url)});
+                EEXCESS.model.toggleVisibility(tab.id, tab.url);
             } else {
                 results = cachedResult;
                 EEXCESS.browserAction.setBadgeText({text: ""});
                 if (!params.visible) {
-                    EEXCESS.messaging.sendMsgAllTabs({method: 'visibility', data: EEXCESS.model.toggleVisibility(tab.url)});
+                    EEXCESS.model.toggleVisibility(tab.id, tab.url);
                 }
 
                 // log activated query
@@ -127,16 +127,25 @@ EEXCESS.model = (function() {
          * @param {String} url the url of the current page
          * @returns {Boolean} true if visible, otherwise false
          */
-        toggleVisibility: function(url) {
-            params.visible = !params.visible;
-            var xhr = $.ajax({
-                url: EEXCESS.config.LOG_SHOW_HIDE_URI,
-                data: JSON.stringify({visible: params.visible, uuid: EEXCESS.profile.getUUID(), currentPage: url}),
-                type: 'POST',
-                contentType: 'application/json; charset=UTF-8',
-                dataType: 'json'
-            });
-            return params.visible;
+        toggleVisibility: function(tabID, url) {
+            var _finally = function(url) {
+                params.visible = !params.visible;
+                var xhr = $.ajax({
+                    url: EEXCESS.config.LOG_SHOW_HIDE_URI,
+                    data: JSON.stringify({visible: params.visible, uuid: EEXCESS.profile.getUUID(), currentPage: url}),
+                    type: 'POST',
+                    contentType: 'application/json; charset=UTF-8',
+                    dataType: 'json'
+                });
+                EEXCESS.messaging.sendMsgAllTabs({method: 'visibility', data: params.visible});
+            };
+            if (url === -1) {
+                EEXCESS.tabs.get(tabID, function(tab) {
+                    _finally(tab.url);
+                });
+            } else {
+                _finally(url);
+            }
         },
         /**
          * Executes the following functions:
