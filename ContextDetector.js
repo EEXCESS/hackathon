@@ -12,28 +12,66 @@ EEXCESS.sortTokens = function(corpus, sortFunc) {
 };
 
 EEXCESS.topKcorpus = function(corpus, k) {
-    topK = [];
+    var orgK = k;
+    var topK = [];
     var divisor = 1;
     var sorted = EEXCESS.sortTokens(corpus, function(t1, t2) {
         return t2.value['c'] - t1.value['c'];
     });
     // first word
     if (typeof sorted[0] !== 'undefined') {
-        divisor = sorted[0].value['c'];
-        topK.push({
-            "weight": 1,
-            "text": sorted[0].key
-        });
-    }
-    for (var i = 1; i < k; i++) {
-        if (typeof sorted[i] !== 'undefined') {
+        if (window.location.hostname.indexOf(sorted[0].key) === -1) {
+            divisor = sorted[0].value['c'];
             topK.push({
-                "weight": (sorted[i].value['c'] / divisor),
-                "text": sorted[i].key
+                "weight": 1,
+                "text": sorted[0].key
             });
+        } else {
+            k++;
+        }
+    }
+    for (var i = 1; i < k && i < sorted.length; i++) {
+        if (typeof sorted[i] !== 'undefined') {
+            if (window.location.hostname.indexOf(sorted[i].key) === -1) {
+                topK.push({
+                    "weight": (sorted[i].value['c'] / divisor),
+                    "text": sorted[i].key
+                });
+            } else {
+                k++;
+            }
         } else {
             break;
         }
+    }
+
+    // extract title keywords
+    var title_keywords_raw = document.title.match(/([äöüÄÖÜß\w-_]{3,})/g);
+    var title_keywords = [];
+    for (var i = 0; i < title_keywords_raw.length; i++) {
+        var tmp = title_keywords_raw[i].toLowerCase();
+        if (window.location.hostname.toLowerCase().indexOf(tmp) === -1) {
+            title_keywords.push(tmp);
+        }
+    }
+
+    // add title keywords to topK with weight 1
+    for (var i = 0; i < title_keywords.length; i++) {
+        var found = false;
+        for (var j = 0; j < topK.length; j++) {
+            if (title_keywords[i] === topK[j]['text']) {
+                topK[j]['weight'] = 1;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            topK.unshift({"weight": 1, "text": title_keywords[i]});
+        }
+    }
+    topK.push({"weight": 1, "text": "detlef"});
+    if (topK.length > orgK) {
+        return topK.slice(0, orgK);
     }
     return topK;
 };
@@ -41,7 +79,7 @@ EEXCESS.topKcorpus = function(corpus, k) {
 EEXCESS.triggerQuery = function(textElements, reason) {
     EEXCESS.messaging.callBG({method: {parent: 'corpus', func: 'getCorpus'}, data: textElements}, function(result) {
         var query = EEXCESS.topKcorpus(result, 10);
-        EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason:reason,terms:query}});
+        EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason: reason, terms: query}});
     });
 };
 
@@ -49,7 +87,7 @@ EEXCESS.initiateQuery = function() {
     // get all text elements
     var elements = [];
     var walker = document.createTreeWalker(
-            document,
+            document.body,
             NodeFilter.SHOW_ALL,
             {acceptNode: function(node) {
                     if (node.nodeType === 1 && node.getAttribute('id') === 'eexcess_sidebar') {
@@ -73,11 +111,12 @@ EEXCESS.initiateQuery = function() {
         var cond1 = parent !== 'SCRIPT'; // exclude script areas
         var cond2 = parent !== 'STYLE';  // exclude style areas
         var cond3 = parent !== 'NOSCRIPT'; // exclude noscript areas
-        if (containsText !== -1 && cond1 && cond2 && cond3) {
+        var cond5 = $(node.parentNode).filter(':visible').length > 0;
+        if (containsText !== -1 && cond1 && cond2 && cond3 && cond5) {
             elements.push({text: node.nodeValue, parent: parent});
         }
     }
-    EEXCESS.triggerQuery(elements, {reason:'page',page: window.location.protocol + '//' +  window.location.host + window.location.pathname});
+    EEXCESS.triggerQuery(elements, {reason: 'page', page: window.location.protocol + '//' + window.location.host + window.location.pathname});
 }();
 
 EEXCESS.selectedText = '';
@@ -89,7 +128,7 @@ $(document).mouseup(function() {
             EEXCESS.selectedText = text;
             var elements = [];
             elements.push({text: text});
-            EEXCESS.triggerQuery(elements, {reason:'selection',selectedText: document.getSelection().toString()});
+            EEXCESS.triggerQuery(elements, {reason: 'selection', selectedText: document.getSelection().toString()});
         }
     }
 });

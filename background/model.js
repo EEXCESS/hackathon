@@ -79,7 +79,7 @@ EEXCESS.model = (function() {
     var _handleResult = function(res) {
         var execute = function(items) {
             res.data.results = items;
-            if (res.hasOwnProperty('reason') && res['reason']['reason'] === 'manual') {
+            if ((res.hasOwnProperty('reason') && res['reason']['reason'] === 'manual') || params.visible && (results.data === null)) {
                 results = res;
                 EEXCESS.messaging.sendMsgAllTabs({
                     method: 'newSearchTriggered',
@@ -124,6 +124,7 @@ EEXCESS.model = (function() {
         /**
          * Toggles the visibility of the widget
          * @memberOf EEXCESS.model
+         * @param {Integer} tabID identifier of the tab, the toggling request originates
          * @param {String} url the url of the current page
          * @returns {Boolean} true if visible, otherwise false
          */

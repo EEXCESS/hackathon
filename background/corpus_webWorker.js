@@ -29,23 +29,23 @@ EEXCESS.stopwords = function(language) {
     // TODO: stopwords to DB / learn stopwords ?
     var languages = {};
     languages['en'] = ["a", "about", "above", "after", "again", "against",
-        "all", "am", "an", "and", "any", "are", "aren't", "as", "at", "be", "for","edit",
-        "because", "been", "before", "by", "from", "had", "hadn't", "has", 
-        "hasn't", "have", "haven't", "having", "he", "he'd", "he'll", "he's", 
-        "her", "here", "here's", "hers", "herself", "him", "himself", "his", 
-        "how", "how's", "i", "i'd", "i'll", "i'm", "i've", "if", "in", "into", 
-        "is", "isn't", "it", "it's", "its", "itself", "let's", "me", "more", 
-        "most", "mustn't", "my", "myself", "no", "nor", "not", "of", "off", 
-        "on", "once", "only", "or", "other", "ought", "our", "ours", 
-        "ourselves", "out", "over", "own", "same", "shan't", "she", "she'd", 
-        "she'll", "she's", "should", "shouldn't", "so", "some", "such", "than", 
-        "that", "that's", "the", "their", "theirs", "them", "themselves", 
-        "then", "there", "there's", "these", "they", "they'd", "they'll", 
-        "they're", "they've", "this", "those", "through", "to", "too", "under", 
-        "until", "up", "very", "was", "wasn't", "we", "we'd", "we'll", "we're", 
-        "we've", "were", "weren't", "what", "what's", "when", "when's", "where", 
-        "where's", "which", "while", "who", "who's", "whom", "why", "why's", 
-        "with", "won't", "would", "wouldn't", "you", "you'd", "you'll", 
+        "all", "am", "an", "and", "any", "are", "aren't", "as", "at", "be", "for", "edit",
+        "because", "been", "before", "by", "from", "had", "hadn't", "has",
+        "hasn't", "have", "haven't", "having", "he", "he'd", "he'll", "he's",
+        "her", "here", "here's", "hers", "herself", "him", "himself", "his",
+        "how", "how's", "i", "i'd", "i'll", "i'm", "i've", "if", "in", "into",
+        "is", "isn't", "it", "it's", "its", "itself", "let's", "me", "more",
+        "most", "mustn't", "my", "myself", "no", "nor", "not", "of", "off",
+        "on", "once", "only", "or", "other", "ought", "our", "ours",
+        "ourselves", "out", "over", "own", "same", "shan't", "she", "she'd",
+        "she'll", "she's", "should", "shouldn't", "so", "some", "such", "than",
+        "that", "that's", "the", "their", "theirs", "them", "themselves",
+        "then", "there", "there's", "these", "they", "they'd", "they'll",
+        "they're", "they've", "this", "those", "through", "to", "too", "under",
+        "until", "up", "very", "was", "wasn't", "we", "we'd", "we'll", "we're",
+        "we've", "were", "weren't", "what", "what's", "when", "when's", "where",
+        "where's", "which", "while", "who", "who's", "whom", "why", "why's",
+        "with", "won't", "would", "wouldn't", "you", "you'd", "you'll",
         "you're", "you've", "your", "yours", "yourself", "yourselves"
     ];
     languages["de"] = ["aber", "als", "am", "an", "auch", "auf", "aus", "bei",
@@ -118,22 +118,25 @@ EEXCESS.createToken = function(text, parent) {
 EEXCESS.tokenize = function(text, parent, language) {
     var tokens = [];
 
-    if(this.stopwords(language).indexOf(text.trim().toLowerCase()) !== -1) {
+    if (this.stopwords(language).indexOf(text.trim().toLowerCase()) !== -1) {
         text = '';
     }
     // remove stopwords
-    var innerRegexp = this.stopwords(language).join('\\b|[^a-zA-ZäöüßÄÖÜ]');
-    var regexp = new RegExp('[^a-zA-ZäöüßÄÖÜ]' + innerRegexp + '\\b', 'gi');
-    text = text.replace(regexp, '');
+//    var innerRegexp = this.stopwords(language).join('\\b|[^a-zA-ZäöüßÄÖÜ]');
+//    var regexp = new RegExp('[^a-zA-ZäöüßÄÖÜ]' + innerRegexp + '\\b', 'gi');
+//    text = text.replace(regexp, '');
 
     // tokenize
     var words = text.match(/([äöüÄÖÜß\w-_]{3,})/g);
     if (words) {
         for (var i = 0, len = words.length; i < len; i++) {
-            // TODO: save position in the text? (stopwors already removed, thuss not really correct)
-            var token = this.createToken(words[i].trim(), parent);
-            if (token !== null) {
-                tokens.push(token);
+            var word = words[i].trim();
+            if (this.stopwords(language).indexOf(word.toLowerCase()) === -1) {
+                // TODO: save position in the text? (stopwors already removed, thuss not really correct)
+                var token = this.createToken(words[i].trim(), parent);
+                if (token !== null) {
+                    tokens.push(token);
+                }
             }
         }
     }
