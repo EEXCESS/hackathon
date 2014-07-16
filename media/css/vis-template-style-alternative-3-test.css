@@ -1,0 +1,345 @@
+
+
+select {
+	background-color: white;
+	border: 0.1em #ddd solid;
+	border-radius: 0.5em;
+    color: #666;
+}
+
+
+button {
+    background: -webkit-linear-gradient(top, #eee, #ddd);
+    background: linear-gradient(top, #eee, #ddd, #eee);
+    border: 0.1em solid #ddd;
+    border-radius: 0.5em;
+    box-shadow: 0em 0.1em .1em #999;
+    color: #aaa;
+    text-shadow: 0 1px 1px rgba(255,255,255,.5);
+}
+
+
+/*
+    Hover style for all buttons
+*/
+button:hover {
+    background: -webkit-linear-gradient(top, #eee, #ccc);
+    border: 0.1em solid #ccc;
+}
+
+
+
+/*
+ *   DROPDOWN LIST
+ */
+.wrapper-dropdown {
+    background: #fff;
+    border-radius: 0.5em;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+
+
+.wrapper-dropdown span {
+    color: #1f6080;
+}
+
+
+.wrapper-dropdown:after {          /* Little arrow */
+    border-width: 6px 6px 0px 6px;;
+    border-style: solid;
+    border-color: rgba(244,188, 103,1) transparent transparent;
+}
+
+.wrapper-dropdown .dropdown {       /*ul*/
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-top: none;
+    border-bottom: none;
+    border-radius: 0 0 0.5em 0.5em;
+    list-style: none;
+    -webkit-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+
+
+
+}.wrapper-dropdown .dropdown li a {
+    color: #333;
+    transition: all 0.3s ease-out;
+}
+
+
+
+/* Hover state */
+.wrapper-dropdown .dropdown li:hover a {
+    color: #57a9d9;
+}
+
+/* Active state */
+.wrapper-dropdown.active {
+    background: rgba(244,188, 103,1);
+    border-bottom: none;
+    border-radius: 0.5em 0.5em 0 0;
+    box-shadow: none;
+    color: white;
+}
+
+
+.wrapper-dropdown.active span {
+    color: #fff;
+}
+
+.wrapper-dropdown.active:after {
+    border-color: #fff transparent;
+    border-width: 0px 6px 6px 6px;
+}
+
+.wrapper-dropdown.active .dropdown {
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+
+
+
+
+/********************************************************************************************************************************************
+
+    Header panel (top of screen)
+
+********************************************************************************************************************************************/
+
+
+/*
+    Div wrapping the whole header (green bar on the top of the iFrame)
+*/
+#eexcess_header {
+    background-color: rgba(125,189,153,1);
+    border-radius: .8em;
+}
+
+
+
+
+/*
+    <span> inside #eexcess_header_search
+    Displays message like "Query Results : xx"
+*/
+#eexcess_header_text {
+    color: #ffffff;
+    text-shadow: 0em 0.1em #555;
+}
+
+
+
+/*
+    <input> field text on left upper corner of screen
+*/
+.eexcess_query_field {
+    border-radius: 0.4em;
+}
+
+
+
+
+/********************************************************************************************************************************************
+
+        Main Containers
+
+********************************************************************************************************************************************/
+
+
+
+/*
+    <div> containinig "#eexcess_controls" (left) and "#eexcess_vis_panel" (center). the first one holds the control Panel and the latter the visualization Panel
+*/
+#eexcess_vis{
+    background-color: whitesmoke;
+    border-radius:10px 10px 10px 10px;
+}
+
+
+/********************************************************************************************************************************************
+
+    Control Panel (left of screen)
+
+********************************************************************************************************************************************/
+
+/*
+    Main panel (div) on the left side (green)
+
+*/
+#eexcess_controls {
+    background-color: rgba(125,189,153,1);
+    border-radius: 10px 10px 10px 10px;
+}
+
+
+/*
+    div on the upper side of #eexcess_controls.
+    Wraps #eexcess_controls_chart and #eexcess_controls_chart, which enclose pairs  of span-select DOM elements
+
+*/
+#eexcess_fixed_controls{
+	border-bottom: 1px solid rgba(255,255,255,0.7);
+}
+
+
+
+/*
+    Class for <span> elements labelling the <select> elements
+*/
+.eexcess_controls_title {
+    text-shadow: 0em 0.1em #555;
+    color: white;
+}
+
+
+#eexcess_select_chart,
+.eexcess_select {
+    background: -webkit-linear-gradient(top, #fff, #f0f0f0);
+    box-shadow: 0em 0.1em .1em #999;
+}
+
+/*
+    Hover effect for all <select>
+*/
+#eexcess_select_chart:hover,
+.eexcess_select:hover {
+	background: -webkit-linear-gradient(top, #eee 75%, #e0e0e0);
+}
+
+
+#eexcess_select_chart > option,
+.eexcess_select > option {
+    color: #666;
+}
+
+
+
+/********************************************************************************************************************************************
+
+Visualization Panel (center of screen)
+
+********************************************************************************************************************************************/
+
+/*
+    Wraps 2 <div> elements: "#eexcess_vis_controls_wrapper" (lower green bar on upper side) and "#eexcess_canvas" (center)
+*/
+#eexcess_vis_panel {
+
+}
+
+
+
+
+/********************************************************************************************************************************************
+
+    Content List Panel (right side of screen)
+
+********************************************************************************************************************************************/
+
+
+
+/*
+    <li> items in "#eexcess_content ul". Each <li> wraps 2 container <div>s: ".eexcess_item_ctl" and ".eexcess_ritem_container"
+*/
+.eexcess_list {
+    background: -webkit-linear-gradient(top, whitesmoke 75%, #DDD);
+    border: 1px solid #ddd;
+    border-radius: 0.4em;
+    -webkit-box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
+    box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
+}
+
+
+/*
+    <li> itmes' hover style
+*/
+.eexcess_list:hover {
+	background: -webkit-linear-gradient(top, rgba(49, 164, 98, 0.3) 75%, rgba(29, 144, 78, 0.5));
+    border: solid 0.1em rgba(29, 144, 78, 0.5);
+}
+
+
+
+
+/*
+    Partner icon
+*/
+.eexcess_partner_icon {
+	border-radius: 0.2em;
+}
+
+
+/*
+    Color icon
+*/
+.color_icon {
+    border-radius: 0.2em;
+}
+
+
+
+
+/********************************************************************************************************************************************
+
+    Bookmark addition panel (appears on favicon clicked)
+
+********************************************************************************************************************************************/
+
+
+#eexcess-bookmark-dialog {
+    background-color: rgba(161,210,182,1);
+    border-radius: 1em;
+    box-shadow: -.3em .3em 1.5em #222;
+}
+
+
+
+#eexcess-bookmark-dialog-title {
+    color: #eee !important;
+}
+
+
+
+#eexcess-bookmark-dialog-settings span {
+    color: #fff;
+}
+
+
+.eexcess-bookmark-dropdown-list-icon {
+    background-color: #fff;
+    border-radius: 0.3em;
+}
+
+
+/* Color picker */
+#eexcess-bookmak-dialog-color-picker {
+    border-radius: 0.6em;
+}
+
+
+
+#eexcess-bookmark-dialog-new-options input {
+    background-color: white;
+	border: 0.1em #ddd solid;
+	border-radius: 0.5em;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+    color: #444;
+}
+
+
+
+
+
+
+
+

@@ -28,6 +28,8 @@ function Visualization( EEXCESSobj ) {
     var newBookmarkOptionsId = "#eexcess-bookmark-dialog-new-options";                  // Div wrapping color picker and input element in bookmark dialog
     var colorPickerId = "#eexcess-bookmak-dialog-color-picker";                         // Div tranformed into a colorpicekr in bookmark dialog
     var bookmarkInputWrapperId = "#eexcess-bookmark-dialog-new-options-input-wrapper";  // Wrapper for input containing new bookmark name
+    var favIconClass = ".eexcess_fav_icon";                                             // img element fpr favicon (either on or off)
+    var bookmarkDetailsIconClass = ".eexcess_bookmark_section_details_icon";            // img element with 3-dot icon in each list item used to display bookmarked item's details on click
 
 	
 	// Icon and Image Constants
@@ -203,18 +205,6 @@ function Visualization( EEXCESSobj ) {
                 default: d['provider-icon'] = NO_IMG; break;
             }
         });
-
-
-
-
-
-        data.forEach(function(d){
-            if(typeof bookmarkedItems[d.id] != 'undefined' && bookmarkedItems[d.id] != 'undefined')
-                d['bookmarked'] = true;
-            else
-                d['bookmarked'] = false;
-        });
-
 
     };
 
@@ -564,8 +554,11 @@ function Visualization( EEXCESSobj ) {
 		contentDiv.append("h1")
 				.append("a")
 					.attr("class", "eexcess_ritem_title")
-					.attr("href", function(d){ return d.uri; })
-					.html(function(d){ return d.title; });
+					.attr("href", "#")
+                    .on("click", function(d){
+                        window.open(d.uri, '_blank');
+                        EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:url}); })
+					.text(function(d){ return d.title; });
 		
 		contentDiv.append("p")
 			.attr("class", "eexcess_ritem_short")
@@ -580,26 +573,25 @@ function Visualization( EEXCESSobj ) {
 				return string.substring(0, string.length - 2); 
 			});
 
-        // Before appending favicon, retrieve bookmarked items. These will have the colored star icon, whereas the unbookmarked items keep the icon in 'off' mode
-
-
-        // append fav icon
+        // bookmark section contains fav icon and details icon
 
         var bookmarkDiv = aListItem.append('div')
             .attr('class', 'eexcess_bookmark_section');
 
 
         bookmarkDiv.append("img")
+            .attr("class", "eexcess_fav_icon")
             .attr("src", function(d){ if(d.bookmarked) return FAV_ICON_ON; return FAV_ICON_OFF; })
             .on("click", EVTHANDLER.faviconClicked);
 
-        /*
+
         bookmarkDiv.append("img")
             .attr("class", "eexcess_bookmark_section_details_icon")
             .attr("src", BOOKMARK_DETAILS_ICON)
             .style("display", function(d){ if(d.bookmarked) return 'inline-block'; return 'none'; })
             .on("click", EVTHANDLER.bookmarkDetailsIconClicked)
-*/
+
+
 		$( contentPanel ).scrollTo( "top" );
 	};
 	
@@ -694,9 +686,12 @@ function Visualization( EEXCESSobj ) {
 	
 	
 
-    LIST.turnFaviconOn = function( index ){
-        d3.select(listItem + '' +index).select('.eexcess_fav_icon').attr("src", FAV_ICON_ON);
-
+    LIST.turnFaviconOnturnFaviconOnAndShowDetailsIcon = function( index ){
+        // Replace favicon_off with favicon_on
+        d3.select(listItem + '' +index).select(favIconClass).attr("src", FAV_ICON_ON);
+        // show bookmark details icon
+        d3.select(listItem + '' +index).select(bookmarkDetailsIconClass).style('display', 'inline-block');
+        // Update item's property 'bookmarked'
         data[index].bookmarked = true;
     };
 
@@ -1081,7 +1076,7 @@ function Visualization( EEXCESSobj ) {
 
             console.log(BookmarkingAPI.getAllBookmarks());
 
-            LIST.turnFaviconOn( item['index'] );
+            LIST.turnFaviconOnAndShowDetailsIcon( item['index'] );
         }
     };
 

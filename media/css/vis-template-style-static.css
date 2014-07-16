@@ -30,6 +30,8 @@ html { font-size: 62.5%; }
 
 body{
 	overflow: hidden;
+    background: white;
+    background-image: none !important;
     font-size: 0.8em;
 }
 
@@ -52,10 +54,7 @@ span {
 select {
 	font-size: 1em;
     text-align: left;
-	color: #666;
 	border: 0.1em #ddd solid;
-	-webkit-border-radius: 0.5em;
-    background-color: white;
 }
 
 
@@ -63,12 +62,6 @@ text {
 	font-size: 0.85em;
 }
 
-
-
-body{
-	background: white;
-	background-image: none !important;
-}
 
 
 body a{
@@ -90,14 +83,6 @@ button {
     text-decoration: none;
     z-index: 0;
     text-align: center;
-    border-radius: 0.5em;
-    box-shadow: 0em 0.1em .1em #999;
-    background: -webkit-linear-gradient(top, #eee, #ddd);
-    background: linear-gradient(top, #eee, #ddd, #eee);
-    border: 0.1em solid #ddd;
-    color: #aaa;
-    text-shadow: 0 1px 1px rgba(255,255,255,.5);
-
 }
 
 
@@ -105,8 +90,6 @@ button {
     Hover style for all buttons
 */
 button:hover {
-    background: -webkit-linear-gradient(top, #eee, #ccc);
-    border: 0.1em solid #ccc;
 }
 
 
@@ -125,9 +108,6 @@ button:hover {
     /* Styles */
     vertical-align: middle;
     line-height: 1.6em;
-    background: #fff;
-    border-radius: 0.5em;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
     cursor: pointer;
     outline: none;
     -webkit-transition: all 0.3s ease-out;
@@ -146,7 +126,6 @@ button:hover {
     vertical-align: top;
     line-height: 1.4em;
     font-size: 1em;
-    color: #1f6080;
 }
 
 
@@ -158,11 +137,6 @@ button:hover {
     top: 50%;
     right: 15px;
     margin-top: -3px;
-    border-width: 6px 6px 0px 6px;;
-    border-style: solid;
-
-    /*Warm style*/
-    border-color: rgba(244,188, 103,1) transparent transparent;
 }
 
 .wrapper-dropdown .dropdown {       /*ul*/
@@ -177,72 +151,40 @@ button:hover {
     -webkit-padding-before: 0em;
     padding-left: 0.4em;
 
-    /* Styles */
-    background: #fff;
-    border-radius: 0 0 0.5em 0.5em;
-    border: 1px solid rgba(0,0,0,0.2);
-    border-top: none;
-    border-bottom: none;
-    list-style: none;
-    -webkit-transition: all 0.3s ease-out;
-    -moz-transition: all 0.3s ease-out;
-    -ms-transition: all 0.3s ease-out;
-    -o-transition: all 0.3s ease-out;
-    transition: all 0.3s ease-out;
-
     /* Hiding */
     max-height: 0;
     overflow: hidden;
 }
 
-
 .wrapper-dropdown .dropdown li {
     padding: 0em;
 }
 
-
 .wrapper-dropdown .dropdown li a {
     display: block;
     text-decoration: none;
-    color: #333;
     transition: all 0.3s ease-out;
     vertical-align: top;
     line-height: 1.7em;
 }
 
-
-
-}.wrapper-dropdown .dropdown li:last-of-type a {
+.wrapper-dropdown .dropdown li:last-of-type a {
     border: none;
 }
 
 
-/* Hover state */
-.wrapper-dropdown .dropdown li:hover a {
-    color: #57a9d9;
-}
-
 /* Active state */
 .wrapper-dropdown.active {
-    border-radius: 0.5em 0.5em 0 0;
-    background: rgba(244,188, 103,1);
     box-shadow: none;
     border-bottom: none;
-    color: white;
 }
 
-
-.wrapper-dropdown.active span {
-    color: #fff;
-}
 
 .wrapper-dropdown.active:after {
-    border-color: #fff transparent;
     border-width: 0px 6px 6px 6px;
 }
 
 .wrapper-dropdown.active .dropdown {
-    border-bottom: 1px solid rgba(0,0,0,0.2);
     max-height: 400px;
 }
 
@@ -339,10 +281,7 @@ button:hover {
     float: left;
     width: 99.49%;
     height: 40px;
-    background-color: rgba(125,189,153,1);
-   /* border: solid 0.1em rgba( 31,145, 81,1); */
     margin-left: 0%;
-    border-radius: .8em;
     vertical-align: middle;
     line-height: 28px;
 }
@@ -376,12 +315,10 @@ button:hover {
 #eexcess_header_text {
 	float: left;
 	width: 40%;
-    color: #ffffff;
     font-family:Arial;
     font-size: 1.1em;
     font-weight: bold;
     text-align:center;
-    text-shadow: 0em 0.1em #555;
 }
 
 
@@ -414,7 +351,6 @@ button:hover {
     height: 1.4em;
     margin-top: 0.2em;
     padding-top: 0.2em;
-    border-radius: 0.4em;
     color: #666;
     font-size: 1em;
     border: solid #cdcfd2 1px;
@@ -470,9 +406,6 @@ button:hover {
     margin-bottom: 5px;
     width:80%;
     height:100%;
-    border-radius:10px 10px 10px 10px;
-
-    background-color: whitesmoke;
 }
 
 
@@ -491,9 +424,6 @@ button:hover {
     vertical-align: middle;
     width: 18%;
     height: 99.5%;
-    border-radius: 10px 10px 10px 10px;
-    background-color: rgba(125,189,153,1);
-/*    border: solid 0.1em rgba( 31,145, 81,1); */
     z-index: 2;
 }
 
@@ -507,7 +437,6 @@ button:hover {
 	height: 20%;
 	margin-top: 2em;
 	margin-bottom: 1%;
-	border-bottom: 1px solid rgba(255,255,255,0.7);
 }
 
 
@@ -545,33 +474,16 @@ button:hover {
 	margin-left: 2%;
 	width: 35%;
 	z-index: 3;
-	text-shadow: -0.1em 0.1em 0.5em #eee;
-    text-shadow: 0em 0.1em #555;
-    color: white;
 }
 
-
+/*
+    All <select> elements
+*/
 #eexcess_select_chart,
 .eexcess_select {
     margin-left: 40%;
     width: 58%;
     display: block;
-    box-shadow: 0em 0.1em .1em #999;
-    background: -webkit-linear-gradient(top, #fff, #f0f0f0);
-}
-
-/*
-    Hover effect for all <select>
-*/
-#eexcess_select_chart:hover,
-.eexcess_select:hover {
-	background: -webkit-linear-gradient(top, #eee 75%, #e0e0e0);
-}
-
-
-#eexcess_select_chart > option,
-.eexcess_select > option {
-    color: #666;
 }
 
 
@@ -586,9 +498,13 @@ Visualization Panel (center of screen)
     Wraps 2 <div> elements: "#eexcess_vis_controls_wrapper" (lower green bar on upper side) and "#eexcess_canvas" (center)
 */
 #eexcess_vis_panel {
+    /*
 	margin-left: 18%;
 	width: 82%;
-	height: 100%;
+    */
+    margin-left: 18.5%;
+    width: 81.5%;
+    height: 99.5%;
 }
 
 
@@ -611,9 +527,6 @@ Visualization Panel (center of screen)
 #eexcess_vis_controls {
 	width: 100%;
 	height: 2.5em;
-	background-color: rgba( 59,160,103,.6);
-	border-radius: 0.8em;
-
 }
 
 
@@ -709,26 +622,14 @@ Visualization Panel (center of screen)
     <li> items in "#eexcess_content ul". Each <li> wraps 2 container <div>s: ".eexcess_item_ctl" and ".eexcess_ritem_container"
 */
 .eexcess_list {
-	position: relative;
+    position: relative;
     padding-top: 1px;
     margin-top: 1px;
     margin-right: 4px;
-    min-height: 60px;
-    -webkit-border-radius: 0.4em;
-    -webkit-box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
-    box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
-    background: -webkit-linear-gradient(top, whitesmoke 75%, #DDD);
-    border: 1px solid #ddd;
+    min-height: 4em;
+    vertical-align: top;
 }
 
-
-/*
-    <li> itmes' hover style
-*/
-.eexcess_list:hover {
-	background: -webkit-linear-gradient(top, rgba(49, 164, 98, 0.3) 75%, rgba(29, 144, 78, 0.5));
-    border: solid 0.1em rgba(29, 144, 78, 0.5);
-}
 
 
 /*
@@ -739,7 +640,6 @@ Visualization Panel (center of screen)
     margin-top: 0.3em;
     margin-left: 1%;
 	text-align: left;
-	float: left;
     width: 20%;
 }
 
@@ -763,7 +663,6 @@ Visualization Panel (center of screen)
 	margin-left: 0.2em;
 	width: 16px;
 	height: 16px;
-	-webkit-border-radius: 0.2em;
     box-shadow: 0.05em 0.05em 0.05em #ccc;
 }
 
@@ -779,7 +678,6 @@ Visualization Panel (center of screen)
     margin-top: 0.25em;
     margin-right: 0px;
     margin-left: 0.2em;
-    -webkit-border-radius: 0.2em;
     box-shadow: 0.05em 0.05em 0.05em #ccc;
 }
 
@@ -790,9 +688,8 @@ Visualization Panel (center of screen)
 .eexcess_ritem_container {
     display: inline-block;
     min-height: 3em;
-    vertical-align: middle;
+    vertical-align: top;
     width: 70%;
-    margin-right: 8%;
 }
 
 
@@ -823,12 +720,30 @@ p.eexcess_ritem_short {
 }
 
 
-.eexcess_fav_icon {
+/*
+    Bookmark section wraps favicon and if the item is actually bookmarked, then a smal stripped icon to show which bookmarks the item belongs to
+*/
+
+
+.eexcess_bookmark_section {
     display: inline-block;
-    position: absolute;
-    right: .5em;
-    top: .5em;
+    width: 8%;
+    margin-left: 1%;
 }
+
+
+.eexcess_bookmark_section img{
+    display: inline-block;
+    margin-top: .2em;
+    margin-right: .1em;
+}
+
+
+
+.eexcess_bookmark_section_details_icon {
+    width: 10px;
+}
+
 
 
 
@@ -846,11 +761,7 @@ p.eexcess_ritem_short {
     max-height: 30em;
     padding: 0.5em;
     z-index: 999;
-    border-radius: 1em;
-    box-shadow: -.3em .3em 1.5em #222;
     font-size: 0.9em;
-
-    background-color: rgba(161,210,182,1);
 }
 
 
@@ -872,8 +783,6 @@ p.eexcess_ritem_short {
     font-size: 1.1em;
     font-weight: bold;
     width: inherit !important;
-
-    color: #eee !important;
 }
 
 
@@ -906,7 +815,6 @@ p.eexcess_ritem_short {
 
 #eexcess-bookmark-dialog-settings span {
     margin-top: 0.3em;
-    color: #fff;
 }
 
 
@@ -917,6 +825,7 @@ p.eexcess_ritem_short {
 }
 
 
+/* Color icon in header of drop-down list */
 .eexcess-bookmark-dropdown-list-icon {
     display: inline-block;
     float: left;
@@ -924,8 +833,6 @@ p.eexcess_ritem_short {
     height: 14px;
     margin-top: 0.24em !important;
     margin-right: 0.4em;
-    border-radius: 0.3em;
-    background-color: #fff;
 }
 
 
@@ -943,11 +850,11 @@ p.eexcess_ritem_short {
     display: inline-block;
     width: 1.55em;
     height: 1.4em;
-    margin-top: 0.4em;
+    margin-top: 0.5em;
     margin-left: 2em;
     margin-right: .3em;
-    border: solid 0.1em #ccc;
-    border-radius: 0.6em;
+
+    /* Static colors */
     background-color: #fff;
     box-shadow: 0 1px 0 rgba(0,0,0,0.2);
 }
@@ -968,7 +875,6 @@ p.eexcess_ritem_short {
     text-align: left;
 	color: #444;
 	border: 0.1em #ddd solid;
-	-webkit-border-radius: 0.5em;
     background-color: white;
     font-size: 1.1em;
     box-shadow: 0 1px 0 rgba(0,0,0,0.2);
@@ -979,8 +885,9 @@ p.eexcess_ritem_short {
     display: inline-block;
     margin-top: 0;
     margin-left: 5.2em;
-    color: red;
     font-size: .9em;
+    /* static */
+    color: red;
 }
 
 
