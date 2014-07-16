@@ -1,5 +1,5 @@
 {
-    "name": "EEXCESS-Cecilia",
+    "name": "EEXCESS Cecilia",
     "version": "0.30",
     "update_url": "http://eexcess.joanneum.at/extension/updates.xml",
     "background": {
@@ -27,7 +27,7 @@
             "css": ["media/css/sidebar.css"]
         }
     ],
-    
+
     "web_accessible_resources": [
         "media/*",
         "widget/*",
@@ -43,7 +43,7 @@
         "<all_urls>",
         "geolocation",
         "history",
-        "background", 
+        "background",
         "storage"
     ],
     "options_page": "options/options.html",

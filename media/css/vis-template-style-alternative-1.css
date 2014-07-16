@@ -881,16 +881,10 @@ p.eexcess_ritem_short {
 
 
 
-.eexcess_bookmark_section > img:last-child {
-    width: 11px;
+.eexcess_bookmark_section_details_icon {
+    width: 10px;
 }
 
-.eexcess_fav_icon {
-    display: inline-block;
-    position: absolute;
-    right: .5em;
-    top: .5em;
-}
 
 
 
