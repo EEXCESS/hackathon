@@ -55,21 +55,20 @@ EEXCESS.topKcorpus = function(corpus, k) {
         }
     }
 
-    // add title keywords to topK with weight 1
+    // set title keywords weight to 1
     for (var i = 0; i < title_keywords.length; i++) {
-        var found = false;
+//        var found = false;
         for (var j = 0; j < topK.length; j++) {
             if (title_keywords[i] === topK[j]['text']) {
                 topK[j]['weight'] = 1;
-                found = true;
+//                found = true;
                 break;
             }
         }
-        if (!found) {
-            topK.unshift({"weight": 1, "text": title_keywords[i]});
-        }
+//        if (!found) {
+//            topK.unshift({"weight": 1, "text": title_keywords[i]});
+//        }
     }
-    topK.push({"weight": 1, "text": "detlef"});
     if (topK.length > orgK) {
         return topK.slice(0, orgK);
     }
