@@ -7,11 +7,11 @@ function Visualization( EEXCESSobj ) {
     var height;	// Screen height
     
     // DOM Selectors
-    var root = "div#eexcess_canvas";														// String to select the area where the visualization should be displayed
+    var root = "div#eexcess_canvas";											// String to select the area where the visualization should be displayed
 	var searchField = "#eexcess_search_field";									// String to select search field in the header
 	var btnSearch = "#eexcess_search_button";									// Selector for search button on left side of the header
 	var headerText = "#eexcess_header_text";									// String to select the text container in the middle of the header
-	var btnFilter = "#eexcess_filter_button";
+	var btnFilter = "#eexcess_filter_button";                                   // Reset button id
 	var btnReset = "#eexcess_btnreset";											// Selector for reset button in vis control panel
 	var chartSelect = "#eexcess_select_chart";									// select for chart
 	var divMapping = "#eexcess_controls_mappings";								// div that contains selects for mapping combinations
