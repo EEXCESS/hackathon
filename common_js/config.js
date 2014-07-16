@@ -27,7 +27,7 @@ EEXCESS.config = (function() {
         EEXCESS.storage.local('privacy.policy.uuid', 1);
     }
     
-    var _PP_BASE_URI = 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/';
+    var _PP_BASE_URI = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/';
     var _LOG_RATING_URI = _PP_BASE_URI + 'log/rating';
     var _LOG_RVIEW_URI = _PP_BASE_URI + 'log/rview';
     var _LOG_RCLOSE_URI = _PP_BASE_URI + 'log/rclose';
