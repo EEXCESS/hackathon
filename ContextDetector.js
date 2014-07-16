@@ -77,7 +77,7 @@ EEXCESS.initiateQuery = function() {
             elements.push({text: node.nodeValue, parent: parent});
         }
     }
-    EEXCESS.triggerQuery(elements, {reason:'page',page: document.URL});
+    EEXCESS.triggerQuery(elements, {reason:'page',page: window.location.protocol + '//' +  window.location.host + window.location.pathname});
 }();
 
 EEXCESS.selectedText = '';
