@@ -476,12 +476,17 @@ function Visualization( EEXCESSobj ) {
 		var contentDiv = listItem.append("div")
 			.attr("class", "eexcess_ritem_container");
 		
-		contentDiv.append("h1")
+
+        contentDiv.append("h1")
 				.append("a")
 					.attr("class", "eexcess_ritem_title")
-					.attr("href", function(d){ return d.uri; })
-					.html(function(d){ return d.title; });
-		
+					.attr("href", "#")
+                    .on("click", function(d){
+                        window.open(d.uri, '_blank');
+                        EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:url}); })
+					.text(function(d){ return d.title; });
+
+
 		contentDiv.append("p")
 			.attr("class", "eexcess_ritem_short")
 			.html(function(d){
