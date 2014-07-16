@@ -7,7 +7,6 @@ function Visualization( EEXCESSobj ) {
     var height;	    // Screen height
     
     // DOM Selectors
-<<<<<<< HEAD
     var root = "div#eexcess_canvas";											        // String to select the area where the visualization should be displayed
 	var searchField = "#eexcess_search_field";									        // String to select search field in the header
 	var btnSearch = "#eexcess_search_button";									        // Selector for search button on left side of the header
@@ -34,7 +33,6 @@ function Visualization( EEXCESSobj ) {
 
 	
 	// Icon and Image Constants
-=======
     var root = "div#eexcess_canvas";											// String to select the area where the visualization should be displayed
 	var searchField = "#eexcess_search_field";									// String to select search field in the header
 	var btnSearch = "#eexcess_search_button";									// Selector for search button on left side of the header
@@ -53,7 +51,6 @@ function Visualization( EEXCESSobj ) {
 
 
 	// Constants
->>>>>>> master
 	var LOADING_IMG = "../../media/loading.gif";
 	var NO_IMG = "../../media/no-img.png";
     var FAV_ICON_OFF = "../../media/icons/favicon_off.png";
@@ -291,12 +288,7 @@ function Visualization( EEXCESSobj ) {
 		// Search for new results if the query is different from the current one
 		if(terms != query){
 			this.updateHeaderText( STR_SEARCHING );
-<<<<<<< HEAD
-            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: [{weight:1,text:terms}]});
-=======
             EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {terms:[{weight:1,text:terms}],reason:{reason:'manual'}}});
-			//EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: [{weight:1,text:terms}]});
->>>>>>> master
 		}
 	};
 
@@ -596,13 +588,9 @@ function Visualization( EEXCESSobj ) {
 		iconsDiv.append("img")
 				.attr("class", "eexcess_partner_icon")
 				.attr("title", function(d){ return d.facets.provider; })
-<<<<<<< HEAD
-				.attr("src", function(d){ return d['provider-icon'] });
-
-=======
 				.attr("src", function(d){ return d['provider-icon']; });
 
->>>>>>> master
+
 		// div 2 wraps the recommendation title (as a link), a short description and a large description (not used yet)
 		var contentDiv = aListItem.append("div")
 			.attr("class", "eexcess_ritem_container");
@@ -616,12 +604,8 @@ function Visualization( EEXCESSobj ) {
                         window.open(d.uri, '_blank');
                         EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:url}); })
 					.text(function(d){ return d.title; });
-<<<<<<< HEAD
-		
-=======
 
 
->>>>>>> master
 		contentDiv.append("p")
 			.attr("class", "eexcess_ritem_short")
 			.html(function(d){
@@ -1106,15 +1090,6 @@ function Visualization( EEXCESSobj ) {
 
 
 
-    BOOKMARKS.appendBookmarkDialogElemets = function( dialogBookmark, d ) {
-
-
-
-    };
-
-
-
-
     BOOKMARKS.destroyBookmarkDialog = function(){
         $( colorPickerId ).colorpicker('destroy');
         $( bookmarkDialogId ).remove();
@@ -1184,10 +1159,6 @@ function Visualization( EEXCESSobj ) {
         indicesToHighlight = [];
 
         // Initialize template's elements
-<<<<<<< HEAD
-=======
-        //PREPROCESSING.bindEventHandlers();
->>>>>>> master
         PREPROCESSING.extendDataWithAncillaryDetails();
         QUERY.updateHeaderText( "Query Results : " + data.length );
         QUERY.updateSearchField( query );
