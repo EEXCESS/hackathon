@@ -57,15 +57,7 @@ EEXCESS.messaging.listener(
                         'autoSize': false,
                         'type': 'iframe',
                         'width': '90%',
-                        'height': '90%',
-                        afterShow: function() {
-                            // log opening the page's preview in the background script
-                            EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: request.data});
-                        },
-                        afterClose: function(evt) {
-                            // log closing the page's preview in the background script
-                            EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: request.data});
-                        }
+                        'height': '90%'
                     }).trigger('click');
                     break;
                 case 'getTextualContext':

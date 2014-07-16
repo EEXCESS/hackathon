@@ -41,23 +41,33 @@ EEXCESS.logging = (function() {
          * @param {Integer} tabID Identifier of the browsertab, the query was executed in
          * @param {String} query The query
          * @param {long} timestamp The timestamp, when the recommendations were retrieved
+         * @param {String} suffix suffix for the object store name
          */
-        logQuery: function(tabID, query, timestamp) {
+        logQuery: function(tabID, query, timestamp, suffix, reason) {
             /**
              * request the context from the browsertab, the query was sent and
              * execute database transaction on callback
              */
             EEXCESS.messaging.sendMsgTab(tabID, {method: 'getTextualContext'}, function(data) {
-                EEXCESS.storage.put('queries', {query: query, timestamp: timestamp, context: data});
+                EEXCESS.storage.put('queries' + suffix, {query: query, timestamp: timestamp, context: data});
+                // log activated queries on privacy proxy
+                if (suffix === '' && (typeof reason === 'undefined' || reason !== 'manual')) {
+                    var xhr = $.ajax({
+                        url: EEXCESS.config.LOG_QUERY_ACTIVATED_URI,
+                        data: JSON.stringify({"uuid": EEXCESS.profile.getUUID(), "queryData": {query: query, timestamp: timestamp, context: data}}),
+                        type: 'POST',
+                        contentType: 'application/json; charset=UTF-8',
+                        dataType: 'json'
+                    });
+                }
             });
         },
         /**
          * Stores the user interaction of starting to view a recommended resource
          * @memberof EEXCESS.logging
-         * @param {Integer} tabID Identifier of the browsertab, the request originated
          * @param {String} resource URI of the viewed resource
          */
-        openedRecommendation: function(tabID, resource) {
+        openedRecommendation: function(resource) {
             var tmp = {
                 resource: resource,
                 timestamp: new Date().getTime(),
@@ -80,10 +90,9 @@ EEXCESS.logging = (function() {
         /**
          * Logs the duration of a user viewing a recommended resource on closing its view
          * @memberof EEXCESS.logging
-         * @param {Integer} tabID Identifier of the browsertab, the request originated
          * @param {String} resource URI of the viewed resource
          */
-        closedRecommendation: function(tabID, resource) {
+        closedRecommendation: function(resource) {
             EEXCESS.storage.closedRecommendation(resource, function(view) {
                 view['action'] = 'result-close';
                 view['uuid'] = EEXCESS.profile.getUUID();

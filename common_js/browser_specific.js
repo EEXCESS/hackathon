@@ -219,6 +219,17 @@ EEXCESS.windows = (function() {
         chrome.windows.onFocusChanged.addListener(callback);
     };
 
+    /**
+     * for documentation see https://developer.chrome.com/extensions/windows#method-getCurrent
+     *
+     * @param {Object} options
+     * @param {Function} callback
+     * @returns {undefined}
+     */
+    var _getCurrent = function(options, callback) {
+        chrome.windows.getCurrent(options,callback);
+    };
+
     var _WINDOW_ID_NONE = function() {
         if (chrome.windows) {
             return chrome.windows.WINDOW_ID_NONE;
@@ -227,6 +238,43 @@ EEXCESS.windows = (function() {
     };
     return {
         WINDOW_ID_NONE: _WINDOW_ID_NONE,
-        focusChangedListener: _focusChangedListener
+        focusChangedListener: _focusChangedListener,
+        getCurrent: _getCurrent
+    };
+})();
+
+EEXCESS.browserAction = (function() {
+    /**
+     * See https://developer.chrome.com/extensions/browserAction#event-onClicked for documentation
+     * @param {Function} callback
+     * @returns {undefined}
+     */
+    var _clickedListener = function(callback) {
+        chrome.browserAction.onClicked.addListener(callback);
+    };
+
+    /**
+     * See https://developer.chrome.com/extensions/browserAction#method-getBadgeText for documentation
+     * @param {Object} details
+     * @param {Function} callback
+     * @returns {undefined}
+     */
+    var _getBadgeText = function(details, callback) {
+        chrome.browserAction.getBadgeText(details, callback);
+    };
+
+    /**
+     * See https://developer.chrome.com/extensions/browserAction#method-setBadgeText for documentation
+     * @param {Object} details
+     * @returns {undefined}
+     */
+    var _setBadgeText = function(details) {
+        chrome.browserAction.setBadgeText(details);
+    };
+
+    return  {
+        clickedListener: _clickedListener,
+        getBadgeText: _getBadgeText,
+        setBadgeText: _setBadgeText
     };
 })();

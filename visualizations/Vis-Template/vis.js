@@ -7,6 +7,7 @@ function Visualization( EEXCESSobj ) {
     var height;	    // Screen height
     
     // DOM Selectors
+<<<<<<< HEAD
     var root = "div#eexcess_canvas";											        // String to select the area where the visualization should be displayed
 	var searchField = "#eexcess_search_field";									        // String to select search field in the header
 	var btnSearch = "#eexcess_search_button";									        // Selector for search button on left side of the header
@@ -33,6 +34,26 @@ function Visualization( EEXCESSobj ) {
 
 	
 	// Icon and Image Constants
+=======
+    var root = "div#eexcess_canvas";											// String to select the area where the visualization should be displayed
+	var searchField = "#eexcess_search_field";									// String to select search field in the header
+	var btnSearch = "#eexcess_search_button";									// Selector for search button on left side of the header
+	var headerText = "#eexcess_header_text";									// String to select the text container in the middle of the header
+	var btnFilter = "#eexcess_filter_button";                                   // Reset button id
+	var btnReset = "#eexcess_btnreset";											// Selector for reset button in vis control panel
+	var chartSelect = "#eexcess_select_chart";									// select for chart
+	var divMapping = "#eexcess_controls_mappings";								// div that contains selects for mapping combinations
+	var divMappingInd = "#eexcess_mapping_container_";							// id for the above div
+	var mappingSelect = ".eexcess_select";										// To select all visual channels' <select> elements by class
+	var contentPanel = "#eexcess_content";										// Selector for content div on the right side
+	var contentList = "#eexcess_content .eexcess_result_list";					// ul element within div content
+	var allListItems = "#eexcess_content .eexcess_result_list .eexcess_list";	// String to select all li items by class
+	var listItem = "#eexcess_content .eexcess_result_list #data-pos-";			// String to select individual li items by id
+	var colorIcon = ".color_icon";												// Class selector for div icon colored according to legend categories
+
+
+	// Constants
+>>>>>>> master
 	var LOADING_IMG = "../../media/loading.gif";
 	var NO_IMG = "../../media/no-img.png";
     var FAV_ICON_OFF = "../../media/icons/favicon_off.png";
@@ -74,6 +95,13 @@ function Visualization( EEXCESSobj ) {
 	var timeVis, barVis;
 	
 		
+    // Constants
+    var ICON_EUROPEANA =  "../../media/icons/Europeana-favicon.ico";
+    var ICON_MENDELEY = "../../media/icons/mendeley-favicon.ico";
+    var ICON_ZBW = "../../media/icons/ZBW-favicon.ico";
+    var ICON_WISSENMEDIA = "../../media/icons/wissenmedia-favicon.ico";
+    var ICON_KIM_COLLECT = "../../media/icons/KIM.Collect-favicon.ico";
+    var ICON_UNKNOWN = "../../media/icons/question-mark.png";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -177,6 +205,24 @@ function Visualization( EEXCESSobj ) {
 		return formattedMappings;
 	};
 
+
+
+    PREPROCESSING.extendDataWithAncillaryDetails = function(){
+
+        data.forEach(function(d){
+            switch(d.facets.provider){
+                case "Europeana": d['provider-icon'] = ICON_EUROPEANA; break;
+			    case "europeana": d['provider-icon'] = ICON_EUROPEANA; break;
+			    case "mendeley": d['provider-icon'] = ICON_MENDELEY; break;
+                case "ZBW": d['provider-icon'] = ICON_ZBW; break;
+                case "econbiz": d['provider-icon'] = ICON_ZBW; break;
+                case "wissenmedia": d['provider-icon'] = ICON_WISSENMEDIA; break;
+                case "KIM.Collect": d["provider-icon"] = ICON_KIM_COLLECT; break;
+                default: d['provider-icon'] = NO_IMG; break;
+            }
+        });
+    };
+
 	
 
     PREPROCESSING.extendDataWithAncillaryDetails = function(){
@@ -245,7 +291,12 @@ function Visualization( EEXCESSobj ) {
 		// Search for new results if the query is different from the current one
 		if(terms != query){
 			this.updateHeaderText( STR_SEARCHING );
+<<<<<<< HEAD
             EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: [{weight:1,text:terms}]});
+=======
+            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {terms:[{weight:1,text:terms}],reason:{reason:'manual'}}});
+			//EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: [{weight:1,text:terms}]});
+>>>>>>> master
 		}
 	};
 
@@ -255,8 +306,8 @@ function Visualization( EEXCESSobj ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	var EVTHANDLER = {};
-	
-	
+
+
 	/**
 	 * Click on search button triggers a new search
 	 * 
@@ -545,13 +596,19 @@ function Visualization( EEXCESSobj ) {
 		iconsDiv.append("img")
 				.attr("class", "eexcess_partner_icon")
 				.attr("title", function(d){ return d.facets.provider; })
+<<<<<<< HEAD
 				.attr("src", function(d){ return d['provider-icon'] });
 
+=======
+				.attr("src", function(d){ return d['provider-icon']; });
+
+>>>>>>> master
 		// div 2 wraps the recommendation title (as a link), a short description and a large description (not used yet)
 		var contentDiv = aListItem.append("div")
 			.attr("class", "eexcess_ritem_container");
 		
-		contentDiv.append("h1")
+
+        contentDiv.append("h1")
 				.append("a")
 					.attr("class", "eexcess_ritem_title")
 					.attr("href", "#")
@@ -559,7 +616,12 @@ function Visualization( EEXCESSobj ) {
                         window.open(d.uri, '_blank');
                         EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:url}); })
 					.text(function(d){ return d.title; });
+<<<<<<< HEAD
 		
+=======
+
+
+>>>>>>> master
 		contentDiv.append("p")
 			.attr("class", "eexcess_ritem_short")
 			.html(function(d){
@@ -1122,6 +1184,10 @@ function Visualization( EEXCESSobj ) {
         indicesToHighlight = [];
 
         // Initialize template's elements
+<<<<<<< HEAD
+=======
+        //PREPROCESSING.bindEventHandlers();
+>>>>>>> master
         PREPROCESSING.extendDataWithAncillaryDetails();
         QUERY.updateHeaderText( "Query Results : " + data.length );
         QUERY.updateSearchField( query );

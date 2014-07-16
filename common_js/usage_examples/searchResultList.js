@@ -1,33 +1,9 @@
 // ====================== RESULT LIST ========================================//
 
-/**
- * Create custom handlers for the results' preview
- * In this case, open a fancybox with the url provided in the result.
- * Please make sure to log opening/closing the preview properly (methods:
- * EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
- * EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
- */
-var previewHandler = function(url) {
-    $('<a href="' + url + '"></a>').fancybox({
-        'type': 'iframe',
-        'width': '90%',
-        'height': '90%',
-        afterShow: function() {
-            // log opening the page's preview in the background script
-            EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'openedRecommendation'}, data: url});
-        },
-        afterClose: function(evt) {
-            // log closing the page's preview in the background script
-            EEXCESS.messaging.callBG({method: {parent: 'logging', func: 'closedRecommendation'}, data: url});
-        }
-    }).trigger('click');
-};
-
 /*
- * Creates a result list in the provided div-element with the provided handler
- * defined above and sets the correct paths (pathToMedia & pathToLibs)
+ * Creates a result list in the provided div-element and sets the correct paths (pathToMedia & pathToLibs)
  */
-var rList = EEXCESS.searchResultList($('#test'), {previewHandler: previewHandler, pathToMedia: '../../media/', pathToLibs: '../../libs/'});
+var rList = EEXCESS.searchResultList($('#test'), {pathToMedia: '../../media/', pathToLibs: '../../libs/'});
 
 // populate query field initially
 EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(res) {
@@ -57,7 +33,7 @@ $('#testForm').submit(function(evt) {
         query.push(tmp);
     }
     // send query for new results
-    EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: query});
+    EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {terms:query,reason:{reason:'manual'}}});
 });
 
 

@@ -3,10 +3,10 @@ var EEXCESS = EEXCESS || {};
 EEXCESS.profile = (function() {
     // retrieve UUID from local storage or create a new one
     var _uuid;
-    _uuid = EEXCESS.storage.local('profile.uuid');
+    _uuid = EEXCESS.storage.local('privacy.profile.uuid');
     if (typeof _uuid === 'undefined' || _uuid === null) {
         _uuid = randomUUID();
-        EEXCESS.storage.local('profile.uuid', _uuid);
+        EEXCESS.storage.local('privacy.profile.uuid', _uuid);
     }
 
     var applyFirstnamePolicy = function() {
@@ -51,11 +51,18 @@ EEXCESS.profile = (function() {
         return "";
     };
 
+    var applyUuidPolicy = function() {
+        if (JSON.parse(EEXCESS.storage.local('privacy.policy.uuid')) === 1) {
+            return _uuid;
+        }
+        return "";
+    };
+
     var applyBirthdayPolicy = function() {
         switch (EEXCESS.storage.local("privacy.policy.birthdate")) {
             case '2':
                 if (EEXCESS.storage.local("privacy.profile.birthdate")) {
-                    return EEXCESS.storage.local("privacy.profile.birthdate").split("-")[0].substr(0, 3) + '0s';
+                    return EEXCESS.storage.local("privacy.profile.birthdate").split("-")[0].substr(0, 3) + '0';
                 }
                 break;
             case '3':
@@ -66,7 +73,7 @@ EEXCESS.profile = (function() {
             case '4':
                 if (EEXCESS.storage.local("privacy.profile.birthdate")) {
                     var tmp = EEXCESS.storage.local("privacy.profile.birthdate").split("-");
-                    return tmp[0] + '-' + tmp[1];
+                    return tmp[0] + '-' + tmp[1] + '-01';
                 }
                 break;
             case '5':
@@ -85,7 +92,7 @@ EEXCESS.profile = (function() {
     var applyAddressPolicy = function() {
         var address = {
             country: "",
-            zipcode: "",
+            zipCode: "",
             city: "",
             line1: "",
             line2: ""
@@ -95,7 +102,7 @@ EEXCESS.profile = (function() {
             setAddressValue('country', address);
         }
         if (level > 2) {
-            setAddressValue('zipcode', address);
+            setAddressValue('zipCode', address);
         }
         if (level > 3) {
             setAddressValue('city', address);
@@ -110,7 +117,7 @@ EEXCESS.profile = (function() {
 
     return {
         getUUID: function() {
-            return _uuid;
+            return applyUuidPolicy();
         },
         getHistorySize: function(tabID, data, callback) {
             if (data) {
@@ -153,20 +160,20 @@ EEXCESS.profile = (function() {
                     break;
             }
             EEXCESS.history.search({'text': '', 'startTime': startTime, 'maxResults': maxResults}, function(results) {
+                for(var i=0, len=results.length; i<len; ++i) {
+                    delete results[i]['id'];
+                    results[i]['lastVisitTime'] = results[i]['lastVisitTime'].toFixed(0);
+                }
                 var profile = {
-                    "eexcess-user-profile": {
-                        "history": results,
-                        "firstname": applyFirstnamePolicy(),
-                        "lastname": applyLastnamePolicy(),
-                        "gender": applyGenderPolicy(),
-                        "birthdate": applyBirthdayPolicy(),
-                        "address": applyAddressPolicy(),
-                        "interests": {
-                            "interest": _interests()
-                        },
-                        "context-list": {}
-                    },
-                    "uuid": _uuid
+                    "history": results,
+                    "firstName": applyFirstnamePolicy(),
+                    "lastName": applyLastnamePolicy(),
+                    "gender": applyGenderPolicy(),
+                    "birthDate": applyBirthdayPolicy(),
+                    "address": applyAddressPolicy(),
+                    "interests": _interests(),
+                    "contextKeywords": {},
+                    "uuid": applyUuidPolicy()
                 };
                 callback(profile);
             });

@@ -2,16 +2,16 @@ var EEXCESS = EEXCESS || {};
 
 EEXCESS.storage = (function() {
     var _name = 'eexcess_db'; // name of the database
-    var _version = 42; // version number of the database
+    var _version = 43; // version number of the database
     var _db = {}; // the database (needs to be initalized - DO NOT ACCESS DIRECTLY! use _getDB instead)
-    
+
     // checks, if the provided callback is a function and executes it without parameters
     var _empty_callback = function(callback) {
         if (typeof callback === 'function') {
             callback();
         }
     };
-    
+
     // checks, if the provided callback is a function and executes it with supplied parameter
     var _optional_callback = function(callback, value) {
         if (typeof callback === 'function') {
@@ -64,8 +64,12 @@ EEXCESS.storage = (function() {
             var tx = db.transaction(objectStore, 'readwrite');
             var store = tx.objectStore(objectStore);
             var req = store.put(value);
-            req.onsuccess = _empty_callback(success);
-            req.onerror = _empty_callback(error);
+            req.onsuccess = function() {
+                _empty_callback(success);
+            };
+            req.onerror = function() {
+                _empty_callback(error);
+            };
         }, _empty_callback(error));
     };
 
@@ -82,8 +86,12 @@ EEXCESS.storage = (function() {
             var tx = db.transaction(objectStore, 'readwrite');
             var store = tx.objectStore(objectStore);
             var req = store.add(value);
-            req.onsuccess = _empty_callback(success);
-            req.onerror = _empty_callback(error);
+            req.onsuccess = function() {
+                _empty_callback(success);
+            };
+            req.onerror = function() {
+                _empty_callback(error);
+            };
         }, _empty_callback(error));
     };
 
@@ -115,7 +123,9 @@ EEXCESS.storage = (function() {
                     _empty_callback(error);
                 }
             };
-            curreq.onerror = _empty_callback(error);
+            curreq.onerror = function() {
+                _empty_callback(error);
+            };
         }, _empty_callback(error));
     };
 
@@ -155,11 +165,17 @@ EEXCESS.storage = (function() {
                     var tx2 = db.transaction('resource_relations', 'readwrite');
                     var store2 = tx2.objectStore('resource_relations');
                     var req = store2.put(rating);
-                    req.onsuccess = _empty_callback(success);
-                    req.onerror = _empty_callback(error);
+                    req.onsuccess = function() {
+                        _empty_callback(success);
+                    };
+                    req.onerror = function() {
+                        _empty_callback(error);
+                    };
                 }
             };
-            tx.onerror = _empty_callback(error);
+            tx.onerror = function() {
+                _empty_callback(error);
+            };
         }, _empty_callback(error));
     };
 
@@ -198,8 +214,64 @@ EEXCESS.storage = (function() {
                     _optional_callback(error, 'no entry found');
                 }
             };
-            curreq.onerror = _optional_callback(error, 'db error');
+            curreq.onerror = function() {
+                _optional_callback(error, 'db error');
+            };
         }, _optional_callback(error, 'db error'));
+    };
+
+    /**
+     * Obtains ratings for a set of results from the database. At the moment, a
+     * rating's context is not considered (the same result item may be rated
+     * different, when retrieved by different queries), but instead, the first
+     * rating found is returned.
+     *
+     * @param {Array} items Array of result objects for which to retrieve ratings
+     * @param {Function} success success callback, receiving the updated results as parameter
+     * @param {Function} error (optional) error callback
+     * @returns {undefined}
+     */
+    var _getRatings = function(items, success, error) {
+        _getDB(function(db) {
+            var tx = db.transaction('resource_relations');
+            var store = tx.objectStore('resource_relations');
+            var idx = store.index('resource');
+
+            var i = 0;
+            handleNext(); // initial item (others get handled by callback on success)
+            // handle a single item
+            function handleNext() {
+                if (i < items.length) {
+                    var curreq = idx.openCursor(items[i].uri);
+                    curreq.onsuccess = function() {
+                        var cursor = curreq.result;
+                        if (cursor) { // TODO: check context?
+                            var req = store.get(cursor.primaryKey);
+                            req.onsuccess = function() {
+                                if (typeof req.result !== 'undefined') {
+                                    if (req.result.type === 'rating') { // TODO: check context?
+                                        items[i].rating = req.result.annotation.hasBody['http://purl.org/stuff/rev#rating'];
+                                        i++;
+                                        handleNext();
+                                    } else {
+                                        cursor.continue();
+                                    }
+                                }
+                            };
+                        } else {
+                            i++;
+                            handleNext();
+                        }
+                    };
+                }
+            }
+            tx.oncomplete = function() {
+                success(items);
+            };
+            tx.onerror = function() {
+                _empty_callback(error);
+            };
+        });
     };
 
     /**
@@ -324,6 +396,17 @@ EEXCESS.storage = (function() {
             os.createIndex('query', 'query');
             os.createIndex('timestamp', 'timestamp');
 
+
+            // remove existing object store 'queries_full' if present
+            if (EEXCESS.DB.objectStoreNames.contains('queries_full') && clear) {
+                EEXCESS.DB.deleteObjectStore('queries_full');
+            }
+            // create object store 'queries_full'
+            os = EEXCESS.DB.createObjectStore('queries_full', {keyPath: 'id', autoIncrement: true});
+            os.createIndex('query', 'query');
+            os.createIndex('timestamp', 'timestamp');
+
+
             // remove existing object store 'history' if present
             if (EEXCESS.DB.objectStoreNames.contains('history') && clear) {
                 EEXCESS.DB.deleteObjectStore('history');
@@ -427,6 +510,7 @@ EEXCESS.storage = (function() {
         storeVisit: _storeVisit,
         storeRecommendations: _storeRecommendations,
         getRating: _getRating,
+        getRatings: _getRatings,
         setRating: _setRating,
         closedRecommendation: _closedRecommendation,
         loadQueryCrumbsData: _loadQueryCrumbsData

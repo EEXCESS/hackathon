@@ -137,6 +137,15 @@ div{
 }
 
 
+#eexcess_header_filter > a > img {
+    float: right;
+    width: 20px;
+    height: 20px;
+}
+
+
+
+
 /*
     <input> field text on left upper corner of screen
 */
