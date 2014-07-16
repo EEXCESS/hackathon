@@ -30,20 +30,29 @@ function Visualization( EEXCESSobj ) {
     var bookmarkInputWrapperId = "#eexcess-bookmark-dialog-new-options-input-wrapper";  // Wrapper for input containing new bookmark name
 
 	
-	// Constants
+	// Icon and Image Constants
 	var LOADING_IMG = "../../media/loading.gif";
 	var NO_IMG = "../../media/no-img.png";
     var FAV_ICON_OFF = "../../media/icons/favicon_off.png";
     var FAV_ICON_ON = "../../media/icons/favicon_on.png";
+    var BOOKMARK_DETAILS_ICON = "../../media/batchmaster/ellipsis.png"
     var IMG_COLOR_WHEEL_SMALL = "../../media/icons/color_wheel_16x16.png";
     var IMG_COLOR_WHEEL_LARGE = "../../media/color-spectrum.jpg";
     var IMG_COLOR_WHEEL_MEDIUM = "../../media/color-wheel.jpg";
-	
+    var ICON_EUROPEANA =  "../../media/icons/Europeana-favicon.ico";
+    var ICON_MENDELEY = "../../media/icons/mendeley-favicon.ico";
+    var ICON_ZBW = "../../media/icons/ZBW-favicon.ico";
+    var ICON_WISSENMEDIA = "../../media/icons/wissenmedia-favicon.ico";
+    var ICON_KIM_COLLECT = "../../media/icons/KIM.Collect-favicon.ico";
+    var ICON_UNKNOWN = "../../media/icons/question-mark.png";
+
+    // String Constants
     var STR_SEARCHING = "Searching...";
     var STR_NO_DATA_RECEIVED = "No Data Received";
     var STR_NEW = "New...";
 	var STR_BOOKMARK_NAME_MISSING = "Indicate new bookmark name";
 	
+
 	// Main variables
 	var data;							// contains the data to be visualized
 	var mappings;						// contains all the possible mapping combiantions for each type of visualization
@@ -57,6 +66,7 @@ function Visualization( EEXCESSobj ) {
 	var mappingSelectors = [];			// Selector array for visual channel <select>. Necessary for event handlers		
 	var indicesToHighlight = [];		// array containing the indices of <li> elements to be highlighted in content list	
 	var isBookmarkDialogOpen = false;
+
 
 	// Chart objects
 	var timeVis, barVis;
@@ -311,6 +321,8 @@ function Visualization( EEXCESSobj ) {
 	};
 
 
+    /**** Bookmark section in content list items ****/
+
 	////////	Star Icon clicked on list item    ////////
 
     EVTHANDLER.faviconClicked = function(d, i){
@@ -319,6 +331,17 @@ function Visualization( EEXCESSobj ) {
         BOOKMARKS.buildBookmarkDialog(d, i, this);
     };
 
+
+
+    EVTHANDLER.bookmarkDetailsIconClicked = function(){
+
+        d3.event.stopPropagation();
+        console.log("details icon clicked");
+    };
+
+
+
+    /**** Bookmark Dialog ****/
 
     ////////	Value changed in bookmark dropdown list 	////////
     EVTHANDLER.bookmarkDropdownListChanged = function(value, index){
@@ -526,7 +549,7 @@ function Visualization( EEXCESSobj ) {
 		iconsDiv.append("a")
 				.attr("href", "#")
 				.append("img")
-					.attr("class", "eexcess_prdataeview")
+					.attr("class", "eexcess_preview")
 					.attr("src", function(d){ return d.previewImage || NO_IMG ; });
 		
 		iconsDiv.append("img")
@@ -567,13 +590,13 @@ function Visualization( EEXCESSobj ) {
 
 
         bookmarkDiv.append("img")
-            .attr("class", "eexcess_fav_icon")
+            //.attr("class", "eexcess_fav_icon")
             .attr("src", function(d){ if(d.bookmarked) return FAV_ICON_ON; return FAV_ICON_OFF; })
             .on("click", EVTHANDLER.faviconClicked);
-		
 
-
-
+        bookmarkDiv.append("img")
+            .attr("src", BOOKMARK_DETAILS_ICON)
+            .on("click", EVTHANDLER.bookmarkDetailsIconClicked)
 
 		$( contentPanel ).scrollTo( "top" );
 	};

@@ -826,10 +826,10 @@ Visualization Panel (center of screen)
 */
 .eexcess_ritem_container {
     display: inline-block;
+    float: left;
     min-height: 3em;
     vertical-align: middle;
     width: 70%;
-    margin-right: 8%;
 }
 
 
@@ -867,11 +867,23 @@ p.eexcess_ritem_short {
 
 .eexcess_bookmark_section {
     display: inline-block;
-    width: auto;
-
+    float: right;
+    width: 8%;
+    height: 3em;
 }
 
 
+.eexcess_bookmark_section img{
+    display: inline-block;
+    margin-top: .2em;
+    margin-right: .1em;
+}
+
+
+
+.eexcess_bookmark_section > img:last-child {
+    width: 11px;
+}
 
 .eexcess_fav_icon {
     display: inline-block;
