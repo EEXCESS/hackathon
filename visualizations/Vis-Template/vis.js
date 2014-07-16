@@ -80,21 +80,6 @@ function Visualization( EEXCESSobj ) {
         $( 'html' ).click(function(){ if(isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
 	};
 	
-	
-    PREPROCESSING.markBookmarkedItems = function(){
-
-        var itemIds = data.map(function(d){ return d.id; });
-        var bookmarkedItems = BookmarkingAPI.getBookmarkedItemsByItemId(itemIds);
-
-        console.log(bookmarkedItems);
-
-        data.forEach(function(d){
-            if(typeof bookmarkedItems[d.id] != 'undefined' && bookmarkedItems[d.id] != 'undefined')
-                d['bookmarked'] = true;
-            else
-                d['bookmarked'] = false;
-        });
-    };
 
 
 	
@@ -181,6 +166,48 @@ function Visualization( EEXCESSobj ) {
 	};
 
 	
+
+    PREPROCESSING.extendDataWithAncillaryDetails = function(){
+
+        var itemIds = data.map(function(d){ return d.id; });
+        var bookmarkedItems = BookmarkingAPI.getBookmarkedItemsByItemId(itemIds);
+
+        data.forEach(function(d){
+
+            // Set 'bookmarked' property to true or false
+            if(typeof bookmarkedItems[d.id] != 'undefined' && bookmarkedItems[d.id] != 'undefined')
+                d['bookmarked'] = true;
+            else
+                d['bookmarked'] = false;
+
+
+            // Assign 'provider-icon' with the provider's icon
+            switch(d.facets.provider){
+                case "Europeana": d['provider-icon'] = ICON_EUROPEANA; break;
+			    case "europeana": d['provider-icon'] = ICON_EUROPEANA; break;
+			    case "mendeley": d['provider-icon'] = ICON_MENDELEY; break;
+                case "ZBW": d['provider-icon'] = ICON_ZBW; break;
+                case "econbiz": d['provider-icon'] = ICON_ZBW; break;
+                case "wissenmedia": d['provider-icon'] = ICON_WISSENMEDIA; break;
+                case "KIM.Collect": d["provider-icon"] = ICON_KIM_COLLECT; break;
+                default: d['provider-icon'] = NO_IMG; break;
+            }
+        });
+
+
+
+
+
+        data.forEach(function(d){
+            if(typeof bookmarkedItems[d.id] != 'undefined' && bookmarkedItems[d.id] != 'undefined')
+                d['bookmarked'] = true;
+            else
+                d['bookmarked'] = false;
+        });
+
+
+    };
+
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -479,7 +506,7 @@ function Visualization( EEXCESSobj ) {
 	 *	Each item represents one recommendation contained in the variable "data"
 	 *
 	 * */	
-	LIST.buildContentList = function(data){
+	LIST.buildContentList = function(){
 	
 		//d3.selectAll(".eexcess_ritem").remove();
 		d3.selectAll( allListItems ).remove();
@@ -499,23 +526,13 @@ function Visualization( EEXCESSobj ) {
 		iconsDiv.append("a")
 				.attr("href", "#")
 				.append("img")
-					.attr("class", "eexcess_preview")
+					.attr("class", "eexcess_prdataeview")
 					.attr("src", function(d){ return d.previewImage || NO_IMG ; });
 		
 		iconsDiv.append("img")
 				.attr("class", "eexcess_partner_icon")
 				.attr("title", function(d){ return d.facets.provider; })
-				.attr("src", function(d){
-					var icon = "../../media/icons/Europeana-favicon.ico";
-					switch(d.facets.provider){
-						case "Europeana": icon = "../../media/icons/Europeana-favicon.ico"; break;
-						case "europeana": icon = "../../media/icons/Europeana-favicon.ico"; break;
-						case "mendeley": icon = "../../media/icons/mendeley-favicon.ico"; break;
-						case "ZBW": icon = "../../media/icons/ZBW-favicon.ico"; break;
-						case "econbiz": icon = "../../media/icons/ZBW-favicon.ico"; break;
-					}
-					return icon;
-				});
+				.attr("src", function(d){ return d['provider-icon'] });
 
 		// div 2 wraps the recommendation title (as a link), a short description and a large description (not used yet)
 		var contentDiv = aListItem.append("div")
@@ -544,11 +561,20 @@ function Visualization( EEXCESSobj ) {
 
 
         // append fav icon
-        aListItem.append("img")
+
+        var bookmarkDiv = aListItem.append('div')
+            .attr('class', 'eexcess_bookmark_section');
+
+
+        bookmarkDiv.append("img")
             .attr("class", "eexcess_fav_icon")
             .attr("src", function(d){ if(d.bookmarked) return FAV_ICON_ON; return FAV_ICON_OFF; })
             .on("click", EVTHANDLER.faviconClicked);
 		
+
+
+
+
 		$( contentPanel ).scrollTo( "top" );
 	};
 	
@@ -579,7 +605,7 @@ function Visualization( EEXCESSobj ) {
 			}
 		}
 	};
-	
+	data
 	
 	
 	/**
@@ -1076,11 +1102,11 @@ function Visualization( EEXCESSobj ) {
         indicesToHighlight = [];
 
         // Initialize template's elements
-        PREPROCESSING.markBookmarkedItems();
+        PREPROCESSING.extendDataWithAncillaryDetails();
         QUERY.updateHeaderText( "Query Results : " + data.length );
         QUERY.updateSearchField( query );
         CONTROLS.buildChartSelect();
-        LIST.buildContentList( data );
+        LIST.buildContentList();
         
         if(data.length > 0){
             // Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)

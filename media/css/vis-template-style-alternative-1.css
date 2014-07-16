@@ -860,6 +860,19 @@ p.eexcess_ritem_short {
 }
 
 
+/*
+    Bookmark section wraps favicon and if the item is actually bookmarked, then a smal stripped icon to show which bookmarks the item belongs to
+*/
+
+
+.eexcess_bookmark_section {
+    display: inline-block;
+    width: auto;
+
+}
+
+
+
 .eexcess_fav_icon {
     display: inline-block;
     position: absolute;
