@@ -88,7 +88,10 @@ database name: 'eexcess_db'
 	* timestamp
 * **interactions** a user's interactions with a web page (currently textual input)
 	* timestamp
-* **queries** the queries issued so far (im- & explicit queries)
+* **queries_full** the queries issued so far (im- & explicit & executed in the background)
+	* query
+	* timestamp
+* **queries** the queries displayed so far (explicit queries & queries executed in the background and afterwards activated by the user)
 	* query
 	* timestamp
 * **resource_relations** the user's relations/interactions with resources (atm view/rating of a recommendation result)
@@ -147,6 +150,9 @@ This interaction is logged on submitting a form on a particular web page.
 * *id*: auto incremented query identifier
 * *query*: the query, represented by an array of query terms and their according weights (array elements are of the form {weight:[0-1],text:'query term'})
 * *timestamp*: timestamp of when the query was issued (in ms since the epoch)
+
+##### queries_full #####
+same as queries
 
 ##### resource_relations #####
 Contains different objects, according to the type of the relation
