@@ -17,7 +17,9 @@ file structure
 * **/visualizations** Visualization components 
 * **/widget** The sidebar UI
 * **README.md** This file
+* **ContextDetector.js** Script for retrieving the context from the current page
 * **content.js** The content script injected into every page which is whitelisted in the manifest-file.
+* **help.html** HTML-page displaying help instructions.
 * **manifest.json** Configuration file, defining permissions, icons, paths, ...
 
 (for detailed information on a component, see the readme in the respective folder)
@@ -46,18 +48,24 @@ EEXCESS.messaging.listener(
         }
 );
 ```
-The issued query is contained in request.data.query and the results in request.data.results
+The issued query is contained in request.data.query and the results in request.data.results  
+The 'newSearchTriggerd'-event message is sent, if the user executes a query manually, or if she decides to view the results of an automatically triggered query. (If a query is triggered automatically, the results are not shown directly to the user, but instead cached and an indicator of how many results were retrieved is shown at the EEXCESS-icon in the menubar. Thus, the event is only thrown after the user clicks the icon and displays the results).
 
 ### issue a new query ###
 ```javascript
-SearchResultList.loading() // call loading-method on search result list first (to show loading bar). Adapt variable name of the list!
 EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: query}); // issue query
 ```
-
 The query-object has to contain the query as an array, consisting of terms and weights, for example:
 ```javascript
 [{weight: 1, text:"term1"},{weight:1,text:"term2"}]
 ```
+Such a query is executed in the background and the results are not directly shown to the user, but instead an indicator of how many results are available is shown at the EEXCESS-icon. To display the results, the user has to click the icon (This click will also trigger the 'newSearchTriggered'-event message). If you want to display the results immediately upon retrievel, you need to add the reason 'manual' to the query message. 
+```javascript
+SearchResultList.loading() // call loading-method on search result list first (to show loading bar). Adapt variable name of the list!
+EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason: {reason: 'manual'}, terms: query}); // issue query
+```
+Sending a query message this way will also cause the 'newSearchTriggered'-event message to be sent to all components.
+
 
 data stored
 ---------------------------------------
@@ -80,7 +88,10 @@ database name: 'eexcess_db'
 	* timestamp
 * **interactions** a user's interactions with a web page (currently textual input)
 	* timestamp
-* **queries** the queries issued so far (im- & explicit queries)
+* **queries_full** the queries issued so far (im- & explicit & executed in the background)
+	* query
+	* timestamp
+* **queries** the queries displayed so far (explicit queries & queries executed in the background and afterwards activated by the user)
 	* query
 	* timestamp
 * **resource_relations** the user's relations/interactions with resources (atm view/rating of a recommendation result)
@@ -139,6 +150,9 @@ This interaction is logged on submitting a form on a particular web page.
 * *id*: auto incremented query identifier
 * *query*: the query, represented by an array of query terms and their according weights (array elements are of the form {weight:[0-1],text:'query term'})
 * *timestamp*: timestamp of when the query was issued (in ms since the epoch)
+
+##### queries_full #####
+same as queries
 
 ##### resource_relations #####
 Contains different objects, according to the type of the relation

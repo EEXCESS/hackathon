@@ -4,6 +4,8 @@ This folder contains files which may be used by several components. Examples on 
 
 * **searchResultList.js** displays a list of search results
 * **storage.js** contains wrappers for access to local storage and the indexed database
+* **browser_specific** wraps browser specific functions, currently contains wrappers for chrome-specific functions (e.g. messaging between scripts)
+* **config.js** contains basic configuration, such as the URLs for logging and inital privacy policy settings
 
 ### storage.js
 In order to ease portability to other systems, this file wraps access to storage systems. In particular, for the browser extension, this encompasses local storage and the indexed database.  
