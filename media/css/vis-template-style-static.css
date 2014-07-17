@@ -849,14 +849,14 @@ p.eexcess_ritem_short {
 #eexcess-bookmak-dialog-color-picker {
     display: inline-block;
     width: 1.55em;
-    height: 1.4em;
+    height: 1.5em;
     margin-top: 0.5em;
     margin-left: 2em;
     margin-right: .3em;
 
     /* Static colors */
     background-color: #fff;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+    box-shadow: -1px 1px 0 rgba(0,0,0,0.2), 1px 1px 0 rgba(0,0,0,0.2);
 }
 
 

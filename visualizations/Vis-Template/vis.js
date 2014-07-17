@@ -22,7 +22,7 @@ function Visualization( EEXCESSobj ) {
 	var allListItems = "#eexcess_content .eexcess_result_list .eexcess_list";	        // String to select all li items by class
 	var listItem = "#eexcess_content .eexcess_result_list #data-pos-";			        // String to select individual li items by id
 	var colorIcon = ".color_icon";												        // Class selector for div icon colored according to legend categories
-	var bookmarkDialogId = "#eexcess-bookmark-dialog";                                  // Id for dialog poping up upon clicking on a "star" icon
+	var saveBookmarkDialogId = "#eexcess-save-bookmark-dialog";                         // Id for dialog poping up upon clicking on a "star" icon
     var bookmarkSettingsId = "#eexcess-bookmark-dialog-settings";                       // Div containing <select> in bookmark dialog
     var bookmarkDropdownListId = "#eexcess-bookmark-dropdown-list";                     // Div wrapping drop down list in boofmark dialog
     var newBookmarkOptionsId = "#eexcess-bookmark-dialog-new-options";                  // Div wrapping color picker and input element in bookmark dialog
@@ -50,7 +50,7 @@ function Visualization( EEXCESSobj ) {
 	var colorIcon = ".color_icon";												// Class selector for div icon colored according to legend categories
 
 
-	// Constants
+	// Icon & Image Constants
 	var LOADING_IMG = "../../media/loading.gif";
 	var NO_IMG = "../../media/no-img.png";
     var FAV_ICON_OFF = "../../media/icons/favicon_off.png";
@@ -361,7 +361,7 @@ function Visualization( EEXCESSobj ) {
     EVTHANDLER.faviconClicked = function(d, i){
 
         d3.event.stopPropagation();
-        BOOKMARKS.buildBookmarkDialog(d, i, this);
+        BOOKMARKS.buildSaveBookmarkDialog(d, i, this);
     };
 
 
@@ -369,7 +369,7 @@ function Visualization( EEXCESSobj ) {
     EVTHANDLER.bookmarkDetailsIconClicked = function(){
 
         d3.event.stopPropagation();
-        console.log("details icon clicked");
+        BOOKMARKS.buildBookmarkedItemDialog();
     };
 
 
@@ -993,7 +993,7 @@ function Visualization( EEXCESSobj ) {
 
 
 
-    BOOKMARKS.buildBookmarkDialog = function(d, i, sender) {
+    BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
 
         BOOKMARKS.destroyBookmarkDialog();
         isBookmarkDialogOpen = true;
@@ -1005,7 +1005,8 @@ function Visualization( EEXCESSobj ) {
 
         // Append bookmark form to content item
         var dialogBookmark = d3.select("body").append("div")
-            .attr("id", "eexcess-bookmark-dialog")
+            .attr("id", "eexcess-bookmark-save-dialog")
+            .attr("class", "eexcess-bookmark-dialog")
             .style('display', 'none')
             .style("top", topOffset + "px" );
 
@@ -1077,7 +1078,7 @@ function Visualization( EEXCESSobj ) {
 
 
         // show bookmark dialog
-        $(bookmarkDialogId).slideDown('slow');
+        $(saveBookmarkDialogId).slideDown('slow');
 
         // make div icon a color picker
         $( colorPickerId ).colorpicker({
@@ -1092,7 +1093,7 @@ function Visualization( EEXCESSobj ) {
 
     BOOKMARKS.destroyBookmarkDialog = function(){
         $( colorPickerId ).colorpicker('destroy');
-        $( bookmarkDialogId ).remove();
+        $( saveBookmarkDialogId ).remove();
 
         isBookmarkDialogOpen = false;
     };
@@ -1119,7 +1120,19 @@ function Visualization( EEXCESSobj ) {
 
 	
 
+
+    BOOKMARKS.buildBookmarkedItemDialog = function(){
+
+
+
+
+
+
+    };
 	
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
