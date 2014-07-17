@@ -202,24 +202,6 @@ function Visualization( EEXCESSobj ) {
 		return formattedMappings;
 	};
 
-
-
-    PREPROCESSING.extendDataWithAncillaryDetails = function(){
-
-        data.forEach(function(d){
-            switch(d.facets.provider){
-                case "Europeana": d['provider-icon'] = ICON_EUROPEANA; break;
-			    case "europeana": d['provider-icon'] = ICON_EUROPEANA; break;
-			    case "mendeley": d['provider-icon'] = ICON_MENDELEY; break;
-                case "ZBW": d['provider-icon'] = ICON_ZBW; break;
-                case "econbiz": d['provider-icon'] = ICON_ZBW; break;
-                case "wissenmedia": d['provider-icon'] = ICON_WISSENMEDIA; break;
-                case "KIM.Collect": d["provider-icon"] = ICON_KIM_COLLECT; break;
-                default: d['provider-icon'] = NO_IMG; break;
-            }
-        });
-    };
-
 	
 
     PREPROCESSING.extendDataWithAncillaryDetails = function(){
@@ -245,7 +227,7 @@ function Visualization( EEXCESSobj ) {
                 case "econbiz": d['provider-icon'] = ICON_ZBW; break;
                 case "wissenmedia": d['provider-icon'] = ICON_WISSENMEDIA; break;
                 case "KIM.Collect": d["provider-icon"] = ICON_KIM_COLLECT; break;
-                default: d['provider-icon'] = NO_IMG; break;
+                default: d['provider-icon'] = ICON_UNKNOWN; break;
             }
         });
 
