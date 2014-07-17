@@ -66,10 +66,6 @@ EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reaso
 ```
 Sending a query message this way will also cause the 'newSearchTriggered'-event message to be sent to all components.
 
-The query-object has to contain the query as an array, consisting of terms and weights, for example:
-```javascript
-[{weight: 1, text:"term1"},{weight:1,text:"term2"}]
-```
 
 data stored
 ---------------------------------------
