@@ -267,7 +267,7 @@ Visualization Panel (center of screen)
 ********************************************************************************************************************************************/
 
 
-#eexcess-bookmark-dialog {
+.eexcess-bookmark-dialog {
     background-color: rgba(241, 241, 230, 1);
     border-radius: 0em;
     box-shadow: .5em .5em 1.5em #222, -.5em 0em 1.5em #222;

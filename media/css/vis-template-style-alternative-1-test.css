@@ -279,7 +279,7 @@ button:hover {
 ********************************************************************************************************************************************/
 
 
-#eexcess-bookmark-dialog {
+.eexcess-bookmark-dialog {
     background-color: rgba(241, 241, 230, 1);
     border-radius: .8em;
     box-shadow: -.3em .3em 1.5em #222;

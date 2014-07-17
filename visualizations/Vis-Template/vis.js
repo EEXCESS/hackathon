@@ -220,11 +220,11 @@ function Visualization( EEXCESSobj ) {
 
             // Assign 'provider-icon' with the provider's icon
             switch(d.facets.provider){
-                case "Europeana": d['provider-icon'] = ICON_EUROPEANA; break;
-			    case "europeana": d['provider-icon'] = ICON_EUROPEANA; break;
-			    case "mendeley": d['provider-icon'] = ICON_MENDELEY; break;
-                case "ZBW": d['provider-icon'] = ICON_ZBW; break;
-                case "econbiz": d['provider-icon'] = ICON_ZBW; break;
+                case "Europeana":   d['provider-icon'] = ICON_EUROPEANA; break;
+			    case "europeana":   d['provider-icon'] = ICON_EUROPEANA; break;
+			    case "mendeley":    d['provider-icon'] = ICON_MENDELEY; break;
+                case "ZBW":         d['provider-icon'] = ICON_ZBW; break;
+                case "econbiz":     d['provider-icon'] = ICON_ZBW; break;
                 case "wissenmedia": d['provider-icon'] = ICON_WISSENMEDIA; break;
                 case "KIM.Collect": d["provider-icon"] = ICON_KIM_COLLECT; break;
                 default: d['provider-icon'] = ICON_UNKNOWN; break;

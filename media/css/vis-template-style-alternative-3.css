@@ -839,7 +839,7 @@ p.eexcess_ritem_short {
 ********************************************************************************************************************************************/
 
 
-#eexcess-bookmark-dialog {
+.eexcess-bookmark-dialog {
     position: absolute;
     right: 4.6em;
     width: 18em;
