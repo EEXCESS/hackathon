@@ -483,7 +483,7 @@ function Visualization( EEXCESSobj ) {
 					.attr("href", "#")
                     .on("click", function(d){
                         window.open(d.uri, '_blank');
-                        EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:url}); })
+                        EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:d.uri}); })
 					.text(function(d){ return d.title; });
 
 
