@@ -79,7 +79,7 @@ EEXCESS.model = (function() {
     var _handleResult = function(res) {
         var execute = function(items) {
             res.data.results = items;
-            if (res.hasOwnProperty('reason') && res['reason']['reason'] === 'manual') {
+            if ((res.hasOwnProperty('reason') && res['reason']['reason'] === 'manual') || params.visible && (results.data === null)) {
                 results = res;
                 EEXCESS.messaging.sendMsgAllTabs({
                     method: 'newSearchTriggered',
@@ -102,7 +102,7 @@ EEXCESS.model = (function() {
      * Update results to a query with ratings from the database and send each
      * updated result to all tabs
      * @memberOf EEXCESS.model
-     * @param {Array.<Recommendation>} items The results, for which to retrieve 
+     * @param {Array.<Recommendation>} items The results, for which to retrieve
      * ratings
      */
     var _updateRatings = function(items) {
@@ -124,6 +124,7 @@ EEXCESS.model = (function() {
         /**
          * Toggles the visibility of the widget
          * @memberOf EEXCESS.model
+         * @param {Integer} tabID identifier of the tab, the toggling request originates
          * @param {String} url the url of the current page
          * @returns {Boolean} true if visible, otherwise false
          */
@@ -157,9 +158,9 @@ EEXCESS.model = (function() {
          * Furthermore they are set as the current results in the widget's model.
          * At logging the recommendations, query is added as context.
          * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request 
+         * @param {Integer} tabID Identifier of the browsertab, the request
          * originated
-         * @param {Object} data The query data 
+         * @param {Object} data The query data
          */
         query: function(tabID, data) {
             console.log(data);
@@ -212,7 +213,7 @@ EEXCESS.model = (function() {
         /**
          * Sends the current model state to the specified callback
          * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request 
+         * @param {Integer} tabID Identifier of the browsertab, the request
          * originated
          * @param {Object} data not used
          * @param {Function} callback
@@ -221,10 +222,10 @@ EEXCESS.model = (function() {
             callback({params: params, results: results});
         },
         /**
-         * Sends the current visibility state of the widget to the specified 
+         * Sends the current visibility state of the widget to the specified
          * callback
          * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request 
+         * @param {Integer} tabID Identifier of the browsertab, the request
          * originated
          * @param {Object} data not used
          * @param {Function} callback
@@ -233,11 +234,11 @@ EEXCESS.model = (function() {
             callback(params.visible);
         },
         /**
-         * Sets the rating score of a resource in the resultlist to the 
+         * Sets the rating score of a resource in the resultlist to the
          * specified value, stores the rating and informs all other tabs.
          * The query  is added to the rating as context.
          * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request 
+         * @param {Integer} tabID Identifier of the browsertab, the request
          * originated
          * @param {Object} data rating of the resource
          * @param {String} data.uri URI of the rated resource
@@ -255,7 +256,7 @@ EEXCESS.model = (function() {
         },
         /**
          * Returns the model's current context. The context contains the current
-         * query (if any) 
+         * query (if any)
          * @memberOf EEXCESS.model
          * @returns {Object} the context
          */
@@ -268,7 +269,7 @@ EEXCESS.model = (function() {
         },
         /**
          * Hands in the current query and corresponding results to the specified callback
-         * @param {Integer} tabID Identifier of the browsertab, the request 
+         * @param {Integer} tabID Identifier of the browsertab, the request
          * originated
          * @param {Object} data unused
          * @param {Function} callback
