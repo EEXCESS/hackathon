@@ -111,7 +111,7 @@ function Visualization( EEXCESSobj ) {
 	 *$
 	 * */
 	PREPROCESSING.bindEventHandlers = function(){
-		
+		var ICON_UNKNOWN = "../../media/icons/help.png";
 		$( btnSearch  ).click( function(){ EVTHANDLER.btnSearchClicked(); });
 		$( btnReset   ).click( function(){ EVTHANDLER.btnResetClicked(); });
         $( 'html' ).click(function(){ if(isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
@@ -584,7 +584,7 @@ function Visualization( EEXCESSobj ) {
 					.attr("href", "#")
                     .on("click", function(d){
                         window.open(d.uri, '_blank');
-                        EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:url}); })
+                        EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:d.uri}); })
 					.text(function(d){ return d.title; });
 
 
