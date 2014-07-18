@@ -7,29 +7,31 @@ function Visualization( EEXCESSobj ) {
     var height;	    // Screen height
     
     // DOM Selectors
-    var root = "div#eexcess_canvas";											        // String to select the area where the visualization should be displayed
-	var searchField = "#eexcess_search_field";									        // String to select search field in the header
-	var btnSearch = "#eexcess_search_button";									        // Selector for search button on left side of the header
-	var headerText = "#eexcess_header_text";									        // String to select the text container in the middle of the header
+    var root = "div#eexcess_canvas";											                   // String to select the area where the visualization should be displayed
+	var searchField = "#eexcess_search_field";									                   // String to select search field in the header
+	var btnSearch = "#eexcess_search_button";									                   // Selector for search button on left side of the header
+	var headerText = "#eexcess_header_text";									                   // String to select the text container in the middle of the header
 	var btnFilter = "#eexcess_filter_button";
-	var btnReset = "#eexcess_btnreset";											        // Selector for reset button in vis control panel
-	var chartSelect = "#eexcess_select_chart";									        // select for chart
-	var divMapping = "#eexcess_controls_mappings";								        // div that contains selects for mapping combinations
-	var divMappingInd = "#eexcess_mapping_container_";							        // id for the above div
-	var mappingSelect = ".eexcess_select";										        // To select all visual channels' <select> elements by class
-	var contentPanel = "#eexcess_content";										        // Selector for content div on the right side
-	var contentList = "#eexcess_content .eexcess_result_list";					        // ul element within div content
-	var allListItems = "#eexcess_content .eexcess_result_list .eexcess_list";	        // String to select all li items by class
-	var listItem = "#eexcess_content .eexcess_result_list #data-pos-";			        // String to select individual li items by id
-	var colorIcon = ".color_icon";												        // Class selector for div icon colored according to legend categories
-	var saveBookmarkDialogId = "#eexcess-save-bookmark-dialog";                         // Id for dialog poping up upon clicking on a "star" icon
-    var bookmarkSettingsId = "#eexcess-bookmark-dialog-settings";                       // Div containing <select> in bookmark dialog
-    var bookmarkDropdownListId = "#eexcess-bookmark-dropdown-list";                     // Div wrapping drop down list in boofmark dialog
-    var newBookmarkOptionsId = "#eexcess-bookmark-dialog-new-options";                  // Div wrapping color picker and input element in bookmark dialog
-    var colorPickerId = "#eexcess-bookmak-dialog-color-picker";                         // Div tranformed into a colorpicekr in bookmark dialog
-    var bookmarkInputWrapperId = "#eexcess-bookmark-dialog-new-options-input-wrapper";  // Wrapper for input containing new bookmark name
-    var favIconClass = ".eexcess_fav_icon";                                             // img element fpr favicon (either on or off)
-    var bookmarkDetailsIconClass = ".eexcess_bookmark_section_details_icon";            // img element with 3-dot icon in each list item used to display bookmarked item's details on click
+	var btnReset = "#eexcess_btnreset";											                   // Selector for reset button in vis control panel
+	var chartSelect = "#eexcess_select_chart";									                   // select for chart
+	var divMapping = "#eexcess_controls_mappings";								                   // div that contains selects for mapping combinations
+	var divMappingInd = "#eexcess_mapping_container_";							                   // id for the above div
+	var mappingSelect = ".eexcess_select";										                   // To select all visual channels' <select> elements by class
+	var contentPanel = "#eexcess_content";										                   // Selector for content div on the right side
+	var contentList = "#eexcess_content .eexcess_result_list";					                   // ul element within div content
+	var allListItems = "#eexcess_content .eexcess_result_list .eexcess_list";	                   // String to select all li items by class
+	var listItem = "#eexcess_content .eexcess_result_list #data-pos-";			                   // String to select individual li items by id
+	var colorIcon = ".color_icon";												                   // Class selector for div icon colored according to legend categories
+	var favIconClass = ".eexcess_fav_icon";                                                        // img element fpr favicon (either on or off)
+    var bookmarkDetailsIconClass = ".eexcess_bookmark_section_details_icon";                       // img element with 3-dot icon in each list item used to display bookmarked item's details on click
+
+    var bookmarkDialogClass = ".eexcess-bookmark-dialog";                                          // Class selector for both types of dialog: save bookmark and see-and-edit-bookmark
+    var saveBookmarkDialogId = "#eexcess-save-bookmark-dialog";                                    // Id for dialog poping up upon clicking on a "star" icon
+    var bookmarkDropdownList = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dropdown-list";    // Div wrapping drop down list in boofmark dialog
+    var newBookmarkOptionsId = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-optional";                             // Div wrapping color picker and input element in bookmark dialog
+    var colorPickerId = "#eexcess-bookmak-dialog-color-picker";                                    // Div tranformed into a colorpicekr in bookmark dialog
+    var bookmarkDialogInputWrapper = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-input-wrapper";             // Wrapper for input containing new bookmark name
+
 
 	
 	// Icon and Image Constants
@@ -83,10 +85,11 @@ function Visualization( EEXCESSobj ) {
 	
 	// Ancillary variables
 	var visChannelKeys;					// array containing the keys (names) of the visual atributes corresponding to the current chart
-	var mappingSelectors = [];			// Selector array for visual channel <select>. Necessary for event handlers		
-	var indicesToHighlight = [];		// array containing the indices of <li> elements to be highlighted in content list	
-	var isBookmarkDialogOpen = false;
-
+	var mappingSelectors;			    // Selector array for visual channel <select>. Necessary for event handlers
+	var indicesToHighlight;	           	// array containing the indices of <li> elements to be highlighted in content list
+	var isBookmarkDialogOpen;
+    var idsArray;
+    var bookmarkedItems;
 
 	// Chart objects
 	var timeVis, barVis;
@@ -204,10 +207,17 @@ function Visualization( EEXCESSobj ) {
 
 	
 
-    PREPROCESSING.extendDataWithAncillaryDetails = function(){
+    PREPROCESSING.setAncillaryVariables = function() {
+	    indicesToHighlight = [];
+        isBookmarkDialogOpen = false;
+        idsArray = data.map(function(d){ return d.id; });
+        bookmarkedItems = BookmarkingAPI.getBookmarkedItemsByItemId(idsArray);
+    };
 
-        var itemIds = data.map(function(d){ return d.id; });
-        var bookmarkedItems = BookmarkingAPI.getBookmarkedItemsByItemId(itemIds);
+
+
+
+    PREPROCESSING.extendDataWithAncillaryDetails = function(){
 
         data.forEach(function(d){
 
@@ -348,10 +358,10 @@ function Visualization( EEXCESSobj ) {
 
 
 
-    EVTHANDLER.bookmarkDetailsIconClicked = function(){
+    EVTHANDLER.bookmarkDetailsIconClicked = function(d){
 
         d3.event.stopPropagation();
-        BOOKMARKS.buildBookmarkedItemDialog();
+        BOOKMARKS.buildSeeAndEditBookmarkDialog(d);
     };
 
 
@@ -714,11 +724,11 @@ function Visualization( EEXCESSobj ) {
 	
 	
 
-    LIST.turnFaviconOnturnFaviconOnAndShowDetailsIcon = function( index ){
+    LIST.turnFaviconOnAndShowDetailsIcon = function( index ){
         // Replace favicon_off with favicon_on
-        d3.select(listItem + '' +index).select(favIconClass).attr("src", FAV_ICON_ON);
+        d3.select(listItem + '' +index).select(favIconClass).transition().attr("src", FAV_ICON_ON).duration(2000);
         // show bookmark details icon
-        d3.select(listItem + '' +index).select(bookmarkDetailsIconClass).style('display', 'inline-block');
+        $(listItem + '' +index + ' ' + bookmarkDetailsIconClass).fadeIn('slow');
         // Update item's property 'bookmarked'
         data[index].bookmarked = true;
     };
@@ -929,11 +939,11 @@ function Visualization( EEXCESSobj ) {
 
         getCurrentBookmark : function(){
 
-            var bookmarkName = $(bookmarkDropdownListId).find('span').text();
+            var bookmarkName = $(bookmarkDropdownList).find('span').text();
             var color = '', type = '';
 
             if( bookmarkName == STR_NEW ){
-                bookmarkName = $(bookmarkInputWrapperId).find('input').val();
+                bookmarkName = $(bookmarkDialogInputWrapper).find('input').val();
                 color = $(colorPickerId).css('backgroundColor');
                 type = 'new';
             }
@@ -983,19 +993,18 @@ function Visualization( EEXCESSobj ) {
         this.internal.setCurrentItem(d.title, d.id, query, i);
 
         var topOffset = $(contentPanel).offset().top;
-        var leftOffset = $(contentPanel).offset().left;
 
         // Append bookmark form to content item
         var dialogBookmark = d3.select("body").append("div")
-            .attr("id", "eexcess-bookmark-save-dialog")
+            .attr("id", "eexcess-save-bookmark-dialog")
             .attr("class", "eexcess-bookmark-dialog")
             .style('display', 'none')
             .style("top", topOffset + "px" );
 
         dialogBookmark.on('click', function(){ d3.event.stopPropagation(); });
 
-        dialogBookmark.append("span")
-            .attr("id", "eexcess-bookmark-dialog-title")
+        dialogBookmark.append("div")
+            .attr("class", "eexcess-bookmark-dialog-title")
             .text("Bookmark Item");
 
         // Append details section
@@ -1009,25 +1018,26 @@ function Visualization( EEXCESSobj ) {
 
         // Append settings section (for bookmark selection or definition of new bookmark)
         var bookmarkSettings = dialogBookmark.append("div")
-            .attr("id", "eexcess-bookmark-dialog-settings");
+            .attr("class", "eexcess-bookmark-dialog-settings");
 
         bookmarkSettings.append("span").text("Add to:");
 
         // array to be sent to plugin building the dropdown list with the list items and the corresponding colors
         var optionsData = $.merge([{'name': STR_NEW, 'color': ''}], BookmarkingAPI.getAllBookmarkNamesAndColors());
 
-        bookmarkSettings.append("div").attr("id", "eexcess-bookmark-dropdown-list");
+        bookmarkSettings.append("div").attr("class", "eexcess-bookmark-dropdown-list");
+
 
         // Create dropdown list to select bookmark
-        $("#eexcess-bookmark-dropdown-list").dropdown({
+        $( bookmarkDropdownList ).dropdown({
             'data' : optionsData,
             'change' : EVTHANDLER.bookmarkDropdownListChanged
         });
 
 
-        // Add wrapper div containing icon for color picking, text input and legend
+        // Add wrapper div containing icon for color picking, text input and legendbookmarkDetails.append('p').text(d.title);
         var newBookmarkOptions = bookmarkSettings.append("div")
-            .attr("id", "eexcess-bookmark-dialog-new-options");
+            .attr("class", "eexcess-bookmark-dialog-optional");
 
         newBookmarkOptions.append("div")
             .attr("id", "eexcess-bookmak-dialog-color-picker")
@@ -1035,7 +1045,7 @@ function Visualization( EEXCESSobj ) {
 
 
         newBookmarkOptions.append("div")
-            .attr("id", "eexcess-bookmark-dialog-new-options-input-wrapper")
+            .attr("class", "eexcess-bookmark-dialog-input-wrapper")
             .append("input");
 
         newBookmarkOptions.append('p')
@@ -1045,7 +1055,7 @@ function Visualization( EEXCESSobj ) {
 
         // Append save and cancel buttons within container
         var bookmarkButtonsWrapper = dialogBookmark.append("div")
-            .attr("id", "eexcess-bookmark-buttons-wrapper");
+            .attr("class", "eexcess-bookmark-buttons-wrapper");
 
 
         bookmarkButtonsWrapper.append("button")
@@ -1075,7 +1085,7 @@ function Visualization( EEXCESSobj ) {
 
     BOOKMARKS.destroyBookmarkDialog = function(){
         $( colorPickerId ).colorpicker('destroy');
-        $( saveBookmarkDialogId ).remove();
+        $( bookmarkDialogClass ).remove();
 
         isBookmarkDialogOpen = false;
     };
@@ -1094,20 +1104,65 @@ function Visualization( EEXCESSobj ) {
             BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item['item-name'], item['item-id'], item['query']);
             BOOKMARKS.destroyBookmarkDialog();
 
-            console.log(BookmarkingAPI.getAllBookmarks());
+           LIST.turnFaviconOnAndShowDetailsIcon( item['index'] );
 
-            LIST.turnFaviconOnAndShowDetailsIcon( item['index'] );
+            // Update ancillary variable
+            bookmarkedItems = BookmarkingAPI.getBookmarkedItemsByItemId(idsArray);
+            console.log(bookmarkedItems);
         }
     };
 
 	
 
 
-    BOOKMARKS.buildBookmarkedItemDialog = function(){
+    BOOKMARKS.buildSeeAndEditBookmarkDialog = function( datum ){
+
+        BOOKMARKS.destroyBookmarkDialog();
+        isBookmarkDialogOpen = true;
+
+        itemDetails = bookmarkedItems[datum.id];
+
+        var topOffset = $(contentPanel).offset().top;
+
+        var detailsDialog = d3.select('body').append('div')
+            .attr('id', 'eexcess-see-and-edit-bookmark-dialog')
+            .attr("class", "eexcess-bookmark-dialog")
+            .style('top', topOffset + 'px')
+            .on("click", function(){ d3.event.stopPropagation(); });
+
+        detailsDialog.append("div")
+            .attr("class", "eexcess-bookmark-dialog-title")
+            .text('Bookmark Info');        // = datum.tilte
+
+        detailsDialog.append('span').text('Tilte');
+        detailsDialog.append('p').text(datum.title);
+
+
+        var detailsList = detailsDialog.append('div').attr('id', 'accordion');
+
+        itemDetails.bookmarked.forEach(function(b){
+
+            console.log(b);
+            detailsList.append('h3').text(b["bookmark-name"]);
+            detailsList.append('div').append('p').text(b.query);
+        });
+
+
+        $( "#accordion" ).accordion({ collapsible: true });
 
 
 
-
+        /*
+        detailsDialog.selectAll('.eexcess-bookmark-entry')
+            .data(itemDetails.bookmarked)
+            .enter()
+            .append('div')
+                .attr('class', 'eexcess-bookmark-entry')
+                .text(function(d){ return d["bookmark-name"]; })
+                .append('div')
+                    .attr('class', '')
+        ;
+        */
 
 
     };
@@ -1151,9 +1206,9 @@ function Visualization( EEXCESSobj ) {
         mappings = PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
         query = receivedQuery;													// string representing the query that triggered the current recommendations
         groupBy = receivedGroupBy;
-        indicesToHighlight = [];
 
         // Initialize template's elements
+        PREPROCESSING.setAncillaryVariables();
         PREPROCESSING.extendDataWithAncillaryDetails();
         QUERY.updateHeaderText( "Query Results : " + data.length );
         QUERY.updateSearchField( query );

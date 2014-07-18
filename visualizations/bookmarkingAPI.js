@@ -6,8 +6,9 @@ function Bookmarking() {
     INTERNAL.init = function() {
 
         // Retrieve current bookmark dictionary and keep it in a local variable during execution
-        chrome.storage.sync.get( "bookmark-dictionary", function(value){
+        chrome.storage.local.get( "bookmark-dictionary", function(value){
             BOOKMARKING.Dictionary = JSON.parse(value["bookmark-dictionary"]);
+            console.log('Bookmark dictionary');
             console.log(BOOKMARKING.Dictionary);
         } );
     };
@@ -15,7 +16,14 @@ function Bookmarking() {
 
 
     INTERNAL.saveToLocalStorage = function( bookmarkDictionaryCopy ) {
-        chrome.storage.sync.set({ "bookmark-dictionary" : JSON.stringify( bookmarkDictionaryCopy ) }, function(){ });
+        chrome.storage.local.set({ "bookmark-dictionary" : JSON.stringify( bookmarkDictionaryCopy ) }, function(){
+            if(chrome.runtime.lastError == 'undefined')
+                console.log('Saving bookmark dictionary in local storage... SUCCESS');
+            else{
+                console.log('Saving bookmark dictionary in local storage... FAIL');
+                console.log( chrome.runtime.lastError );
+            }
+        });
     };
 
 
@@ -223,6 +231,7 @@ function Bookmarking() {
                     bookmarkedItems[itemEntry].bookmarked.push({
                         'bookmark-name' : entry,
                         'bookmark-id' : BOOKMARKING.Dictionary[entry].id,
+                        'color' : BOOKMARKING.Dictionary[entry].color,
                         'query' : item.query
                     });
                 }

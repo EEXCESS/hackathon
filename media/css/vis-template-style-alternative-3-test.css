@@ -303,15 +303,13 @@ Visualization Panel (center of screen)
 }
 
 
-
-#eexcess-bookmark-dialog-title {
-    color: #eee !important;
+#eexcess-bookmark-dialog-settings span {
+    color: #fff;
 }
 
 
-
-#eexcess-bookmark-dialog-settings span {
-    color: #fff;
+.eexcess-bookmark-dialog-title {
+    color: #eee !important;
 }
 
 
@@ -327,13 +325,8 @@ Visualization Panel (center of screen)
 }
 
 
-
 #eexcess-bookmark-dialog-new-options input {
-    background-color: white;
-	border: 0.1em #ddd solid;
 	border-radius: 0.5em;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-    color: #444;
 }
 
 

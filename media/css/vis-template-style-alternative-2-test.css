@@ -242,7 +242,6 @@ Visualization Panel (center of screen)
 
 
 
-
 /*
     Partner icon
 */
@@ -273,38 +272,26 @@ Visualization Panel (center of screen)
     box-shadow: .5em .5em 1.5em #222, -.5em 0em 1.5em #222;
 }
 
-
-#eexcess-bookmark-dialog span {
+.eexcess-bookmark-dialog span {
     color: #1f6080;
 }
 
-
-#eexcess-bookmark-dialog-title {
+.eexcess-bookmark-dialog-title {
     color: #114a66 !important;
 }
-
-
 
 .eexcess-bookmark-dropdown-list-icon {
     background-color: #fff;
     border-radius: 0em;
 }
 
-
-
 /* Color picker */
 #eexcess-bookmak-dialog-color-picker {
   border-radius: 0em;
 }
 
-
-
-#eexcess-bookmark-dialog-new-options input {
-	background-color: white;
-	border: 0.1em #ddd solid;
+.eexcess-bookmark-dialog-input-wrapper input {
 	border-radius: 0em;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-    color: #444;
 }
 
 

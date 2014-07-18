@@ -729,6 +729,7 @@ p.eexcess_ritem_short {
     display: inline-block;
     width: 8%;
     margin-left: 1%;
+    vertical-align: top;
 }
 
 
@@ -754,7 +755,7 @@ p.eexcess_ritem_short {
 ********************************************************************************************************************************************/
 
 
-#eexcess-bookmark-dialog {
+.eexcess-bookmark-dialog {
     position: absolute;
     right: 4.6em;
     width: 18em;
@@ -765,7 +766,7 @@ p.eexcess_ritem_short {
 }
 
 
-#eexcess-bookmark-dialog span {
+.eexcess-bookmark-dialog span {
     display: inline-block;
     float: left;
     width: 19%;
@@ -774,7 +775,7 @@ p.eexcess_ritem_short {
     text-align: left;
 }
 
-#eexcess-bookmark-dialog-title {
+.eexcess-bookmark-dialog-title {
     display: block !important;
     margin-top: 0.2em !important;
     margin-bottom: 0.5em;
@@ -788,7 +789,7 @@ p.eexcess_ritem_short {
 
 #eexcess-boookmark-dialog-details {
     width: 100%;
-    margin-top: 1.5em;
+    margin-top: 0.6em;
     margin-bottom: 0.6em;
     vertical-align: top;
 }
@@ -806,22 +807,23 @@ p.eexcess_ritem_short {
 
 
 
-#eexcess-bookmark-dialog-settings {
+.eexcess-bookmark-dialog-settings {
     width: 100%;
     min-height: 2em;
     margin-bottom: .6em;
 }
 
 
-#eexcess-bookmark-dialog-settings span {
+.eexcess-bookmark-dialog-settings span {
     margin-top: 0.3em;
 }
 
 
-#eexcess-bookmark-dropdown-list {
+.eexcess-bookmark-dropdown-list {
     display: inline-block;
     width: 68%;
     height: 1.7em;
+    border: 0.1em #ddd solid;
 }
 
 
@@ -836,7 +838,7 @@ p.eexcess_ritem_short {
 }
 
 
-#eexcess-bookmark-dialog-new-options {
+.eexcess-bookmark-dialog-optional {
     float: left;
     width: 100%;
     margin-top: 0.3em;
@@ -844,44 +846,7 @@ p.eexcess_ritem_short {
     vertical-align: top;
 }
 
-
-/* Color picker */
-#eexcess-bookmak-dialog-color-picker {
-    display: inline-block;
-    width: 1.55em;
-    height: 1.5em;
-    margin-top: 0.5em;
-    margin-left: 2em;
-    margin-right: .3em;
-
-    /* Static colors */
-    background-color: #fff;
-    box-shadow: -1px 1px 0 rgba(0,0,0,0.2), 1px 1px 0 rgba(0,0,0,0.2);
-}
-
-
-
-#eexcess-bookmark-dialog-new-options-input-wrapper{
-    display: inline-block;
-    width: 72%;
-    margin-top: 0.35em;
-    vertical-align: top;
-}
-
-
-#eexcess-bookmark-dialog-new-options input {
-    width: 100%;
-    height: 1.2em;
-    text-align: left;
-	color: #444;
-	border: 0.1em #ddd solid;
-    background-color: white;
-    font-size: 1.1em;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-}
-
-
-#eexcess-bookmark-dialog-new-options p {
+.eexcess-bookmark-dialog-optional p {
     display: inline-block;
     margin-top: 0;
     margin-left: 5.2em;
@@ -891,7 +856,48 @@ p.eexcess_ritem_short {
 }
 
 
-#eexcess-bookmark-buttons-wrapper {
+/* Color picker */
+#eexcess-bookmak-dialog-color-picker {
+    display: inline-block;
+    width: 1.7em;
+    height: 1.7em;
+    margin-top: 0.3em;
+    margin-left: 2em;
+    margin-right: .3em;
+
+    /* Static color-related style */
+    background-color: #fff;
+    border: 0.1em #ddd solid;
+    box-shadow: 0px 1px rgba(0, 0, 0, .2);
+}
+
+
+
+.eexcess-bookmark-dialog-input-wrapper {
+    display: inline-block;
+    width: 72%;
+    margin-top: 0.35em;
+    vertical-align: top;
+}
+
+
+.eexcess-bookmark-dialog-input-wrapper input {
+    width: 100%;
+    height: 1.4em;
+    font-size: 1.1em;
+    text-align: left;
+
+    /* Static color-related style */
+    background-color: white;
+    border: 0.1em #ddd solid;
+    /*box-shadow: 0 1px 0 rgba(0,0,0,0.2);*/
+    box-shadow: inset 4px 4px 6px -6px #666666;
+    color: #666;
+}
+
+
+
+.eexcess-bookmark-buttons-wrapper {
     width: 100%;
     text-align: center;
     margin-bottom: .3em;
@@ -907,6 +913,20 @@ p.eexcess_ritem_short {
 
 
 
+.eexcess-bookmark-entry {
+    display: inline-block;
+    width: 68%;
+    height: 1.7em;
+    margin: .3em 0em;
+    padding-left: .3em;
+    vertical-align: baseline;
+    line-height: 1.7em;
+
+    background: white;
+    border: 0.1em #ddd solid;
+
+    border-radius: .5em;
+}
 
 
 

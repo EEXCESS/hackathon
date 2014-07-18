@@ -171,8 +171,9 @@ $.fn.dropdown = function( options ){
     var data = options['data'];
     var onChangeCallback = options['change'];
 
-    var dropdownList = d3.select(this[0])
-        .attr("class", "wrapper-dropdown");
+    $(this).addClass("wrapper-dropdown");
+
+    var dropdownList = d3.select(this[0]);
 
     dropdownList.append("div")
         .attr("class", "eexcess-bookmark-dropdown-list-icon")

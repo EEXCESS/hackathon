@@ -286,12 +286,12 @@ button:hover {
 }
 
 
-#eexcess-bookmark-dialog span {
+.eexcess-bookmark-dialog span {
     color: #1f6080;
 }
 
 
-#eexcess-bookmark-dialog-title {
+.eexcess-bookmark-dialog-title {
     color: #114a66 !important;
 }
 
@@ -309,12 +309,8 @@ button:hover {
 }
 
 
-#eexcess-bookmark-dialog-new-options input {
-    background-color: white;
-	border: 0.1em #ddd solid;
+.eexcess-bookmark-dialog-input-wrapper input {
     border-radius: 0.5em;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-    color: #444;
 }
 
 
