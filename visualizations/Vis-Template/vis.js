@@ -1,7 +1,5 @@
 function Visualization( EEXCESSobj ) {
 
-    console.log("estoy en hackathon/ceci-dev");
-
 	var self = this;
 	var EEXCESS = EEXCESSobj || {};
 
