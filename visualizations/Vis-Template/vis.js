@@ -54,7 +54,7 @@ function Visualization( EEXCESSobj ) {
     var ICON_ZBW = "../../media/icons/ZBW-favicon.ico";
     var ICON_WISSENMEDIA = "../../media/icons/wissenmedia-favicon.ico";
     var ICON_KIM_COLLECT = "../../media/icons/KIM.Collect-favicon.ico";
-    var ICON_UNKNOWN = "../../media/icons/question-mark.png";
+    var ICON_UNKNOWN = "../../media/icons/help.png";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,7 +67,7 @@ function Visualization( EEXCESSobj ) {
 	 *
 	 * */
 	PREPROCESSING.bindEventHandlers = function(){
-		
+		var ICON_UNKNOWN = "../../media/icons/help.png";
 		$( btnSearch  ).click( function(){ EVTHANDLER.btnSearchClicked(); });
 		$( btnReset   ).click( function(){ EVTHANDLER.btnResetClicked(); });
 	};
@@ -162,14 +162,14 @@ function Visualization( EEXCESSobj ) {
 
         data.forEach(function(d){
             switch(d.facets.provider){
-                case "Europeana": d['provider-icon'] = ICON_EUROPEANA; break;
-			    case "europeana": d['provider-icon'] = ICON_EUROPEANA; break;
-			    case "mendeley": d['provider-icon'] = ICON_MENDELEY; break;
-                case "ZBW": d['provider-icon'] = ICON_ZBW; break;
-                case "econbiz": d['provider-icon'] = ICON_ZBW; break;
+                case "Europeana":   d['provider-icon'] = ICON_EUROPEANA; break;
+			    case "europeana":   d['provider-icon'] = ICON_EUROPEANA; break;
+			    case "mendeley":    d['provider-icon'] = ICON_MENDELEY; break;
+                case "ZBW":         d['provider-icon'] = ICON_ZBW; break;
+                case "econbiz":     d['provider-icon'] = ICON_ZBW; break;
                 case "wissenmedia": d['provider-icon'] = ICON_WISSENMEDIA; break;
                 case "KIM.Collect": d["provider-icon"] = ICON_KIM_COLLECT; break;
-                default: d['provider-icon'] = NO_IMG; break;
+                default: d['provider-icon'] = ICON_UNKNOWN; break;
             }
         });
     };
