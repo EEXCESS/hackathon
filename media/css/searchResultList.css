@@ -1,0 +1,49 @@
+/* css file for displaying the search results in a list */
+
+.eexcess_loading {
+    text-align: center;
+}
+
+.eexcess_loading img {
+    margin:auto;
+}
+
+.resCtL {
+    width: 70px;
+    float: left;
+}
+
+.eexcess_previewIMG {
+    width: 44px;
+    height: 44px;
+    margin: 2px;
+    float: left;
+}
+
+.partner_icon {
+    margin-right: 0px;
+    margin-top: 2px;
+    width:16px;
+    height:16px;
+}
+
+.eexcess_raty {
+    margin:0;
+    margin-top: 5px;
+	margin-right: 5px;
+    padding:0;
+    float:right;
+    display:block;
+    position:relative;
+    z-index: 99;
+}
+
+.result_description{
+    margin:0;
+    padding:0;
+    font-size:0.8em;
+}
+
+.block_list li {
+    min-height: 50px;
+}

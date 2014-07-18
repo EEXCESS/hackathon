@@ -1,0 +1,54 @@
+{
+    "name": "EEXCESS",
+    "version": "0.30",
+    "update_url": "http://eexcess.joanneum.at/extension/updates.xml",
+    "background": {
+        "page": "background/background.html"
+    },
+    "browser_action":
+            {
+                "default_icon": {
+                    "19": "media/icons/19.png",
+                    "38": "media/icons/38.png"
+                },
+                "default_title": "EEXCESS"
+            },
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+               "exclude_globs": ["*google*chrome*"],
+            "run_at":"document_end",
+            "js": [
+                "libs/jquery-1.10.1.min.js",
+                "common_js/browser_specific.js",
+                "content.js",
+                "ContextDetector.js"
+            ],
+            "css": ["media/css/sidebar.css"]
+        }
+    ],
+
+    "web_accessible_resources": [
+        "media/*",
+        "widget/*",
+        "options/*",
+        "privacy/*",
+        "libs/*",
+        "visualizations/*",
+        "help.html"
+    ],
+    "manifest_version": 2,
+    "permissions": [
+        "tabs",
+        "<all_urls>",
+        "geolocation",
+        "history",
+        "background",
+        "storage"
+    ],
+    "options_page": "options/options.html",
+    "icons": {"16": "media/icons/16.png",
+        "48": "media/icons/48.png",
+        "128": "media/icons/128.png"}
+}
+

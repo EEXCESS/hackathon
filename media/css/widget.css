@@ -1,0 +1,36 @@
+/* css file for the widget displayed at the right border of a page */
+
+#eexcess_searchForm {
+    float:left;
+}
+
+nav {
+    float:right;
+    position:relative;
+    top:9px;
+    right:10px;
+}
+
+#eexcess_content {
+    clear:both;
+}
+
+.header_sidebar {
+    border:none;
+    background: transparent;
+
+}
+
+.content_sidebar {
+    margin-left:auto; margin-right:auto;
+    height: 300px;
+	border-top: 1px solid #dbdbdb;
+    overflow-y: auto;
+    height:82%;
+}
+
+.footer_sidebar {
+	border-top: 1px solid #dbdbdb;
+	padding: 0.8em;
+}
+

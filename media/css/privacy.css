@@ -1,0 +1,16 @@
+.progress-bar.disable {
+	opacity: 0.4;
+}
+
+.progress-bar {
+	cursor: pointer !important;
+}
+
+.progress-label {
+	float: left;
+    margin-right: 1em;
+}
+
+.label-container span.label {
+	margin: 3px;
+}

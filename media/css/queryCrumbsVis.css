@@ -1,0 +1,65 @@
+#queryCrumbs {
+    position:relative;
+    top:30px;
+    width:100%;
+    height:50px;
+}
+
+#queryCrumbs-svg {
+    position:absolute;
+    left: 10px;
+}
+.queryNode {
+    pointer-events:all;
+    cursor: pointer;
+}
+.queryRectBg {
+    fill: #000000;
+}
+.queryRectBgHovered {
+    fill: #70C896;
+}
+.queryRectBg-selected {
+    fill: #70C896;
+}
+.queryRect {
+
+}
+.queryRect:hover {
+    stroke: #000000;
+    stroke-width: 2px;
+}
+
+.queryEdge {
+    fill: #000000;
+}
+
+.edgeInfo {
+    font-family: Verdana;
+    font-size: 10px;
+    fill: #ffffff;
+}
+
+.nodeInfo {
+    font-family: Verdana;
+    font-size: 11px;
+    font-weight: bold;
+    fill: #ffffff;
+}
+.edgeBg {
+
+}
+.nodeBg {
+
+}
+.docNode {
+    fill: #000000;
+}
+.docNodeInfo {
+    font-family: Verdana;
+    font-size: 10px;
+}
+
+.docNode-highlighted {
+    fill: #000000;
+}

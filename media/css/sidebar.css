@@ -1,0 +1,19 @@
+/* css file for formatting the sidebar element (this script is injected into a
+visited webpage and the sidebar is an iframe element, added to the dom of the
+particular page */
+
+#eexcess_sidebar{
+ display:none;
+ position:fixed;
+ top:0px;
+ margin:0;
+ padding:0;
+ right:0px;
+ width:348px;
+ height:100%;
+ border:0px;
+ z-index:999;
+ background-color:white;
+ font-size:11pt;
+ font-family:Helvetica;
+}
