@@ -1,6 +1,7 @@
 function Visualization( EEXCESSobj ) {
 
-    console.log('ceci-dev');
+    console.log('in other');
+
 	var self = this;
 	var EEXCESS = EEXCESSobj || {};
 	
