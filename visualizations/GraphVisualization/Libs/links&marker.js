@@ -5,11 +5,11 @@ var LinkClass = function(core){
 	var graphData = core.graphData;
 	var links = core.links;
 	//////////////////////////
-
+	
 	var helpFunc = new HelpFunctions();
-	var AssignParameter = helpFunc.AssignParameter;
-	var getArrayElementById = helpFunc.getArrayElementById;
-
+	var AssignParameter = helpFunc.AssignParameter;	
+	var getArrayElementById = helpFunc.getArrayElementById;	
+	
 	var oC={
 
 		Add:function(sourceNodeId,targetNodeId,linkId,linkObj){
@@ -25,12 +25,12 @@ var LinkClass = function(core){
 					newlink = {
 						//search in array: not ok
 						//solution: get node per dictionary: ok
-						source: graphData.data.dict.node[sourceNodeId].object,
+						source: graphData.data.dict.node[sourceNodeId].object, 
 						//search in array: not ok
 						//solution: get node per dictionary: ok
 						target: graphData.data.dict.node[targetNodeId].object,
 						elementId:linkId,
-						linkContent:{
+						linkContent:{ 
 							parameter:{
 								curve:{
 									active:false,
@@ -68,7 +68,7 @@ var LinkClass = function(core){
 				graphData.data.dict.link[linkId] = links[links.length-1];
 				graphData.data.dict.node[sourceNodeId].connections[linkId] = null;
 				graphData.data.dict.node[targetNodeId].connections[linkId] = null;
-
+				
 			}
 		},
 
@@ -76,13 +76,13 @@ var LinkClass = function(core){
 			//delete link
 			//search in array link-list and delete it: ok.
 			links.splice(getArrayElementById(links,linkId,"elementId").index, 1);
-
+			
 			var currentLink = graphData.data.dict.link[linkId];
 			delete graphData.data.dict.node[currentLink.source.elementId].connections[linkId];
 			delete graphData.data.dict.node[currentLink.target.elementId].connections[linkId];
 			delete graphData.data.dict.link[linkId];
-
-
+			
+			
 		},
 		Change:function(linkId,param){
 			//change link data
@@ -97,13 +97,13 @@ var LinkClass = function(core){
 				var currentElement = graphData.data.dict.link[linkId].linkContent;
 				currentElement.subElementsList.splice(currentElement.subElementsList.indexOf(deleteSubLinkId),1);
 				delete currentElement.subElements[deleteSubLinkId];
-
+				
 			},
 			Add:function(linkId,newSubLinkId,svgSubElement){
 
 				var currentElement = graphData.data.dict.link[linkId].linkContent;
 				currentElement.subElementsList.push(newSubLinkId);
-
+				
 				//default sub link
 				currentElement.subElements[newSubLinkId] ={
 					element:svgSubElement,
@@ -115,7 +115,7 @@ var LinkClass = function(core){
 						param:null
 					}
 				};
-
+				
 			},
 
 			Change:function(linkId,subLinkId,param){
@@ -123,7 +123,7 @@ var LinkClass = function(core){
 			}
 		}
 
-	};
+	}; 
 return oC;};
 
 
@@ -133,11 +133,11 @@ var MarkerClass = function(core){
 	var graphData = core.graphData;
 	var markers = core.markers;
 	//////////////////////////
-
+	
 	var helpFunc = new HelpFunctions();
-	var AssignParameter = helpFunc.AssignParameter;
-	var getArrayElementById = helpFunc.getArrayElementById;
-
+	var AssignParameter = helpFunc.AssignParameter;	
+	var getArrayElementById = helpFunc.getArrayElementById;	
+	
 	var oC={
 
 		Add:function(markerId,markerObj){
@@ -165,7 +165,7 @@ var MarkerClass = function(core){
 				graphData.data.dict.marker[markerId] = markers[markers.length-1];
 			}
 		},
-
+		
 		Delete:function(markerId){
 			markers.splice(getArrayElementById(markers,markerId,"elementId").index, 1);
 			delete graphData.data.dict.marker[markerId];
@@ -174,14 +174,14 @@ var MarkerClass = function(core){
 		Change:function(markerId,param){
 			AssignParameter(param,graphData.data.dict.marker[markerId].attr);
 		},
-
+		
 		ChangeSubElement:{
 
 			Add:function(markerId,newSubMarkerId,svgSubElement){
 
 				var currentElement = graphData.data.dict.marker[markerId].markerContent;
 				currentElement.subElementsList.push(newSubMarkerId);
-
+				
 				//default sub marker
 				currentElement.subElements[newSubMarkerId] ={
 					element:svgSubElement,
@@ -195,7 +195,7 @@ var MarkerClass = function(core){
 				var currentElement = graphData.data.dict.marker[markerId].markerContent;
 				currentElement.subElementsList.splice(currentElement.subElementsList.indexOf(newSubMarkerId),1);
 				delete currentElement.subElements[newSubMarkerId];
-
+				
 			},
 
 			Change:function(markerId,newSubMarkerId,param){
@@ -203,5 +203,5 @@ var MarkerClass = function(core){
 			}
 		}
 
-	};
+	}; 
 return oC;};

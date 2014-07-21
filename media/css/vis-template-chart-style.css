@@ -3,7 +3,7 @@
 
 
 
-
+		
 
 
 #div-chart {
@@ -12,20 +12,20 @@
 	margin-right: 10em;
 	width: 100%;
 }
-
+		
 
 .svg{
 	float: left;
 }
-
-
+		
+		
 rect.pane {
 	cursor: move;
 	fill: none;
 	pointer-events: all;
 }
-
-
+		
+		
 .brush .extent {
 	stroke: gainsboro;
 	fill: dodgerblue;
@@ -33,36 +33,36 @@ rect.pane {
 	fill-opacity: .125;
 	shape-rendering: crispEdges;
 }
-
-
+		
+		
 .axis path,
 .axis line{
-	fill: none;
+	fill: none; 
 	stroke : #000;
     shape-rendering: crispEdges;
 }
-
+	
 .y.axis path
 {
 	stroke-width : 0;
 }
-
+		
 .y.axis line {
 	fill: none;
     stroke: none;
     opacity: 0.5;
 }
-
+		
 .y.axis .tick
 {
 	stroke : none;
 	stroke-width : 0;
 }
-
+		
 .y.axis .tick > text {
     font-family : sans-serif;
 }
-
+	
 
 .axis2 path,
 .axis2 line {
@@ -70,7 +70,7 @@ rect.pane {
     stroke: none;
     shape-rendering: crispEdges;
 }
-
+	
 
 
 .axis2 .tick > text {
@@ -78,65 +78,65 @@ rect.pane {
 	stroke: lightgrey;
 	stroke-width: 0.3;
 }
-
-
+		
+		
 .link{
 	stroke: lightgreen;
 	stroke-width: 1.5px;
 	fill: none;
 	opacity: 0.8;
 }
-
+		
 .dot{
 	stroke:darkgrey;
 	stroke-width:2;
 }
-
+		
 .mindot{
 	stroke:darkgrey;
 	stroke-width:1;
 }
-
+		
 
 
 .keywordDot{
 	fill : blue;
 }
-
+		
 
 
 .text{
 	position: relative;
 	font-family: sans-serif;
-	stroke: lightgrey;
+	stroke: lightgrey;		
 	stroke-width: 0.3px;
 	opacity: 0.7;
 }
-
-
-.keywordNode,
+		
+		
+.keywordNode, 
 .legend {
 	cursor: pointer;
 }
-
+		
 text.node_text {
 	stroke-width: 0.01em;
 	stroke: #888;
 }
-
+	
 text.shadow {
 	stroke: #eee;
 	stroke-width: 0.3em;
 	opacity: 0.7;
 }
-
-
+		
+		
 #div-wrap-legends {
 	display: inline-block;
 	margin-top: 1em;
     width: 8em;
 }
-
+		
 
 .legend {
 	pointer-events: all;
@@ -148,8 +148,8 @@ text.shadow {
 	vertical-align: bottom;
 	text-shadow: 0.1em 0.1em 0.5em #aaa;
 }
-
-
+		
+		
 .legend > div{
 	margin-right: 0.1em;
 	float:right;
@@ -159,9 +159,9 @@ text.shadow {
 	-webkit-border-radius: 0.2em;
 	box-shadow: 0.1em 0.1em 0.5em #555;
 }
-
-
-
+		
+		
+		
 #tooltip {
     position: absolute;
     width: 15em;
@@ -175,20 +175,20 @@ text.shadow {
 	pointer-events: all;
     z-index: 100;
 }
-
-
+	
+		
 
 #tooltip.hidden {
     opacity: 0;
 }
-
+	
 #tooltip a {
     margin: 0;
     font-family: sans-serif;
     font-size: 1.05em;
 	line-height: 1.15em;
 }
-
+		
 
 
 #tooltip p {
@@ -198,7 +198,7 @@ text.shadow {
 	line-height: 0.95em;
 	color: #222;
 }
-
+			
 #tabs,
 #div-chart,
 #div-list,
@@ -207,7 +207,7 @@ text.shadow {
 	display: block;
 }
 
-
+		
 #div-list {
     overflow: auto;
 	vertical-align: top;
@@ -218,7 +218,7 @@ text.shadow {
 	border-radius: 5px;
 	border: 1px #1d904e solid;
 }
-
+		
 #select-list,
 #div-list ul {
 	height: 100% !important;
@@ -229,8 +229,8 @@ text.shadow {
 	padding-right: 0px;
 	padding-left: 0px;
 }
-
-
+		
+				
 .ui-selected {
 	padding-left: 1px;
 	padding-top: 1px;
@@ -239,30 +239,30 @@ text.shadow {
 	height: 1.1em;/*12px;*/
 	width: 100%;
 }
-
+		
 #div-span {
 	margin-top: 10px;
 }
-
-
-
+		
+		
+		
 #span-list{
 	color: blue;
-font-size: 12px;
+font-size: 12px; 
 }
-
+		
 
 
 #div-button {
 	/*position: absolute;*/
 	text-align: center;
 }
-
-
+		
+		
 .message {
     padidng-top: 50em;
     font-size: 1.2em;
     font-weight: bold;
 }
-
+		
 

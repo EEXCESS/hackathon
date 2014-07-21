@@ -46,9 +46,9 @@ a[href^="https://"], a[href^="http://"] { padding-right: 16px; background-image:
 
 /*
 .dropDown li { background-image: url('/images/small-icons.png'); background-size: 16px 14px; background-repeat: no-repeat; padding-left: 25px !important; }
-.dropDown li:nth-child(1) { background-position: 0 -28px; }
-.dropDown li:nth-child(2) { background-position: 0 -42px; }
-.dropDown li:nth-child(3) { background-position: 0 -56px; }
+.dropDown li:nth-child(1) { background-position: 0 -28px; } 
+.dropDown li:nth-child(2) { background-position: 0 -42px; } 
+.dropDown li:nth-child(3) { background-position: 0 -56px; } 
 */
 
 

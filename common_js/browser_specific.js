@@ -5,7 +5,7 @@ EEXCESS.messaging = (function() {
 
     /**
      * Sends a message to the background script
-     *
+     * 
      * @param {Object} message The message to send
      * @param {Function} callback Function to be called by the receiver
      */
@@ -70,7 +70,7 @@ EEXCESS.messaging = (function() {
 
     /**
      * Listens for incoming messages
-     * @param {Function} callback a function that looks like this:
+     * @param {Function} callback a function that looks like this: 
      function(any message, MessageSender sender, function sendResponse) {...};
      */
     var _listener = function(callback) {
@@ -88,9 +88,9 @@ EEXCESS.messaging = (function() {
 
 EEXCESS.inject = (function() {
     /**
-     * Injects functionality for showing a fancybox overlay into the current tab
+     * Injects functionality for showing a fancybox overlay into the current tab 
      * and forwards the request to it (request contains url to display)
-     *
+     * 
      * @param {Integer} tabID identifier of the tab, the fancybox should be injected
      * @param {Object} req request to be forwarded to the tab, with attributes "method"="fancybox" and "data"= the url to display
      */
@@ -110,7 +110,7 @@ EEXCESS.inject = (function() {
 EEXCESS.utils = (function() {
     /**
      * Detects the language of the specified tab.
-     *
+     * 
      * @param {Integer} tabID identifier of the tab
      * @param {Function} success callback, which receives the country code as parameter
      */
@@ -126,7 +126,7 @@ EEXCESS.utils = (function() {
 EEXCESS.history = (function() {
     /**
      * Searches the history, see https://developer.chrome.com/extensions/history#method-search for documentation
-     *
+     * 
      * @param {Object} query the query object
      * @param {Function} callback callback function, receiving the search result as parameter
      */
@@ -136,7 +136,7 @@ EEXCESS.history = (function() {
 
     /**
      * Retrieve the visits to the specified url.
-     *
+     * 
      * @param {String} url the url for which to retrieve the visits
      * @param {Function} callback callback function, receiving an array of visit items corresponding to the supplied url
      */
@@ -155,7 +155,7 @@ EEXCESS.history = (function() {
 EEXCESS.tabs = (function() {
     /**
      * See https://developer.chrome.com/extensions/tabs#event-onUpdated for documentation
-     *
+     * 
      * @param {Function} callback
      */
     var _updateListener = function(callback) {
@@ -163,9 +163,9 @@ EEXCESS.tabs = (function() {
     };
 
     /**
-     *
+     * 
      * See https://developer.chrome.com/extensions/tabs#event-onActivated for documentation
-     *
+     * 
      * @param {Function} callback
      */
     var _activatedListener = function(callback) {
@@ -174,7 +174,7 @@ EEXCESS.tabs = (function() {
 
     /**
      * See https://developer.chrome.com/extensions/tabs#method-get for documentation
-     *
+     * 
      * @param {Integer} tabID identifier of the tab
      * @param {Object} callback
      */
@@ -184,7 +184,7 @@ EEXCESS.tabs = (function() {
 
     /**
      * See https://developer.chrome.com/extensions/tabs#method-query for documentation
-     *
+     * 
      * @param {Object} queryInfo
      * @param {Function} callback
      */
@@ -194,7 +194,7 @@ EEXCESS.tabs = (function() {
 
     /**
      * Listens to tab removed events
-     *
+     * 
      * @param {Function} callback callback function, receiving the identifier of the removed tab
      */
     var _removedListener = function(callback) {
@@ -212,7 +212,7 @@ EEXCESS.tabs = (function() {
 EEXCESS.windows = (function() {
     /**
      * Listen to window focus change events
-     *
+     * 
      * @param {Function} callback callback function for event, receiving the window identifier as parameter
      */
     var _focusChangedListener = function(callback) {

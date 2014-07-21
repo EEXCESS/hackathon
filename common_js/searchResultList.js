@@ -14,7 +14,7 @@ var EEXCESS = EEXCESS || {};
  * - jquery-ui.css
  * Handlers for preview and rating can be customized via options, as well as the
  * path to the media folder and the path to the libs folder
- *
+ * 
  * See an usage example in /usage_examples searchResultList.js and searchResultList.html
  * @param {Jquery div elmeent} divContainer
  * @param {Object} options

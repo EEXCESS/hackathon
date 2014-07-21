@@ -1,6 +1,6 @@
 /** This is a master css file for eexcess pages
     all pages should include first this css, and then
-    their own. The base color for the scheme design is #1d904e
+    their own. The base color for the scheme design is #1d904e 
     This file should not contain definitions below class level.
 */
 
@@ -23,16 +23,16 @@ body {
 body a{
     text-decoration:none;
     color: #529CBF;
-
+	
 }
 
 header {
-    /*margin-top:30px; width:500px;*/
-    background:white;
-    margin-left:auto;
-    margin-right:auto;
-    /*padding-bottom:20px;*/
-    padding-bottom: 35px;
+    /*margin-top:30px; width:500px;*/ 
+    background:white; 
+    margin-left:auto; 
+    margin-right:auto; 
+    /*padding-bottom:20px;*/ 
+    padding-bottom: 35px;   
 }
 
 /*ceci*/
@@ -89,7 +89,7 @@ header .eexcess_submit_btn{
 
 header .eexcess_submit_btn:hover{
     box-shadow: -0.1em 0.1em 0.1em green, 0.1em 0.1em 0.1em green, 0.1em -0.1em 0.1em green, -0.1em -0.1em 0.1em green;
-
+	
 }
 
 /*ceci*/

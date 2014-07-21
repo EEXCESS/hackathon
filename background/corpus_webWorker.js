@@ -2,10 +2,10 @@ var EEXCESS = EEXCESS || {};
 
 /**
  * Represents a token.
- *
+ * 
  * By default, the type is set to 'w', if no type is provided. This corresponds
  * to a regular word.
- *
+ * 
  * @param {String} token
  * @param {String} parent
  * @param {String} type
@@ -19,9 +19,9 @@ EEXCESS.Token = function(token, parent, type) {
 /**
  * Returns an array of stopwords for the provided language if the specified
  * language is supported.
- *
+ * 
  * Currently, only english and german are supported
- *
+ * 
  * @param {String} language country code of provided language
  * @returns {Array} array of stopwords
  */
@@ -79,7 +79,7 @@ EEXCESS.stopwords = function(language) {
  * Tokens, consisting of a single character after this process are discarded.
  * For urls, tokens with the type 'u' are created and for email-adresses,
  * tokens with the type 'e' respectively.
- *
+ * 
  * @param {String} text the text from which to create the token
  * @param {String} parent the parent element of the text
  * @returns {EEXCESS.Token} the created token
@@ -109,7 +109,7 @@ EEXCESS.createToken = function(text, parent) {
 
 /**
  * Tokenizes the provided text
- *
+ * 
  * @param {String} text the text to tokenize
  * @param {String} parent the parent element of the text
  * @param {String} language country code of the text's language
@@ -151,11 +151,11 @@ EEXCESS.Corpus = function() {
 
 /**
  * Function updates the amount of tokens belonging to the provided parent
- *
- * If no entry exists for the token in the corpus, a new entry is created along
+ * 
+ * If no entry exists for the token in the corpus, a new entry is created along 
  * with the corresponding parent entry. If the token is present, but the parent
  * entry not, the latter is added. Otherwise, the amount of tokens corresponding
- * to the given parent entry is incremented by 1. In all cases, the overall
+ * to the given parent entry is incremented by 1. In all cases, the overall 
  * amount of occurrences of the provided token is incremented by 1.
  * @param {String} token the token for which to increment the amount
  * @param {String} parent the token's parent for which to increment the amount
@@ -176,7 +176,7 @@ EEXCESS.Corpus.prototype.add = function(token, parent) {
 
 /**
  * Builds a corpus of tokens from the given elements
- *
+ * 
  * @param {Array} elements the elements to tokenize (each entry in the array
  * must be an object with structure {text:String,parent:String}
  * @param {String} language country code for language

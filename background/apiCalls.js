@@ -100,7 +100,7 @@ EEXCESS.euCall = function(queryData, start, success, error) {
 
 /**
  * Sends a query with the specified parameters to an API-endpoint
- * @param {Object} queryData either the weighted query terms directly or containing the weighted query terms in "terms" and a reason for the query in "reason"
+ * @param {Object} queryData either the weighted query terms directly or containing the weighted query terms in "terms" and a reason for the query in "reason" 
  * @param {Integer} start pagination index to start with in the result list
  * @param {Function} success success callback, receives the retrieved results as parameter
  * @param {Function} error error callback, receives the error message as parameter
@@ -142,7 +142,7 @@ EEXCESS.frCall_impl = function(queryData, start, success, error) {
 };
 
 
-// set provider call function and url according to the provided value
+// set provider call function and url according to the provided value 
 // if an inappropriate value is given, set it to fr-stable
 EEXCESS.backend = (function() {
     var call = EEXCESS.frCall_impl;

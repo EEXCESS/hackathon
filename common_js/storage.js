@@ -23,7 +23,7 @@ EEXCESS.storage = (function() {
      * Wrapper for local storage access. If a value is supplied, it is stored at
      * with the supplied key. Otherwise the function returns the value stored at
      * the supplied key.
-     *
+     * 
      * @param {String} key The key for which to retrieve/store a value
      * @param {JSON} value (optional) The value to store. If no value is
      * supplied, the value at the supplied key is returned.
@@ -38,7 +38,7 @@ EEXCESS.storage = (function() {
 
     /**
      * Obtains a connection to the database
-     *
+     * 
      * @param {function} success success callback, receives the database as parameter
      * @param {function} error (optional) error callback
      */
@@ -51,9 +51,9 @@ EEXCESS.storage = (function() {
     };
 
     /**
-     *
+     * 
      * Puts an object into the desired object store (may overwrite an existing entry)
-     *
+     * 
      * @param {String} objectStore name of the object store, where the entry should be put in
      * @param {Object} value the value to store
      * @param {Function} error (optional) error callback
@@ -132,7 +132,7 @@ EEXCESS.storage = (function() {
     /**
      * Stores the rating of a resource. If a rating for this resource is already
      * present within the same context, the rating is updated
-     *
+     * 
      * @param {Object} rating the rating, including the resource and context
      * @param {Function} success (optional) success callback without parameters
      * @param {Function} error (optional) error callback without parameters
@@ -181,10 +181,10 @@ EEXCESS.storage = (function() {
 
     /**
      * Obtains the rating for a resource from the database. At the moment, the
-     * rating's context is not considered (the same result item may be rated
-     * different, when retrieved by different queries), but instead, the first
+     * rating's context is not considered (the same result item may be rated 
+     * different, when retrieved by different queries), but instead, the first 
      * rating found is returned.
-     *
+     * 
      * @param {String} uri the uri of the resource for which to retrieve the rating
      * @param {Object} context the context for which to retrieve the rating
      * @param {Function} success success callback, receiving the rating score as parameter
@@ -276,7 +276,7 @@ EEXCESS.storage = (function() {
 
     /**
      * Enriches a visit with its referrer (if any) and stores it in the database
-     *
+     * 
      * @param {Object} visitItem the visit to store
      * @param {Integere} referringVisitId identifier of the referring visit
      */
@@ -299,9 +299,9 @@ EEXCESS.storage = (function() {
     };
 
     /**
-     * Stores recommendations in the database, along with the context in which
+     * Stores recommendations in the database, along with the context in which 
      * they were retrived and a timestamp.
-     *
+     * 
      * @param {Array} recommendations the recommendations to store
      * @param {Object} context the context in which the recommendations were retrieved
      * @param {long} timestamp the timestamp
@@ -342,7 +342,7 @@ EEXCESS.storage = (function() {
 
     /**
      * Initializes or updates the database. If the rm_previous parameter is set to true or left empty, the previous entries are removed.
-     *
+     * 
      * @param {function} success (optional) success callback (receives the database as parameter)
      * @param {function} error (optional) error callback (receives the error object as parameter)
      * @param {type} rm_previous (optional) flag, indicating if the previous entries should be removed (by default they are)

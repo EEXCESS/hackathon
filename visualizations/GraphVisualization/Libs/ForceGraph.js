@@ -1,21 +1,21 @@
 
 var FGraph = function(){
 	var core = null;
-
+	
 	var nodeWorks = null;
 	var linkWorks = null;
 	var markerWorks = null;
 	var clusterWorks = null;
-	var workFunc = null;
-
+	var workFunc = null;		
+		
 	var graphData = null;
-
+	
 	var currentObjectContent = null;
-
-
-
-	var ToObject = function(){currentObjectContent = oC;return currentObjectContent;};
-
+	
+	
+	
+	var ToObject = function(){currentObjectContent = oC;return currentObjectContent;};	
+	
 	var ToNode = function(){currentObjectContent = oC.Node;return currentObjectContent;};
 	var ToLink = function(){currentObjectContent = oC.Link;return currentObjectContent;};
 	var ToMarker = function(){currentObjectContent = oC.Marker;return currentObjectContent;};
@@ -24,15 +24,15 @@ var FGraph = function(){
 	var ToNodeSubElement = function(){currentObjectContent = oC.Node.ChangeSubElement;return currentObjectContent;};
 	var ToNodeCluster = function(){currentObjectContent = oC.Node.Cluster;return currentObjectContent;};
 	var ToLinkSubElement = function(){currentObjectContent = oC.Link.ChangeSubElement;return currentObjectContent;};
-	var ToMarkerSubElement = function(){currentObjectContent = oC.Marker.ChangeSubElement;return currentObjectContent;};
-
+	var ToMarkerSubElement = function(){currentObjectContent = oC.Marker.ChangeSubElement;return currentObjectContent;};	
+		
 	var oC = {
 		//Init graph
 		InitGraph:function(chartIdParam){
 			core =new Core();
 			core.InitCore(chartIdParam);
 			//graphData = core.graphData;
-
+			
 			nodeWorks = new NodeClass(core);
 			linkWorks = new LinkClass(core);
 			markerWorks = new MarkerClass(core);
@@ -45,22 +45,22 @@ var FGraph = function(){
 		Test1:function(){
 			return currentObjectContent;
 		},
-
-
+		
+		
 		To:{
 			Object:ToObject,
 			Node:ToNode,Link:ToLink,
 			Graph:ToGraph,Marker:ToMarker
 		},
-
+		
 		Node:{
 			To:{
 				SubElement:ToNodeSubElement,Object:ToObject,Cluster:ToNodeCluster
 			},
-
+			
 			Add:function(nodeId,nodeObj){
 				nodeWorks.Add(nodeId,nodeObj);return currentObjectContent;
-			},
+			},	
 			Change:function(nodeId,param){
 				nodeWorks.Change(nodeId,param);return currentObjectContent;
 			},
@@ -79,7 +79,7 @@ var FGraph = function(){
 				},
 				Change:function(nodeId,subNodeId,param){
 					nodeWorks.ChangeSubElement.Change(nodeId,subNodeId,param);return currentObjectContent;
-				}
+				}				
 			},
 			Cluster:{
 				To:{
@@ -99,7 +99,7 @@ var FGraph = function(){
 			},
 			Add:function(sourceNodeId,targetNodeId,linkId,linkObj){
 				linkWorks.Add(sourceNodeId,targetNodeId,linkId,linkObj);return currentObjectContent;
-			},
+			},	
 			Change:function(linkId,param){
 				linkWorks.Change(linkId,param);return currentObjectContent;
 			},
@@ -118,7 +118,7 @@ var FGraph = function(){
 				},
 				Change:function(linkId,subLinkId,param){
 					linkWorks.ChangeSubElement.Change(linkId,subLinkId,param);return currentObjectContent;
-				}
+				}				
 			}
 		},
 		Marker:{
@@ -127,7 +127,7 @@ var FGraph = function(){
 			},
 			Add:function(markerId,markerObj){
 				markerWorks.Add(markerId,markerObj);return currentObjectContent;
-			},
+			},	
 			Change:function(markerId,param){
 				markerWorks.Change(markerId,param);return currentObjectContent;
 			},
@@ -146,10 +146,10 @@ var FGraph = function(){
 				},
 				Change:function(markerId,newSubMarkerId,param){
 					markerWorks.ChangeSubElement.Change(markerId,newSubMarkerId,param);return currentObjectContent;
-				}
+				}				
 			}
 		},
-
+		
 		Graph:{
 			To:{
 				Object:ToObject
@@ -171,7 +171,7 @@ var FGraph = function(){
 			},
 			ReOption:function(){
 				workFunc.Reoption();return currentObjectContent;
-			},
+			},	
 			ReScale:function(){
 				workFunc.Rescale();return currentObjectContent;
 			},
@@ -182,7 +182,7 @@ var FGraph = function(){
 				return core.force;
 			}
 		}
-
-
+		
+		
 	}
 return oC;};

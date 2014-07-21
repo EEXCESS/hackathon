@@ -31,7 +31,7 @@ EEXCESS.local_url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/rec
     } else {
         EEXCESS.storage.local('federated_url', EEXCESS.federated_url);
     }
-
+    
     // privacy proxy local
     var ls_local_url = EEXCESS.storage.local('local_url');
     if(typeof ls_local_url !== 'undefined' && ls_local_url !== null) {

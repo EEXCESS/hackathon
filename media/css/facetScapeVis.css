@@ -69,7 +69,7 @@ input {
 }
 .queryPanel-search {
     float:left;
-
+	
 }
 .queryPanel-searchButton, .queryPanel-filterButton {
     background-color: white;/*494949;*/

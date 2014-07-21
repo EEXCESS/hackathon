@@ -2,9 +2,9 @@
 var Core = function(){
 
 var oC = {
-
+	
 	graphData:null,
-
+	
 	outer:null,
 	vis:null,
 	zoomCall:null,
@@ -17,7 +17,7 @@ var oC = {
 	defs:null,
 	marker:null,
 	dataPanZoom:null,
-
+		
 	//data for graph, it is serialable in json format.
 	SetDefaultValues: function (){
 		return {
@@ -40,13 +40,13 @@ var oC = {
 					alpha:0.1//0.01
 				}
 			},
-
+						
 			//graph scale
 			vis:{
 				trans:[0,0],
 				scale:1
 			},
-
+			
 			//graph data
 			data:{
 				dict:{
@@ -58,15 +58,15 @@ var oC = {
 				funcDict:{}
 			}
 		};
-	},
-
+	},	
+		
 	InitCore:function(chartIdParam){
 		oC.graphData = oC.SetDefaultValues();
-
+		
 		if(chartIdParam != undefined){
 			oC.graphData.options.svg.chartId = chartIdParam;
 		}
-
+		
 		// init svg
 		oC.outer = d3.select(oC.graphData.options.svg.chartId)
 			.append("svg")
@@ -75,7 +75,7 @@ var oC = {
 			//.attr("pointer-events", "all")
 			//.attr("class","box");
 
-
+			
 		oC.vis = oC.outer.append('g');
 
 		oC.zoomCall = d3.behavior.zoom().on("zoom", oC.PanZoom);
@@ -125,7 +125,7 @@ var oC = {
 		oC.marker = oC.defs.selectAll(".marker");
 
 
-
+		
 		//start the graph
 		//console.log("start");
 		oC.reoption();
@@ -140,34 +140,34 @@ var oC = {
 		//console.log("tick");
 		oC.node.attr("transform", Transform);
 		oC.node.each(cluster(10 * e.alpha * e.alpha))
-
+				  
 		oC.link.select("path").attr("d", LinkArc)
 		oC.link.select(".label")
-			.attr("transform",function(d) {
+			.attr("transform",function(d) { 
 				return "translate(" + (d.source.x + d.target.x)/2 + "," + (d.source.y + d.target.y)/2 + ")";
 			});
-
+		
 		function LinkArc(d) {
 			var dx = d.target.x - d.source.x;
 			var dy = d.target.y - d.source.y;
-
+				  
 			if(d.linkContent.parameter.curve.active){
 				var curve = d.linkContent.parameter.curve;
 				var dr = Math.sqrt(dx * dx + dy * dy)+curve.radius;
-				return "M" + d.source.x + " "+ d.source.y  +
+				return "M" + d.source.x + " "+ d.source.y  +  
 					"A" + dr + " " + dr + " "+curve.restpathparam+" " + d.target.x+ " " + d.target.y;
 			}
 			return "M" + d.source.x + " "+ d.source.y  +  "L" + d.target.x+ " " + d.target.y;
 		}
-
+		
 		function Transform(d) {
 			return "translate(" + d.x + "," + d.y + ")";
 		}
-
+		
 		function cluster(alpha) {
 			return function(d) {
 				var cluster = d.nodeContent.parameter.cluster;
-
+		  
 				if(!cluster.active){
 					return;
 				}
@@ -175,16 +175,16 @@ var oC = {
 					return;
 				}
 				var clusterValue = oC.graphData.data.clusters[cluster.name];// center node from cluster.
-
+				
 				if (clusterValue === d){
 					return;
 				}
-
+				
 				var x = d.x - clusterValue.x,
 					y = d.y - clusterValue.y,
 					l = Math.sqrt(x * x + y * y),
 					r = cluster.distance + clusterValue.nodeContent.parameter.cluster.distance;
-
+					
 				if (l != r) {
 				  l = (l - r) / l * alpha;
 				  d.x -= x *= l;
@@ -192,15 +192,15 @@ var oC = {
 				  clusterValue.x += x;
 				  clusterValue.y += y;
 				}
-
+			
 			};
 		}
-
+		
 	},
 
 
 
-	//re- scale, draw, option ----------------------------------------------------------------------------------------------------------------------
+	//re- scale, draw, option ---------------------------------------------------------------------------------------------------------------------- 
 
 	//reoption force graph
 	reoption: function() {
@@ -228,17 +228,17 @@ var oC = {
 
 	PanZoom:function() {
 		//console.log("rescale");
-
+		
 		if(oC.dataPanZoom == null){
 			oC.dataPanZoom = d3.event;
 		}
 		oC.graphData.vis.trans=d3.event.translate;
 		oC.graphData.vis.scale=d3.event.scale;
-
+		
 		oC.vis.attr("transform",
 			"translate(" + oC.graphData.vis.trans + ")"
 			+ " scale(" + oC.graphData.vis.scale + ")");
-
+			
 	},
 
 	rescale:function(){
@@ -246,10 +246,10 @@ var oC = {
 		oC.vis.attr("transform",
 			"translate(" + oC.graphData.vis.trans + ")"
 			+ " scale(" + oC.graphData.vis.scale + ")");
-
+			
 		if(oC.dataPanZoom != null){
 			oC.dataPanZoom.translate=oC.graphData.vis.trans;
-			oC.dataPanZoom.scale=oC.graphData.vis.scale;
+			oC.dataPanZoom.scale=oC.graphData.vis.scale;	
 		}
 
 		oC.zoomCall.translate(oC.graphData.vis.trans);
@@ -258,18 +258,18 @@ var oC = {
 	},
 
 
-
-
+			
+		
 	// redraw force layout
 	//var count = 0;
 	redraw:function() {
 		//console.log("redraw "+ count);count++;
-
+		
 /*
 		if(oC.force.stopCalc){
 			oC.force.stop();
 		}*/
-
+		
 		//link properties
 		oC.force.linkDistance(function(d){
 			return d.linkContent.parameter.distance;
@@ -277,8 +277,8 @@ var oC = {
 		oC.force.linkStrength(function(d){
 			return d.linkContent.parameter.strength;
 		});
-
-
+		
+		
 		// generate any svg-link
 		oC.link.data([]).exit().remove();
 		oC.link = oC.vis.selectAll(".link");
@@ -291,14 +291,14 @@ var oC = {
 			.attr("id",function(d){
 				return d.elementId;
 			});
-
-		linkgroup.insert("svg:title").text(function(d){
-			return d.linkContent.parameter.title;
+			
+		linkgroup.insert("svg:title").text(function(d){ 
+			return d.linkContent.parameter.title; 
 		});
-
+			
 		linkgroup.insert("path")
 			.attr("data-nodata",function(d){
-
+			
 				var innerCurrentElement = d.linkContent.parameter;
 				d3.select("#"+d.elementId  +" > " + "path").attr(innerCurrentElement.attr)
 				.on(innerCurrentElement.event.action,function(d){
@@ -307,44 +307,44 @@ var oC = {
 
 			});
 
-
+			
 		linkgroup.insert('g')
 			.attr("class","label")
 			.attr("data-nodata",function(d){
-
+			
 				var currentSubLink = d.linkContent;
-
+				
 				var currentElement ={};
 				var subElement = d3.select("#"+d.elementId +" > .label");
 
 				currentSubLink.subElementsList.forEach(function(currentSubLinkname){
-
+				
 					currentElement = currentSubLink.subElements[currentSubLinkname];
 					var innerCurrentElement = currentElement;//very important!
-
+					
 					//d3.select("#"+d.elementId +" > .label")
 					subElement.insert(currentElement.element)
 						.attr(currentElement.attr)
-						.text(currentElement.text)
+						.text(currentElement.text)					
 						.on(currentElement.event.action,function(d){
 							return oC.graphData.data.funcDict[innerCurrentElement.event.func](innerCurrentElement.event.param);
 						});
 				});
 			});
 
-
+		
 		/*
 		  link
 			.classed("link_selected", function(d) { return d === selected_link; });
 		*/
-
-
+		
+		
 		// generate any svg-node
 		oC.node.data([]).exit().remove();
 		oC.node = oC.vis.selectAll('.node');
-
+		
 		oC.node = oC.node.data(oC.nodes);
-
+		
 
 		oC.node.enter()
 			.insert("g")
@@ -352,20 +352,20 @@ var oC = {
 			.attr("id",function(d){
 				return d.elementId;
 			})
-			.insert("svg:title").text(function(d){
-				return d.nodeContent.parameter.title;
+			.insert("svg:title").text(function(d){ 
+				return d.nodeContent.parameter.title; 
 			})
 			.attr("data-nodata",function(d){
 				var currentNode = d.nodeContent;
-
+				
 				var currentElement ={};
 				var subElement = d3.select("#"+d.elementId).attr(currentNode.parameter.attr);
-
+				
 				currentNode.subElementsList.forEach(function(currentSubNode){
-
-					currentElement = currentNode.subElements[currentSubNode];
+				
+					currentElement = currentNode.subElements[currentSubNode];		
 					var innerCurrentElement = currentElement; //very important!
-
+					
 					subElement.insert(currentElement.element)
 						.attr(currentElement.attr)
 						.text(currentElement.text)
@@ -378,19 +378,19 @@ var oC = {
 						.on(currentElement.event2.action,function(d){
 							return oC.graphData.data.funcDict[innerCurrentElement.event2.func](innerCurrentElement.event2.param);
 						});
-
+						
 					if(currentNode.parameter.drag){
 						subElement.call(oC.force.drag);
 					}
 				});
-			});
-
+			});	
+			
 		// generate any svg marker
 		oC.marker.data([]).exit().remove();
 		oC.marker = oC.defs.selectAll('.marker');
-
+		
 		oC.marker = oC.marker.data(oC.markers);
-
+		
 		oC.marker.enter()
 			.insert("marker")
 			.attr("class", "marker")
@@ -399,12 +399,12 @@ var oC = {
 			})
 			.attr("data-nodata",function(d){
 				var currentSubMarker = d.markerContent;
-
+				
 				var currentElement ={};
 				var subElement = d3.select("#"+d.elementId).attr(d.attr);
 				currentSubMarker.subElementsList.forEach(function(currentSubMarkername){
-
-					currentElement = currentSubMarker.subElements[currentSubMarkername];
+				
+					currentElement = currentSubMarker.subElements[currentSubMarkername];		
 					//var innerCurrentElement = currentElement;
 
 					subElement.insert(currentElement.element)
@@ -412,7 +412,7 @@ var oC = {
 						.text(currentElement.text);
 				});
 			});
-
+			
 //////////////////////////////////
 /*
 		if (d3.event) {
@@ -425,7 +425,7 @@ var oC = {
 		oC.force.start();
 
 	}
-};
+}; 
 
 
 return oC;};

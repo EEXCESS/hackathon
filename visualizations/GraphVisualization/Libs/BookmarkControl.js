@@ -8,7 +8,7 @@ var bookmarkDict = {
 
 //add new book mark
 $("#addbookmark").click(function(){
-
+    
     //has bookmark a name?
     var bookmarkname =  $("#newbookmarkname").val();
     if(bookmarkname == ""){
@@ -22,20 +22,20 @@ $("#addbookmark").click(function(){
         $("#message").text("bookmark exists");
         return;
     }
-
+    
     // add new bookmark
     $("#bookmark-body").append(
         '<div id="'+bookmarkname+'">'
             //+'<div class="bookmark">'
 			+'<div class="green_round_box bookmark">'
-
+			
                 +'<div>'
                     +'<input class="bookmarktext" type="text" readonly value="'+bookmarkname+'"></input>'
-                   // +'<button class="editbookmarkname">edit</button>'
+                   // +'<button class="editbookmarkname">edit</button>'   
                 +'</div>'
                 +'<div class="workbookmarkshow" >'
 					+'<input class="editcolor" disabled type="color" value="'+$("#newcolor").val()+'"></input>'
-                    +'<button class="expanderbookmark">+</button>'
+                    +'<button class="expanderbookmark">+</button>'        
                     +'<button class="deletebookmark">x</button>'
                 +'</div>'
                 +'<div class="editbookmarkshow" style="display:none;">'
@@ -48,15 +48,15 @@ $("#addbookmark").click(function(){
             +'</div>'
         +'</div>'
     );
-
-
+    
+    
     // add events for bookmark
-
+    
 
     //expand bookmarkelement
     var ExpandBookmarkElement = function(event){
         var bookmarlElement = "#"+event.data.bookmarkname+" .bookmarkelement";
-
+        
         if($(bookmarlElement).css("display") == "none"){
             //expand bookmark
             //if($(bookmarlElement).children().length>0){
@@ -72,34 +72,34 @@ $("#addbookmark").click(function(){
         }
     };
     $("#"+bookmarkname+" .expanderbookmark").on("click",{bookmarkname:bookmarkname},ExpandBookmarkElement);
-
-
+    
+    
     //edit bookmark color
 	/*
     var EditBookmarlColor = function(event){
         //change the color nodes
         //todo...
         //bookmarkDict.bookmarks[event.data.bookmarkname] ={};
-
-
+		
+        
         //$("#"+bookmarkname+" .showable").css(
         //    "background",$("#"+bookmarkname+" .editcolor").val()
         //);
-
+        
     };
     $("#"+bookmarkname+" .editcolor").on("change",{bookmarkname:bookmarkname},EditBookmarlColor);
     */
-
+    
     //delete bookmark
     var DeleteBookmark = function(event){
         if (confirm("You want delete this bookmark?") == true) {
             $("#"+event.data.bookmarkname).remove();
             currentSelectedBookmark = null;
-
+			
             //delete bookmarks from nodes
 
 			//delete nodes from graph
-			//var test = forceGraph.Graph.GetGraphData();
+			//var test = forceGraph.Graph.GetGraphData();	
 			var resultNodelistObj = bookmarkDict.bookmarks[event.data.bookmarkname];
 			Object.keys(resultNodelistObj).forEach(function(resultNodeId){
 				var currentBookmarkName = "Bookmark_"+resultNodeId+"_"+event.data.bookmarkname;
@@ -107,11 +107,11 @@ $("#addbookmark").click(function(){
 					forceGraph.To.Object()
 						.Node.Delete(currentBookmarkName);
 				}
-
+					
 			});
 			forceGraph.To.Object().To.Graph().ReDraw();
-
-			//work with dictionary
+			
+			//work with dictionary 
 			var deletedNodes = bookmarkDict.bookmarks[event.data.bookmarkname];
 			Object.keys(deletedNodes).forEach(function(elementNode){
 
@@ -124,47 +124,47 @@ $("#addbookmark").click(function(){
 			});
 
             delete bookmarkDict.bookmarks[event.data.bookmarkname];
+			
 
-
-
+			
             $("#message").text("bookmark deleted successfully!");
         }else{
             $("#message").text("cancel bookmark deleted!");
         }
     };
     $("#"+bookmarkname+" .deletebookmark").on("click",{bookmarkname:bookmarkname},DeleteBookmark);
+    
 
-
-
-
+   
+    
     //edit current bookmark
     var EditCurrentBookmark = function(event){
 
         var $buttonObj = $("#"+event.data.bookmarkname+" .editbookmarkname");
-
+        
         if($buttonObj.text() == "edit"){
             //user can editable bookmark name
             $buttonObj.text("rename");
             $("#"+event.data.bookmarkname+" .editbookmarkshow").css("display","");
             $("#"+event.data.bookmarkname+" .workbookmarkshow").css("display","none");
-
+            
         }else if($buttonObj.text() == "rename"){
             //save edit new bookmark name
-
-
-
+            
+            
+            
             $buttonObj.text("edit");
             $("#"+event.data.bookmarkname+" .editbookmarkshow").css("display","none");
             $("#"+event.data.bookmarkname+" .workbookmarkshow").css("display","");
-
+            
             var newBookmarkName = $("#"+event.data.bookmarkname+" .bookmarknewtext").val();
-
+            
             if(newBookmarkName == ""){
                 return;
             }
-
+            
             var findsamename = $('#bookmark-body div[id="' +newBookmarkName +'"]');
-
+            
             //console.log(findsamename.length);
             if(findsamename.length > 0){
                 //console.log("xxx");
@@ -182,10 +182,10 @@ $("#addbookmark").click(function(){
                 //$("#"+event.data.bookmarkname+" .editcolor").off("change");
                 $("#"+event.data.bookmarkname+" .expanderbookmark").off("click");
 
-
+                
                 $("#"+event.data.bookmarkname).attr("id",newBookmarkName);
                 $("#"+newBookmarkName+" .bookmarktext").val(newBookmarkName);
-
+                
                 //bind the events
                 $("#"+newBookmarkName).on("click",{bookmarkname:newBookmarkName},CurrentBookmarkSelected);
                 $("#"+newBookmarkName+" .editbookmarkname")
@@ -199,21 +199,21 @@ $("#addbookmark").click(function(){
                 $("#"+newBookmarkName+" .expanderbookmark")
                     .on("click",{bookmarkname:newBookmarkName},ExpandBookmarkElement);
                 currentSelectedBookmark = newBookmarkName;
-
+                
 				var currentBookmark = bookmarkDict.bookmarks[event.data.bookmarkname];
 				delete bookmarkDict.bookmarks[event.data.bookmarkname];
 				bookmarkDict.bookmarks[newBookmarkName] ={};
 				bookmarkDict.bookmarks[newBookmarkName] = currentBookmark;
-
+				
                 //rename(id) bookmarks from nodes
                 //todo...
-
-            }
+                
+            }            
         }
     };
     $("#"+bookmarkname+" .editbookmarkname").on("click",{bookmarkname:bookmarkname},EditCurrentBookmark);
 
-
+    
     //cancel edit current bookmark
     var CancelEditCurrentbookmark = function(event){
         var $buttonObj = $("#"+event.data.bookmarkname+" .editbookmarkname");
@@ -222,27 +222,27 @@ $("#addbookmark").click(function(){
         $("#"+event.data.bookmarkname+" .workbookmarkshow").css("display","");
     };
     $("#"+bookmarkname+" .cancelbookmarkname").on("click",{bookmarkname:bookmarkname},CancelEditCurrentbookmark);
-
-
-
+    
+    
+        
     //current bookmark selected
     var CurrentBookmarkSelected = function(event){
         currentSelectedBookmark = event.data.bookmarkname;
         //console.log(currentSelectedBookmark);
         $(".bookmark").css("background","");
         $("#"+event.data.bookmarkname + " .bookmark").css("background","yellow");
-
+        
         $("#message").text(event.data.bookmarkname+ " selected");
-
+        
     };
     $("#"+bookmarkname).on("click",{bookmarkname:bookmarkname},CurrentBookmarkSelected);
-
-
+    
+    
     $("#newbookmarkname").val("");
     $("#message").text("success");
-
+    
 	bookmarkDict.bookmarks[bookmarkname] ={};
-
+	
 });
 
 

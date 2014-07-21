@@ -36,14 +36,14 @@
     font-weight: 200;
     line-height: 34px;
     .opacity(95);
-
+  
     small {
       color: inherit;
       display: block;
       font-size: inherit;
       font-weight: 700;
-    }
-  }
+    }  
+  }    
 }
 
 // LOGIN FORM
@@ -52,7 +52,7 @@
   background-color: @form-color;
   padding: 24px 23px 20px;
   position: relative;
-  .border-radius(6px);
+  .border-radius(6px);  
 
   // Ear
   &:before {
@@ -64,7 +64,7 @@
     position: absolute;
     left: -12px;
     top: 35px;
-    width: 0;
+    width: 0;    
     -webkit-transform: rotate(360deg); // Make corners smooth
   }
   .control-group {
@@ -78,13 +78,13 @@
     padding-top: 11px;
     text-indent: 3px;
     width: 299px;
-    margin-bottom: 10px !important;
-
+    margin-bottom: 10px !important; 
+    
     &:focus {
       & + .login-field-icon {
         color: @firm;
-      }
-    }
+      }  
+    }    
   }
   .login-field-icon {
     color: mix(@gray, @inverse, 60%);
@@ -93,7 +93,7 @@
     right: 13px;
     top: 14px;
     .transition(.25s);
-  }
+  }  
 }
 
 .login-link {
@@ -108,6 +108,6 @@
 @media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-moz-min-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (-o-min-device-pixel-ratio: 2/1), only screen and (-moz-min-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 2) {
   .login {
     background-image: url(../images/login/imac-2x.png);
-  }
-}
+  }  
+}    
 

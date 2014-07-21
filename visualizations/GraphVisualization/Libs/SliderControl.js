@@ -2,10 +2,10 @@
 function SilderControl(){
 
 	function ReDraw(){
-
-	/*
+	
+	/*	
 		d3.select(oC.selectHTMLTag).select("svg").remove();
-
+		
 		var svg = d3.select(oC.selectHTMLTag)
 			.append("svg")
 				.attr(oC.svgAttr)
@@ -14,16 +14,16 @@ function SilderControl(){
 				.attr("transform", "translate(" + oC.position + ")");
 */
 
-		d3.select("#"+oC.controlId).remove();
+		d3.select("#"+oC.controlId).remove();	
 
 		var svg = d3.select("#"+oC.svgTag)
 			.append("g")
 				.attr("id",oC.controlId)
 				.attr("transform", "translate(" + oC.position + ")");
+				
+		// scale //////////////	
 
-		// scale //////////////
-
-		if(oC.isScale.value){
+		if(oC.isScale.value){	
 			svg.append("g")
 				.attr("class", "x axis")
 				.attr("transform", "translate(0," +// 96
@@ -33,8 +33,8 @@ function SilderControl(){
 				);
 		}
 		//////////////////////
-
-
+			
+			
 			/*
 		var circle = svg.append("g").selectAll("circle")
 			.data(data)
@@ -46,21 +46,21 @@ function SilderControl(){
 			.attr("class", "brush")
 			.call(oC.brush);
 
-
+			
 		brushg.selectAll(".resize")
 			//.append("path")
 			.append("g")
 			.attr("transform", "translate(0," +  /*height*//*96 /2*/ 96/2 + ")")
 			;//.attr("d", arc);
 
-
+			
 		brushg.selectAll("rect")
 			.attr("height", oC.sliderHeight);
 
-
+			
 		brushg.selectAll(".background").style({fill:"white",visibility:"visible",stroke:"black","stroke-width":1});
 	}
-
+	
 	var oC = {
 		x:null,
 		brush:null,
@@ -75,12 +75,12 @@ function SilderControl(){
 		},
 
 		ChangeSilderControl:function(){
-
+		
 			oC.brush.x(oC.x);
-
-			ReDraw();
+			
+			ReDraw();	
 		},
-
+		
 		SetSliderControl:function(controlId,svgTag){
 			oC.controlId = controlId;
 			oC.svgTag = svgTag;
@@ -92,7 +92,7 @@ function SilderControl(){
 			oC.brush = d3.svg.brush()
 				.x(oC.x)
 				.extent([10, 30]);
-
+				
 			   // .on("brushstart", brushstart)
 				//.on("brush", brushmove)
 				//.on("brushend", brushend);
@@ -103,7 +103,7 @@ function SilderControl(){
 				.startAngle(0)
 				.endAngle(function(d, i) { return i ? -Math.PI : Math.PI; });
 			*/
-
+			
 			//scale part
 			//oC.x;
 			oC.isScale.xDataScale = d3.scale.ordinal()
@@ -111,10 +111,10 @@ function SilderControl(){
 					["a","b","c"]
 				)
 				.rangePoints([0, 600], 0);
-
+			
 			//redraw the control
-			ReDraw();
-
+			ReDraw();	
+				
 				/*
 			brushstart();
 			brushmove();
@@ -139,8 +139,8 @@ function SilderControl(){
 			*/
 		}
 	};
-
-
+	
+	
 	return oC;
-
+	
 };

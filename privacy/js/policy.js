@@ -31,7 +31,7 @@ function doChangeProgress() {
 	}
 
 	$(this).closest(".panel").find(".setting").html(value);
-
+	
 	$(this).each(updatePolicy);
 }
 
@@ -43,7 +43,7 @@ function updatePolicy() {
 		if($(this).find(".progress-bar:eq(0)").hasClass("disable")) {
 			value = 1;
 		}
-
+		
 		var jsonTopicsPolicy = EEXCESS.storage.local('privacy.profile.topics');
         var topics = [];
         if(jsonTopicsPolicy) {
@@ -68,13 +68,13 @@ function updatePolicy() {
 		} else {
 			value = $(this).find(".progress-bar:not(.disable)").size();
 		}
-
+		
 		EEXCESS.storage.local("privacy.policy."+fieldName,value);
 		updateDisclosedValue(fieldName);
 	}
-
-
-/* 	var rawValue = EEXCESS.storage.local("profile.private."+fieldValue);
+	
+	
+/* 	var rawValue = EEXCESS.storage.local("profile.private."+fieldValue);	
 	privacy.apply(fieldName,rawValue, value);
 	*/
 }
@@ -147,7 +147,7 @@ function updateDisclosedValue(fieldName) {
     	if (EEXCESS.storage.local("privacy.policy.address") >= 5) {
     		if (EEXCESS.storage.local("privacy.profile.address.line1")) {
     			value += EEXCESS.storage.local("privacy.profile.address.line1") + '<br>\n';
-    		}
+    		} 
     		if (EEXCESS.storage.local("privacy.profile.address.line2")) {
     			value += EEXCESS.storage.local("privacy.profile.address.line2") + '<br>\n';
     		}
@@ -172,7 +172,7 @@ function updateDisclosedValue(fieldName) {
     		value = 'Nothing';
     	} else {
     		value += '</address>';
-    	}
+    	}	
 		$("div[data-eexcess-policy-field='address']").find("#disclosed").html(value);
     	break;
     case "birthdate":
@@ -184,7 +184,7 @@ function updateDisclosedValue(fieldName) {
     		}
     		break;
     	case '3':
-    		if (EEXCESS.storage.local("privacy.profile.birthdate")) {
+    		if (EEXCESS.storage.local("privacy.profile.birthdate")) { 
     			value = EEXCESS.storage.local("privacy.profile.birthdate").split("-")[0];
     		}
     		break;
@@ -256,7 +256,7 @@ function initAvailableValue(fieldName) {
 		var value = '<address>\n';
 		  if (EEXCESS.storage.local("privacy.profile.address.line1")) {
 			  value += EEXCESS.storage.local("privacy.profile.address.line1") + '<br>\n';
-		  }
+		  } 
 		  if (EEXCESS.storage.local("privacy.profile.address.line2")) {
 			  value += EEXCESS.storage.local("privacy.profile.address.line2") + '<br>\n';
 		  }
@@ -289,7 +289,7 @@ function initAvailableValue(fieldName) {
 			$("div[data-eexcess-policy-field='" + fieldName + "']").find("#available").html("Undefined");
 		}
 	}
-}
+} 
 
 function initPolicyPanel() {
 	var fieldName = $(this).closest(".panel").attr("data-eexcess-policy-field");

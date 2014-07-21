@@ -23,14 +23,14 @@ var HelpFunctions = function(){
 			Object.keys(sourceObj).forEach(function(key){
 				sourceSubObj = sourceObj[key];
 				targetSubObj = targetObj[key];
-
+				
 				if(typeof sourceSubObj === "object" && Array.isArray(sourceSubObj) == false && sourceSubObj != null){
 					oC.AssignParameter(sourceSubObj,targetSubObj);
 				}else{
 					targetObj[key] = sourceSubObj;
 				}
-
-			});
+			
+			});    
 		},
 
 
@@ -60,15 +60,15 @@ var HelpFunctions = function(){
 					return true;
 				}
 			});
-
+			
 			toSplice.map(function(l){
 				links.splice(oC.getArrayElementById(links,l.elementId,"elementId").index, 1);
 			});
-
+			  
 		}
 
 
-	};
+	}; 
 return oC;
 }
 
@@ -83,63 +83,63 @@ var WorkFunctions = function(core){
 	var markerWorks = new MarkerClass(core);
 	var linkWorks = new LinkClass(core);
 	var clusterWorks = new ClusterClass(core);
-
+	
 	var helpFunc = new HelpFunctions();
 	var AssignParameter = helpFunc.AssignParameter;
-
-
+	
+	
 	var oC = {
 		DeleteGraph:function(){
 			//delete Graph
 			//delete node and links
 			Object.keys(graphData.data.dict.node).forEach(function(key){
-				nodeWorks.Delete(key);
+				nodeWorks.Delete(key);	
 			});
-
+			
 			//delete markers
 			Object.keys(graphData.data.dict.marker).forEach(function(key){
-				markerWorks.Delete(key);
+				markerWorks.Delete(key);	
 			});
 
 			//delete clusters
 			Object.keys(graphData.data.clusters).forEach(function(key){
-				clusterWorks.AwayCluster(key);
+				clusterWorks.AwayCluster(key);	
 			});
-
+			
 			// set default value
 			graphData = core.SetDefaultValues();
 		},
 
 
 		ImportData:function(data){
-
+			
 
 			//import nodes
-			Object.keys(data.dict.node).forEach(function(key){
+			Object.keys(data.dict.node).forEach(function(key){ 
 				nodeWorks.Add(key,data.dict.node[key]);
 			});
-
+			
 			//import links
 			var currentLink = null;
-			Object.keys(data.dict.link).forEach(function(key){
+			Object.keys(data.dict.link).forEach(function(key){ 
 				currentLink = data.dict.link[key];
 				linkWorks.Add(currentLink.source.elementId,currentLink.target.elementId,key,currentLink);
 
 			});
-
+			
 			//import markers
-			Object.keys(data.dict.marker).forEach(function(key){
+			Object.keys(data.dict.marker).forEach(function(key){ 
 				markerWorks.Add(key,data.dict.marker[key]);
 			});
-
+			
 			//import clusters
-			Object.keys(data.clusters).forEach(function(key){
+			Object.keys(data.clusters).forEach(function(key){ 
 				clusterWorks.ToCluster(key,data.clusters[key].elementId);
 			});
-
+	
 			//import function data
 			graphData.data.funcDict = data.funcDict;
-
+			
 		},
 
 		//set and Import data -----------------------------------------------------------------------------------------
@@ -155,11 +155,11 @@ var WorkFunctions = function(core){
 		},
 		Reoption:function(){
 			core.reoption();
-		},
+		},	
 		Rescale:function(){
 			core.rescale();
 		}
-	};
+	}; 
 return oC;
 }
 

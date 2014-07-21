@@ -8,18 +8,18 @@ visTemplate.init();
 
 
 var onDataReceived = function(dataReceived, status, action) {
-
+	
 	console.log("Post to EEXCESS/Belgin server status: " + status);
 	console.log(action);
-
+	
 	globals.mappingcombination = dataReceived[0].mapping;
 	globals.groupedBy = dataReceived[0].groupedBy;
 	globals.data = dataReceived[0].data;
-
+	
 	console.log(globals);
 
 	var charts = getCharts( globals.mappingcombination );
-
+	
 	visTemplate.refresh( globals.data.query, globals.data.results.results, charts, globals.mappingcombination, globals.groupedBy, action );
 };
 
@@ -34,23 +34,23 @@ requestPlugin();
 function requestPlugin() {
 
     var requestVisualizations = function(pluginResponse, action) {
-
+        
     	if((typeof pluginResponse == "undefined") || pluginResponse == null) {
             $("#tabs").text("no data available");
         }
         else {
-
+            
         	var dataToSend = pluginResponse;//fixMissingAndMalformattedValues( pluginResponse );
             var host = "http://eexcess.know-center.tugraz.at/";
             var cmd = "getMappings";
-
+            
             // Call server
             var post = $.post(host + "/viz", { cmd: cmd, dataset: JSON.stringify(dataToSend) });
-
+            
             post
             	.done(function(reqData){
             		var data = JSON.parse(reqData);
-            		onDataReceived(data, "success", action);
+            		onDataReceived(data, "success", action);  		
             	})
             	.fail(function(){
             		var dummy = new Dummy();
@@ -60,11 +60,11 @@ function requestPlugin() {
         }
     }
 
-
+    	
     EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
            requestVisualizations(reqResult, "load_visualization");
     });
-
+    
     EEXCESS.messaging.listener(
     	function(request, sender, sendResponse) {
     		if (request.method === 'newSearchTriggered') {
@@ -74,7 +74,7 @@ function requestPlugin() {
    		}
     );
 
-
+    
 }
 
 
@@ -93,6 +93,6 @@ function getCharts(combinations){
 		if(charts.indexOf(mc.chartname) == -1)
 			charts.push(mc.chartname);
 	});
-
+	
 	return charts;
 }

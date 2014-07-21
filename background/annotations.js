@@ -20,8 +20,8 @@ EEXCESS.annotation = (function() {
          * @memberOf EEXCESS.annotation
          * @param {String} resource URI of the resource to rate
          * @param {Integer} score The rating's score
-         * @param {Object} context The context of the score assignment (a
-         * resource may be rated positive when provided as result to a certain
+         * @param {Object} context The context of the score assignment (a 
+         * resource may be rated positive when provided as result to a certain 
          * query, but negative in the context of another query)
          * @param {Boolean} beenRecommended Flag for indicating if the resource was recommended by the EEXCESS framework
          */
@@ -55,12 +55,12 @@ EEXCESS.annotation = (function() {
                 contentType: 'application/json; charset=UTF-8',
                 dataType: 'json'
             });
-
+            
             // store rating
             EEXCESS.storage.setRating(rating);
         },
         /**
-         * Retrieves the rating score of a resource from the database.
+         * Retrieves the rating score of a resource from the database. 
          * @memberOf EEXCESS.annotation
          * @param {String} uri The resource for which to retrieve a score
          * @param {Object} context A context for which to retrieve ratings

@@ -31,8 +31,8 @@ EEXCESS.handleWidgetVisibility = function(visible) {
 };
 
 /*
- * Adds the eexcess widget as an iframe, calls the background script with
- * visibility handler as callback, to determine the current state of
+ * Adds the eexcess widget as an iframe, calls the background script with 
+ * visibility handler as callback, to determine the current state of 
  * visibility in the background's model.
  */
 

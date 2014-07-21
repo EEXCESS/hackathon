@@ -1,13 +1,13 @@
 
 var GetDataFromIndexedDB = function(){
 	var database = indexedDB.open("eexcess_db");
-
-
+	
+	
 	//async method
 	function AsyncGetSubData(database,transactionAndObjectstoreName,indexDbName,keyRange,func1,func2){
 		var tx = database.result.transaction(transactionAndObjectstoreName); // get read transaction
 		var store = tx.objectStore(transactionAndObjectstoreName); // get object store
-		var idx = store.index(indexDbName); // get timestamp index
+		var idx = store.index(indexDbName); // get timestamp index 
 
 		var cursor = idx.openCursor(keyRange); // open cursor, starting at "0" (every timestamp is larger)
 		/*
@@ -16,7 +16,7 @@ var GetDataFromIndexedDB = function(){
 			console.log("no keywords!");
 		};
 		*/
-
+			
 		//async method
 		cursor.onsuccess = function(evt) {
 			var res = evt.target.result;
@@ -39,7 +39,7 @@ var GetDataFromIndexedDB = function(){
 						oC.queryObjHistory.push(evt.target.result.value);
 					},function(){
 						//console.log(oC.queryObjHistory);
-
+						
 						//next async call
 						asyncSeries["MakeWordlists"]();
 					}
@@ -47,7 +47,7 @@ var GetDataFromIndexedDB = function(){
 			},
 			"MakeWordlists":function(){
 				oC.queryObjHistory.forEach(function(element){
-					oC.wordHistory.push(element.query.map(function(d){return d.text;}).join(" "));
+					oC.wordHistory.push(element.query.map(function(d){return d.text;}).join(" "));	
 				});
 				//console.log(oC.wordHistory);
 				oC.uniqueWords = d3.set(oC.wordHistory).values();
@@ -56,7 +56,7 @@ var GetDataFromIndexedDB = function(){
 					oC.wordsWithResults[d] = {results:{},userActions:{},resultList:[]};//userActions ??
 				});
 				//console.log(oC.uniqueWords);
-
+				
 				//next async call
 				asyncSeries["MakeResults"](-1);
 			},
@@ -70,11 +70,11 @@ var GetDataFromIndexedDB = function(){
 						var res = evt.target.result;
 						resultObject[res.value.result.uri] = res.value.result;
 						resultList.push(res.value.result.uri);
-
+						
 					},function(){
 						oC.wordsWithResults[keyword].results = resultObject;
 						oC.wordsWithResults[keyword].resultList = resultList;
-
+						
 						if(oC.uniqueWords.length-1 == index){
 							// async call posible;
 							//console.log("--finish--");
@@ -82,7 +82,7 @@ var GetDataFromIndexedDB = function(){
 							//BuildSlider();
 							oC.asyncCall();
 							//console.log("--finish--");
-
+						
 						}else{
 							//recursion async call
 							asyncSeries["MakeResults"](index);
@@ -91,42 +91,42 @@ var GetDataFromIndexedDB = function(){
 				);
 			}
 		};
-
+		
 		//start async the first call.
 		asyncSeries["GetHistory"]();
 	};
-
+	
 	var oC = {
 		asyncCall:function(){},
-
+	
 		queryObjHistory:[],
 		wordHistory:[],
 		uniqueWords:[],
-
+		
 		wordsWithResults :{},
 		Init:function(asyncCall){
 			oC.asyncCall = asyncCall;
 			database.onsuccess = GetData;
 		},
 		GetNewData:function(asyncCall){
-
+		
 			oC.asyncCall = function(){};
 			oC.queryObjHistory=[];
 			oC.wordHistory=[];
 			oC.uniqueWords=[];
-
+			
 			oC.wordsWithResults ={};
-
+			
 			//console.log(oC);
-
+			
 			oC.asyncCall = asyncCall;
 			database.onsuccess();
 			//LastTestAction();
 
 			//BuildControls();
 				//forceGraph.InitGraph("#D3graph");
-
-
+			
+			
 		}
 	};
 	return oC;

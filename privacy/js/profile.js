@@ -19,7 +19,7 @@ function loadTopics(topicList) {
     }
     for (var i=0;i<topics.length;i++) {
         topicList.append('<li data="' + topics[i]['uri'] + '">' + topics[i]['label'] + '</li>');
-    }
+    }    
 }
 
 (function($) {

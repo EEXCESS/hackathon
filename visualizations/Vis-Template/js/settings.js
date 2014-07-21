@@ -1,31 +1,31 @@
 function Settings (){
-
+	
 	var SETTINGS = {};
-
-
-
+	
+	
+	
 	SETTINGS.getDimensions = function( domRoot, iWidth, iHeight, senderStr ){
-
+		
 		var DIMENSIONS = {};
-
+		
 		var rootWidth  = $(domRoot).width() - 10;
 		var rootHeight = $(domRoot).height() >= 500 ? 500 : $(domRoot).height();
-
+		
 		switch( senderStr ){
-			case "timeline": DIMENSIONS = getTimelineDimensions( domRoot, iWidth, rootWidth, rootHeight, senderStr ); break;
-			case "barchart": DIMENSIONS = getBarchartDimensions( domRoot, iWidth, rootWidth, rootHeight, senderStr ); break;
+			case "timeline": DIMENSIONS = getTimelineDimensions( domRoot, iWidth, rootWidth, rootHeight, senderStr ); break;			
+			case "barchart": DIMENSIONS = getBarchartDimensions( domRoot, iWidth, rootWidth, rootHeight, senderStr ); break;		
 
 		}
 		return DIMENSIONS;
-
+		
 	};
-
-
+	
+	
 	/************************************************************
 	 * DIMENSIONS processing
-	 *
+	 * 
 	 * **/
-
+	
 	function getTimelineDimensions( domRoot, iWidth, rootWidth, rootHeight ){
 
 		var focusMargin = {top: 0, bottom: 100, left: 80, right: 20 };
@@ -35,21 +35,21 @@ function Settings (){
 		var contextMargin	= {top: cTop, bottom: 20, left: 80, right: 20 };
 
 		var cHeight = rootHeight - contextMargin.top - contextMargin.bottom;
-		var contextHeight	= cHeight > 0 ? cHeight : 40;
+		var contextHeight	= cHeight > 0 ? cHeight : 40; 
 		//rootHeight - this.contextMargin.top - this.contextMargin.bottom;
 
 		var width = rootWidth - focusMargin.left - 140;//this.focusMargin.right;
 
 		var centerOffset = (iWidth/2) - ((width + focusMargin.left + focusMargin.right)/2);
 		var verticalOffset = (rootHeight < 500) ? 20 : ($(domRoot).height() - 500) / 2;
-
-		return { 'focusMargin': focusMargin, 'focusHeight': focusHeight, 'contextMargin': contextMargin, 'contextHeight': contextHeight, 'width': width,
+		
+		return { 'focusMargin': focusMargin, 'focusHeight': focusHeight, 'contextMargin': contextMargin, 'contextHeight': contextHeight, 'width': width, 
 				'centerOffset': centerOffset, 'verticalOffset': verticalOffset };
 	}
-
-
+	
+	
 	function getBarchartDimensions( domRoot, iWidth, rootWidth, rootHeight ){
-
+		
 		var margin = { top: 50, bottom: 50, left: 80, right: 20 };
 		var height = rootHeight - margin.top - margin.bottom;
 		var width = rootWidth - margin.left - 140;
@@ -57,21 +57,21 @@ function Settings (){
 		var centerOffset = (iWidth/2) - ((width + margin.left + margin.right)/2);
 		var verticalOffset = (rootHeight < 500) ? 20 : ($(domRoot).height() - 500) / 2;
 		var delay = 400;
-
+		
 		return { 'margin': margin, 'height': height, 'width': width, 'centerOffset': centerOffset, 'verticalOffset': verticalOffset, 'delay': delay };
 	}
-
-
-
-
-
-
+	
+		
+	
+	
+	
+	
 	/************************************************************
 	 * INITDATA
-	 *
+	 * 
 	 * **/
 	SETTINGS.getInitData = function( senderStr, data, mappings, arg ){
-
+		
 		var INITDATA = {};
         var preprocessedData = fixMissingAndMalformattedValues( data );
 
@@ -82,11 +82,11 @@ function Settings (){
 
 		return INITDATA;
 	};
-
-
+	
+	
 	/************************************************************
 	 * INITDATA processing
-	 *
+	 * 
 	 * **/
 
 
@@ -166,30 +166,30 @@ function Settings (){
 	function getBarchartInitData( processedData, mappings, yearRange ){
 
 		var xAxis, yAxis, color;
-
+		
 		var i = 0;
 		while(i < mappings.length && mappings[i]['visualattribute'] != 'x-axis')
 			i++;
-
+		
 		// Visual channels
 		xAxis = mappings[i]['facet'];
 		color = xAxis;
 		yAxis = 'count';
-
+			
 		// domain and counter are parallel arrays
 		var domain = d3.set( processedData.map(function(d){ return d.facets[xAxis]; }) ).values();
 		var counter = Array();
 		domain.forEach(function(d, i){
 			counter.push( parseInt(0) );
 		});
-
+		
 		processedData.forEach(function(d){
 			var index = domain.indexOf( d.facets[xAxis] );
 			counter[index]++;
 		});
-
+		
 		var array = [];
-
+		
 		domain.forEach(function(d, i){
 			var obj = {};
 			obj[xAxis] = d;
@@ -197,19 +197,19 @@ function Settings (){
 			obj['selected'] = false;
 			array.push( obj );
 		});
-
+		
 		// INITDATA
 		return {'data': array, 'recomData': processedData, 'xAxisChannel': xAxis, 'yAxisChannel': yAxis, 'colorChannel': color};
-
+		
 	}
+	
 
+	
 
-
-
-
-
+	
+	
 //////////////////////////////////////////////////////////////////////////////////////////
-
+		
 	return SETTINGS;
-
+	
 }
