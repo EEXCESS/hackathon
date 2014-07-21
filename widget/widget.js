@@ -32,7 +32,7 @@ EEXCESS.init = function(widget) {
         evt.preventDefault();
         EEXCESS.messaging.callBG({method: 'fancybox', data: 'chrome-extension://' + EEXCESS.utils.extID + '/' + $(evt.target).parent('a').attr('href')});
     });
-    
+
     $('#eexcess_hide_btn').click(function(evt){
         evt.preventDefault();
         EEXCESS.messaging.callBG({method: {parent:'model',func:'toggleVisibility'}, data:-1});

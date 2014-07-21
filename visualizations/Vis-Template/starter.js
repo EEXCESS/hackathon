@@ -9,7 +9,7 @@ visTemplate.init();
 
 var onDataReceived = function(dataReceived, status, action) {
 	
-	console.log("Post status: "+ status);
+	console.log("Post to EEXCESS/Belgin server status: " + status);
 	console.log(action);
 	
 	globals.mappingcombination = dataReceived[0].mapping;
@@ -68,7 +68,7 @@ function requestPlugin() {
     EEXCESS.messaging.listener(
     	function(request, sender, sendResponse) {
     		if (request.method === 'newSearchTriggered') {
-    			//console.log(request.data);
+    			console.log('data received from plugin');
    				requestVisualizations(request.data, "refresh_visualization");
    			}
    		}

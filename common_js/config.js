@@ -1,6 +1,6 @@
 var EEXCESS = EEXCESS || {};
 
-EEXCESS.config = (function() {    
+EEXCESS.config = (function() {
     // init privacy policy
     if(typeof EEXCESS.storage.local('privacy.policy.address') === 'undefined') {
         EEXCESS.storage.local('privacy.policy.address', 2);
@@ -26,7 +26,7 @@ EEXCESS.config = (function() {
     if(typeof EEXCESS.storage.local('privacy.policy.uuid') === 'undefined') {
         EEXCESS.storage.local('privacy.policy.uuid', 1);
     }
-    
+
     var _PP_BASE_URI = 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/';
     var _LOG_RATING_URI = _PP_BASE_URI + 'log/rating';
     var _LOG_RVIEW_URI = _PP_BASE_URI + 'log/rview';

@@ -12,31 +12,46 @@ and open the template in the editor.
 
         <script type="text/javascript" src="../../libs/jquery-1.10.1.min.js"></script>
         <script type="text/javascript" src="../../libs/jquery-ui/jquery-ui.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../libs/jquery-ui/jquery-ui.css" />
         <script type="text/javascript" src="../../libs/d3.v3.js"></script>
         
         <script type="text/javascript" src="../../common_js/browser_specific.js" charset="utf-8"></script>
+        <script type="text/javascript" src="../bookmarkingAPI.js" charset="utf-8"></script>
 		
 		<script type="text/javascript" src="vis.js"></script>
 		<script type="text/javascript" src="js/utils.js"></script>
 		<script type="text/javascript" src="js/settings.js"></script>
+        <script type="text/javascript" src="js/colorpicker.js"></script>
 		<script type="text/javascript" src="js/dummy.js"></script>
-
-		<link rel="stylesheet" type="text/css" href="../../media/css/eexcess.css">
-		<link rel="stylesheet" type="text/css" href="../../media/css/vis-template-style.css" />
-        <link rel="stylesheet" type="text/css" href="../../media/css/vis-template-chart-style.css" />
 
 		<script type="text/javascript" src="Timeline/timeline.js"></script>
 		<script type="text/javascript" src="Timeline/js/geometry.js"></script>
 		<script type="text/javascript" src="Barchart/barchart.js"></script>
         
+        <link rel="stylesheet" type="text/css" href="../../media/css/eexcess.css">
+
+        <!-- <link rel="stylesheet" type="text/css" href="../../media/css/vis-template-style-alternative-1.css" /> -->
+        <!-- <link rel="stylesheet" type="text/css" href="../../media/css/vis-template-style-alternative-2.css" /> -->
+        <!-- <link rel="stylesheet" type="text/css" href="../../media/css/vis-template-style-alternative-3.css" /> -->
+
+        <link rel="stylesheet" type="text/css" href="../../media/css/vis-template-style-static.css" />
+        <link rel="stylesheet" type="text/css" href="../../media/css/vis-template-style-alternative-1-test.css" />
+        <!-- <link rel="stylesheet" type="text/css" href="../../media/css/vis-template-style-alternative-2-test.css" /> -->
+        <!-- <link rel="stylesheet" type="text/css" href="../../media/css/vis-template-style-alternative-3-test.css" /> -->
+
+
+        <link rel="stylesheet" type="text/css" href="../../media/css/vis-template-chart-style-cecilia.css" />
+
     </head>
     <body>
 		
 		<div id="eexcess_header">
 			<div id="eexcess_inner_header">
 		  		<div id="eexcess_header_search">
-	    			<input id="eexcess_search_field" class="eexcess_query_field" type="text" name="query" value="">	
-	    			<input id="eexcess_search_button" class="eexcess_submit_btn" type="submit" value="Search">
+                    <div class="eexcess_query_field_wrapper">
+	    			    <input id="eexcess_search_field" class="eexcess_query_field" type="text" name="query" value="">
+                    </div>
+                    <button id="eexcess_search_button" class="eexcess_query_btn">Search</button>
 	  			</div>
 	  			<div id="eexcess_header_text">
 	  				<span></span>
@@ -71,9 +86,8 @@ and open the template in the editor.
 				<div id="eexcess_vis_panel">
 				
 					<div id="eexcess_vis_controls_wrapper">
-						<div id="eexcess_vis_controls">
-							<button id="eexcess_btnreset" class="eexcess_vis_controls_button" >Reset</button>							
-						</div>
+				        <button id="eexcess_btnreset" class="eexcess_vis_controls_button" >Reset</button>
+                        <button id="eexcess_btnbookmarks" class="eexcess_vis_controls_button" >Bookmarks</button>
 					</div>
 								
 					<div id="eexcess_canvas"></div>

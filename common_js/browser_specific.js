@@ -218,10 +218,10 @@ EEXCESS.windows = (function() {
     var _focusChangedListener = function(callback) {
         chrome.windows.onFocusChanged.addListener(callback);
     };
-    
+
     /**
      * for documentation see https://developer.chrome.com/extensions/windows#method-getCurrent
-     * 
+     *
      * @param {Object} options
      * @param {Function} callback
      * @returns {undefined}

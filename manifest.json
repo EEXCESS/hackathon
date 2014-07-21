@@ -27,7 +27,7 @@
             "css": ["media/css/sidebar.css"]
         }
     ],
-    
+
     "web_accessible_resources": [
         "media/*",
         "widget/*",
@@ -43,7 +43,7 @@
         "<all_urls>",
         "geolocation",
         "history",
-        "background", 
+        "background",
         "storage"
     ],
     "options_page": "options/options.html",
@@ -51,3 +51,4 @@
         "48": "media/icons/48.png",
         "128": "media/icons/128.png"}
 }
+

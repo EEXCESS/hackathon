@@ -8,7 +8,7 @@ html { font-size: 62.5%; }
 
 
 @media (max-width: 300px) {
-    html { font-size: 70%; }    
+    html { font-size: 70%; }
 }
 
 @media (min-width: 500px) {
@@ -28,34 +28,34 @@ body{
 	overflow: hidden;
     font-size: 0.7em;
 }
-	
+
 h1 {
 	font-size: 0.85em;
 }
 
 p {
 	font-size: 0.8em;
-}	
-	
+}
+
 span {
 	font-size: 1em;
 }
-	
+
 select {
 	font-size: 1em;
 }
-	
+
 text {
 	font-size: 0.85em;
 }
-	
-	
-	
+
+
+
 body{
 	background: white;
 	background-image: none !important;
 }
-	
+
 
 body a{
     text-decoration:none;
@@ -84,7 +84,7 @@ div{
     height: 25px;
     background-color: white;
     margin-left: 0%;
-    border-radius: 0px; 
+    border-radius: 0px;
     vertical-align: middle;
 	line-height: 28px;
 }
@@ -211,7 +211,7 @@ div{
 /*
     <div> containing everything below the header ("#eexcess_header")
 */
-#eexcess_main_panel{	
+#eexcess_main_panel{
 	text-align: center;
 	vertical-align: top;
 	height: 90%;
@@ -231,8 +231,8 @@ div{
     margin-top: 5px;
     margin-bottom: 5px;
     width:80%;
-    height:100%;  
- border:1px solid #e4e4e4;    
+    height:100%;
+ border:1px solid #e4e4e4;
 }
 
 
@@ -244,7 +244,7 @@ div{
 
 /*
     Main panel (div) on the left side (green)
-    
+
 */
 #eexcess_controls {
 	float: left;
@@ -267,8 +267,8 @@ div{
 #eexcess_fixed_controls{
 	height: 50%;
 	margin-bottom: 100%;
- border:1px solid #e4e4e4; 
-padding-top: 0.8em; 
+ border:1px solid #e4e4e4;
+padding-top: 0.8em;
 }
 
 
@@ -292,7 +292,7 @@ padding-top: 0.8em;
     Contains individual <span>, <select> pairs
 */
 .eexcess_mapping_container {
-	
+
 }
 
 
@@ -303,7 +303,7 @@ padding-top: 0.8em;
 	display: block;
 	float: left;
 	text-align : left;
-	margin-left: 2%; 
+	margin-left: 2%;
 	width: 35%;
 	z-index: 3;
 }
@@ -366,16 +366,16 @@ Visualization Panel (center of screen)
 /*
     Container for control buttons in Visualization Panel (so far only "Reset")
 */
-#eexcess_vis_controls {	
+#eexcess_vis_controls {
 	width: 100%;
 	height: 2.5em;
- border:1px solid #e4e4e4;    
-	
+ border:1px solid #e4e4e4;
+
 }
 
 
 /*
-    Reset button style 
+    Reset button style
 */
 .eexcess_vis_controls_button {
 
@@ -418,7 +418,7 @@ Visualization Panel (center of screen)
 
 
 /*
-    <div> appended to #eexcess_canvas when a message should be displayed. E.g. when a new search is triggered or no data are received. 
+    <div> appended to #eexcess_canvas when a message should be displayed. E.g. when a new search is triggered or no data are received.
     Contains a <span> for the message and optionally an <img> tag (for the loading icon, only for the case of a new search )
 */
 #eexcess_message_on_canvas{
@@ -478,7 +478,7 @@ Visualization Panel (center of screen)
     margin: 0;
     padding: 0;
     list-style: none;
-    display:block;   
+    display:block;
     padding-top: 1px;
     padding-bottom: 1px;
 }
@@ -496,7 +496,7 @@ Visualization Panel (center of screen)
 	background-color: rgba(241, 241, 230, 0.9);
 	min-height: 60px;
 	border: 1px solid rgba(119, 136, 153, 0.8);
-	-webkit-box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);			
+	-webkit-box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
 	box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
 }
 
@@ -582,7 +582,7 @@ h1 {
     Recommendation title contained here
 */
 .eexcess_ritem_title {
-	/*text-shadow: 0.1em 0.1em 0.5em #ccc;*/	
+	/*text-shadow: 0.1em 0.1em 0.5em #ccc;*/
 }
 
 

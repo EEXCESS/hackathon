@@ -222,10 +222,10 @@ EEXCESS.storage = (function() {
 
     /**
      * Obtains ratings for a set of results from the database. At the moment, a
-     * rating's context is not considered (the same result item may be rated 
-     * different, when retrieved by different queries), but instead, the first 
+     * rating's context is not considered (the same result item may be rated
+     * different, when retrieved by different queries), but instead, the first
      * rating found is returned.
-     * 
+     *
      * @param {Array} items Array of result objects for which to retrieve ratings
      * @param {Function} success success callback, receiving the updated results as parameter
      * @param {Function} error (optional) error callback
@@ -395,7 +395,7 @@ EEXCESS.storage = (function() {
             os = EEXCESS.DB.createObjectStore('queries', {keyPath: 'id', autoIncrement: true});
             os.createIndex('query', 'query');
             os.createIndex('timestamp', 'timestamp');
-            
+
 
             // remove existing object store 'queries_full' if present
             if (EEXCESS.DB.objectStoreNames.contains('queries_full') && clear) {
@@ -405,7 +405,7 @@ EEXCESS.storage = (function() {
             os = EEXCESS.DB.createObjectStore('queries_full', {keyPath: 'id', autoIncrement: true});
             os.createIndex('query', 'query');
             os.createIndex('timestamp', 'timestamp');
-            
+
 
             // remove existing object store 'history' if present
             if (EEXCESS.DB.objectStoreNames.contains('history') && clear) {

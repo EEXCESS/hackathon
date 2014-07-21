@@ -50,7 +50,7 @@ EEXCESS.profile = (function() {
         }
         return "";
     };
-    
+
     var applyUuidPolicy = function() {
         if (JSON.parse(EEXCESS.storage.local('privacy.policy.uuid')) === 1) {
             return _uuid;
