@@ -1,7 +1,5 @@
 function Visualization( EEXCESSobj ) {
 
-    console.log('ESTOY EN OTHER');
-
 	var self = this;
 	var EEXCESS = EEXCESSobj || {};
 	
@@ -35,11 +33,6 @@ function Visualization( EEXCESSobj ) {
     var bookmarkDialogInputWrapper = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-input-wrapper";             // Wrapper for input containing new bookmark name
 
 
-<<<<<<< HEAD
-	
-=======
-
->>>>>>> other/master
 	// Icon and Image Constants
     var root = "div#eexcess_canvas";											// String to select the area where the visualization should be displayed
 	var searchField = "#eexcess_search_field";									// String to select search field in the header
@@ -259,11 +252,7 @@ function Visualization( EEXCESSobj ) {
 
     };
 
-<<<<<<< HEAD
-	
-=======
 
->>>>>>> other/master
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
