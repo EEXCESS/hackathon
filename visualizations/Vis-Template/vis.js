@@ -1,6 +1,6 @@
 function Visualization( EEXCESSobj ) {
 
-    console.log('in other');
+    console.log('ESTOY EN OTHER');
 
 	var self = this;
 	var EEXCESS = EEXCESSobj || {};
