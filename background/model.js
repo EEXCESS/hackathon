@@ -186,16 +186,12 @@ EEXCESS.model = (function() {
             params.tab = 'results';
             // log all queries in 'queries_full'
             EEXCESS.logging.logQuery(tabID, tmp['weightedTerms'], _queryTimestamp, '_full');
-            // add manual queries to 'queries'
-            if (tmp.hasOwnProperty('reason') && tmp['reason']['reason'] === 'manual') {
-                EEXCESS.logging.logQuery(tabID, tmp['weightedTerms'], _queryTimestamp, '', 'manual');
-            }
+
+
             var success = function(data) { // success callback
                 // TODO: search may return no results (although successful)
                 tmp['data'] = data;
                 if (data.totalResults !== 0) {
-//                    // update results with ratings
-//                    _updateRatings(data.results);
                     // create context
                     var context = {query: tmp['query']};
                     // log results
@@ -207,8 +203,19 @@ EEXCESS.model = (function() {
             var error = function(error) { // error callback
                 EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
             };
-            // call provider (resultlist should start with first item)
-            EEXCESS.backend.getCall()(data, 1, success, error);
+
+            // log manual query and obtain selection
+            if (tmp.hasOwnProperty('reason') && tmp['reason']['reason'] === 'manual') {
+                EEXCESS.logging.logQuery(tabID, tmp['weightedTerms'], _queryTimestamp, '', 'manual');
+                EEXCESS.messaging.sendMsgTab(tabID, {method: 'getTextualContext'}, function(ctxData) {
+                    tmp['reason']['context'] = ctxData['selectedText'];
+                    // call provider (resultlist should start with first item)
+                    EEXCESS.backend.getCall()(data, 1, success, error);
+                });
+            } else {
+                // call provider (resultlist should start with first item)
+                EEXCESS.backend.getCall()(data, 1, success, error);
+            }
         },
         /**
          * Sends the current model state to the specified callback

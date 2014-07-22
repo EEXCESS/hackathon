@@ -115,8 +115,10 @@ EEXCESS.frCall_impl = function(queryData, start, success, error) {
     EEXCESS.profile.getProfile(function(profile) {
         profile['contextKeywords'] = weightedTerms;
         if (queryData.hasOwnProperty('reason')) {
-            for(var i=0,len= weightedTerms.length; i < len; i++) {
-                profile['contextKeywords'][i]['reason'] = queryData['reason']['reason'];
+            profile['context'] = queryData['reason'];
+            // apply history policy 
+            if(profile['context']['reason'] === 'page' && JSON.parse(EEXCESS.storage.local("privacy.policy.history")) === 1) {
+                profile['context']['context'] = 'disabled';
             }
         }
         var xhr = $.ajax({
