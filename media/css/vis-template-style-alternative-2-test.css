@@ -29,6 +29,11 @@ button:hover {
  *   DROPDOWN LIST
  */
 
+.wrapper-dropdown {
+    border-radius: 0em;
+}
+
+
 .wrapper-dropdown span {
 
 }
@@ -40,30 +45,17 @@ button:hover {
     border-color: rgba( 61,175, 111,1) transparent transparent;
 }
 
+
+.dropdown-list-icon {
+    background-color: #fff;
+    border-radius: 0em;
+}
+
+
 .wrapper-dropdown .dropdown {       /*ul*/
-    background: #fff;
-    border: 1px solid rgba(0,0,0,0.2);
-    border-top: none;
-    border-bottom: none;
-    list-style: none;
-    -webkit-transition: all 0.3s ease-out;
-    -moz-transition: all 0.3s ease-out;
-    -ms-transition: all 0.3s ease-out;
-    -o-transition: all 0.3s ease-out;
-    transition: all 0.3s ease-out;
+    border-radius: 0em;
 }
 
-
-.wrapper-dropdown .dropdown li a {
-    color: #333;
-    transition: all 0.3s ease-out;
-}
-
-
-/* Hover state */
-.wrapper-dropdown .dropdown li:hover a {
-    color: #57a9d9;
-}
 
 /* Active state */
 .wrapper-dropdown.active {
@@ -72,14 +64,6 @@ button:hover {
     color: white;
 }
 
-.wrapper-dropdown.active:after {
-    border-color: #fff transparent;
-    border-width: 0px 6px 6px 6px;
-}
-
-.wrapper-dropdown.active .dropdown {
-    border-bottom: 1px solid rgba(0,0,0,0.2);
-}
 
 
 
