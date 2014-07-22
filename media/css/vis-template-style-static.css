@@ -86,17 +86,13 @@ button {
 }
 
 
-/*
-    Hover style for all buttons
-*/
-button:hover {
-}
 
+/********************************************************************************************************************************************
 
+    DROP-DOWN LIST
 
-/*
- *   DROPDOWN LIST
- */
+********************************************************************************************************************************************/
+
 .wrapper-dropdown {
 
     /* Size & position */
@@ -131,10 +127,10 @@ button:hover {
     content: "";
     width: 0;
     height: 0;
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    margin-top: -3px;
+    position: relative;
+    float: right;
+    margin-right: 15px;
+    margin-top: 7px;
 }
 
 
@@ -145,6 +141,7 @@ button:hover {
     height: 14px;
     margin-top: 0.24em !important;
     margin-right: 0.4em;
+    background-color: inherit;
 }
 
 
@@ -177,8 +174,7 @@ button:hover {
     text-decoration: none;
     vertical-align: top;
     line-height: 1.7em;
-
-    color: #333;
+    color: #666;
 }
 
 
@@ -209,9 +205,104 @@ button:hover {
 
 
 
-/*
- *  COLOR PICKER
- */
+/********************************************************************************************************************************************
+
+    ACCORDION
+
+********************************************************************************************************************************************/
+
+
+#accordion {
+    width: 100%;
+    margin: 1em 0em;
+}
+
+.accordion-item {
+    width: 100%;
+}
+
+
+.accordion-header {
+    display: inline-block;
+    width: 100%;
+    height: 1.7em;
+
+    vertical-align: middle;
+    font-size: 1em;
+    line-height: 1.6em;
+    cursor: pointer;
+    outline: none;
+
+    border: 0.1em #ddd solid;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+
+.accordion-header span {
+    display: inline-block;
+    float: left;
+    margin-left: 0em !important;
+    margin-top: 0.2em !important;
+    vertical-align: top;
+    line-height: 1.4em;
+    font-size: 1em;
+}
+
+.accordion-header:after {          /* Little arrow */
+    content: "";
+    width: 0;
+    height: 0;
+    position: relative;
+    float: right;
+    margin-right: 15px;
+    margin-top: 7px;
+}
+
+
+.accordion-header-color-icon {
+    display: inline-block;
+    float: left;
+    width: 14px;
+    height: 14px;
+    margin-top: 0.25em;
+    margin-right: 0.4em;
+    margin-left: .5em;
+    /*margin-top: .11em;*/
+}
+
+
+.accordion-content {
+    width: 100%;
+    max-height: 30em;
+    background: #fff;
+    border: 0.1em #ddd solid;
+}
+
+.accordion-content p {
+    display: inline-block;
+    margin: .4em;
+    font-size: .95em;
+    -webkit-margin-before: 0.5em !important;
+    -webkit-margin-after: 0.5em !important;
+}
+
+
+/* Active state */
+.accordion-header.active {
+    box-shadow: none;
+}
+
+.accordion-header.active:after {
+    border-color: #fff transparent;
+    border-width: 0px 6px 6px 6px;
+}
+
+
+
+/********************************************************************************************************************************************
+
+    COLOR PICKER
+
+********************************************************************************************************************************************/
 
 
 /* colorpicker styles */
@@ -760,7 +851,7 @@ p.eexcess_ritem_short {
 
 
 
-.eexcess_bookmark_section_details_icon {
+.eexcess_details_icon {
     width: 10px;
 }
 
@@ -933,70 +1024,6 @@ p.eexcess_ritem_short {
     margin-left: 0.2em;
     margin-right: 0.2em;
 }
-
-
-
-/* Accordion in bookmark details dialog */
-
-#accordion {
-    width: 90%;
-    margin .5em;
-}
-
-.accordion-item {
-
-    /* Size & position */
-    width: 100%;
-    height: 1.7em;
-    position: relative;
-    float: left;
-    padding-left: 0.5em;
-
-    /* Styles */
-    vertical-align: middle;
-    font-size: 1em;
-    line-height: 1.6em;
-    cursor: pointer;
-    outline: none;
-
-    background: #fff;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-}
-
-
-.accordion-header {
-    display: inline-block;
-    width: 100%;
-    height: 1.7em;
-    border: 0.1em #ddd solid;
-}
-
-.accordion-header span {
-    margin-left: 0em;
-}
-
-.accordion-header-color-icon {
-    display: inline-block;
-    float: left;
-    width: 14px;
-    height: 14px;
-    margin-top: 0.24em;
-    margin-right: 0.4em;
-    /*margin-top: .11em;*/
-}
-
-
-.accordion-content {
-    width: 100%;
-    max-height: 30em;
-}
-
-
-.accordion-content p {
-    -webkit-margin-before: 0em;
-    -webkit-margin-after: 0em;
-}
-
 
 
 

@@ -27,9 +27,11 @@ button:hover {
 
 
 
-/*
- *   DROPDOWN LIST
- */
+/********************************************************************************************************************************************
+
+    DROP-DOWN LIST
+
+********************************************************************************************************************************************/
 
 .wrapper-dropdown {
     border-radius: 0.5em;
@@ -49,7 +51,6 @@ button:hover {
 
 
 .dropdown-list-icon {
-    background-color: #fff;
     border-radius: 0.3em;
 }
 
@@ -67,13 +68,49 @@ button:hover {
 }
 
 
-/*.wrapper-dropdown.active .dropdown {*/
-.wrapper-dropdown .dropdown.active {
-    border-bottom: 1px solid rgba(0,0,0,0.2);
+
+/********************************************************************************************************************************************
+
+    ACCORDION
+
+********************************************************************************************************************************************/
+
+
+.accordion-header {
+    background: #fff;
+    border-radius: 0.5em;
+}
+
+
+.accordion-header span {
+    color: #1f6080;
+}
+
+
+.accordion-header:after {          /* Little arrow */
+    border-width: 6px 6px 0px 6px;;
+    border-style: solid;
+    border-color: rgba(244,188, 103,1) transparent transparent;
+}
+
+
+.accordion-header-color-icon {
+    background-color: #fff;
+    border-radius: 0.3em;
+}
+
+.accordion-content {
+    border-radius: 0 0 0.5em 0.5em;
 }
 
 
 
+/* Active state */
+.accordion-header.active {
+    background: -webkit-linear-gradient(top, rgba(255,208,135,1) ,rgba(244,188, 103,1));
+    border-radius: 0.5em 0.5em 0 0;
+    color: white;
+}
 
 
 
@@ -253,7 +290,7 @@ button:hover {
 
 
 .eexcess-bookmark-dialog span {
-    color: #1f6080;
+    color: #529CBF;
 }
 
 

@@ -25,9 +25,11 @@ button:hover {
 
 
 
-/*
- *   DROPDOWN LIST
- */
+/********************************************************************************************************************************************
+
+    DROP-DOWN LIST
+
+********************************************************************************************************************************************/
 
 .wrapper-dropdown {
     border-radius: 0em;
@@ -35,7 +37,7 @@ button:hover {
 
 
 .wrapper-dropdown span {
-
+    color: #1f6080;
 }
 
 
@@ -47,7 +49,6 @@ button:hover {
 
 
 .dropdown-list-icon {
-    background-color: #fff;
     border-radius: 0em;
 }
 
@@ -60,12 +61,52 @@ button:hover {
 /* Active state */
 .wrapper-dropdown.active {
     background: rgba( 61,175, 111,1);
-    border-radius: 0.5em 0.5em 0 0;
+    border-radius: 0em;
     color: white;
 }
 
 
+/********************************************************************************************************************************************
 
+    ACCORDION
+
+********************************************************************************************************************************************/
+
+
+.accordion-header {
+    background: whitesmoke;
+    border-radius: 0em;
+}
+
+
+.accordion-header span {
+    color: #1f6080;
+}
+
+
+.accordion-header:after {          /* Little arrow */
+    border-width: 6px 6px 0px 6px;;
+    border-style: solid;
+    border-color: rgba( 61,175, 111,1) transparent transparent;
+}
+
+
+.accordion-header-color-icon {
+    border-radius: 0em;
+}
+
+.accordion-content {
+    border-radius: 0em;
+}
+
+
+
+/* Active state */
+.accordion-header.active {
+    background: rgba( 61,175, 111,1);
+    border-radius: 0em;
+    color: white;
+}
 
 
 

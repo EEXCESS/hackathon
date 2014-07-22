@@ -54,6 +54,7 @@ $.fn.dropdown = function( options ){
                 .attr("class", "dropdown-list-icon")
                 .style("background-color", function(d){ return d.color || "inherit"; });
 
+    // Events
     if(onChangeCallback != 'undefined'){
 
         liElements.on("click", function(d, i){
@@ -69,8 +70,8 @@ $.fn.dropdown = function( options ){
 
 
     this.on('click', function(event){
-        $(this).find('.dropdown').slideToggle(slideOptions);
         $(this).toggleClass('active');
+        $(this).find('.dropdown').slideToggle(slideOptions);
 		event.stopPropagation();
     });
 
@@ -89,6 +90,7 @@ $.fn.dropdown = function( options ){
 
 $.fn.accordionCustom = function( options ) {
 
+    var collapsible = options['collapsible'] || false;
     var duration = options['duration'] || 400;
     var easing = options['easing'] || 'swing';
     var slideOptions = { 'duration': duration, 'easing': easing };
@@ -125,14 +127,35 @@ $.fn.accordionCustom = function( options ) {
             .style("margin-left", "0em")
             .text(d.title);
 
-        accordionItem.append('div').attr('class', 'accordion-content')
+        accordionItem.append('div')
+            .attr('class', 'accordion-content')
+            .style('display', 'none')
             .append('p').text(d.content);
 
+        // Colapse & Expand
+        header.on('click', function(d){
+
+            if(collapsible){
+                itemIdToToggle = $(this.parentNode).attr('id');
+
+                $('.accordion-item').each(function(i, item){
+                    if($(item).attr('id') == itemIdToToggle){
+                        $(item).find('.accordion-header').toggleClass('active');
+                        $(item).find('.accordion-content').slideToggle(slideOptions);
+                    }
+                    else{
+                        $(item).find('.accordion-header').removeClass('active');
+                        $(item).find('.accordion-content').slideUp(slideOptions);
+                    }
+                });
+            }
+            else{
+                $(this.parentNode).find('.accordion-header').toggleClass('active');
+                $(this.parentNode).find('.accordion-content').slideToggle(slideOptions);
+            }
+        });
 
     });
-
-
-
 
 };
 

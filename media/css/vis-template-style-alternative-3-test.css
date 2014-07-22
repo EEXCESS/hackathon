@@ -29,28 +29,30 @@ button:hover {
 
 
 
-/*
- *   DROPDOWN LIST
- */
+/********************************************************************************************************************************************
+
+    DROP-DOWN LIST
+
+********************************************************************************************************************************************/
+
 .wrapper-dropdown {
     border-radius: 0.5em;
 }
 
 
 .wrapper-dropdown span {
-    color: #1f6080;
+    color: #1f6080 !important;
 }
 
 
 .wrapper-dropdown:after {          /* Little arrow */
     border-width: 6px 6px 0px 6px;;
     border-style: solid;
-    border-color: rgba(244,188, 103,1) transparent transparent;
+    border-color: #ddd transparent transparent;
 }
 
 
 .dropdown-list-icon {
-    background-color: #fff;
     border-radius: 0.3em;
 }
 
@@ -63,12 +65,61 @@ button:hover {
 
 /* Active state */
 .wrapper-dropdown.active {
-    background: rgba(244,188, 103,1);
+    background: -webkit-linear-gradient(top, #eee, #ddd);
     border-radius: 0.5em 0.5em 0 0;
-    color: white;
+}
+
+.wrapper-dropdown.active span {
+    color: #aaa !important;
 }
 
 
+/********************************************************************************************************************************************
+
+    ACCORDION
+
+********************************************************************************************************************************************/
+
+
+.accordion-header {
+    background: whitesmoke;
+    border-radius: 0.5em;
+}
+
+
+.accordion-header span {
+    color: #1f6080 !important;
+}
+
+
+.accordion-header:after {          /* Little arrow */
+    border-width: 6px 6px 0px 6px;;
+    border-style: solid;
+    border-color: #ddd transparent transparent;
+}
+
+
+.accordion-header-color-icon {
+    background-color: #fff;
+    border-radius: 0.3em;
+}
+
+.accordion-content {
+    border-radius: 0 0 0.5em 0.5em;
+}
+
+
+
+/* Active state */
+.accordion-header.active {
+    background: -webkit-linear-gradient(top, #eee, #ddd);
+    border-radius: 0.5em 0.5em 0 0;
+}
+
+
+.accordion-header.active span {
+    color: #aaa !important;
+}
 
 
 /********************************************************************************************************************************************
@@ -139,7 +190,7 @@ button:hover {
 */
 #eexcess_controls {
     background-color: rgba(125,189,153,1);
-    border-radius: 10px 10px 10px 10px;
+    border-radius: .8em;
 }
 
 
@@ -264,7 +315,7 @@ Visualization Panel (center of screen)
 }
 
 
-#eexcess-bookmark-dialog-settings span {
+.eexcess-bookmark-dialog span {
     color: #fff;
 }
 
@@ -286,7 +337,7 @@ Visualization Panel (center of screen)
 }
 
 
-#eexcess-bookmark-dialog-new-options input {
+.eexcess-bookmark-dialog-input-wrapper input {
 	border-radius: 0.5em;
 }
 
