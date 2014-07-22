@@ -25,14 +25,15 @@ function Visualization( EEXCESSobj ) {
 	var listItem = "#eexcess_content .eexcess_result_list #data-pos-";			                   // String to select individual li items by id
 	var colorIcon = ".color_icon";												                   // Class selector for div icon colored according to legend categories
 	var favIconClass = ".eexcess_fav_icon";                                                        // img element fpr favicon (either on or off)
-    var bookmarkDetailsIconClass = ".eexcess_bookmark_section_details_icon";                       // img element with 3-dot icon in each list item used to display bookmarked item's details on click
+    var bookmarkDetailsIconClass = ".eexcess_details_icon";                                        // img element with 3-dot icon in each list item used to display bookmarked item's details on click
 
     var bookmarkDialogClass = ".eexcess-bookmark-dialog";                                          // Class selector for both types of dialog: save bookmark and see-and-edit-bookmark
     var saveBookmarkDialogId = "#eexcess-save-bookmark-dialog";                                    // Id for dialog poping up upon clicking on a "star" icon
     var bookmarkDropdownList = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dropdown-list";    // Div wrapping drop down list in boofmark dialog
-    var newBookmarkOptionsId = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-optional";                             // Div wrapping color picker and input element in bookmark dialog
+    var newBookmarkOptionsId = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-optional";  // Div wrapping color picker and input element in bookmark dialog
     var colorPickerId = "#eexcess-bookmak-dialog-color-picker";                                    // Div tranformed into a colorpicekr in bookmark dialog
-    var bookmarkDialogInputWrapper = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-input-wrapper";             // Wrapper for input containing new bookmark name
+    var bookmarkDialogInputWrapper = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-input-wrapper"; // Wrapper for input containing new bookmark name
+    var detailsBookmarkDialogId = "#eexcess-see-and-edit-bookmark-dialog";                         // Dialog displaying bookmark detials (when click on 3-dotted icon)
 
 
 	// Icon and Image Constants
@@ -387,21 +388,26 @@ function Visualization( EEXCESSobj ) {
         else
             $(newBookmarkOptionsId).slideUp("slow");
 
-        $(newBookmarkOptionsId).find('p').fadeOut('fast');
+        $(newBookmarkOptionsId).find('p').fadeOut('fast');      // error message hidden
     };
 
 
-    ////////	'Cancel' button clicked in bookmark dialog 	////////
+    ////////	'Cancel' button clicked in save bookmark dialog 	////////
     EVTHANDLER.bookmarkCancelButtonClicked = function(){
         BOOKMARKS.destroyBookmarkDialog();
     };
 
 
-    ////////	'Save' button clicked in bookmark dialog 	////////
+    ////////	'Save' button clicked in save bookmark dialog 	////////
     EVTHANDLER.bookmarkSaveButtonClicked = function(){
         BOOKMARKS.saveBookmark();
     };
 
+
+    ////////	'Done' button clicked in bookmark details dialog 	////////
+    EVTHANDLER.bookmarkDoneButtonClicked = function(){
+        BOOKMARKS.destroyBookmarkDialog();
+    };
 
 
 	
@@ -635,7 +641,7 @@ function Visualization( EEXCESSobj ) {
 
 
         bookmarkDiv.append("img")
-            .attr("class", "eexcess_bookmark_section_details_icon")
+            .attr("class", "eexcess_details_icon")
             .attr("src", BOOKMARK_DETAILS_ICON)
             .style("display", function(d){ if(d.bookmarked) return 'inline-block'; return 'none'; })
             .on("click", EVTHANDLER.bookmarkDetailsIconClicked)
@@ -1020,7 +1026,7 @@ function Visualization( EEXCESSobj ) {
 
         // Append details section
         var bookmarkDetails = dialogBookmark.append('div')
-            .attr('id', 'eexcess-boookmark-dialog-details');
+            .attr('class', 'eexcess-boookmark-dialog-details');
 
         bookmarkDetails.append('span').text('Title:');
         bookmarkDetails.append('p').text(d.title);
@@ -1034,17 +1040,21 @@ function Visualization( EEXCESSobj ) {
         bookmarkSettings.append("span").text("Add to:");
 
         // array to be sent to plugin building the dropdown list with the list items and the corresponding colors
-        var optionsData = $.merge([{'name': STR_NEW, 'color': ''}], BookmarkingAPI.getAllBookmarkNamesAndColors());
+        var optionsData = $.merge([{'bookmark-name': STR_NEW, 'color': ''}], BookmarkingAPI.getAllBookmarkNamesAndColors());
 
-        bookmarkSettings.append("div").attr("class", "eexcess-bookmark-dropdown-list");
+        var bookmarksListContainer = bookmarkSettings.append("div").attr("class", "eexcess-bookmark-dropdown-list")
+            .append('ul');
 
+        bookmarksListData = bookmarksListContainer.selectAll('li').data(optionsData);
+
+        bookmarksList = bookmarksListData.enter().append('li');
+        bookmarksList.append('a').text(function(b){ return b["bookmark-name"];})
+        bookmarksList.append('div').text(function(b){ return b.color; });
 
         // Create dropdown list to select bookmark
         $( bookmarkDropdownList ).dropdown({
-            'data' : optionsData,
-            'change' : EVTHANDLER.bookmarkDropdownListChanged
+            'change' : EVTHANDLER.bookmarkDropdownListChanged,
         });
-
 
         // Add wrapper div containing icon for color picking, text input and legendbookmarkDetails.append('p').text(d.title);
         var newBookmarkOptions = bookmarkSettings.append("div")
@@ -1139,43 +1149,42 @@ function Visualization( EEXCESSobj ) {
             .attr('id', 'eexcess-see-and-edit-bookmark-dialog')
             .attr("class", "eexcess-bookmark-dialog")
             .style('top', topOffset + 'px')
+            .style('display', 'none')
             .on("click", function(){ d3.event.stopPropagation(); });
 
         detailsDialog.append("div")
             .attr("class", "eexcess-bookmark-dialog-title")
             .text('Bookmark Info');        // = datum.tilte
 
-        detailsDialog.append('span').text('Tilte');
-        detailsDialog.append('p').text(datum.title);
+        var detailsSection = detailsDialog.append('div')
+            .attr('class', 'eexcess-boookmark-dialog-details');
+
+        detailsSection.append('span').text('Title');
+        detailsSection.append('p').text(datum.title);
+
+        var accordion = detailsDialog.append('div').attr('id', 'accordion');
+        accordion.append('span').style('width', '100%').text('Bookmarked in:');
+
+        var accordionData = accordion.selectAll('div').data(itemDetails.bookmarked);
+
+        var accordionItem = accordionData.enter().append('div');
+        accordionItem.append('h3').text(function(d){ return d["bookmark-name"]; });
+        accordionItem.append('div').text(function(d){ return d.color; });
+        accordionItem.append('p').text(function(d){ return 'Query: ' + d.query; });
+
+        $('#accordion').accordionCustom({ 'collapsible': true });
 
 
-        var detailsList = detailsDialog.append('div').attr('id', 'accordion');
+        // Append done button within container
+        var bookmarkButtonsWrapper = detailsDialog.append("div")
+            .attr("class", "eexcess-bookmark-buttons-wrapper");
 
-        itemDetails.bookmarked.forEach(function(b){
+        bookmarkButtonsWrapper.append("button")
+            .attr("class", "eexcess-bookmark-button")
+            .text("Done")
+            .on("click", EVTHANDLER.bookmarkDoneButtonClicked);
 
-            console.log(b);
-            detailsList.append('h3').text(b["bookmark-name"]);
-            detailsList.append('div').append('p').text(b.query);
-        });
-
-
-        $( "#accordion" ).accordion({ collapsible: true });
-
-
-
-        /*
-        detailsDialog.selectAll('.eexcess-bookmark-entry')
-            .data(itemDetails.bookmarked)
-            .enter()
-            .append('div')
-                .attr('class', 'eexcess-bookmark-entry')
-                .text(function(d){ return d["bookmark-name"]; })
-                .append('div')
-                    .attr('class', '')
-        ;
-        */
-
-
+        $(detailsBookmarkDialogId).slideDown('slow');
     };
 	
 

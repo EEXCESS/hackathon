@@ -159,58 +159,6 @@ $.fn.scrollTo = function( target, options, callback ){
 
 
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-/**
- * Dropdown list
- *
- * */
-
-
-$.fn.dropdown = function( options ){
-
-    var data = options['data'];
-    var onChangeCallback = options['change'];
-
-    $(this).addClass("wrapper-dropdown");
-
-    var dropdownList = d3.select(this[0]);
-
-    dropdownList.append("div")
-        .attr("class", "eexcess-bookmark-dropdown-list-icon")
-        .style("margin-top", "0.11em");
-
-    dropdownList.append("span")
-        .style("margin-left", "0em")
-        .text(data[0].name);
-
-    var dropdownListUl = dropdownList.append("ul")
-        .attr("class", "dropdown");
-
-    dropdownListUl.selectAll("li")
-        .data( data )
-        .enter()
-        .append("li")
-            .attr("data-item", function(d, i){ return i; })
-            .on("click", function(d, i){
-                dropdownList.select("div").style("background", d.color || "inherit");
-                dropdownList.select("span").text( d.name );
-                $(this).removeClass("active");
-                onChangeCallback(d.name, i);              // EVTHANDLER.selectBookmarkChanged
-            })
-            .append("a")
-                .attr("href", "#")
-                .text(function(d){ return d.name; })
-                .append("div")
-                    .attr("class", "eexcess-bookmark-dropdown-list-icon")
-                    .style("background-color", function(d){ return d.color || "inherit"; });
-
-
-    this.on('click', function(event){
-		  $(this).toggleClass('active');
-		  event.stopPropagation();
-    });
-
-};
 
 
 

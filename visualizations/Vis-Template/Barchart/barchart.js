@@ -188,13 +188,9 @@ function Barchart( domRoot, visTemplate, Settings ) {
 		/******************************************************
 		*	Define axis functions
 		******************************************************/
-		xAxis = d3.svg.axis()
-    		.scale(x)
-    		.orient("bottom");
+		xAxis = d3.svg.axis().scale(x).orient("bottom");
 			
-		yAxis = d3.svg.axis()
-    		.scale(y)
-    		.orient("left");	
+		yAxis = d3.svg.axis().scale(y).orient("left").ticks(6);
 		
 			
 		/******************************************************
@@ -218,7 +214,6 @@ function Barchart( domRoot, visTemplate, Settings ) {
 			.attr("class", "focus")
 			.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 			.attr("height", height);
-			//.call(zoom);
 
 
 		/******************************************************
@@ -269,8 +264,7 @@ function Barchart( domRoot, visTemplate, Settings ) {
 				.attr("transform", function(d, i) { return "translate(40," + (i+1)*20 + ")"; })
 				.on( "click", BARCHART.Evt.legendClicked )
 				.on( "mouseover", BARCHART.Evt.legendMouseOvered )
-				.on( "mouseout", BARCHART.Evt.legendMouseOuted )
-				;
+				.on( "mouseout", BARCHART.Evt.legendMouseOuted );
 		
 		legend.append("div")
 			.attr("x", width + 126)

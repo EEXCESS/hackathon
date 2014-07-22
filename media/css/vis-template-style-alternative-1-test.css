@@ -27,19 +27,14 @@ button:hover {
 
 
 
-/*
- *   DROPDOWN LIST
- */
+/********************************************************************************************************************************************
+
+    DROP-DOWN LIST
+
+********************************************************************************************************************************************/
 
 .wrapper-dropdown {
-    background: #fff;
     border-radius: 0.5em;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
-    -webkit-transition: all 0.3s ease-out;
-    -moz-transition: all 0.3s ease-out;
-    -ms-transition: all 0.3s ease-out;
-    -o-transition: all 0.3s ease-out;
-    transition: all 0.3s ease-out;
 }
 
 
@@ -55,36 +50,15 @@ button:hover {
 }
 
 
+.dropdown-list-icon {
+    border-radius: 0.3em;
+}
+
 .wrapper-dropdown .dropdown {       /*ul*/
-    background: #fff;
     border-radius: 0 0 0.5em 0.5em;
-    border: 1px solid rgba(0,0,0,0.2);
-    border-top: none;
-    border-bottom: none;
-    list-style: none;
-    -webkit-transition: all 0.3s ease-out;
-    -moz-transition: all 0.3s ease-out;
-    -ms-transition: all 0.3s ease-out;
-    -o-transition: all 0.3s ease-out;
-    transition: all 0.3s ease-out;
 }
 
 
-
-.wrapper-dropdown .dropdown li a {
-    color: #333;
-    transition: all 0.3s ease-out;
-}
-
-.wrapper-dropdown .dropdown li:last-of-type a {
-    border: none;
-}
-
-
-/* Hover state */
-.wrapper-dropdown .dropdown li:hover a {
-    color: #57a9d9;
-}
 
 /* Active state */
 .wrapper-dropdown.active {
@@ -93,21 +67,50 @@ button:hover {
     color: white;
 }
 
-.wrapper-dropdown.active span {
-    color: #fff;
+
+
+/********************************************************************************************************************************************
+
+    ACCORDION
+
+********************************************************************************************************************************************/
+
+
+.accordion-header {
+    background: #fff;
+    border-radius: 0.5em;
 }
 
-.wrapper-dropdown.active:after {
-    border-color: #fff transparent;
-    border-width: 0px 6px 6px 6px;
-}
 
-.wrapper-dropdown.active .dropdown {
-    border-bottom: 1px solid rgba(0,0,0,0.2);
+.accordion-header span {
+    color: #1f6080;
 }
 
 
+.accordion-header:after {          /* Little arrow */
+    border-width: 6px 6px 0px 6px;;
+    border-style: solid;
+    border-color: rgba(244,188, 103,1) transparent transparent;
+}
 
+
+.accordion-header-color-icon {
+    background-color: #fff;
+    border-radius: 0.3em;
+}
+
+.accordion-content {
+    border-radius: 0 0 0.5em 0.5em;
+}
+
+
+
+/* Active state */
+.accordion-header.active {
+    background: -webkit-linear-gradient(top, rgba(255,208,135,1) ,rgba(244,188, 103,1));
+    border-radius: 0.5em 0.5em 0 0;
+    color: white;
+}
 
 
 
@@ -287,7 +290,7 @@ button:hover {
 
 
 .eexcess-bookmark-dialog span {
-    color: #1f6080;
+    color: #529CBF;
 }
 
 

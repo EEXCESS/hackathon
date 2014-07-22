@@ -86,17 +86,13 @@ button {
 }
 
 
-/*
-    Hover style for all buttons
-*/
-button:hover {
-}
 
+/********************************************************************************************************************************************
 
+    DROP-DOWN LIST
 
-/*
- *   DROPDOWN LIST
- */
+********************************************************************************************************************************************/
+
 .wrapper-dropdown {
 
     /* Size & position */
@@ -110,11 +106,9 @@ button:hover {
     line-height: 1.6em;
     cursor: pointer;
     outline: none;
-    -webkit-transition: all 0.3s ease-out;
-    -moz-transition: all 0.3s ease-out;
-    -ms-transition: all 0.3s ease-out;
-    -o-transition: all 0.3s ease-out;
-    transition: all 0.3s ease-out;
+
+    background: #fff;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
 }
 
 
@@ -133,11 +127,23 @@ button:hover {
     content: "";
     width: 0;
     height: 0;
-    position: absolute;
-    top: 50%;
-    right: 15px;
-    margin-top: -3px;
+    position: relative;
+    float: right;
+    margin-right: 15px;
+    margin-top: 7px;
 }
+
+
+.dropdown-list-icon {
+    display: inline-block;
+    float: left;
+    width: 14px;
+    height: 14px;
+    margin-top: 0.24em !important;
+    margin-right: 0.4em;
+    background-color: inherit;
+}
+
 
 .wrapper-dropdown .dropdown {       /*ul*/
 
@@ -151,9 +157,12 @@ button:hover {
     -webkit-padding-before: 0em;
     padding-left: 0.4em;
 
-    /* Hiding */
-    max-height: 0;
+    max-height: 30em;
     overflow: hidden;
+    list-style: none;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-top: none;
 }
 
 .wrapper-dropdown .dropdown li {
@@ -163,36 +172,137 @@ button:hover {
 .wrapper-dropdown .dropdown li a {
     display: block;
     text-decoration: none;
-    transition: all 0.3s ease-out;
     vertical-align: top;
     line-height: 1.7em;
+    color: #666;
 }
+
 
 .wrapper-dropdown .dropdown li:last-of-type a {
     border: none;
 }
 
 
+/* Hover state */
+.wrapper-dropdown .dropdown li:hover a {
+    color: #57a9d9;
+}
+
+
 /* Active state */
 .wrapper-dropdown.active {
     box-shadow: none;
-    border-bottom: none;
 }
 
+.wrapper-dropdown.active span {
+    color: #fff;
+}
 
 .wrapper-dropdown.active:after {
+    border-color: #fff transparent;
     border-width: 0px 6px 6px 6px;
 }
 
-.wrapper-dropdown.active .dropdown {
-    max-height: 400px;
+
+
+/********************************************************************************************************************************************
+
+    ACCORDION
+
+********************************************************************************************************************************************/
+
+
+#accordion {
+    width: 100%;
+    margin: 1em 0em;
+}
+
+.accordion-item {
+    width: 100%;
+}
+
+
+.accordion-header {
+    display: inline-block;
+    width: 100%;
+    height: 1.7em;
+
+    vertical-align: middle;
+    font-size: 1em;
+    line-height: 1.6em;
+    cursor: pointer;
+    outline: none;
+
+    border: 0.1em #ddd solid;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+
+.accordion-header span {
+    display: inline-block;
+    float: left;
+    margin-left: 0em !important;
+    margin-top: 0.2em !important;
+    vertical-align: top;
+    line-height: 1.4em;
+    font-size: 1em;
+}
+
+.accordion-header:after {          /* Little arrow */
+    content: "";
+    width: 0;
+    height: 0;
+    position: relative;
+    float: right;
+    margin-right: 15px;
+    margin-top: 7px;
+}
+
+
+.accordion-header-color-icon {
+    display: inline-block;
+    float: left;
+    width: 14px;
+    height: 14px;
+    margin-top: 0.25em;
+    margin-right: 0.4em;
+    margin-left: .5em;
+    /*margin-top: .11em;*/
+}
+
+
+.accordion-content {
+    width: 100%;
+    max-height: 30em;
+    background: #fff;
+    border: 0.1em #ddd solid;
+}
+
+.accordion-content p {
+    display: inline-block;
+    margin: .4em;
+    font-size: .95em;
+    -webkit-margin-before: 0.5em !important;
+    -webkit-margin-after: 0.5em !important;
+}
+
+
+/* Active state */
+.accordion-header.active {
+    box-shadow: none;
+}
+
+.accordion-header.active:after {
+    border-color: #fff transparent;
+    border-width: 0px 6px 6px 6px;
 }
 
 
 
-/*
- *  COLOR PICKER
- */
+/********************************************************************************************************************************************
+
+    COLOR PICKER
+
+********************************************************************************************************************************************/
 
 
 /* colorpicker styles */
@@ -741,7 +851,7 @@ p.eexcess_ritem_short {
 
 
 
-.eexcess_bookmark_section_details_icon {
+.eexcess_details_icon {
     width: 10px;
 }
 
@@ -775,6 +885,12 @@ p.eexcess_ritem_short {
     text-align: left;
 }
 
+.eexcess-bookmark-dialog p {
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+}
+
+
 .eexcess-bookmark-dialog-title {
     display: block !important;
     margin-top: 0.2em !important;
@@ -787,7 +903,7 @@ p.eexcess_ritem_short {
 }
 
 
-#eexcess-boookmark-dialog-details {
+.eexcess-boookmark-dialog-details {
     width: 100%;
     margin-top: 0.6em;
     margin-bottom: 0.6em;
@@ -796,13 +912,11 @@ p.eexcess_ritem_short {
 
 
 
-#eexcess-boookmark-dialog-details p {
+.eexcess-boookmark-dialog-details p {
     display: inline-block;
     width: 76%;
     height: auto;
     font-size: .95em;
-    -webkit-margin-before: 0em;
-    -webkit-margin-after: 0em;
 }
 
 
@@ -913,20 +1027,10 @@ p.eexcess_ritem_short {
 
 
 
-.eexcess-bookmark-entry {
-    display: inline-block;
-    width: 68%;
-    height: 1.7em;
-    margin: .3em 0em;
-    padding-left: .3em;
-    vertical-align: baseline;
-    line-height: 1.7em;
 
-    background: white;
-    border: 0.1em #ddd solid;
 
-    border-radius: .5em;
-}
+
+
 
 
 
