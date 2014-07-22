@@ -1,7 +1,5 @@
 function Visualization( EEXCESSobj ) {
 
-    console.log('in ceci-dev');
-
 	var self = this;
 	var EEXCESS = EEXCESSobj || {};
 	
