@@ -102,7 +102,7 @@ EEXCESS.model = (function() {
      * Update results to a query with ratings from the database and send each
      * updated result to all tabs
      * @memberOf EEXCESS.model
-     * @param {Array.<Recommendation>} items The results, for which to retrieve
+     * @param {Array.<Recommendation>} items The results, for which to retrieve 
      * ratings
      */
     var _updateRatings = function(items) {
@@ -158,9 +158,9 @@ EEXCESS.model = (function() {
          * Furthermore they are set as the current results in the widget's model.
          * At logging the recommendations, query is added as context.
          * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request
+         * @param {Integer} tabID Identifier of the browsertab, the request 
          * originated
-         * @param {Object} data The query data
+         * @param {Object} data The query data 
          */
         query: function(tabID, data) {
             console.log(data);
@@ -186,16 +186,12 @@ EEXCESS.model = (function() {
             params.tab = 'results';
             // log all queries in 'queries_full'
             EEXCESS.logging.logQuery(tabID, tmp['weightedTerms'], _queryTimestamp, '_full');
-            // add manual queries to 'queries'
-            if (tmp.hasOwnProperty('reason') && tmp['reason']['reason'] === 'manual') {
-                EEXCESS.logging.logQuery(tabID, tmp['weightedTerms'], _queryTimestamp, '', 'manual');
-            }
+
+
             var success = function(data) { // success callback
                 // TODO: search may return no results (although successful)
                 tmp['data'] = data;
                 if (data.totalResults !== 0) {
-//                    // update results with ratings
-//                    _updateRatings(data.results);
                     // create context
                     var context = {query: tmp['query']};
                     // log results
@@ -207,13 +203,24 @@ EEXCESS.model = (function() {
             var error = function(error) { // error callback
                 EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
             };
-            // call provider (resultlist should start with first item)
-            EEXCESS.backend.getCall()(data, 1, success, error);
+
+            // log manual query and obtain selection
+            if (tmp.hasOwnProperty('reason') && tmp['reason']['reason'] === 'manual') {
+                EEXCESS.logging.logQuery(tabID, tmp['weightedTerms'], _queryTimestamp, '', 'manual');
+                EEXCESS.messaging.sendMsgTab(tabID, {method: 'getTextualContext'}, function(ctxData) {
+                    tmp['reason']['context'] = ctxData['selectedText'];
+                    // call provider (resultlist should start with first item)
+                    EEXCESS.backend.getCall()(data, 1, success, error);
+                });
+            } else {
+                // call provider (resultlist should start with first item)
+                EEXCESS.backend.getCall()(data, 1, success, error);
+            }
         },
         /**
          * Sends the current model state to the specified callback
          * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request
+         * @param {Integer} tabID Identifier of the browsertab, the request 
          * originated
          * @param {Object} data not used
          * @param {Function} callback
@@ -222,10 +229,10 @@ EEXCESS.model = (function() {
             callback({params: params, results: results});
         },
         /**
-         * Sends the current visibility state of the widget to the specified
+         * Sends the current visibility state of the widget to the specified 
          * callback
          * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request
+         * @param {Integer} tabID Identifier of the browsertab, the request 
          * originated
          * @param {Object} data not used
          * @param {Function} callback
@@ -234,11 +241,11 @@ EEXCESS.model = (function() {
             callback(params.visible);
         },
         /**
-         * Sets the rating score of a resource in the resultlist to the
+         * Sets the rating score of a resource in the resultlist to the 
          * specified value, stores the rating and informs all other tabs.
          * The query  is added to the rating as context.
          * @memberOf EEXCESS.model
-         * @param {Integer} tabID Identifier of the browsertab, the request
+         * @param {Integer} tabID Identifier of the browsertab, the request 
          * originated
          * @param {Object} data rating of the resource
          * @param {String} data.uri URI of the rated resource
@@ -256,7 +263,7 @@ EEXCESS.model = (function() {
         },
         /**
          * Returns the model's current context. The context contains the current
-         * query (if any)
+         * query (if any) 
          * @memberOf EEXCESS.model
          * @returns {Object} the context
          */
@@ -269,7 +276,7 @@ EEXCESS.model = (function() {
         },
         /**
          * Hands in the current query and corresponding results to the specified callback
-         * @param {Integer} tabID Identifier of the browsertab, the request
+         * @param {Integer} tabID Identifier of the browsertab, the request 
          * originated
          * @param {Object} data unused
          * @param {Function} callback
