@@ -43,16 +43,18 @@ and open the template in the editor.
 	
 		-->
 		<div id="content">
-			<div>
+			<div id="graphcontrol">
 				<!-- Graph-->
 				<div id="D3graph" class="eexcess_vis">
+					<svg></svg>
 				</div>
+				
 				<!--
 				<svg width="800" height="400" >
 
 				</svg>
 				-->
-				<div class="eexcess_vis">
+				<div id="slidercontrol" class="eexcess_vis">
 					<input id="growgraph" value="growgraph" type="checkbox" > grow graph</input>
 					<span>
 					&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
@@ -61,7 +63,11 @@ and open the template in the editor.
 					&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 					
 					search history</span>
-					<svg  id="d3_slider" >
+					<br/>
+					<!--
+					preserveAspectRatio="xMinYMin meet"
+					-->
+					<svg  id="d3_slider" viewBox="0 0 1700 80" preserveAspectRatio="none">
 						<defs>
 							<linearGradient id="redblue" x1="0%" y1="0%" x2="100%" y2="0%">
 								<stop id="redgradient" offset="0%"  />

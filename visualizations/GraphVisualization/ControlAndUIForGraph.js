@@ -623,7 +623,8 @@ var BuildControls = function(){
 	var historyData = getDataFromIndexedDB.queryObjHistory;
 	var intalvalResults = GetSamePartOfArray(historyData.length,4);
 	//var sliderWidth = 900;
-	var sliderWidth = 720;
+	//var sliderWidth = 720;
+	var sliderWidth = 1500;
 	
 
 	
