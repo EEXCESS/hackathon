@@ -982,7 +982,7 @@ p.eexcess_ritem_short {
     /* Static color-related style */
     background-color: #fff;
     border: 0.1em #ddd solid;
-    box-shadow: 0px 1px rgba(0, 0, 0, .2);
+    box-shadow: inset 4px 4px 6px -6px #666666;
 }
 
 

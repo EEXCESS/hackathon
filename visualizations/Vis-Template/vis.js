@@ -94,15 +94,7 @@ function Visualization( EEXCESSobj ) {
 
 	// Chart objects
 	var timeVis, barVis;
-	
-		
-    // Constants
-    var ICON_EUROPEANA =  "../../media/icons/Europeana-favicon.ico";
-    var ICON_MENDELEY = "../../media/icons/mendeley-favicon.ico";
-    var ICON_ZBW = "../../media/icons/ZBW-favicon.ico";
-    var ICON_WISSENMEDIA = "../../media/icons/wissenmedia-favicon.ico";
-    var ICON_KIM_COLLECT = "../../media/icons/KIM.Collect-favicon.ico";
-    var ICON_UNKNOWN = "../../media/icons/help.png";
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -212,7 +204,7 @@ function Visualization( EEXCESSobj ) {
 	    indicesToHighlight = [];
         isBookmarkDialogOpen = false;
         idsArray = data.map(function(d){ return d.id; });
-        bookmarkedItems = BookmarkingAPI.getBookmarkedItemsByItemId(idsArray);
+        bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
     };
 
 
@@ -231,14 +223,14 @@ function Visualization( EEXCESSobj ) {
 
             // Assign 'provider-icon' with the provider's icon
             switch(d.facets.provider){
+                case "europeana":
                 case "Europeana":   d['provider-icon'] = ICON_EUROPEANA; break;
-			    case "europeana":   d['provider-icon'] = ICON_EUROPEANA; break;
 			    case "mendeley":    d['provider-icon'] = ICON_MENDELEY; break;
+                case "econbiz":
                 case "ZBW":         d['provider-icon'] = ICON_ZBW; break;
-                case "econbiz":     d['provider-icon'] = ICON_ZBW; break;
                 case "wissenmedia": d['provider-icon'] = ICON_WISSENMEDIA; break;
                 case "KIM.Collect": d["provider-icon"] = ICON_KIM_COLLECT; break;
-                default: d['provider-icon'] = ICON_UNKNOWN; break;
+                default:            d['provider-icon'] = ICON_UNKNOWN; break;
             }
         });
 
@@ -930,17 +922,12 @@ function Visualization( EEXCESSobj ) {
     BOOKMARKS.internal = {
 
         currentBookmark :{
-                        'bookmark-name': 'none',
-                        'color': ' none',
-                        'type': 'none'      // new or existing
+                        'bookmark-name': '',
+                        'color': '',
+                        'type': ''      // new or existing
                         },
 
-        currentItem : {
-                        'item-name': 'none',
-                        'item-id': 'none',
-                        'query': 'none',
-                        'index': 'none'
-                     },
+        currentItem : {},
 
 
         getCurrentBookmark : function(){
@@ -961,16 +948,15 @@ function Visualization( EEXCESSobj ) {
         },
 
 
-        setCurrentItem : function(itemName, itemId, queryTerm, index){
-            this.currentItem['item-name'] = itemName;
-            this.currentItem['item-id'] = itemId;
-            this.currentItem['query'] = queryTerm;
+        setCurrentItem : function(item, index){
+            this.currentItem['item'] = item;
             this.currentItem['index'] = index;
         },
 
 
-        getCurrentItem : function(){ return this.currentItem; },
+        getCurrentItem : function(){ return this.currentItem['item']; },
 
+        getCurrentItemIndex : function(){ return this.currentItem['index']; },
 
         validateBookmarkToSave : function(){
             var $message = $(newBookmarkOptionsId).find('p');
@@ -996,7 +982,7 @@ function Visualization( EEXCESSobj ) {
         BOOKMARKS.destroyBookmarkDialog();
         isBookmarkDialogOpen = true;
 
-        this.internal.setCurrentItem(d.title, d.id, query, i);
+        this.internal.setCurrentItem(d, i);
 
         var topOffset = $(contentPanel).offset().top;
 
@@ -1106,18 +1092,20 @@ function Visualization( EEXCESSobj ) {
 
         var bookmark = this.internal.getCurrentBookmark();
         var item = this.internal.getCurrentItem();
+        var index = this.internal.getCurrentItemIndex();
 
         if( this.internal.validateBookmarkToSave() ){
             if(bookmark['type'] == 'new')
                 BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
 
-            BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item['item-name'], item['item-id'], item['query']);
-            BOOKMARKS.destroyBookmarkDialog();
+            console.log(BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item));
 
-           LIST.turnFaviconOnAndShowDetailsIcon( item['index'] );
+            BOOKMARKS.destroyBookmarkDialog();
+            LIST.turnFaviconOnAndShowDetailsIcon(index);
 
             // Update ancillary variable
-            bookmarkedItems = BookmarkingAPI.getBookmarkedItemsByItemId(idsArray);
+            bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
+            BookmarkingAPI.getBookmarkedItemsById(idsArray);
             console.log(bookmarkedItems);
         }
     };
@@ -1130,7 +1118,8 @@ function Visualization( EEXCESSobj ) {
         BOOKMARKS.destroyBookmarkDialog();
         isBookmarkDialogOpen = true;
 
-        itemDetails = bookmarkedItems[datum.id];
+        var itemDetails = bookmarkedItems[datum.id];
+        console.log(itemDetails);
 
         var topOffset = $(contentPanel).offset().top;
 

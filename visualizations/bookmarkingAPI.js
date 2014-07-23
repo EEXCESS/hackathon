@@ -5,9 +5,10 @@ function Bookmarking() {
 
     INTERNAL.init = function() {
 
+        chrome.storage.local.remove("bookmark-dictionary");
         // Retrieve current bookmark dictionary and keep it in a local variable during execution
         chrome.storage.local.get( "bookmark-dictionary", function(value){
-            BOOKMARKING.Dictionary = JSON.parse(value["bookmark-dictionary"]);
+            BOOKMARKING.Dictionary = ($.isEmptyObject(value)) ? {} : JSON.parse(value["bookmark-dictionary"]);
             console.log('Bookmark dictionary');
             console.log(BOOKMARKING.Dictionary);
         } );
@@ -16,9 +17,11 @@ function Bookmarking() {
 
 
     INTERNAL.saveToLocalStorage = function( bookmarkDictionaryCopy ) {
+
         chrome.storage.local.set({ "bookmark-dictionary" : JSON.stringify( bookmarkDictionaryCopy ) }, function(){
-            if(typeof chrome.runtime.lastError == 'undefined' || chrome.runtime.lastError == 'undefined')
+            if(typeof chrome.runtime.lastError == 'undefined' || chrome.runtime.lastError == 'undefined'){
                 console.log('Saving bookmark dictionary in local storage... SUCCESS');
+            }
             else{
                 console.log('Saving bookmark dictionary in local storage... FAIL');
                 console.log( chrome.runtime.lastError );
@@ -38,7 +41,7 @@ function Bookmarking() {
     var BOOKMARKING = {};
 
 
-    BOOKMARKING.Dictionary = {};
+    BOOKMARKING.Dictionary;
 
 
     // Creation, Addition
@@ -63,22 +66,16 @@ function Bookmarking() {
 
 
 
-    BOOKMARKING.addItemToBookmark = function( bookmarkName, itemName, itemId, query ){
+    BOOKMARKING.addItemToBookmark = function( bookmarkName, item ){
 
         if( typeof BOOKMARKING.Dictionary[bookmarkName] == 'undefined' || BOOKMARKING.Dictionary[bookmarkName] == 'undefined')
-            return "bookmark specified doesn't exist";
+            return "Selected bookmark does not exist";
 
         // If item to be added already exists in specified bookmark, return false
-        if( BOOKMARKING.Dictionary[bookmarkName].items.getIndexOf(itemId, 'item-id') != -1 )
-            return 'item to be added already exists in specified bookmark';
+        if( BOOKMARKING.Dictionary[bookmarkName].items.getIndexOf(item.id, 'id') != -1 )
+            return 'Item already exists in ' + bookmarkName;
 
-        var timestamp = Date.now();
-
-        BOOKMARKING.Dictionary[bookmarkName].items.push({
-            'item-name' : itemName,
-            'item-id' : itemId,
-            'query' : query
-        });
+        BOOKMARKING.Dictionary[bookmarkName].items.push(item);
 
         INTERNAL.saveToLocalStorage( BOOKMARKING.Dictionary );
         return 'success';
@@ -93,7 +90,7 @@ function Bookmarking() {
 
         // If bookmark to be deleted doesn't exist, return false
         if( BOOKMARKING.Dictionary[bookmarkName] == 'undefined' || BOOKMARKING.Dictionary[bookmarkName] == null )
-            return "bookmark to be deleted doesn't exist";
+            return "Selected bookmark does not exist";
 
         delete BOOKMARKING.Dictionary[bookmarkName];
 
@@ -112,9 +109,9 @@ function Bookmarking() {
 
     BOOKMARKING.deleteItemFromBookmark = function( itemId, bookmarkName ){
         // If item to be deleted doesn't exist in specified bookmark, return false
-        var index = BOOKMARKING.Dictionary[bookmarkName].items.getIndexOf(itemId, 'item-id');
+        var index = BOOKMARKING.Dictionary[bookmarkName].items.getIndexOf(itemId, 'id');
         if(index == -1)
-            return false;
+            return "Selected item does not exist";
 
         BOOKMARKING.Dictionary[bookmarkName].items.splice(index, 1);
 
@@ -129,7 +126,7 @@ function Bookmarking() {
         var entries = Object.keys(BOOKMARKING.Dictionary);
 
         entries.forEach(function( entry ){
-            var index = BOOKMARKING.Dictionary[entry].items.getIndexOf(itemId, 'item-id');
+            var index = BOOKMARKING.Dictionary[entry].items.getIndexOf(itemId, 'id');
             if(index != -1)
                 BOOKMARKING.Dictionary[entry].items.splice(index, 1);
         });
@@ -151,12 +148,12 @@ function Bookmarking() {
     BOOKMARKING.getAllBookmarkNamesAndColors = function(){
 
         var bookmarkNamesAndColors = [];
-        var keys = Object.keys(BOOKMARKING.Dictionary);
+        var entries = Object.keys(BOOKMARKING.Dictionary);
 
-        keys.forEach(function(key){
+        entries.forEach(function(entry){
             bookmarkNamesAndColors.push({
-                'bookmark-name' : key,
-                'color' : BOOKMARKING.Dictionary[key].color
+                'bookmark-name' : entry,
+                'color' : BOOKMARKING.Dictionary[entry].color
             });
         });
 
@@ -168,7 +165,7 @@ function Bookmarking() {
     BOOKMARKING.getBookmarsDictionary = function( bookmarkName ) {
 
         if(typeof BOOKMARKING.Dictionary[bookmarkName] == 'undefined' || BOOKMARKING.Dictionary[bookmarkName] == 'undefined' || BOOKMARKING.Dictionary[bookmarkName] == null)
-            return {};
+            return "Error retrieving bookmark";
 
         return BOOKMARKING.Dictionary[bookmarkName];
     };
@@ -178,19 +175,16 @@ function Bookmarking() {
     BOOKMARKING.getAllBookmarkedItemsInArray = function( bookmarkName ) {
 
         if(BOOKMARKING.Dictionary[bookmarkName] == 'undefined' || BOOKMARKING.Dictionary[bookmarkName] == null || typeof BOOKMARKING.Dictionary[bookmarkName] == 'undefined')
-            return [];
+            return "Error retrieving bookmark";
 
         var bookmarkedItems = [];
 
         BOOKMARKING.Dictionary[bookmarkName].items.forEach(function(item){
-            bookmarkedItems.push({
-                'bookmark-name' : bookmarkName,
-                'bookmark-id' : BOOKMARKING.Dictionary[bookmarkName].id,
-                'color' : BOOKMARKING.Dictionary[bookmarkName].color,
-                'item-id' : item["item-id"],
-                'item-name' : item["item-name"],
-                'query' : item.query
-            });
+
+            var obj = item;
+            obj['bookmark-name'] = bookmarkName;
+            obj['bookmark-id'] = BOOKMARKING.Dictionary[bookmarkName].id;
+            obj['color'] = BOOKMARKING.Dictionary[bookmarkName].color;
         });
 
         return bookmarkedItems;
@@ -221,18 +215,13 @@ function Bookmarking() {
                     var itemEntry = item[attrName];
                     if(typeof bookmarkedItems[itemEntry] == 'undefined' || bookmarkedItems[itemEntry] == 'undefined'){
                         // bookmarkedItems doesn't contain an entry with the value item[attrName] yet. Add new entry
-                        bookmarkedItems[itemEntry] = {
-                            'item-id' : item["item-id"],
-                            'item-name' : item["item-name"],
-                            'bookmarked' : new Array()
-                        };
+                        bookmarkedItems[itemEntry] = { 'bookmarked' : new Array() };
                     }
 
                     bookmarkedItems[itemEntry].bookmarked.push({
                         'bookmark-name' : entry,
                         'bookmark-id' : BOOKMARKING.Dictionary[entry].id,
                         'color' : BOOKMARKING.Dictionary[entry].color,
-                        'query' : item.query
                     });
                 }
             });
@@ -262,8 +251,8 @@ function Bookmarking() {
             return BOOKMARKING.createBookmark(bookmarkName, color );
         },
 
-        addItemToBookmark : function( bookmarkName, itemName, itemId, query ){
-            return BOOKMARKING.addItemToBookmark( bookmarkName, itemName, itemId, query );
+        addItemToBookmark : function( bookmarkName, item ){
+            return BOOKMARKING.addItemToBookmark( bookmarkName, item );
         },
 
 
@@ -302,23 +291,12 @@ function Bookmarking() {
             return BOOKMARKING.getAllBookmarkedItemsInArray(bookmarkName)  ;
         },
 
-        getBookmarkedItemsByItemId : function( itemId ) {
-             return BOOKMARKING.getBookmarkedItemsByAttr( itemId, 'item-id' );
-        },
-        getBookmarkedItemsByitemName : function( itemName ) {
-             return BOOKMARKING.getBookmarkedItemsByAttr( itemName, 'item-name' );
+        getBookmarkedItemsById : function(itemId) {
+             return BOOKMARKING.getBookmarkedItemsByAttr( itemId, 'id' );
         },
 
-        getBookmarkedItemsByQuery : function( query ) {
-             return BOOKMARKING.getBookmarkedItemsByAttr( query, 'query' );
-        },
-
-        getItemDetailsByitemId : function(itemId){
-            return BOOKMARKING.getBookmarkedItemsByAttr(itemId, 'item-id');
-        },
-
-        getItemDetailsByitemName : function(itemName){
-            return BOOKMARKING.getBookmarkedItemsByAttr(itemName, 'item-name');
+        getBookmarkedItemsByTitle : function(itemName) {
+             return BOOKMARKING.getBookmarkedItemsByAttr( itemName, 'title' );
         },
 
 
