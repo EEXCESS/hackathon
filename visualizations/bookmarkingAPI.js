@@ -17,7 +17,7 @@ function Bookmarking() {
 
     INTERNAL.saveToLocalStorage = function( bookmarkDictionaryCopy ) {
         chrome.storage.local.set({ "bookmark-dictionary" : JSON.stringify( bookmarkDictionaryCopy ) }, function(){
-            if(chrome.runtime.lastError == 'undefined')
+            if(typeof chrome.runtime.lastError == 'undefined' || chrome.runtime.lastError == 'undefined')
                 console.log('Saving bookmark dictionary in local storage... SUCCESS');
             else{
                 console.log('Saving bookmark dictionary in local storage... FAIL');
