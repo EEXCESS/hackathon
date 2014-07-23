@@ -148,14 +148,14 @@ function Bookmarking() {
     };
 
 
-    BOOKMARKING.getBookmarkNamesAndColors = function(){
+    BOOKMARKING.getAllBookmarkNamesAndColors = function(){
 
         var bookmarkNamesAndColors = [];
         var keys = Object.keys(BOOKMARKING.Dictionary);
 
         keys.forEach(function(key){
             bookmarkNamesAndColors.push({
-                'name' : key,
+                'bookmark-name' : key,
                 'color' : BOOKMARKING.Dictionary[key].color
             });
         });
@@ -291,7 +291,7 @@ function Bookmarking() {
         },
 
         getAllBookmarkNamesAndColors : function(){
-            return BOOKMARKING.getBookmarkNamesAndColors();
+            return BOOKMARKING.getAllBookmarkNamesAndColors();
         },
 
         getBookmarsDictionary : function(bookmarkName){
