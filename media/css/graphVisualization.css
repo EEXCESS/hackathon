@@ -31,19 +31,38 @@ body {
 }
 
 #content{
+/*
 	display:inline-flex;
+	*/
+	display:flex;
 }
 
 #D3graph{
-		margin-top:5px;
-
-			margin-bottom:5px;
-
+	margin-top:5px;
+	margin-bottom:5px;
+}
+#D3graph > svg{
+	width:100%;
 }
 
 #d3_slider{
 	margin:5px;
 	height:80px;
+	width:100%
+	/*
+	width:750px;
+	*/
+}
+
+#d3Slider text{
+	font-size:30px;
+
+
+	
+		/*
+	letter-spacing:6;
+	*/
+	
 }
 
 #redgradient{
@@ -52,6 +71,19 @@ body {
 
 #bluegradient{
 	stop-color:blue;stop-opacity:1;
+}
+
+#graphcontrol{
+    min-width:300px; 
+    max-width:1500px; 
+    flex:1;
+}
+
+
+#slidercontrol{
+/*
+	overflow:auto;
+	*/
 }
 
 #sidebar{
