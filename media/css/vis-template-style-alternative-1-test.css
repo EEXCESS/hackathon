@@ -3,7 +3,7 @@ select {
 	background-color: white;
 	border: 0.1em #ddd solid;
     border-radius: 0.5em;
-    color: #444;
+    color: #555;
 }
 
 
@@ -220,12 +220,21 @@ button:hover {
 
 
 
+
+
 #eexcess_select_chart > option,
 .eexcess_select > option {
     color: #666;
 }
 
 
+.eexcess_controls_facet_div {
+    background: -webkit-linear-gradient(top,#fefefe, #fff , #fefefe);
+    border: 0.1em #ddd solid;
+    border-radius: 0.4em;
+    color: #555;
+    box-shadow: 0em 0.1em .1em #999;
+}
 
 
 
@@ -316,6 +325,14 @@ button:hover {
     border-radius: 0.5em;
 }
 
+/*  In bookamrk details dialog  */
 
+.eexcess-bookmark-bookmarked-in {
+    background: rgba(231, 231, 220, 1);
+    border-radius: 0.5em;
+}
 
-
+.eexcess-bookmark-color-icon {
+    background-color: inherit;
+    border-radius: 0.3em;
+}

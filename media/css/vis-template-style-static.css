@@ -226,7 +226,7 @@ button {
     display: inline-block;
     width: 100%;
     height: 1.7em;
-
+    margin-top: .1em;
     vertical-align: middle;
     font-size: 1em;
     line-height: 1.6em;
@@ -597,6 +597,25 @@ button {
 }
 
 
+.eexcess_controls_facet_div {
+    display: block;
+    width: 56%;
+    height: 1.3em;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    margin-left: 40%;
+    margin right: auto;
+    padding-left: .2em;
+    font-size: 1em;
+    text-align: left;
+
+    background: -webkit-linear-gradient(top,#fefefe, #fff , #fefefe);
+    border: 0.1em #ddd solid;
+    border-radius: 0.4em;
+    color: #555;
+    box-shadow: 0em 0.1em .1em #999;
+}
+
 
 /********************************************************************************************************************************************
 
@@ -847,6 +866,7 @@ p.eexcess_ritem_short {
     display: inline-block;
     margin-top: .2em;
     margin-right: .1em;
+    cursor: pointer;
 }
 
 
@@ -880,12 +900,19 @@ p.eexcess_ritem_short {
     display: inline-block;
     float: left;
     width: 19%;
+    margin-top: .1em;
     margin-left: 0.4em;
     margin-right: 0.4em;
     text-align: left;
 }
 
 .eexcess-bookmark-dialog p {
+    display: inline-block;
+    width: 76%;
+    height: auto;
+    margin-top: .1em;
+    font-size: .95em;
+
     -webkit-margin-before: 0em;
     -webkit-margin-after: 0em;
 }
@@ -909,16 +936,6 @@ p.eexcess_ritem_short {
     margin-bottom: 0.6em;
     vertical-align: top;
 }
-
-
-
-.eexcess-boookmark-dialog-details p {
-    display: inline-block;
-    width: 76%;
-    height: auto;
-    font-size: .95em;
-}
-
 
 
 .eexcess-bookmark-dialog-settings {
@@ -973,11 +990,12 @@ p.eexcess_ritem_short {
 /* Color picker */
 #eexcess-bookmak-dialog-color-picker {
     display: inline-block;
-    width: 1.7em;
-    height: 1.7em;
+    width: 1.8em;
+    height: 1.8em;
     margin-top: 0.3em;
-    margin-left: 2em;
+    margin-left: 1.9em;
     margin-right: .3em;
+    cursor: pointer;
 
     /* Static color-related style */
     background-color: #fff;
@@ -1026,10 +1044,52 @@ p.eexcess_ritem_short {
 }
 
 
+.eexcess-bookmark-bookmarked-in-section {
+    width: 100%;
+    margin: 1em 0em;
+}
+
+.eexcess-bookmark-bookmarked-in {
+    display: inline-block;
+    width: 100%;
+    height: 1.7em;
+    margin-top: .1em;
+    vertical-align: middle;
+    font-size: 1em;
+    line-height: 1.6em;
+    border: 0.1em #ddd solid;
+}
 
 
+.eexcess-bookmark-bookmarked-in span {
+    display: inline-block;
+    float: left;
+    margin-left: 0em !important;
+    margin-top: 0.2em !important;
+    vertical-align: top;
+    line-height: 1.4em;
+    font-size: 1em;
+}
 
+.eexcess-bookmark-bookmarked-in img {
+    width: 12px;
+    height: 12px;
+    float: right;
+    margin-top: .3em;
+    margin-right: .5em;
+    z-index: 99;
+    cursor: pointer;
+}
 
+.eexcess-bookmark-color-icon {
+    display: inline-block;
+    float: left;
+    width: 14px;
+    height: 14px;
+    margin-top: 0.25em;
+    margin-right: 0.4em;
+    margin-left: .5em;
+}
 
 
 

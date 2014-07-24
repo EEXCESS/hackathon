@@ -9,7 +9,7 @@ function Timeline( domRoot, visTemplate, Settings ){
 	
 	var Vis = visTemplate;										// Allows calling template's public functions
 	Geometry = new Geometry();									// Ancillary functions for drawing purposes
-	
+	console.log(Vis);
 	root = domRoot;  	
 	
 	var width, focusHeight, focusMargin, contextHeight, contextMargin, centerOffset, verticalOffset;
@@ -965,6 +965,7 @@ function Timeline( domRoot, visTemplate, Settings ){
 	};
 		
 		
+    console.log(TIMEVIS);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

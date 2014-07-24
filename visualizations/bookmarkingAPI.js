@@ -5,7 +5,7 @@ function Bookmarking() {
 
     INTERNAL.init = function() {
 
-        chrome.storage.local.remove("bookmark-dictionary");
+        //chrome.storage.local.remove("bookmark-dictionary");
         // Retrieve current bookmark dictionary and keep it in a local variable during execution
         chrome.storage.local.get( "bookmark-dictionary", function(value){
             BOOKMARKING.Dictionary = ($.isEmptyObject(value)) ? {} : JSON.parse(value["bookmark-dictionary"]);

@@ -11,7 +11,6 @@ function Visualization( EEXCESSobj ) {
 	var searchField = "#eexcess_search_field";									                   // String to select search field in the header
 	var btnSearch = "#eexcess_search_button";									                   // Selector for search button on left side of the header
 	var headerText = "#eexcess_header_text";									                   // String to select the text container in the middle of the header
-	var btnFilter = "#eexcess_filter_button";
 	var btnReset = "#eexcess_btnreset";											                   // Selector for reset button in vis control panel
 	var chartSelect = "#eexcess_select_chart";									                   // select for chart
 	var divMapping = "#eexcess_controls_mappings";								                   // div that contains selects for mapping combinations
@@ -32,24 +31,7 @@ function Visualization( EEXCESSobj ) {
     var colorPickerId = "#eexcess-bookmak-dialog-color-picker";                                    // Div tranformed into a colorpicekr in bookmark dialog
     var bookmarkDialogInputWrapper = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-input-wrapper"; // Wrapper for input containing new bookmark name
     var detailsBookmarkDialogId = "#eexcess-see-and-edit-bookmark-dialog";                         // Dialog displaying bookmark detials (when click on 3-dotted icon)
-
-
-	// Icon and Image Constants
-    var root = "div#eexcess_canvas";											// String to select the area where the visualization should be displayed
-	var searchField = "#eexcess_search_field";									// String to select search field in the header
-	var btnSearch = "#eexcess_search_button";									// Selector for search button on left side of the header
-	var headerText = "#eexcess_header_text";									// String to select the text container in the middle of the header
-	var btnFilter = "#eexcess_filter_button";                                   // Reset button id
-	var btnReset = "#eexcess_btnreset";											// Selector for reset button in vis control panel
-	var chartSelect = "#eexcess_select_chart";									// select for chart
-	var divMapping = "#eexcess_controls_mappings";								// div that contains selects for mapping combinations
-	var divMappingInd = "#eexcess_mapping_container_";							// id for the above div
-	var mappingSelect = ".eexcess_select";										// To select all visual channels' <select> elements by class
-	var contentPanel = "#eexcess_content";										// Selector for content div on the right side
-	var contentList = "#eexcess_content .eexcess_result_list";					// ul element within div content
-	var allListItems = "#eexcess_content .eexcess_result_list .eexcess_list";	// String to select all li items by class
-	var listItem = "#eexcess_content .eexcess_result_list #data-pos-";			// String to select individual li items by id
-	var colorIcon = ".color_icon";												// Class selector for div icon colored according to legend categories
+    var bookmarkedInId = 'eexcess-bookmark-bookmarked-in-';                                        // Divs in bookamark details dialog showing bookmarks in which the current item is recorded
 
 
 	// Icon & Image Constants
@@ -57,8 +39,8 @@ function Visualization( EEXCESSobj ) {
 	var NO_IMG = "../../media/no-img.png";
     var FAV_ICON_OFF = "../../media/icons/favicon_off.png";
     var FAV_ICON_ON = "../../media/icons/favicon_on.png";
+    var REMOVE_SMALL_ICON = "../../media/batchmaster/remove.png"
     var BOOKMARK_DETAILS_ICON = "../../media/batchmaster/ellipsis.png"
-    var IMG_COLOR_WHEEL_SMALL = "../../media/icons/color_wheel_16x16.png";
     var IMG_COLOR_WHEEL_LARGE = "../../media/color-spectrum.jpg";
     var IMG_COLOR_WHEEL_MEDIUM = "../../media/color-wheel.jpg";
     var ICON_EUROPEANA =  "../../media/icons/Europeana-favicon.ico";
@@ -93,6 +75,76 @@ function Visualization( EEXCESSobj ) {
 
 	// Chart objects
 	var timeVis, barVis;
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     *  START object is returned to starter so it can call init or redresh upon new results received
+     *
+     */
+
+    var START = {};
+
+	/**
+	 * 	Initizialization function called from starter.js
+	 * 	Sets up the visualization-independent components and instantiates the visualization objects (e.g. timeVis)
+	 *
+	 * */
+	START.init = function(){
+
+		PREPROCESSING.bindEventHandlers();
+		timeVis = new Timeline(root, EXT, VISPANEL.Settings );
+		barVis = new Barchart(root, EXT, VISPANEL.Settings );
+
+        BookmarkingAPI = new Bookmarking();
+        BookmarkingAPI.init();
+	};
+
+
+
+
+    /**
+     * 	Initizialization function called from starter.js
+     * 	Sets up the visualization-independent components and instantiates the visualization objects (e.g. timeVis)
+     *
+     * */
+    START.refresh = function( receivedQuery, receivedData, receivedCharts, receivedMappings, receivedGroupBy ){
+
+        width  = $(window).width();
+        height = $(window).height();
+
+        data = receivedData;													// contains the data to be visualized
+        charts = receivedCharts;
+        mappings = PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
+        query = receivedQuery;													// string representing the query that triggered the current recommendations
+        groupBy = receivedGroupBy;
+
+        console.log(data);
+        // Initialize template's elements
+        PREPROCESSING.setAncillaryVariables();
+        BOOKMARKS.updateBookmarkedItems();
+        PREPROCESSING.extendDataWithAncillaryDetails();
+        QUERY.updateHeaderText( "Query Results : " + data.length );
+        QUERY.updateSearchField( query );
+        CONTROLS.buildChartSelect();
+        LIST.buildContentList();
+
+        if(data.length > 0){
+            // Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)
+            VISPANEL.drawChart();
+        }
+        else{
+            VISPANEL.showMessageOnCanvas( STR_NO_DATA_RECEIVED );
+        }
+
+        //BookmarkingAPI.testBookmarking();
+    };
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -203,18 +255,8 @@ function Visualization( EEXCESSobj ) {
 	    indicesToHighlight = [];
         isBookmarkDialogOpen = false;
         idsArray = data.map(function(d){ return d.id; });
-        bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
     };
 
-
-
-
-    PREPROCESSING.setAncillaryVariables = function() {
-	    indicesToHighlight = [];
-        isBookmarkDialogOpen = false;
-        idsArray = data.map(function(d){ return d.id; });
-        bookmarkedItems = BookmarkingAPI.getBookmarkedItemsByItemId(idsArray);
-    };
 
 
 
@@ -360,10 +402,10 @@ function Visualization( EEXCESSobj ) {
 
 
 
-    EVTHANDLER.bookmarkDetailsIconClicked = function(d){
+    EVTHANDLER.bookmarkDetailsIconClicked = function(d, i){
 
         d3.event.stopPropagation();
-        BOOKMARKS.buildSeeAndEditBookmarkDialog(d);
+        BOOKMARKS.buildSeeAndEditBookmarkDialog(d, i);
     };
 
 
@@ -400,6 +442,12 @@ function Visualization( EEXCESSobj ) {
     };
 
 
+
+    EVTHANDLER.removeBookmarkIconClicked = function(bookmark, bookmarkIndex) {
+        BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog(this, bookmark, bookmarkIndex);
+    }
+
+
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -434,7 +482,7 @@ function Visualization( EEXCESSobj ) {
 	 *
 	 * */	
 	CONTROLS.buildVisualChannelSelects = function(){
-		
+
 		// Steps to create <select> elements for visual channels
 		//
 		var combinations = [];
@@ -478,24 +526,37 @@ function Visualization( EEXCESSobj ) {
 				.attr("class", "eexcess_controls_title")
 				.text(c.channel);
 			
-			var channelSelect = divChannel
-									.append("select")
-									.attr("class", "eexcess_select")
-									.attr("name", c.channel);
-					
-			// the "mappingSelectors" array stores the selectors that allow to set change events for each visual channel <select> element in
-			// the function "setSelectChangeHandlers"
-			// E.g. mappingSelectors[0] = "#eexcess_mapping_container_0 .eexcess_select"
-			mappingSelectors.push(divMappingInd + "" + i + " "+ mappingSelect);	
-			
-			var mappingOptions = "";
+            if(c.values.length > 1){
 
-			c.values.forEach(function(v){
-				mappingOptions += "<option class=\"ui-selected\" value=\""+v+"\">"+v+"</option>";
-			});
+                var channelSelect = divChannel
+				    .append("select")
+					.attr("class", "eexcess_select")
+					.attr("name", c.channel);
+					
+                // the "mappingSelectors" array stores the selectors that allow to set change events for each visual channel <select> element in
+                // the function "setSelectChangeHandlers"
+                // E.g. mappingSelectors[0] = "#eexcess_mapping_container_0 .eexcess_select"
+                mappingSelectors.push(divMappingInd + "" + i + " "+ mappingSelect);
 			
-			channelSelect.html( mappingOptions );
+                var mappingOptions = "";
+
+                c.values.forEach(function(v){
+				    mappingOptions += "<option class=\"ui-selected\" value=\""+v+"\">"+v+"</option>";
+                });
+			
+                channelSelect.html( mappingOptions );
+            }
+            else{
+                divChannel.append('div')
+                    .attr('class', 'eexcess_controls_facet_div')
+                    .text(c.values[0]);
+
+            }
+
+
 		});
+
+
 		// Create event handlers
 		EVTHANDLER.setSelectChangeHandlers();
 		
@@ -626,12 +687,14 @@ function Visualization( EEXCESSobj ) {
 
         bookmarkDiv.append("img")
             .attr("class", "eexcess_fav_icon")
+            .attr('title', 'Bookmark this item')
             .attr("src", function(d){ if(d.bookmarked) return FAV_ICON_ON; return FAV_ICON_OFF; })
             .on("click", EVTHANDLER.faviconClicked);
 
 
         bookmarkDiv.append("img")
             .attr("class", "eexcess_details_icon")
+            .attr('title', 'See item\'s bookmarks')
             .attr("src", BOOKMARK_DETAILS_ICON)
             .style("display", function(d){ if(d.bookmarked) return 'inline-block'; return 'none'; })
             .on("click", EVTHANDLER.bookmarkDetailsIconClicked)
@@ -739,6 +802,16 @@ function Visualization( EEXCESSobj ) {
         // Update item's property 'bookmarked'
         data[index].bookmarked = true;
     };
+
+
+    LIST.turnFaviconOffAndHideDetailsIcon = function( index ){
+        // Replace favicon_on with favicon_off
+        d3.select(listItem + '' +index).select(favIconClass).transition().attr("src", FAV_ICON_OFF).duration(2000);
+        // Hide bookmark details icon
+        $(listItem + '' +index + ' ' + bookmarkDetailsIconClass).fadeOut('slow');
+        // Update item's property 'bookmarked'
+        data[index].bookmarked = false;
+    }
 
 	
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -971,7 +1044,7 @@ function Visualization( EEXCESSobj ) {
             var $message = $(newBookmarkOptionsId).find('p');
 
             // validation for new bookmark name
-            if(this.currentBookmark['type'] == 'new' && (this.currentBookmark['bookmark-name'] == '' || this.currentBookmark['bookmark-name'] == 'none')) {
+            if(this.currentBookmark['type'] == 'new' && this.currentBookmark['bookmark-name'] == '') {
                 $message.fadeIn('slow');
                 return false;
             }
@@ -983,6 +1056,12 @@ function Visualization( EEXCESSobj ) {
     };
 
 
+
+    BOOKMARKS.updateBookmarkedItems = function(){
+            bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
+            console.log('----- BOOKMARKED ITEMS -----');
+            console.log(bookmarkedItems);
+    };
 
 
 
@@ -1113,22 +1192,19 @@ function Visualization( EEXCESSobj ) {
             LIST.turnFaviconOnAndShowDetailsIcon(index);
 
             // Update ancillary variable
-            bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
-            BookmarkingAPI.getBookmarkedItemsById(idsArray);
-            console.log(bookmarkedItems);
+            BOOKMARKS.updateBookmarkedItems();
         }
     };
 
 	
 
 
-    BOOKMARKS.buildSeeAndEditBookmarkDialog = function( datum ){
+    BOOKMARKS.buildSeeAndEditBookmarkDialog = function( datum, index ){
 
         BOOKMARKS.destroyBookmarkDialog();
         isBookmarkDialogOpen = true;
 
-        var itemDetails = bookmarkedItems[datum.id];
-        console.log(itemDetails);
+        this.internal.setCurrentItem(datum, index);
 
         var topOffset = $(contentPanel).offset().top;
 
@@ -1149,17 +1225,27 @@ function Visualization( EEXCESSobj ) {
         detailsSection.append('span').text('Title');
         detailsSection.append('p').text(datum.title);
 
-        var accordion = detailsDialog.append('div').attr('id', 'accordion');
-        accordion.append('span').style('width', '100%').text('Bookmarked in:');
 
-        var accordionData = accordion.selectAll('div').data(itemDetails.bookmarked);
+        var bookmarkedInSection = detailsDialog.append('div').attr('class', 'eexcess-bookmark-bookmarked-in-section');
+        bookmarkedInSection.append('span').style('width', '100%').text('Bookmarked in:');
 
-        var accordionItem = accordionData.enter().append('div');
-        accordionItem.append('h3').text(function(d){ return d["bookmark-name"]; });
-        accordionItem.append('div').text(function(d){ return d.color; });
-        accordionItem.append('p').text(function(d){ return 'Query: ' + d.query; });
+        itemBookmarksData = bookmarkedInSection.selectAll('div')
+            .data(bookmarkedItems[datum.id].bookmarked);
 
-        $('#accordion').accordionCustom({ 'collapsible': true });
+        var itemInBookmarks = itemBookmarksData.enter().append('div')
+                //.attr('id', function(d, i){ return 'eexcess-bookmark-bookmarked-in-' + i; })
+                .attr('class', 'eexcess-bookmark-bookmarked-in');
+
+        itemInBookmarks.append('div')
+            .attr('class', 'eexcess-bookmark-color-icon')
+            .style('background-color', function(d){ return d.color; });
+
+        itemInBookmarks.append('span').text(function(d){ return d["bookmark-name"]; });
+
+        itemInBookmarks.append('img')
+            .attr('src', REMOVE_SMALL_ICON)
+            .attr('title', 'Remove item from this bookmark')
+            .on('click', EVTHANDLER.removeBookmarkIconClicked);
 
 
         // Append done button within container
@@ -1176,80 +1262,44 @@ function Visualization( EEXCESSobj ) {
 	
 
 
+    BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog = function(sender, bookmark, bookmarkIndex){
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * 	Initizialization function called from starter.js
-	 * 	Sets up the visualization-independent components and instantiates the visualization objects (e.g. timeVis) 
-	 * 
-	 * */
-	this.init = function(){
-
-		PREPROCESSING.bindEventHandlers();
-		timeVis = new Timeline(root, self, VISPANEL.Settings );
-		barVis = new Barchart(root, self, VISPANEL.Settings );
-
-        BookmarkingAPI = new Bookmarking();
-        BookmarkingAPI.init();
-	};
-
-
-
-
-    /**
-     * 	Initizialization function called from starter.js
-     * 	Sets up the visualization-independent components and instantiates the visualization objects (e.g. timeVis)
-     *
-     * */
-    this.refresh = function( receivedQuery, receivedData, receivedCharts, receivedMappings, receivedGroupBy, action ){
-
-        width  = $(window).width();
-        height = $(window).height();
-
-        data = receivedData;													// contains the data to be visualized
-        charts = receivedCharts;
-        mappings = PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
-        query = receivedQuery;													// string representing the query that triggered the current recommendations
-        groupBy = receivedGroupBy;
-
-        // Initialize template's elements
-        PREPROCESSING.setAncillaryVariables();
-        PREPROCESSING.extendDataWithAncillaryDetails();
-        QUERY.updateHeaderText( "Query Results : " + data.length );
-        QUERY.updateSearchField( query );
-        CONTROLS.buildChartSelect();
-        LIST.buildContentList();
+        var itemId = this.internal.getCurrentItem().id;
+        var itemIndex = this.internal.getCurrentItemIndex();
         
-        if(data.length > 0){
-            // Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)
-            VISPANEL.drawChart();
-        }
-        else{
-            VISPANEL.showMessageOnCanvas( STR_NO_DATA_RECEIVED );
-        }
+        BookmarkingAPI.deleteItemFromBookmark(itemId, bookmark["bookmark-name"]);
 
-        //BookmarkingAPI.testBookmarking();
-    };
+        // sender is img element with remove icon
+        $(sender.parentNode).remove();
+        BOOKMARKS.updateBookmarkedItems();
+
+        if(typeof bookmarkedItems[itemId] == 'undefined' || bookmarkedItems[itemId] == 'undefined')
+            LIST.turnFaviconOffAndHideDetailsIcon(itemIndex);
+    }
+
+
+
 
 	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+	///////////// External calls to allow overloaded visualization communicate with the template
+
+
+    var EXT = {};
 	
-	
-	///////////// External calls triggered by current chart
-	
-	this.ListItemSelected = function(d, i){
-		LIST.selectListItem( d, i, true );
+	EXT.ListItemSelected = function(datum, index){
+		LIST.selectListItem( datum, index, true );
 	};
 	
 	
-	this.selectItems = function( itemIndices ){
-		LIST.highlightListItems( itemIndices, true );
+	EXT.selectItems = function( itemIndicesArray ){
+		LIST.highlightListItems( itemIndicesArray, true );
 	};
 
+
+    return START;
 
 
 }

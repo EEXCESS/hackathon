@@ -219,6 +219,13 @@ button:hover {
 }
 
 
+.eexcess_controls_facet_div {
+    background: -webkit-linear-gradient(top,#fefefe, #fff , #fefefe);
+    border: 0.1em #ddd solid;
+    border-radius: 0.4em;
+    color: #555;
+    box-shadow: 0em 0.1em .1em #999;
+}
 
 
 /********************************************************************************************************************************************
