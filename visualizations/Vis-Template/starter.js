@@ -16,7 +16,6 @@ var onDataReceived = function(dataReceived, status) {
         return;
     }
 
-    console.log(dataReceived);
 	globals.mappingcombination = dataReceived[0].mapping;
 	globals.groupedBy = dataReceived[0].groupedBy;
 	globals.data = dataReceived[0].data;

@@ -75,7 +75,7 @@ function Visualization( EEXCESSobj ) {
     var bookmarkedItems;
 
 	// Chart objects
-	var timeVis, barVis;
+	var timeVis, barVis, geoVis;
 
 
 
@@ -98,8 +98,9 @@ function Visualization( EEXCESSobj ) {
 	START.init = function(){
 
 		PREPROCESSING.bindEventHandlers();
-		timeVis = new Timeline(root, EXT, VISPANEL.Settings );
-		barVis = new Barchart(root, EXT, VISPANEL.Settings );
+		timeVis = new Timeline(root, EXT );
+		barVis = new Barchart(root, EXT );
+        geoVis = new Geochart(root, EXT);
 
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();
@@ -117,7 +118,6 @@ function Visualization( EEXCESSobj ) {
      * */
     START.refresh = function( receivedData, receivedQuery, receivedCharts, receivedMappings, receivedGroupBy ){
 
-        console.log(receivedData);
         if(receivedData == 'undefined' || receivedData.length == 0 ){
             VISPANEL.clearCanvasAndShowMessage( STR_NO_DATA_RECEIVED );
             return;
@@ -132,7 +132,6 @@ function Visualization( EEXCESSobj ) {
         query = receivedQuery;													// string representing the query that triggered the current recommendations
         groupBy = receivedGroupBy;
 
-        console.log(data);
         // Initialize template's elements
         PREPROCESSING.setAncillaryVariables();
         BOOKMARKS.updateBookmarkedItems();
@@ -251,6 +250,11 @@ function Visualization( EEXCESSobj ) {
 			
 		});
 		
+
+        // Add geo chart to mappings
+        formattedMappings.push( {'chart': 'geochart', 'combinations': new Array()} );
+        charts.push('geochart');
+
 		return formattedMappings;
 	};
 
@@ -377,7 +381,6 @@ function Visualization( EEXCESSobj ) {
 	////////	content list item click	////////
 	
 	EVTHANDLER.listItemClicked = function(d, i, isSelectedFromOutside){
-		console.log("list item clicked");
         LIST.selectListItem( d, i);
 	};
 	
@@ -491,80 +494,82 @@ function Visualization( EEXCESSobj ) {
 		// Steps to create <select> elements for visual channels
 		//
 		var combinations = [];
+        var initialMapping = [];
 		var chartIndex = charts.indexOf( VISPANEL.chartName );		// VISPANEL.chartName value assigned in 'getSelectedMapping()' (the caller)
 		mappingSelectors = [];
 		
 		visChannelKeys = [];
-		var initialMapping = mappings[chartIndex].combinations[0];
-		
-		// Each item of the array "combinations" consists in an object that stores the name of the visual channel ('channel'), 
-		// and an empty array that will contain all its possible values ('values')
-		initialMapping.forEach(function(m){
-			combinations.push({'channel': m.visualattribute, 'values': []});
-			visChannelKeys.push(m.visualattribute);
-		});
-				
-		// Goes over all the combinations. Every time chartname equals the current chart, it retrieves all the possible values for each visual channel
-		// The values are stored like -> combinations[0] = { channel: x-axis, values: [year, ...]}	
-		mappings[chartIndex].combinations.forEach(function(comb){
-			
-			comb.forEach(function(vc){
-				var visAttrIndex = visChannelKeys.indexOf(vc.visualattribute);
-				
-				if(combinations[visAttrIndex]['values'].indexOf(vc.facet) == -1)
-					combinations[visAttrIndex]['values'].push(vc.facet);
-			});
-					
-		});
-		
-		// For each visual channel stored in the array combinations, creates a <select> element and populates its <option> subitems with the
-		// values retrieved in the previous step
-		combinations.forEach(function(c, i){
-			
-			var divChannel = d3.select(divMapping)
-								.append("div")
-								.attr("class", "eexcess_mapping_container")
-								.attr("id", "eexcess_mapping_container_"+i);
-			
-			divChannel
-				.append("span")
-				.attr("class", "eexcess_controls_title")
-				.text(c.channel);
-			
-            if(c.values.length > 1){
 
-                var channelSelect = divChannel
-				    .append("select")
-					.attr("class", "eexcess_select")
-					.attr("name", c.channel);
-					
-                // the "mappingSelectors" array stores the selectors that allow to set change events for each visual channel <select> element in
-                // the function "setSelectChangeHandlers"
-                // E.g. mappingSelectors[0] = "#eexcess_mapping_container_0 .eexcess_select"
-                mappingSelectors.push(divMappingInd + "" + i + " "+ mappingSelect);
-			
-                var mappingOptions = "";
+        if(mappings[chartIndex].combinations.length > 0){
 
-                c.values.forEach(function(v){
-				    mappingOptions += "<option class=\"ui-selected\" value=\""+v+"\">"+v+"</option>";
+            initialMapping = mappings[chartIndex].combinations[0];
+		
+            // Each item of the array "combinations" consists in an object that stores the name of the visual channel ('channel'),
+            // and an empty array that will contain all its possible values ('values')
+            initialMapping.forEach(function(m){
+                combinations.push({'channel': m.visualattribute, 'values': []});
+                visChannelKeys.push(m.visualattribute);
+            });
+				
+            // Goes over all the combinations. Every time chartname equals the current chart, it retrieves all the possible values for each visual channel
+            // The values are stored like -> combinations[0] = { channel: x-axis, values: [year, ...]}
+            mappings[chartIndex].combinations.forEach(function(comb){
+			
+                comb.forEach(function(vc){
+				    var visAttrIndex = visChannelKeys.indexOf(vc.visualattribute);
+				
+                    if(combinations[visAttrIndex]['values'].indexOf(vc.facet) == -1)
+					   combinations[visAttrIndex]['values'].push(vc.facet);
                 });
-			
-                channelSelect.html( mappingOptions );
-            }
-            else{
-                divChannel.append('div')
-                    .attr('class', 'eexcess_controls_facet_div')
-                    .text(c.values[0]);
-
-            }
-
-
-		});
-
-
-		// Create event handlers
-		EVTHANDLER.setSelectChangeHandlers();
+					
+            });
 		
+            // For each visual channel stored in the array combinations, creates a <select> element and populates its <option> subitems with the
+            // values retrieved in the previous step
+            combinations.forEach(function(c, i){
+			
+                var divChannel = d3.select(divMapping)
+				    .append("div")
+					.attr("class", "eexcess_mapping_container")
+					.attr("id", "eexcess_mapping_container_"+i);
+			
+                divChannel
+				    .append("span")
+				    .attr("class", "eexcess_controls_title")
+				    .text(c.channel);
+			
+                if(c.values.length > 1){
+
+                    var channelSelect = divChannel
+				        .append("select")
+					   .attr("class", "eexcess_select")
+					   .attr("name", c.channel);
+					
+                    // the "mappingSelectors" array stores the selectors that allow to set change events for each visual channel <select> element in
+                    // the function "setSelectChangeHandlers"
+                    // E.g. mappingSelectors[0] = "#eexcess_mapping_container_0 .eexcess_select"
+                    mappingSelectors.push(divMappingInd + "" + i + " "+ mappingSelect);
+			
+                    var mappingOptions = "";
+
+                    c.values.forEach(function(v){
+				        mappingOptions += "<option class=\"ui-selected\" value=\""+v+"\">"+v+"</option>";
+                    });
+			
+                    channelSelect.html( mappingOptions );
+                }
+                else{
+                    divChannel.append('div')
+                        .attr('class', 'eexcess_controls_facet_static')
+                        .text(c.values[0]);
+                }
+            });
+
+
+            // Create event handlers
+            EVTHANDLER.setSelectChangeHandlers();
+		
+        }
 		return initialMapping;
 	};
 	
@@ -835,7 +840,8 @@ function Visualization( EEXCESSobj ) {
 				var changedItem = item || "undefined";
 		    	
 				// if the chart changes, reset array with indices to be  highlighted
-				if(VISPANEL.chartName != $(chartSelect).val()) indicesToHighlight = [];
+				if(VISPANEL.chartName != $(chartSelect).val())
+                    indicesToHighlight = [];
 				
 				VISPANEL.chartName = $(chartSelect).val();
 				
@@ -923,12 +929,9 @@ function Visualization( EEXCESSobj ) {
 	
 	/** 
 	 * 	chartName = name of the chart currently displayed
-	 * 	isRankingDrawn = flag to indicate whether the method 'draw' or 'redraw' for rankingVis should be called
-	 * 	Settings = object that contains method for retrieving canvas dimensions and processed input data for each type of chart
 	 * 
 	 * */
 	VISPANEL.chartName = "";
-	VISPANEL.Settings = new Settings();
 	
 	
 	
@@ -944,8 +947,9 @@ function Visualization( EEXCESSobj ) {
 		var selectedMapping = this.internal.getSelectedMapping( item );
 
 		switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
-			case "timeline" : timeVis.draw( selectedMapping, data, width, height,  indicesToHighlight, LIST.selectededListIndex, self ); break;
-			case "barchart": barVis.draw( selectedMapping, data.slice(0), width, height,  LIST.selectededListIndex );	break;
+			case "timeline" : timeVis.draw( selectedMapping, data, width, height); break;
+			case "barchart":  barVis.draw( selectedMapping, data.slice(0), width, height); break;
+            case "geochart":  geoVis.draw(data, width, height); break;
 			default : d3.select(root).text("No Visualization");	
 		}
 
@@ -965,14 +969,16 @@ function Visualization( EEXCESSobj ) {
 				switch(VISPANEL.chartName){
 					case "timeline": timeVis.reset(); break;
 					case "barchart": barVis.reset(); break;
+                    case "geochart": geoVis.reset(); break;
 				}
 				break;
 			case "highlight_item_selected":
 				
 				var arrayIndices = arg;
 				switch(VISPANEL.chartName){
-					case "timeline": timeVis.selectNodes( arrayIndices, self ); break;
+					case "timeline": timeVis.selectNodes(arrayIndices, self); break;
                     case "barchart": barVis.clearSelection(); break;
+                    case "geochart": geoVis.highlightItems(arrayIndices); break;
 				}
 				break;
 
@@ -1146,14 +1152,16 @@ function Visualization( EEXCESSobj ) {
             .attr("class", "eexcess-bookmark-buttons-wrapper");
 
 
-        bookmarkButtonsWrapper.append("button")
+        bookmarkButtonsWrapper.append("input")
+            .attr("type", "button")
             .attr("class", "eexcess-bookmark-button")
-            .text("Save")
+            .attr("value", "Save")
             .on("click", EVTHANDLER.bookmarkSaveButtonClicked);
 
-        bookmarkButtonsWrapper.append("button")
+        bookmarkButtonsWrapper.append("input")
+            .attr("type", "button")
             .attr("class", "eexcess-bookmark-button")
-            .text("Cancel")
+            .attr("value", "Cancel")
             .on('click', EVTHANDLER.bookmarkCancelButtonClicked);
 
 
@@ -1256,9 +1264,10 @@ function Visualization( EEXCESSobj ) {
         var bookmarkButtonsWrapper = detailsDialog.append("div")
             .attr("class", "eexcess-bookmark-buttons-wrapper");
 
-        bookmarkButtonsWrapper.append("button")
+        bookmarkButtonsWrapper.append("input")
+            .attr("type", "button")
             .attr("class", "eexcess-bookmark-button")
-            .text("Done")
+            .attr("value", "Done")
             .on("click", EVTHANDLER.bookmarkDoneButtonClicked);
 
         $(detailsBookmarkDialogId).slideDown('slow');

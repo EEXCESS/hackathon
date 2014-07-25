@@ -8,7 +8,7 @@ select {
 
 
 
-button {
+input[type="button"] {
     background: -webkit-linear-gradient(top, rgba(255,208,135,1) ,rgba(244,188, 103,1));
     background: linear-gradient(top, rgba(255,208,135,1) ,rgba(244,188, 103,1));
     border: 0.1em solid rgba(255,208,135,1);
@@ -21,7 +21,7 @@ button {
 /*
     Hover style for all buttons
 */
-button:hover {
+input[type="button"]:hover {
     box-shadow: 0 0 0.5em rgba(123, 26, 0, .8);
 }
 
@@ -228,7 +228,7 @@ button:hover {
 }
 
 
-.eexcess_controls_facet_div {
+.eexcess_controls_facet_static {
     background: -webkit-linear-gradient(top,#fefefe, #fff , #fefefe);
     border: 0.1em #ddd solid;
     border-radius: 0.4em;
@@ -329,6 +329,7 @@ button:hover {
 
 .eexcess-bookmark-bookmarked-in {
     background: rgba(231, 231, 220, 1);
+    border: 0.1em #ddd solid;
     border-radius: 0.5em;
 }
 

@@ -1,8 +1,9 @@
 
-function Barchart( domRoot, visTemplate, Settings ) {
-	
+function Barchart( domRoot, visTemplate ) {
+
 	var BARCHART = {};
 	
+    BARCHART.Settings = new Settings('barchart');
 	var Vis = visTemplate;
 	
 	var self = this;
@@ -15,6 +16,7 @@ function Barchart( domRoot, visTemplate, Settings ) {
 	var bars;
 	var indexItemSelected = 'undefined';
 	
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,13 +145,13 @@ function Barchart( domRoot, visTemplate, Settings ) {
 	*	Draws main svg components (svg, focus & context), defines scales and axis.
 	* 
 	* ***************************************************************************************************************/
-	BARCHART.Render.draw = function( mappings, recomData, iWidth, iHeight ){
+	BARCHART.Render.draw = function( mappings, receivedData, iWidth, iHeight ){
 		
 		
 		/******************************************************
 		*	Define canvas dimensions
 		******************************************************/
-		BARCHART.Dimensions = Settings.getDimensions( domRoot, iWidth, iHeight, 'barchart' );
+		BARCHART.Dimensions = BARCHART.Settings.getDimensions(domRoot, iWidth, iHeight);
 		width          = BARCHART.Dimensions.width;
 		height         = BARCHART.Dimensions.height;
 		margin         = BARCHART.Dimensions.margin;
@@ -161,9 +163,9 @@ function Barchart( domRoot, visTemplate, Settings ) {
 		*	Define input variables
 		******************************************************/
 
-		BARCHART.Input = Settings.getInitData( 'barchart', recomData, mappings );
+		BARCHART.Input = BARCHART.Settings.getInitData(receivedData, mappings);
 		data         = BARCHART.Input.data;
-        recomList    = BARCHART.Input.recomData;
+        recomList    = BARCHART.Input.recomList;
 		xAxisChannel = BARCHART.Input.xAxisChannel;
 		yAxisChannel = BARCHART.Input.yAxisChannel;
 		colorChannel = BARCHART.Input.colorChannel;
@@ -437,7 +439,7 @@ function Barchart( domRoot, visTemplate, Settings ) {
 	
 	BARCHART.Ext = {
 			
-		draw: function( mappings, recomData, iWidth, iHeight, selectededListIndex ){
+		draw: function( mappings, recomData, iWidth, iHeight ){
 		  BARCHART.Render.draw( mappings, recomData, iWidth, iHeight ); 
 		},
 		

@@ -37,7 +37,8 @@ function Bookmarking() {
 
 
 
-/*****************************************************************************************************************************************************************************************************************/
+/****************************************************************************************************************************************************************************************************/
+
     var BOOKMARKING = {};
 
 
@@ -197,8 +198,9 @@ function Bookmarking() {
     *   @param attrName: name of the attribute to be used for comparison
     *   return: dictionary whose entries correspond to the values included in attrValues that are actually bookmarked.
     *       Each entry contains an array 'bookmarked', where each item consists of an object specifying bookmark name and id, plus the query within which the item was bookmarked'
-    *       An item representes a recommended documents that can be bookmarked in more than one bookmark (but only once in each bookmark). Hence 'bookmarked' has as many elements as the # of bookmarks
-    *       where an item was included.
+    *       An item representes a recommended documents that can be bookmarked in more than one bookmark (but only once in each bookmark). Hence 'bookmarked'
+    *       has as many elements as the # of bookmarkswhere an item was included.
+    *
     **/
     BOOKMARKING.getBookmarkedItemsByAttr = function( attrValues, attrName ){
 
@@ -236,7 +238,7 @@ function Bookmarking() {
 
 
 
-/*****************************************************************************************************************************************************************************************************************/
+/****************************************************************************************************************************************************************************************************/
 
 
     var EXTERNAL = {
@@ -341,12 +343,6 @@ function Bookmarking() {
             console.log(EXTERNAL.getAllBookmarkedItemsInArray("blahblah"));
             console.log("get bookmarks in array for <lalala> (doesn't exist)");
             console.log(EXTERNAL.getAllBookmarkedItemsInArray("lalala"));
-
-            console.log("*****************************************************************************************");
-            console.log("get bookmarks by query <women workforce>");
-            console.log(EXTERNAL.getBookmarkedItemsByQuery("women workforce"));
-            console.log("get bookmarks by query <women> (doesn't exist)");
-            console.log(EXTERNAL.getBookmarkedItemsByQuery("women"));
 
             console.log("*****************************************************************************************");
             console.log("get bookmarks by item id <doc1346923649898> (1 item)");

@@ -1,15 +1,15 @@
 
-function Timeline( domRoot, visTemplate, Settings ){
+function Timeline( root, visTemplate ){
 		
 	/**
 	 * Steps executed when the timeline is intialized
 	 * 
 	 * */
 	var TIMEVIS = {};
-	
+	TIMEVIS.Settings = new Settings('timeline');
+
 	var Vis = visTemplate;										// Allows calling template's public functions
 	Geometry = new Geometry();									// Ancillary functions for drawing purposes
-	root = domRoot;  	
 	
 	var width, focusHeight, focusMargin, contextHeight, contextMargin, centerOffset, verticalOffset;
 	var xAxisChannel, yAxisChannel, colorChannel, data, keywords;	// data retrieved from Input() function
@@ -376,13 +376,12 @@ function Timeline( domRoot, visTemplate, Settings ){
 	*****************************************************************************************************************************/	
 	
 	TIMEVIS.Render.draw = function(mapping, initData, iWidth, iHeight){
-		
-		
+
 		/******************************************************
 		 * Define canvas dimensions
 		 ******************************************************/
 		
-		TIMEVIS.Dimensions = Settings.getDimensions( root, iWidth, iHeight, 'timeline' );
+		TIMEVIS.Dimensions = TIMEVIS.Settings.getDimensions(root, iWidth, iHeight);
 		width          = TIMEVIS.Dimensions.width;
 		focusHeight    = TIMEVIS.Dimensions.focusHeight;
 		focusMargin    = TIMEVIS.Dimensions.focusMargin;
@@ -396,7 +395,7 @@ function Timeline( domRoot, visTemplate, Settings ){
 		 * Assign visual channels and processed data
 		 ******************************************************/
 
-        TIMEVIS.Input = Settings.getInitData( 'timeline', initData, mapping );
+        TIMEVIS.Input = TIMEVIS.Settings.getInitData(initData, mapping);
 		xAxisChannel = TIMEVIS.Input.xAxisChannel;
 		yAxisChannel = TIMEVIS.Input.yAxisChannel;
 		colorChannel = TIMEVIS.Input.colorChannel;
@@ -488,9 +487,7 @@ function Timeline( domRoot, visTemplate, Settings ){
 	
 		// Add svg main component
 		var divchart = d3.select( root ).append( "div" )
-			.attr("id", "div-chart")
-			//.attr("padding-top", verticalOffset)
-        ;
+			.attr("id", "div-chart");
 	
 		var svg = divchart.append("svg")
 			.attr("class", "svg")
@@ -970,11 +967,8 @@ function Timeline( domRoot, visTemplate, Settings ){
 
 	TIMEVIS.Ext = {
 		
-		draw : function( mapping, initData, iWidth, iHeight, indicesToHighlight, selectedIndex, sender ){
-			TIMEVIS.Render.draw( mapping, initData, iWidth, iHeight );
-			
-			var indices = ( indicesToHighlight.length > 0 ) ? indicesToHighlight : selectedIndex;
-			TIMEVIS.Render.selectNodes( indices, sender );
+		draw : function(mapping, initData, iWidth, iHeight){
+			TIMEVIS.Render.draw(mapping, initData, iWidth, iHeight);
 		},
 		
 		reset : function(){
