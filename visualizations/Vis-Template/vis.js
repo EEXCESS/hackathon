@@ -23,6 +23,7 @@ function Visualization( EEXCESSobj ) {
 	var colorIcon = ".color_icon";												                   // Class selector for div icon colored according to legend categories
 	var favIconClass = ".eexcess_fav_icon";                                                        // img element fpr favicon (either on or off)
     var bookmarkDetailsIconClass = ".eexcess_details_icon";                                        // img element with 3-dot icon in each list item used to display bookmarked item's details on click
+    var loadingMsgId = "#eexcess_message_on_canvas";
 
     var bookmarkDialogClass = ".eexcess-bookmark-dialog";                                          // Class selector for both types of dialog: save bookmark and see-and-edit-bookmark
     var saveBookmarkDialogId = "#eexcess-save-bookmark-dialog";                                    // Id for dialog poping up upon clicking on a "star" icon
@@ -51,7 +52,7 @@ function Visualization( EEXCESSobj ) {
     var ICON_UNKNOWN = "../../media/icons/question-mark.png";
 
     // String Constants
-    var STR_SEARCHING = "Searching...";
+    var STR_LOADING = "Loading...";
     var STR_NO_DATA_RECEIVED = "No Data Received";
     var STR_NEW = "New...";
 	var STR_BOOKMARK_NAME_MISSING = "Indicate new bookmark name";
@@ -102,6 +103,8 @@ function Visualization( EEXCESSobj ) {
 
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();
+
+        VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
 	};
 
 
@@ -112,7 +115,13 @@ function Visualization( EEXCESSobj ) {
      * 	Sets up the visualization-independent components and instantiates the visualization objects (e.g. timeVis)
      *
      * */
-    START.refresh = function( receivedQuery, receivedData, receivedCharts, receivedMappings, receivedGroupBy ){
+    START.refresh = function( receivedData, receivedQuery, receivedCharts, receivedMappings, receivedGroupBy ){
+
+        console.log(receivedData);
+        if(receivedData == 'undefined' || receivedData.length == 0 ){
+            VISPANEL.clearCanvasAndShowMessage( STR_NO_DATA_RECEIVED );
+            return;
+        }
 
         width  = $(window).width();
         height = $(window).height();
@@ -133,13 +142,9 @@ function Visualization( EEXCESSobj ) {
         CONTROLS.buildChartSelect();
         LIST.buildContentList();
 
-        if(data.length > 0){
-            // Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)
-            VISPANEL.drawChart();
-        }
-        else{
-            VISPANEL.showMessageOnCanvas( STR_NO_DATA_RECEIVED );
-        }
+        // Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)
+        VISPANEL.drawChart();
+
 
         //BookmarkingAPI.testBookmarking();
     };
@@ -299,10 +304,10 @@ function Visualization( EEXCESSobj ) {
 	 * */
 	QUERY.updateHeaderText = function( text ){
 		
-		if( text == STR_SEARCHING){
+		if( text == STR_LOADING){
 			$( headerText ).find( "span" ).text( "" );
             
-            VISPANEL.showMessageOnCanvas( STR_SEARCHING );
+            VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
 		}
 		else{
 			$( headerText ).find( "span" ).text( text );
@@ -323,7 +328,7 @@ function Visualization( EEXCESSobj ) {
 		
 		// Search for new results if the query is different from the current one
 		if(terms != query){
-			this.updateHeaderText( STR_SEARCHING );
+			this.updateHeaderText( STR_LOADING );
             EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {terms:[{weight:1,text:terms}],reason:{reason:'manual'}}});
 		}
 	};
@@ -730,7 +735,6 @@ function Visualization( EEXCESSobj ) {
 			}
 		}
 	};
-	data
 	
 	
 	/**
@@ -977,7 +981,7 @@ function Visualization( EEXCESSobj ) {
 	};
     
     
-    VISPANEL.showMessageOnCanvas = function( message ){
+    VISPANEL.clearCanvasAndShowMessage = function( message ){
         
         $( root ).empty();
 			
@@ -987,7 +991,7 @@ function Visualization( EEXCESSobj ) {
 		messageOnCanvasDiv.append("span")
             .text( message );	
 			
-        if( message == STR_SEARCHING ){
+        if( message == STR_LOADING ){
             messageOnCanvasDiv.append("img")
                 .attr("src", LOADING_IMG);
         }

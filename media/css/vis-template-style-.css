@@ -70,6 +70,201 @@ div{
 
 /********************************************************************************************************************************************
 
+    DROP-DOWN LIST
+
+********************************************************************************************************************************************/
+
+.wrapper-dropdown {
+
+    /* Size & position */
+    position: relative;
+    font-size: 1em;
+    float: left;
+    padding-left: 0.5em;
+
+    /* Styles */
+    vertical-align: middle;
+    line-height: 1.6em;
+    cursor: pointer;
+    outline: none;
+
+    background: #fff;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+
+
+.wrapper-dropdown span {
+    display: inline-block;
+    float: left;
+    margin-left: 0em !important;
+    margin-top: 0.2em !important;
+    vertical-align: top;
+    line-height: 1.4em;
+    font-size: 1em;
+    color: #1f6080;
+}
+
+
+.wrapper-dropdown:after {          /* Little arrow */
+    content: "";
+    width: 0;
+    height: 0;
+    position: relative;
+    float: right;
+    margin-right: 15px;
+    margin-top: 7px;
+    border-width: 6px 6px 0px 6px;
+    border-style: solid;
+    border-color: rgba(244,188, 103,1) transparent transparent;
+}
+
+
+.dropdown-list-icon {
+    display: inline-block;
+    float: left;
+    width: 14px;
+    height: 14px;
+    margin-top: 0.2em !important;
+    margin-right: 0.4em;
+    background-color: inherit;
+}
+
+
+.wrapper-dropdown .dropdown {       /*ul*/
+
+    /* Size & position */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    -webkit-padding-before: 0em;
+    padding-left: 0.4em;
+
+    max-height: 30em;
+    overflow: hidden;
+    list-style: none;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-top: none;
+}
+
+.wrapper-dropdown .dropdown li {
+    padding: 0em;
+}
+
+.wrapper-dropdown .dropdown li a {
+    display: block;
+    text-decoration: none;
+    vertical-align: top;
+    line-height: 1.9em;
+    color: #666;
+}
+
+
+.wrapper-dropdown .dropdown li:last-of-type a {
+    border: none;
+}
+
+
+/* Hover state */
+.wrapper-dropdown .dropdown li:hover a {
+    color: #57a9d9;
+}
+
+
+/* Active state */
+.wrapper-dropdown.active {
+    background: -webkit-linear-gradient(top, rgba(255,208,135,1) ,rgba(244,188, 103,1));
+    color: white;
+    box-shadow: none;
+}
+
+.wrapper-dropdown.active span {
+    color: #fff;
+}
+
+.wrapper-dropdown.active:after {
+    border-color: #fff transparent;
+    border-width: 0px 6px 6px 6px;
+}
+
+
+
+
+/********************************************************************************************************************************************
+
+    COLOR PICKER
+
+********************************************************************************************************************************************/
+
+
+/* colorpicker styles */
+
+
+.colorpicker {
+    display: block;
+    z-index: 1000;
+    background-color: #222222;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 2px 2px 2px #444444;
+    color: #FFFFFF;
+    font-size: 12px;
+    position: absolute;
+    width: 370px;
+}
+
+#picker-container {
+    float: left;
+    margin: 10px;
+    border: 0;
+}
+
+#picker {
+    cursor: crosshair;
+}
+
+
+.colorpicker-controls {
+    float: right;
+    margin: 10px;
+}
+
+
+.colorpicker-controls > div {
+    border: 1px solid #2F2F2F;
+    margin-bottom: 5px;
+    overflow: hidden;
+    padding: 5px;
+}
+
+
+.colorpicker-controls label {
+    float: left;
+}
+
+
+.colorpicker-controls > div input {
+    background-color: #121212;
+    border: 1px solid #2F2F2F;
+    color: #DDDDDD;
+    float: right;
+    font-size: 10px;
+    height: 14px;
+    margin-left: 6px;
+    text-align: center;
+    text-transform: uppercase;
+    width: 75px;
+}
+
+
+#preview {
+    height: 14px;
+}
+
+/********************************************************************************************************************************************
+
     Header panel (top of screen)
 
 ********************************************************************************************************************************************/
@@ -513,10 +708,11 @@ Visualization Panel (center of screen)
     Holds preview image, partner icon and color icon (matching current color legend in displayed visualization)
 */
 .eexcess_item_ctl {
-	display: block;
-	text-align: -webkit-match-parent;;
-	float: left;
-    width: 75px;
+	display: inline-block;
+    margin-top: 0.3em;
+    margin-left: 1%;
+	text-align: left;
+    width: 20%;
 }
 
 
@@ -524,10 +720,10 @@ Visualization Panel (center of screen)
     Preview image
 */
 .eexcess_preview {
-	width: 44px;
-	height: 44px;
-	margin: 2px;
+	width: 35px;
+	height: 35px;
 	float: left;
+    margin-bottom: 0.2em;
 }
 
 
@@ -535,8 +731,8 @@ Visualization Panel (center of screen)
     Partner icon
 */
 .eexcess_partner_icon {
-	margin-right: 0px;
-	margin-top: 2px;
+    float: left;
+	margin-left: 0.2em;
 	width: 16px;
 	height: 16px;
     box-shadow: 0.05em 0.05em 0.05em #ccc;
@@ -547,11 +743,13 @@ Visualization Panel (center of screen)
     Color icon
 */
 .color_icon {
-	display: block;
+	float: left;
+    display: block;
 	width:16px;
     height:16px;
+    margin-top: 0.25em;
     margin-right: 0px;
-    margin-left: 54px;
+    margin-left: 0.2em;
     box-shadow: 0.05em 0.05em 0.05em #ccc;
 }
 
@@ -560,11 +758,10 @@ Visualization Panel (center of screen)
     Encloses title of the recommendation (h1 .eexcess_ritem_title) and short text below ("p.eexcess_ritem_short")
 */
 .eexcess_ritem_container {
-    margin-left: 65px;
-    padding-left:5px;
-    padding-right:5px;
-    min-height: 4em;
-    vertical-align: -webkit-match-parent;
+    display: inline-block;
+    min-height: 3em;
+    vertical-align: top;
+    width: 70%;
 }
 
 
@@ -593,3 +790,258 @@ p.eexcess_ritem_short {
     margin-top: 0em;
     margin-bottom: 0.5em;
 }
+
+
+/*
+    Bookmark section wraps favicon and if the item is actually bookmarked, then a smal stripped icon to show which bookmarks the item belongs to
+*/
+
+
+.eexcess_bookmark_section {
+    display: inline-block;
+    width: 8%;
+    margin-left: 1%;
+    vertical-align: top;
+}
+
+
+.eexcess_bookmark_section img{
+    display: inline-block;
+    margin-top: .2em;
+    margin-right: .1em;
+    cursor: pointer;
+}
+
+
+
+.eexcess_details_icon {
+    width: 10px;
+}
+
+
+
+/********************************************************************************************************************************************
+
+    Bookmark addition panel (appears on favicon clicked)
+
+********************************************************************************************************************************************/
+
+
+.eexcess-bookmark-dialog {
+    position: absolute;
+    right: 4.6em;
+    width: 18em;
+    max-height: 30em;
+    padding: 0.5em;
+    z-index: 999;
+    font-size: 0.9em;
+    background-color: rgba(241, 241, 230, 1);
+    box-shadow: -.3em .3em 1.5em #222;
+}
+
+
+.eexcess-bookmark-dialog span {
+    display: inline-block;
+    float: left;
+    width: 19%;
+    margin-top: .1em;
+    margin-left: 0.4em;
+    margin-right: 0.4em;
+    text-align: left;
+    color: #529CBF;
+}
+
+.eexcess-bookmark-dialog p {
+    display: inline-block;
+    width: 76%;
+    height: auto;
+    margin-top: .1em;
+    font-size: .95em;
+
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+}
+
+
+.eexcess-bookmark-dialog-title {
+    display: block !important;
+    width: inherit !important;
+    margin-top: 0.2em !important;
+    margin-bottom: 0.5em;
+    margin-left: 0em !important;
+    text-align: center !important;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #114a66 !important;
+}
+
+
+.eexcess-boookmark-dialog-details {
+    width: 100%;
+    margin-top: 0.6em;
+    margin-bottom: 0.6em;
+    vertical-align: top;
+}
+
+
+.eexcess-bookmark-dialog-settings {
+    width: 100%;
+    min-height: 2em;
+    margin-bottom: .6em;
+}
+
+
+.eexcess-bookmark-dialog-settings span {
+    margin-top: 0.3em;
+}
+
+
+.eexcess-bookmark-dropdown-list {
+    display: inline-block;
+    width: 68%;
+    height: 1.7em;
+    border: 0.1em #ddd solid;
+}
+
+
+/* Color icon in header of drop-down list */
+.eexcess-bookmark-dropdown-list-icon {
+    display: inline-block;
+    float: left;
+    width: 14px;
+    height: 14px;
+    margin-top: 0.24em !important;
+    margin-right: 0.4em;
+    background-color: inherit;
+}
+
+
+.eexcess-bookmark-dialog-optional {
+    float: left;
+    width: 100%;
+    margin-top: 0.3em;
+    margin-bottom: .6em;
+    vertical-align: top;
+}
+
+.eexcess-bookmark-dialog-optional p {
+    display: inline-block;
+    margin-top: 0;
+    margin-left: 5.2em;
+    font-size: .9em;
+    /* static */
+    color: red;
+}
+
+
+/* Color picker */
+#eexcess-bookmak-dialog-color-picker {
+    display: inline-block;
+    width: 1.6em;
+    height: 1.6em;
+    margin-top: 0.4em;
+    margin-left: 2.1em;
+    margin-right: .3em;
+    cursor: pointer;
+    background-color: #fff;
+    border: 0.1em #ddd solid;
+    box-shadow: inset 4px 4px 6px -6px #666666;
+}
+
+
+
+.eexcess-bookmark-dialog-input-wrapper {
+    display: inline-block;
+    width: 72%;
+    margin-top: 0.35em;
+    vertical-align: top;
+}
+
+
+.eexcess-bookmark-dialog-input-wrapper input {
+    width: 100%;
+    height: 1.4em;
+    font-size: 1.1em;
+    text-align: left;
+
+    /* Static color-related style */
+    background-color: white;
+    border: 0.1em #ddd solid;
+    /*box-shadow: 0 1px 0 rgba(0,0,0,0.2);*/
+    box-shadow: inset 4px 4px 6px -6px #666666;
+    color: #666;
+}
+
+
+
+.eexcess-bookmark-buttons-wrapper {
+    width: 100%;
+    text-align: center;
+    margin-bottom: .3em;
+}
+
+
+.eexcess-bookmark-button {
+    height: 1.8em;
+    width: 5.7em;
+    margin-left: 0.2em;
+    margin-right: 0.2em;
+}
+
+
+.eexcess-bookmark-bookmarked-in-section {
+    width: 100%;
+    margin: 1em 0em;
+}
+
+.eexcess-bookmark-bookmarked-in {
+    display: inline-block;
+    width: 100%;
+    height: 1.7em;
+    margin-top: .1em;
+    vertical-align: middle;
+    font-size: 1em;
+    line-height: 1.6em;
+    border: 0.1em #ddd solid;
+    background: rgba(231, 231, 220, 1);
+}
+
+
+.eexcess-bookmark-bookmarked-in span {
+    display: inline-block;
+    float: left;
+    margin-left: 0em !important;
+    margin-top: 0.2em !important;
+    vertical-align: top;
+    line-height: 1.4em;
+    font-size: 1em;
+}
+
+.eexcess-bookmark-bookmarked-in img {
+    width: 12px;
+    height: 12px;
+    float: right;
+    margin-top: .3em;
+    margin-right: .5em;
+    z-index: 99;
+    cursor: pointer;
+}
+
+.eexcess-bookmark-color-icon {
+    display: inline-block;
+    float: left;
+    width: 14px;
+    height: 14px;
+    margin-top: 0.25em;
+    margin-right: 0.4em;
+    margin-left: .5em;
+    background-color: inherit;
+}
+
+
+
+
+
+
+
+

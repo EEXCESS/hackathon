@@ -9,8 +9,14 @@ visTemplate.init();
 
 var onDataReceived = function(dataReceived, status) {
 	
-	console.log("Post to EEXCESS/Belgin server status: " + status);
+	console.log(status);
 	
+    if(status == "no data available"){
+        visTemplate.refresh("");
+        return;
+    }
+
+    console.log(dataReceived);
 	globals.mappingcombination = dataReceived[0].mapping;
 	globals.groupedBy = dataReceived[0].groupedBy;
 	globals.data = dataReceived[0].data;
@@ -19,7 +25,7 @@ var onDataReceived = function(dataReceived, status) {
 
 	var charts = getCharts( globals.mappingcombination );
 	
-	visTemplate.refresh( globals.data.query, globals.data.results.results, charts, globals.mappingcombination, globals.groupedBy );
+	visTemplate.refresh( globals.data.results.results, globals.data.query, charts, globals.mappingcombination, globals.groupedBy );
 };
 
 
@@ -32,48 +38,47 @@ requestPlugin();
 
 function requestPlugin() {
 
-    var requestVisualizations = function(pluginResponse, action) {
-        console.log(pluginResponse);
+    var requestVisualizations = function(pluginResponse) {
     	if((typeof pluginResponse == "undefined") || pluginResponse.results == null) {
             onDataReceived([], "no data available");
         }
         else {
             
-        	var dataToSend = pluginResponse;//fixMissingAndMalformattedValues( pluginResponse );
+        	var dataToSend = deletedRdf(pluginResponse);
             var host = "http://eexcess.know-center.tugraz.at/";
             var cmd = "getMappings";
-            
+
             // Call server
             var post = $.post(host + "/viz", { cmd: cmd, dataset: JSON.stringify(dataToSend) });
             
             post
             	.done(function(reqData){
             		var data = JSON.parse(reqData);
-            		onDataReceived(data, "success");
+            		onDataReceived(data, "Post to EEXCESS/Belgin server status: success");
             	})
             	.fail(function(){
             		var dummy = new Dummy();
             		globals.keywords = dummy.keywords;
-            		onDataReceived(dummy.data, "fail");
+            		onDataReceived(dummy.data, "Post to EEXCESS/Belgin server status: fail");
             	});
         }
     }
 
     	
-    EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
-           requestVisualizations(reqResult, "load_visualization");
-    });
-    
+    // Set listener to receive new data when a new query is triggered
     EEXCESS.messaging.listener(
     	function(request, sender, sendResponse) {
     		if (request.method === 'newSearchTriggered') {
     			console.log('data received from plugin');
-   				requestVisualizations(request.data, "refresh_visualization");
+   				requestVisualizations(request.data);
    			}
    		}
     );
 
     
+    // Retrieve current recommendations data
+    EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: null});
+
 }
 
 
@@ -83,6 +88,14 @@ function requestPlugin() {
  */
 
 
+function deletedRdf(pluginResponse) {
+
+    pluginResponse.results.results.forEach(function(d){
+        delete d.rdf;
+    });
+
+    return pluginResponse;
+}
 
 
 function getCharts(combinations){
