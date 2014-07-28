@@ -38,11 +38,13 @@ EEXCESS.model = (function() {
                 }
 
                 // log activated query
-                EEXCESS.logging.logQuery(tab.id, results['weightedTerms'], new Date().getTime(), '');
-                EEXCESS.messaging.sendMsgAllTabs({
-                    method: 'newSearchTriggered',
-                    data: {query: cachedResult.query, results: cachedResult.data}
-                });
+                if (results['weightedTerms'] !== null) {
+                    EEXCESS.logging.logQuery(tab.id, results['weightedTerms'], new Date().getTime(), '');
+                    EEXCESS.messaging.sendMsgAllTabs({
+                        method: 'newSearchTriggered',
+                        data: {query: cachedResult.query, results: cachedResult.data}
+                    });
+                }
             }
         });
     });
