@@ -52,6 +52,36 @@ function LastTestAction(){
 
 //init the application
 
+//init bookmark data
+var bookmarkingAPI = new Bookmarking();
+
+
+
+bookmarkingAPI.init();
+
+//Ultrahack !!!!!!!!!!!!!!!!!!!!!
+setTimeout(function () {
+	console.log("-----------------------------");
+	//console.log(bookmarkingAPI.getAllBookmarkNamesAndColors());/////////
+	/*
+	console.log(bookmarkingAPI.getAllBookmarks());
+	console.log(bookmarkingAPI.getBookmarsDictionary("zz"));
+	console.log(bookmarkingAPI.getBookmarsDictionary("bububu"));
+	console.log(bookmarkingAPI.getAllBookmarkedItemsInArray("zz")); //??
+	console.log(bookmarkingAPI.getAllBookmarkedItemsInArray("bububu")); //??
+	console.log(bookmarkingAPI.getBookmarkedItemsById("10009777995")); //??
+	console.log(bookmarkingAPI.getBookmarkedItemsByTitle("The economic outlook for Russia in 2012 - 2014"));//??
+	*/
+	
+	console.log("-----------------------------");
+	
+	LoadBookmarks(bookmarkingAPI.getAllBookmarks());
+}, 5000);
+//Ultrahack !!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
 //get data from indexedDB
 var getDataFromIndexedDB = null;
 getDataFromIndexedDB = new GetDataFromIndexedDB();
@@ -93,6 +123,7 @@ function AddBookMarkInGraph(nodeId,bookmarkId,color){
 	
 	forceGraph.To.Object().To.Graph().ReDraw();
 	
+
 }
 
 function DeleteBookMarkFromGraph(nodeId,bookmarkId){
@@ -231,6 +262,7 @@ var funcStore =	{
 				});	
 				AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,
 					$("#"+currentSelectedBookmark+" .editcolor").val());	
+					
 				bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={};
 				bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={
 					color:$("#"+currentSelectedBookmark+" .editcolor").val(),
@@ -242,6 +274,7 @@ var funcStore =	{
 					bookmarkDict.nodes[currentNodeId]={};
 				}
 				bookmarkDict.nodes[currentNodeId][currentSelectedBookmark] = null;
+					console.log(bookmarkDict);
 			}else{
 				//delete bookmark element
 				$("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId).remove();

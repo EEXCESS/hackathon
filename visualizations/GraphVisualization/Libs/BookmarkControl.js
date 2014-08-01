@@ -6,11 +6,43 @@ var bookmarkDict = {
 	nodes:{}
 };
 
+function LoadBookmarks(bookmarkDictParam){
+	console.log(bookmarkDictParam);
+	console.log(bookmarkDict);
+	if(bookmarkDictParam == null){
+		return;
+	}
+	Object.keys(bookmarkDictParam).forEach(function(key){
+		console.log(key + " : " + bookmarkDictParam[key].color);
+		
+		var color = bookmarkDictParam[key].color;
+		
+		//Hack
+		if(color.length == 4){
+			var newColor = "#";
+			newColor += color[1]+color[1];
+			newColor += color[2]+color[2];
+			newColor += color[3]+color[3];
+			color = newColor;
+		}
+		////Hack
+		AddBookmark(key,color);
+		//AddItems
+		getDataFromIndexedDB.uniqueWords.every(function(element,index){
+			if(key == element){
+				console.log("#: " + index + " : " + key);
+				return false;
+			}
+		});
+		
+		
+	});
+}
+
+
 //add new book mark
-$("#addbookmark").click(function(){
-    
-    //has bookmark a name?
-    var bookmarkname =  $("#newbookmarkname").val();
+function AddBookmark(bookmarkname,colorname){
+
     if(bookmarkname == ""){
         $("#message").text("please get a bookmarkname!");
         return;
@@ -34,7 +66,7 @@ $("#addbookmark").click(function(){
                    // +'<button class="editbookmarkname">edit</button>'   
                 +'</div>'
                 +'<div class="workbookmarkshow" >'
-					+'<input class="editcolor" disabled type="color" value="'+$("#newcolor").val()+'"></input>'
+					+'<input class="editcolor" disabled type="color" value="'+colorname+'"></input>'
                     +'<button class="expanderbookmark">+</button>'        
                     +'<button class="deletebookmark">x</button>'
                 +'</div>'
@@ -242,6 +274,16 @@ $("#addbookmark").click(function(){
     $("#message").text("success");
     
 	bookmarkDict.bookmarks[bookmarkname] ={};
+	
+};
+
+$("#addbookmark").click(function(){
+    
+    //has bookmark a name?
+    var bookmarkname =  $("#newbookmarkname").val();
+	var colorname = $("#newcolor").val();
+	console.log(colorname);
+	AddBookmark(bookmarkname,colorname);
 	
 });
 
