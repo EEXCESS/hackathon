@@ -1198,6 +1198,10 @@ function Visualization( EEXCESSobj ) {
             if(bookmark['type'] == 'new')
                 BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
 
+			//hack from steff begin
+			item.query = query;
+			//hack from steff end
+			
             console.log(BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item));
 
             BOOKMARKS.destroyBookmarkDialog();

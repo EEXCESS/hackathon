@@ -150,6 +150,144 @@ var currentResultClick = {
 
 var currentHover = null;
 
+
+function AddBookmarkItem(currentNodeId,currentSelectedBookmark){
+	
+	var bookmarkColor = $("#"+currentSelectedBookmark+" .editcolor").val();
+	
+	if(currentSelectedBookmark == null){
+		console.log("no bookmark selected");
+	}else{
+		var bookmarkElement = $("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId);
+		
+		if(bookmarkElement.length == 0){
+			//add new bookmark element
+			
+			var queryNodePartNames = currentNodeId.split("_");
+			$("#"+currentSelectedBookmark+" .bookmarkelement")
+				.append(
+					'<div style="user-select: text;" class="bookmark_element_'+currentNodeId+' grey_round_box">'
+						+'<div>'
+							+'<span class="type_bold">query: </span>'
+							+'<span class="querycontent">'
+							+$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text()
+							+'</span>'
+						+'</div>'
+						+'<div>'
+							+'<span class="type_bold">title:</span>'
+							+$("#"+currentNodeId+" title").text()
+						+'</div>'
+					+'</div>');
+			
+			//add bookmark hover
+			$(".bookmark_element_"+currentNodeId).on("mouseover",function(){
+				funcStore["MouseOverBookmark"](JSON.stringify({
+					nodeName:"Bookmark_"+currentNodeId+"_"+currentSelectedBookmark,
+					bookmarkName:currentSelectedBookmark,
+					nodeId:currentNodeId,
+					color:"black"}));
+			});
+			$(".bookmark_element_"+currentNodeId).on("mouseout",function(){
+				funcStore["MouseOutBookmark"](JSON.stringify({
+					nodeName:"Bookmark_"+currentNodeId+"_"+currentSelectedBookmark,
+					bookmarkName:currentSelectedBookmark,
+					nodeId:currentNodeId,
+					color:"black"}));
+			});
+			$(".bookmark_element_"+currentNodeId).on("click",function(){
+				var searchText = 
+					$("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId+" .querycontent").text();
+				//console.log("|"+searchText+"|");
+				
+				var historyNumber = [];
+				getDataFromIndexedDB.wordHistory.forEach(function(query,index){
+					if(searchText == query){
+						historyNumber.push(index);
+					}
+				});
+				//console.log(historyNumber);
+				//console.log(sliderMin+ " , "+sliderMax);
+				var binaryContent ={number:0,min:false,max:false};
+				var vmin = null;
+				var vmax = null;
+				
+				for(var icount=0;icount<historyNumber.length;icount++){
+					binaryContent ={number:historyNumber[icount],min:false,max:false};
+					
+					if(sliderMin<=historyNumber[icount]){
+						binaryContent.min = true;
+					}
+					if(historyNumber[icount]<=sliderMax){
+						binaryContent.max = true;
+					}
+					
+					if(binaryContent.min == true && binaryContent.max == true){
+						//bookmark are here
+						vmin = null; vmax = null;
+						break;
+					//bookmark not here
+					}else if(binaryContent.min == false && binaryContent.max == true){
+						vmin = binaryContent.number;
+					}else if(binaryContent.min == true && binaryContent.max == false){
+						vmax = binaryContent.number;
+						break;
+					}
+
+				}
+				
+				if(vmin != null && vmax != null){
+					if((sliderMin - vmin)<(vmax-sliderMax)){
+						sliderMin = vmin;
+					}else{
+						sliderMax = vmax;
+					}
+				}else if(vmin != null && vmax == null){
+					sliderMin = vmin;
+				}else if(vmax != null && vmin == null){
+					sliderMax = vmax;
+				}
+				
+				slidercontrol.brush.extent([sliderMin, sliderMax]);
+				
+				drawGraphObj.ReDrawGraph(sliderMin,sliderMax,sliderMin,sliderMax);
+				drawGraphObj.ChangeGraph(sliderMin,sliderMax);
+				forceGraph.To.Object().To.Graph().ReDraw();
+				
+				slidercontrol.ChangeSilderControl();
+			});	
+			AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,bookmarkColor);	
+				
+			bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={};
+			bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={
+				color:$("#"+currentSelectedBookmark+" .editcolor").val(),
+				query:$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text(),
+				title:$("#"+currentNodeId+" title").text()
+			};
+			
+			if(!bookmarkDict.nodes.hasOwnProperty(currentNodeId)){
+				bookmarkDict.nodes[currentNodeId]={};
+			}
+			bookmarkDict.nodes[currentNodeId][currentSelectedBookmark] = null;
+				console.log(bookmarkDict);
+		}else{
+			//delete bookmark element
+			$("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId).remove();
+			DeleteBookMarkFromGraph(currentNodeId,currentSelectedBookmark);
+			
+			delete bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId];
+
+			delete bookmarkDict.nodes[currentNodeId][currentSelectedBookmark];
+			
+			if(Object.keys(bookmarkDict.nodes[currentNodeId]).length == 0){
+				delete bookmarkDict.nodes[currentNodeId];
+			}
+		}
+	}
+	//}	
+
+}
+
+
 //storefunction for graph	
 var funcStore =	{
 	"WorkWithResultNode":function(param){
@@ -160,6 +298,10 @@ var funcStore =	{
 		var currentNodeId = JSON.parse(param).nodeName;
 		//var test = forceGraph.Graph.GetGraphData();
 		
+		var bookmarkColor = $("#"+currentSelectedBookmark+" .editcolor").val();
+		AddBookmarkItem(currentNodeId,currentSelectedBookmark);
+		
+		/*
 		if(currentSelectedBookmark == null){
 			console.log("no bookmark selected");
 		}else{
@@ -260,8 +402,7 @@ var funcStore =	{
 					
 					slidercontrol.ChangeSilderControl();
 				});	
-				AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,
-					$("#"+currentSelectedBookmark+" .editcolor").val());	
+				AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,bookmarkColor);	
 					
 				bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={};
 				bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={
@@ -290,7 +431,7 @@ var funcStore =	{
 			}
 		}
 		//}	
-
+*/
 	},
 	"MoreResult":function(param){
 		// get data from graph

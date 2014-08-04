@@ -6,16 +6,17 @@ var bookmarkDict = {
 	nodes:{}
 };
 
+////////////////////////////////////////////
 function LoadBookmarks(bookmarkDictParam){
-	console.log(bookmarkDictParam);
-	console.log(bookmarkDict);
+	//console.log(bookmarkDictParam);
+	//console.log(bookmarkDict);
 	if(bookmarkDictParam == null){
 		return;
 	}
-	Object.keys(bookmarkDictParam).forEach(function(key){
-		console.log(key + " : " + bookmarkDictParam[key].color);
+	Object.keys(bookmarkDictParam).forEach(function(bookmarkName){
+		console.log(bookmarkName + " : " + bookmarkDictParam[bookmarkName].color);
 		
-		var color = bookmarkDictParam[key].color;
+		var color = bookmarkDictParam[bookmarkName].color;
 		
 		//Hack
 		if(color.length == 4){
@@ -24,21 +25,48 @@ function LoadBookmarks(bookmarkDictParam){
 			newColor += color[2]+color[2];
 			newColor += color[3]+color[3];
 			color = newColor;
+		}else if(color.length > 7){
+			var colorArray = color.substring(4,color.length -1).split(",");
+			//console.log(color);
+			function componentToHex(c) {
+				var hex = c.toString(16);
+				return hex.length == 1 ? "0" + hex : hex;
+			}
+
+			function rgbToHex(r, g, b) {
+				return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+			}
+			color = rgbToHex(parseInt(colorArray[0]),parseInt(colorArray[1]),parseInt(colorArray[2]));
+			
 		}
 		////Hack
-		AddBookmark(key,color);
+		AddBookmark(bookmarkName,color);
+		
+		
 		//AddItems
-		getDataFromIndexedDB.uniqueWords.every(function(element,index){
-			if(key == element){
-				console.log("#: " + index + " : " + key);
-				return false;
+		//console.log("#:- " + bookmarkName);
+		bookmarkDictParam[bookmarkName].items.forEach(function(item){
+			if(item.hasOwnProperty("query")){
+				//console.log("#:-- " + item.query + " : " +item.uri);
+				getDataFromIndexedDB.wordsWithResults[item.query].resultList.every(function(element,index){
+					if(item.uri == element){
+						//console.log("#:--- " + index + " : " + item.uri);
+						//add items
+						var nodeName = "ResultNodeID_UniqueNodeID_" + MD5(item.query) + "_" + index;
+						//console.log(nodeName);
+						AddBookmarkItem(nodeName,bookmarkName);
+						return false;
+					}
+					return true;
+				});
 			}
 		});
 		
 		
+		
 	});
 }
-
+///////////////////////////////////////////
 
 //add new book mark
 function AddBookmark(bookmarkname,colorname){
