@@ -98,10 +98,13 @@ function AddBookMarkInGraph(nodeId,bookmarkId,color){
 			.Change("LinkBookmark_"+nodeId+"_"+bookmarkId,{distance:2});
 		
 		forceGraph.To.Object().To.Graph().ReDraw();
-		console.log("boooooooookmark");
-	}else{
-		console.log("noooooooooooo  boooooooookmark!!!!!!!!!!!!");
-	}
+		
+
+		
+		//console.log("boooooooookmark");
+	}//else{
+	//	console.log("noooooooooooo  boooooooookmark!!!!!!!!!!!!");
+	//}
 
 	
 	
@@ -133,6 +136,7 @@ var currentResultClick = {
 var currentHover = null;
 
 
+
 function AddBookmarkItem(currentNodeId,currentSelectedBookmark,queryName){
 	
 	var bookmarkColor = $("#"+currentSelectedBookmark+" .editcolor").val();
@@ -141,20 +145,33 @@ function AddBookmarkItem(currentNodeId,currentSelectedBookmark,queryName){
 		console.log("no bookmark selected");
 	}else{
 		var bookmarkElement = $("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId);
+		var queryNodePartNames = currentNodeId.split("_");
 		
 		if(bookmarkElement.length == 0){
 			//add new bookmark element
 			
-			var queryNodePartNames = currentNodeId.split("_");
+			
 			
 			var queryTextContent = $("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text();
 			var titleTextContent = $("#"+currentNodeId+" title").text();
 			
 			if(queryName != null ){
-				queryTextContent = queryName;	
-				titleTextContent =	getDataFromIndexedDB.wordsWithResults[queryName].results[
+
+				var bookmarkItem = getDataFromIndexedDB.wordsWithResults[queryName].results[
 						getDataFromIndexedDB.wordsWithResults[queryName].resultList[queryNodePartNames[3]]
-					].title;
+					];
+				bookmarkItem.query = queryName;
+				
+				queryTextContent = queryName;		
+				titleTextContent = bookmarkItem.title;
+
+			}else{
+				var bookmarkItem = getDataFromIndexedDB.wordsWithResults[queryTextContent].results[
+						getDataFromIndexedDB.wordsWithResults[queryTextContent].resultList[queryNodePartNames[3]]
+					];
+				bookmarkItem.query = queryTextContent;
+				bookmarkingAPI.addItemToBookmark(currentSelectedBookmark, bookmarkItem);
+			
 			}
 			
 			$("#"+currentSelectedBookmark+" .bookmarkelement")
@@ -248,7 +265,7 @@ function AddBookmarkItem(currentNodeId,currentSelectedBookmark,queryName){
 				slidercontrol.ChangeSilderControl();
 			});	
 			AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,bookmarkColor);	
-				
+			
 			bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={};
 			bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={
 				color:$("#"+currentSelectedBookmark+" .editcolor").val(),
@@ -265,6 +282,14 @@ function AddBookmarkItem(currentNodeId,currentSelectedBookmark,queryName){
 			//delete bookmark element
 			$("#"+currentSelectedBookmark+" .bookmark_element_"+currentNodeId).remove();
 			DeleteBookMarkFromGraph(currentNodeId,currentSelectedBookmark);
+
+			var queryNameVar = bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId].query;
+			
+			var bookmarkItem = getDataFromIndexedDB.wordsWithResults[queryNameVar].results[
+				getDataFromIndexedDB.wordsWithResults[queryNameVar].resultList[queryNodePartNames[3]]
+			];
+			bookmarkingAPI.deleteItemFromBookmark(bookmarkItem.id,currentSelectedBookmark);
+			
 			
 			delete bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId];
 
@@ -279,13 +304,11 @@ function AddBookmarkItem(currentNodeId,currentSelectedBookmark,queryName){
 
 }
 
-
 //init bookmark data
 var bookmarkingAPI = new Bookmarking();
 
-
-
 bookmarkingAPI.init();
+
 
 //Ultrahack !!!!!!!!!!!!!!!!!!!!!
 setTimeout(function () {
@@ -354,7 +377,7 @@ function LoadBookmarks(bookmarkDictParam){
 						var nodeName = "ResultNodeID_UniqueNodeID_" + MD5(item.query) + "_" + index;
 						//console.log(nodeName + " : " + item.query);
 						
-						AddBookmarkItem(nodeName,bookmarkName,item.query,null);
+						AddBookmarkItem(nodeName,bookmarkName,item.query);
 						
 						return false;
 					}
@@ -380,7 +403,7 @@ var funcStore =	{
 		//var test = forceGraph.Graph.GetGraphData();
 		
 		var bookmarkColor = $("#"+currentSelectedBookmark+" .editcolor").val();
-		AddBookmarkItem(currentNodeId,currentSelectedBookmark);
+		AddBookmarkItem(currentNodeId,currentSelectedBookmark,null);
 		
 	},
 	"MoreResult":function(param){
@@ -667,6 +690,9 @@ var BookmarkFunction = function(){
 		ChangeResultNodes(AddBookmarkNode);
 		
 		forceGraph.To.Object().To.Graph().ReDraw();	
+		
+		
+		
 		toggleBookmark = true;
 	}else {
 		//$(".editbookmarkname,.editcolor,#newcolor,#addbookmark").prop("disabled",false);
