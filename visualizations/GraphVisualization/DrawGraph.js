@@ -63,7 +63,7 @@ var DrawGraph = function(){
 		
 		//add the bookmarks
 		//todo
-		//...
+		//...////////////////////////////////////////////////
 		if(bookmarkDict.nodes.hasOwnProperty(resultNodeName)){
 			var bookmarkValues = bookmarkDict.nodes[resultNodeName];
 			Object.keys(bookmarkValues).forEach(function(bookmarkElement){
