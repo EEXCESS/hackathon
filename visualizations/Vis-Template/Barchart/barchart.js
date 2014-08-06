@@ -120,7 +120,7 @@ function Barchart( domRoot, visTemplate ) {
 
 	BARCHART.Internal.getLegendDomain = function(colorDomain){
 		
-		var legendDomain = []
+		var legendDomain = [];
 		
 		colorDomain.forEach(function(c, i){
 			legendDomain[i] = { 'item': c, 'selected': false };
@@ -229,7 +229,7 @@ function Barchart( domRoot, visTemplate ) {
 	        	.style("text-anchor", "end")
 	            .attr("dx", "-.8em")
 	            .attr("dy", ".15em")
-	            .attr("transform", function() { return "rotate(-45)" });
+	            .attr("transform", function() { return "rotate(-45)"; });
 
 	 
 		focus.append("g")
