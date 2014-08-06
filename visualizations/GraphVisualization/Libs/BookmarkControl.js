@@ -124,7 +124,9 @@ function AddBookmark(bookmarkname,colorname){
 
             delete bookmarkDict.bookmarks[event.data.bookmarkname];
 			
-
+			///////////////
+			bookmarkingAPI.deleteBookmark(bookmarkname);
+			////////////////
 			
             $("#message").text("bookmark deleted successfully!");
         }else{
@@ -249,9 +251,12 @@ $("#addbookmark").click(function(){
     //has bookmark a name?
     var bookmarkname =  $("#newbookmarkname").val();
 	var colorname = $("#newcolor").val();
-	console.log(colorname);
+	//console.log(colorname);
 	AddBookmark(bookmarkname,colorname);
 	
+	///////////////
+	bookmarkingAPI.createBookmark(bookmarkname,colorname);
+	////////////////
 });
 
 
