@@ -1,0 +1,23 @@
+.marker-cluster-pie{
+    background:none;
+    border:none;
+    position:relative;
+}
+    .marker-cluster-pie .child-count{
+        position:absolute;
+        border-radius: 12px;
+        background-color: rgba(255, 255, 255, 0.8);
+        height: 24px;
+        width: 24px;
+        line-height: 24px;
+        left: 10px;
+        top: 10px;
+    }
+    /*.marker-cluster-pie .slice{
+        fill-opacity: 1;
+        stroke:black;
+        stroke-width: 1
+    }
+        .marker-cluster-pie .slice-one{
+            fill:#ff0000;
+        }*/

@@ -7,6 +7,7 @@ function Geochart(root, visTemplate) {
 	var Vis = visTemplate;
 	var data;
     var width, height;
+    GEO.$root = $(root);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,7 +26,21 @@ function Geochart(root, visTemplate) {
 
     /*  Additional methods, if necessary*/
 
-	GEO.Internal = {};
+	GEO.Internal = {
+
+        getRandomInRange: function (from, to, fixed) {
+            return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
+            // .toFixed() returns string, so ' * 1' is a trick to convert to number
+        },
+        getRandomLatLon: function () {
+            return [GEO.Internal.getRandomInRange(-20, 60, 3), GEO.Internal.getRandomInRange(-120, 120, 3)];
+        },
+        spatializeData: function(data){
+            for(var i=0; i<data.length; i++){
+                data[i].coordinate = GEO.Internal.getRandomLatLon();
+            }
+        }
+    };
 
 
 
@@ -61,13 +76,41 @@ function Geochart(root, visTemplate) {
 		*	Define input variables
 		******************************************************/
 		GEO.Input = GEO.Settings.getInitData(receivedData );
-		data = GEO.Input.data;
+        GEO.Internal.spatializeData(GEO.Input.data);
+        GEO.$root.append('<div id="mapInner" style="height:100%"></div>');
 
-
-		//  TO DO
-
-
+        GEO.map = L.map('mapInner');
+        GEO.Render.centerMap();
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(GEO.map);
+        GEO.Render.drawMarkers();
 	};
+
+    GEO.Render.centerMap = function(){
+        GEO.map.setView([51.505, -0.09], 2);
+    };
+
+    GEO.Render.drawMarkers = function(){
+
+        GEO.markersGroup = new L.MarkerClusterGroup({
+            //iconCreateFunction: function(cluster) {
+            //    //return new L.DivIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
+            //    //return new L.DivIcon({ html: '<div><span>' + cluster.getChildCount() + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
+            //    return new L.DivIcon({ className:'marker-cluster-pie', iconSize: L.point(44, 44), html: '<svg width="44" height="44" viewbox="0 0 400 400"><path d="M200,200 L200,20 A180,180 0 0,1 377,231 z" style="fill:#ff0000;fill-opacity: 0.5;"/><path d="M200,200 L377,231 A180,180 0 0,1 138,369 z" style="fill:#00ff00;fill-opacity: 0.5;"/><path d="M200,200 L138,369 A180,180 0 0,1 20,194 z" style="fill:#0000ff;fill-opacity: 0.5;"/><path d="M200,200 L20,194 A180,180 0 0,1 75,71 z" style="fill:#ff00ff;fill-opacity: 0.5;"/><path d="M200,200 L75,71 A180,180 0 0,1 200,20 z" style="fill:#ffff00;fill-opacity: 0.5;"/></svg><div class="child-count">' + cluster.getChildCount() + '</div></div>'});
+            //}
+        });
+
+        for(var i=0; i<GEO.Input.data.length; i++){
+            var marker = L.marker(GEO.Input.data[i].coordinate);
+            //var marker = L.marker([51.505, -0.09]);
+            marker.bindPopup(GEO.Input.data[i].title);
+            GEO.markersGroup.addLayer(marker);
+            GEO.Input.data[i].geoMarker = marker;
+        }
+
+        GEO.map.addLayer(GEO.markersGroup);
+    };
 
 
 
@@ -82,8 +125,9 @@ function Geochart(root, visTemplate) {
 	*
 	* ***************************************************************************************************************/
 	GEO.Render.reset = function(  ){
-
-        //  TO DO
+        GEO.map.removeLayer(GEO.markersGroup);
+        GEO.Render.drawMarkers();
+        GEO.Render.centerMap();
 	};
 
 
@@ -95,8 +139,12 @@ function Geochart(root, visTemplate) {
 	*
 	* ***************************************************************************************************************/
 	GEO.Render.highlightItems = function(indexArray){
-
-        //  TO DO
+        indexArray.forEach(function(i) {
+            GEO.markersGroup.zoomToShowLayer(GEO.Input.data[i].geoMarker, function() {
+                GEO.Input.data[i].geoMarker.openPopup();
+            });
+            //GEO.Input.data[i].geoMarker.openPopup();
+        });
     };
 
 
