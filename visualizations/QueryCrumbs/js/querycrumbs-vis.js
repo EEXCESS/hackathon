@@ -1,40 +1,5 @@
 function display_querycrumbs(domElem) {
 
-
-    var QueryCrumbsConfiguration = {
-        /*
-        The qualitative color palette used to color the background of the query rectangles.
-        - Colors should be easily distinguishable.
-        - Colors should allow to construct a lighter and a darker version and be still distinguishable from all other colors.
-        - Using colorbrewer library (http://colorbrewer2.org/). Color Set1 is suitable for colorblind people.
-         */
-        baseColors:  colorbrewer["Set1"]["8"]
-    }
-
-    // Query Crumbs dimensions
-    var HISTORY_LENGTH = 11;
-    var DENSE_PIXELS = 16;
-    var rectHeight = 20;
-    var rectWidth = 20;
-    var docRectHorizontal = 4;
-    var docRectVertical = 4;
-    var docRectHeight = rectHeight / docRectVertical;
-    var docRectWidth = rectWidth / docRectHorizontal;
-
-    var edgeWidth = 10;
-    var edgeHeight = 10;
-
-    // node border and padding of additional info on mouse over
-    var rectBorderWidth = 2;
-    var rectInfoVertPadding = 15;
-    var edgeInfoVertPadding = 17;
-
-    // params for color-coded similarity
-    var newDocOpacity = 0.1;
-    var oldDocOpacity = 0.5;
-    // if similarity of a node exceeds this threshold it gets the same color
-    var color_threshold = 0.1;
-
     // A list of the HISTORY_LENGTH recent queries
     var historyData = [];
     // A list of similarities of one node to its predecessor
@@ -53,50 +18,13 @@ function display_querycrumbs(domElem) {
     var simResults = [];
 
     // The dimension of the svg panel
-    var width = HISTORY_LENGTH * (rectWidth + edgeWidth) - edgeWidth + 4;
-    var height = rectHeight + rectInfoVertPadding + edgeInfoVertPadding;
+    var width = QueryCrumbsConfiguration.dimensions.HISTORY_LENGTH * (QueryCrumbsConfiguration.dimensions.rectWidth + QueryCrumbsConfiguration.dimensions.edgeWidth) - QueryCrumbsConfiguration.dimensions.edgeWidth + 4;
+    var height = QueryCrumbsConfiguration.dimensions.rectHeight + QueryCrumbsConfiguration.dimensions.rectInfoVertPadding + QueryCrumbsConfiguration.dimensions.edgeInfoVertPadding;
 
     var svgContainer = domElem.append("svg")
         .attr("width", width)
         .attr("height", height)
         .attr("id", "queryCrumbs-svg");
-
-    /*
-        Uses the base colors defined in QueryCrumbsConfiguration.base_colors. Several basic distinct colors can be defined here. When appending a new node to the QueryCrumbs, we assign
-        one of these colors to the node. If the similarity of the new node compared to the previous node is below a
-        certain threshold 'color_threshold', we assign the color which comes next in this list to the new node. Otherwise
-        the new node gets the same color as the previous nod.
-     */
-    var BaseColorManager = {
-        current: 0,
-        currentFirstBaseColor: null,
-        getColor: function(preNodeColor, similarity) {
-            /*
-            console.log(QueryCrumbsConfiguration.baseColors)
-            console.log(preNodeColor)
-            console.log("similarity " + similarity)
-            console.log(color_threshold)
-    */
-            if(preNodeColor) {
-                if(similarity > color_threshold) {
-                    return preNodeColor;
-                } else {
-                    var cIdx = (QueryCrumbsConfiguration.baseColors.indexOf(preNodeColor) + 1) % QueryCrumbsConfiguration.baseColors.length;
-//                    console.log(cIdx)
-                    return QueryCrumbsConfiguration.baseColors[cIdx];
-                }
-            } else {
-                return QueryCrumbsConfiguration.baseColors[0];
-            }
-        },
-        getFirstColor: function() {
-            if(BaseColorManager.currentFirstBaseColor) {
-                return BaseColorManager.currentFirstBaseColor;
-            } else {
-                return QueryCrumbsConfiguration.baseColors[0];
-            }
-        }
-    };
 
     var INTERACTION = {
         onClick: function(d, i) {
@@ -138,14 +66,14 @@ function display_querycrumbs(domElem) {
             var jqNode = $("g text.nodeInfo");
             var w = jqNode.width();
             var h = jqNode.height();
-            var ttX = d.x_pos - rectBorderWidth;
-            ttX = (ttX + w > width) ? width - w - (2 * rectBorderWidth): ttX - (2 * rectBorderWidth);
+            var ttX = d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth;
+            ttX = (ttX + w > width) ? width - w - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth): ttX - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth);
             ttX = (ttX < 0) ? 0 : ttX;
             infoBox.select("text.nodeInfo").attr("x", ttX);
             infoBox.append("rect")
                 .attr("class", "nodeBg")
                 .attr("x", ttX)
-                .attr("y", d.y_pos - rectInfoVertPadding)
+                .attr("y", d.y_pos - QueryCrumbsConfiguration.dimensions.rectInfoVertPadding)
                 .attr("width", w)
                 .attr("height", h)
                 .style("fill", d.base_color)
@@ -155,7 +83,10 @@ function display_querycrumbs(domElem) {
             var rootGroup = d3.select(this.parentNode);
             var iDocs = CORE.collectIdenticalDocs(i);
             for(var n in iDocs) {
-                var docRects = rootGroup.selectAll("g.queryNode").filter(function(d,i) { return (d.timestamp == visualData.visualDataNodes[n].timestamp);}).select("g").selectAll("rect.docNode").filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
+                var docRects = rootGroup.selectAll("g.queryNode")
+                    .filter(function(d,i) { return (d.timestamp == visualData.visualDataNodes[n].timestamp);})
+                    .select("g").selectAll("rect.docNode")
+                    .filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
                 simResults.push(docRects);
                 docRects.classed("docNode", true).classed("docNode-highlighted", true).style("opacity", 1);
             }
@@ -165,7 +96,7 @@ function display_querycrumbs(domElem) {
             d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", false).style("cursor",null);
             for(var n in simResults) {
                 simResults[n].classed("docNode", true).classed("docNode-highlighted", false)
-                    .style("opacity", function(d) { return ((d.preIdx == -1) ? newDocOpacity : oldDocOpacity);});
+                    .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
             }
             simResults = [];
         },
@@ -184,15 +115,15 @@ function display_querycrumbs(domElem) {
             var jqNode = $("g text.edgeInfo");
             var w = jqNode.width();
             var h = jqNode.height();
-            var ttX = d.end_x - w / 2 - edgeWidth / 2;
+            var ttX = d.end_x - w / 2 - QueryCrumbsConfiguration.dimensions.edgeWidth / 2;
             ttX = (ttX + w > width) ? width - w - 2: ttX;
             ttX = (ttX < 0) ? 0 : ttX;
-            infoBox.select("text.edgeInfo").attr("x", ttX).attr("y", d.end_y + edgeInfoVertPadding + 4/5 * h);
+            infoBox.select("text.edgeInfo").attr("x", ttX).attr("y", d.end_y + QueryCrumbsConfiguration.dimensions.edgeInfoVertPadding + 4/5 * h);
 
             infoBox.append("rect")
                 .attr("class", "edgeBg")
                 .attr("x", ttX)
-                .attr("y", d.end_y + edgeInfoVertPadding)
+                .attr("y", d.end_y + QueryCrumbsConfiguration.dimensions.edgeInfoVertPadding)
                 .attr("width", w)
                 .attr("height", h)
                 .style("fill", "url(#gradient)")
@@ -212,13 +143,14 @@ function display_querycrumbs(domElem) {
      */
     var QUERYING = {
         loadDataFromIndexedDB: function() {
-            EEXCESS.storage.loadQueryCrumbsData(HISTORY_LENGTH, init);
+            EEXCESS.storage.loadQueryCrumbsData(QueryCrumbsConfiguration.dimensions.HISTORY_LENGTH, init);
         },
         /*
             A callback function for the EEXCESS extension's background script. It gets called each time a query is issued.
             When receiving results, we insert the query as new node immediately after the node that is currently
             selected ('currentNode') and remove all subsequent nodes.
          */
+
         SearchTriggeredListener: function(request, sender, sendResponse) {
             if (request.method === 'newSearchTriggered') {
                 if(historyData.length == 0) {
@@ -241,8 +173,8 @@ function display_querycrumbs(domElem) {
                         currentNode = latestNode;
                         historyData[currentIdx] = currentNode;
                     } else {
-                        if(currentIdx == HISTORY_LENGTH-1) {
-                            historyData.splice(-HISTORY_LENGTH,1);
+                        if(currentIdx == QueryCrumbsConfiguration.dimensions.HISTORY_LENGTH-1) {
+                            historyData.splice(-QueryCrumbsConfiguration.dimensions.HISTORY_LENGTH,1);
                             BaseColorManager.currentFirstBaseColor = visualData.visualDataNodes[1].base_color;
                         } else {
                             currentIdx += 1;
@@ -358,29 +290,37 @@ function display_querycrumbs(domElem) {
                 vNode.timestamp = history[nodeIdx].timestamp;
                 vNode.sim = similarities[nodeIdx].rsSimScore.sim;
                 vNode.base_color = (visualDataNodes[nodeIdx-1]) ? BaseColorManager.getColor(visualDataNodes[nodeIdx-1].base_color, vNode.sim) : BaseColorManager.getFirstColor();
-                vNode.x_pos = nodeIdx * (rectWidth + edgeWidth);
+                vNode.x_pos = nodeIdx * (QueryCrumbsConfiguration.dimensions.rectWidth + QueryCrumbsConfiguration.dimensions.edgeWidth);
                 vNode.y_pos = 0;
-                vNode.width = rectWidth;
-                vNode.height = rectHeight;
+                vNode.width = QueryCrumbsConfiguration.dimensions.rectWidth;
+                vNode.height = QueryCrumbsConfiguration.dimensions.rectHeight;
                 vNode.results = [];
-                for(var docIdx = 0; docIdx < DENSE_PIXELS; docIdx++) {
+                for(var docIdx = 0; docIdx < QueryCrumbsConfiguration.dimensions.DENSE_PIXELS; docIdx++) {
                     var vDoc = {};
-                    vDoc.x_pos = vNode.x_pos + (docIdx % docRectHorizontal) * docRectWidth;
-                    vDoc.y_pos = vNode.y_pos + Math.floor(docIdx / docRectVertical) * docRectHeight;
-                    vDoc.width = docRectWidth;
-                    vDoc.height = docRectHeight;
-                    vDoc.sim = (similarities[nodeIdx].rsSimScore.recurrence[docIdx] == -1) ? 1 : 0;
-                    vDoc.preIdx = (typeof similarities[nodeIdx].rsSimScore.recurrence[docIdx] != "undefined") ? similarities[nodeIdx].rsSimScore.recurrence[docIdx] : -1;
+                    vDoc.x_pos = vNode.x_pos + (docIdx % QueryCrumbsConfiguration.dimensions.docRectHorizontal) * QueryCrumbsConfiguration.dimensions.docRectWidth;
+                    vDoc.y_pos = vNode.y_pos + Math.floor(docIdx / QueryCrumbsConfiguration.dimensions.docRectVertical) * QueryCrumbsConfiguration.dimensions.docRectHeight;
+                    vDoc.width = QueryCrumbsConfiguration.dimensions.docRectWidth;
+                    vDoc.height = QueryCrumbsConfiguration.dimensions.docRectHeight;
+                    // Beginners see only the base colors
+                    console.log(QueryCrumbsConfiguration.skillLevel)
+                    if(QueryCrumbsConfiguration.skillLevel == "BEGINNER") {
+                        vDoc.sim = 1;
+                        vDoc.preIdx = -1;
+                    } else if(QueryCrumbsConfiguration.skillLevel == "EXPERT"){
+                        vDoc.sim = (similarities[nodeIdx].rsSimScore.recurrence[docIdx] == -1) ? 1 : 0;
+                        vDoc.preIdx = (typeof similarities[nodeIdx].rsSimScore.recurrence[docIdx] != "undefined") ? similarities[nodeIdx].rsSimScore.recurrence[docIdx] : -1;
+                    }
+                    
                     vDoc.uri = (history[nodeIdx].results[docIdx]) ? history[nodeIdx].results[docIdx].uri : "";
                     vNode.results.push(vDoc);
                 }
                 visualDataNodes.push(vNode);
                 if(nodeIdx > 0) {
                     var vEdge = {};
-                    vEdge.start_x = vNode.x_pos - edgeWidth;
-                    vEdge.start_y = rectHeight / 2 - edgeHeight / 2;
+                    vEdge.start_x = vNode.x_pos - QueryCrumbsConfiguration.dimensions.edgeWidth;
+                    vEdge.start_y = QueryCrumbsConfiguration.dimensions.rectHeight / 2 - QueryCrumbsConfiguration.dimensions.edgeHeight / 2;
                     vEdge.end_x = vNode.x_pos;
-                    vEdge.end_y = rectHeight / 2 - edgeHeight / 2;
+                    vEdge.end_y = QueryCrumbsConfiguration.dimensions.rectHeight / 2 - QueryCrumbsConfiguration.dimensions.edgeHeight / 2;
                     vEdge.diffTerms = similarities[nodeIdx].qSimScore.diff;
                     vEdge.simTerms = similarities[nodeIdx].qSimScore.sim;
                     vEdge.simResults = similarities[nodeIdx].rsSimScore.sim;
@@ -438,7 +378,6 @@ function display_querycrumbs(domElem) {
             d3.select("svg defs").remove();
         },
         redraw: function(visualData) {
-
             var crumbsSel = svgContainer.selectAll("g.crumbs").data([visualData]);
             crumbsSel.enter().append("g").attr("class", "crumbs");
             var crumbsUpd = crumbsSel.attr("transform", "translate(2, "+15+")");
@@ -458,21 +397,24 @@ function display_querycrumbs(domElem) {
                 if(fWait_BackNaviResults) {
                     return "translate(0,0)";
                 } else {
-                    var lOffset = edgeWidth + rectWidth;
+                    var lOffset = QueryCrumbsConfiguration.dimensions.edgeWidth + QueryCrumbsConfiguration.dimensions.rectWidth;
                     return ("translate("+parseInt(-lOffset)+", 0)");
                 }
             });
 
-            queryNodesSel.select("rect.queryRectBg").attr("x", function (d) { return d.x_pos - rectBorderWidth; })
-                .attr("y", function (d) { return d.y_pos - rectBorderWidth; } )
-                .attr("width", function (d) { return d.width + 2 * rectBorderWidth; })
-                .attr("height", function (d) { return d.height + 2 * rectBorderWidth; })
+            queryNodesSel.select("rect.queryRectBg").attr("x", function (d) { return d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth; })
+                .attr("y", function (d) { return d.y_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth; } )
+                .attr("width", function (d) { return d.width + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth; })
+                .attr("height", function (d) { return d.height + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth; })
+                .attr("ry", function(d,i) { return i == currentIdx ? 5 : 0 })
                 .classed("queryRectBg", true)
                 .classed("queryRectBg-selected", function(d,i) { return (i == currentIdx);});
+
             queryNodesSel.select("rect.queryRect").attr("x", function (d) { return d.x_pos; })
                 .attr("y", function (d) { return d.y_pos; } )
                 .attr("width", function (d) { return d.width; })
                 .attr("height", function (d) { return d.height; })
+                .attr("ry", function(d,i) { return i == currentIdx ? 5 : 0 })
                 .style("fill", function (d) { return d.base_color; })
                 .classed("queryRect", true);
             nodeEnter.transition().attr("transform", "translate(0,0)");
@@ -484,7 +426,7 @@ function display_querycrumbs(domElem) {
                 .attr("y", function(d) { return d.y_pos; })
                 .attr("width", function(d) { return d.width; })
                 .attr("height", function(d) { return d.height; })
-                .style("opacity", function(d) { return ((d.preIdx == -1) ? newDocOpacity : oldDocOpacity);});
+                .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
 
             var queryEdgesSel = crumbsUpd.selectAll("rect.queryEdge").data(function(d) { return d.visualDataEdges;});
             var queryEdgesEnter = queryEdgesSel.enter()
@@ -497,8 +439,8 @@ function display_querycrumbs(domElem) {
 
             queryEdgesSel.attr("x",function (d) { return d.start_x; } )
                 .attr("y",function (d) { return d.start_y; } )
-                .attr("width", edgeWidth )
-                .attr("height", edgeHeight)
+                .attr("width", QueryCrumbsConfiguration.dimensions.edgeWidth )
+                .attr("height", QueryCrumbsConfiguration.dimensions.edgeHeight)
                 .style("opacity", function(d) { return d.simTerms;});
 
 

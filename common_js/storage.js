@@ -470,9 +470,12 @@ EEXCESS.storage = (function() {
                     var tx_sub = db.transaction("recommendations");
                     var recIndex = tx_sub.objectStore("recommendations").index("query");
                     var queryString = '';
-                    queries[q].query.forEach(function(d) {
-                        queryString += d.text + ' ';
-                    });
+                    if(queries[q].query != undefined) {
+                        queries[q].query.forEach(function(d) {
+                            queryString += d.text + ' ';
+                        });  
+                    }
+                    
                     queryString = queryString.trim();
                     queries[q].query = queryString.split(' ');
                     var singleKeyRange = IDBKeyRange.only(queryString);
