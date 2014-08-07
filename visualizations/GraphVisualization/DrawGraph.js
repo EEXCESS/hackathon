@@ -552,12 +552,15 @@ var DrawGraph = function(){
 
 
 			
+			////////////////////////////////////////////////////////////////////////////////
+			////////////////////////////////////////////////////////////////////////////////
 			
 			//build table for neightbor table
 			var sortedLinknumbers = Object.keys(neightborNodes).map(function(element){
 				return {
 					name:element,
-					length:neightborNodes[element].neightbors.length
+					length:neightborNodes[element].neightbors.length,
+					status:0//0 = free, 1 = no use for central force node.
 				};
 			}).sort(function(a,b){
 			    if (a.length > b.length)
@@ -567,10 +570,13 @@ var DrawGraph = function(){
 				// a must be equal to b
 				return 0;
 			}).reverse();
-
+			
+			console.log("DEBUG 1---------------------------------------------");
+			console.log(sortedLinknumbers);
 			console.log(graphData);
-			var gg = JSON.parse(JSON.stringify(neightborNodes));
-			console.log(gg);
+			console.log(JSON.parse(JSON.stringify(neightborNodes)));
+			console.log("DEBUG 1---------------------------------------------");
+
 			
 			//change the neightbor table
 			sortedLinknumbers.forEach(function(element){
@@ -589,7 +595,11 @@ var DrawGraph = function(){
 					});
 				}
 			});
-
+			console.log("DEBUG 2---------------------------------------------");
+			console.log(JSON.parse(JSON.stringify(neightborNodes)));
+			console.log("DEBUG 2---------------------------------------------");
+			
+			
 			
 			//optimize the querynode with most links
 			var optimizedNeightborNodes = Object.keys(neightborNodes).sort(function(a,b){
@@ -621,6 +631,10 @@ var DrawGraph = function(){
 				});		
 					
 			});
+			
+			////////////////////////////////////////////////////////////////////////////////
+			////////////////////////////////////////////////////////////////////////////////
+			
 			/*
 			Object.keys(graphData.link).filter(function(element){
 				if(element.substr(0,"forceline_".length) == "forceline_"){
