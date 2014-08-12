@@ -49,7 +49,7 @@ function Visualization( EEXCESSobj ) {
     var ICON_ZBW = "../../media/icons/ZBW-favicon.ico";
     var ICON_WISSENMEDIA = "../../media/icons/wissenmedia-favicon.ico";
     var ICON_KIM_COLLECT = "../../media/icons/KIM.Collect-favicon.ico";
-    var ICON_UNKNOWN = "../../media/icons/question-mark.png";
+	var ICON_UNKNOWN = "../../media/icons/help.png";
 
     // String Constants
     var STR_LOADING = "Loading...";
@@ -162,7 +162,6 @@ function Visualization( EEXCESSobj ) {
 	 *$
 	 * */
 	PREPROCESSING.bindEventHandlers = function(){
-		var ICON_UNKNOWN = "../../media/icons/help.png";
 		$( btnSearch  ).click( function(){ EVTHANDLER.btnSearchClicked(); });
 		$( btnReset   ).click( function(){ EVTHANDLER.btnResetClicked(); });
         $( 'html' ).click(function(){ if(isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
@@ -1042,6 +1041,17 @@ function Visualization( EEXCESSobj ) {
 
         setCurrentItem : function(item, index){
             this.currentItem['item'] = item;
+
+            this.currentItem['item'] = {
+                'id': item.id,
+                'title': item.title,
+                'facets': item.facets,
+                'uri': item.uri,
+                'query': query
+            };
+
+
+
             this.currentItem['index'] = index;
         },
 
@@ -1197,11 +1207,11 @@ function Visualization( EEXCESSobj ) {
         if( this.internal.validateBookmarkToSave() ){
             if(bookmark['type'] == 'new')
                 BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
-
+/*
 			//hack from steff begin
 			item.query = query;
 			//hack from steff end
-			
+			*/
             console.log(BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item));
 
             BOOKMARKS.destroyBookmarkDialog();

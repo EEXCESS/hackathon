@@ -293,9 +293,8 @@ input[type="button"]:hover{
     border-collapse:separate;
     float: left;
     height: 25px;
-    background-color: white;
     margin-left: 0%;
-    border-radius: 0px;
+    padding-bottom: 0px;
     vertical-align: middle;
 	line-height: 28px;
 }
@@ -958,14 +957,14 @@ p.eexcess_ritem_short {
     margin-bottom: .3em;
 }
 
-
+/*
 .eexcess-bookmark-button {
     height: 1.8em;
     width: 5.7em;
     margin-left: 0.2em;
     margin-right: 0.2em;
 }
-
+*/
 
 .eexcess-bookmark-bookmarked-in-section {
     width: 100%;
