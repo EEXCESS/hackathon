@@ -524,14 +524,13 @@ padding-top: 0.8em;
 
 .eexcess_controls_facet_static {
     display: block;
-    width: 56%;
-    height: 1.3em;
+    width: 55%;
+    height: 14px;
     margin-top: 2px;
     margin-bottom: 2px;
     margin-left: 40%;
     margin right: auto;
     padding-left: .4em;
-    font-size: 1em;
     text-align: left;
     line-height: 1.4em;
     background-color: white;
