@@ -397,6 +397,7 @@ input[type="button"] {
     width: 99.49%;
     height: 40px;
     margin-left: 0%;
+    padding-bottom: 0px;
     vertical-align: middle;
     line-height: 28px;
 }
