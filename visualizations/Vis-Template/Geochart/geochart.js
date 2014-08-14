@@ -32,12 +32,13 @@ function Geochart(root, visTemplate) {
             return (Math.random() * (to - from) + from).toFixed(fixed) * 1;
             // .toFixed() returns string, so ' * 1' is a trick to convert to number
         },
-        getRandomLatLon: function () {
+        getRandomLatLon: function (i) {
             return [GEO.Internal.getRandomInRange(-20, 60, 3), GEO.Internal.getRandomInRange(-120, 120, 3)];
+            //return [(20 + i).toFixed(3) * 1, (0).toFixed(3) * 1];
         },
         spatializeData: function(data){
             for(var i=0; i<data.length; i++){
-                data[i].coordinate = GEO.Internal.getRandomLatLon();
+                data[i].coordinate = GEO.Internal.getRandomLatLon(i);
             }
         }
     };
@@ -94,11 +95,11 @@ function Geochart(root, visTemplate) {
     GEO.Render.drawMarkers = function(){
 
         GEO.markersGroup = new L.MarkerClusterGroup({
-            //iconCreateFunction: function(cluster) {
-            //    //return new L.DivIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
-            //    //return new L.DivIcon({ html: '<div><span>' + cluster.getChildCount() + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
-            //    return new L.DivIcon({ className:'marker-cluster-pie', iconSize: L.point(44, 44), html: '<svg width="44" height="44" viewbox="0 0 400 400"><path d="M200,200 L200,20 A180,180 0 0,1 377,231 z" style="fill:#ff0000;fill-opacity: 0.5;"/><path d="M200,200 L377,231 A180,180 0 0,1 138,369 z" style="fill:#00ff00;fill-opacity: 0.5;"/><path d="M200,200 L138,369 A180,180 0 0,1 20,194 z" style="fill:#0000ff;fill-opacity: 0.5;"/><path d="M200,200 L20,194 A180,180 0 0,1 75,71 z" style="fill:#ff00ff;fill-opacity: 0.5;"/><path d="M200,200 L75,71 A180,180 0 0,1 200,20 z" style="fill:#ffff00;fill-opacity: 0.5;"/></svg><div class="child-count">' + cluster.getChildCount() + '</div></div>'});
-            //}
+            iconCreateFunction: function(cluster) {
+                //return new L.DivIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
+                //return new L.DivIcon({ html: '<div><span>' + cluster.getChildCount() + '</span></div>', className: 'marker-cluster', iconSize: new L.point(40, 40) });
+                return new L.DivIcon({ className:'marker-cluster-pie', iconSize: L.point(44, 44), html: '<svg width="44" height="44" viewbox="0 0 400 400"><path d="M200,200 L200,20 A180,180 0 0,1 377,231 z" style="fill:#ff0000;fill-opacity: 0.5;"/><path d="M200,200 L377,231 A180,180 0 0,1 138,369 z" style="fill:#00ff00;fill-opacity: 0.5;"/><path d="M200,200 L138,369 A180,180 0 0,1 20,194 z" style="fill:#0000ff;fill-opacity: 0.5;"/><path d="M200,200 L20,194 A180,180 0 0,1 75,71 z" style="fill:#ff00ff;fill-opacity: 0.5;"/><path d="M200,200 L75,71 A180,180 0 0,1 200,20 z" style="fill:#ffff00;fill-opacity: 0.5;"/></svg><div class="child-count">' + cluster.getChildCount() + '</div></div>'});
+            }
         });
 
         for(var i=0; i<GEO.Input.data.length; i++){

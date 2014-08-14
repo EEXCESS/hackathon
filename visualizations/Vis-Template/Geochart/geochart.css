@@ -1,7 +1,5 @@
 .marker-cluster-pie{
-    background:none;
-    border:none;
-    position:relative;
+    position:fixed; /* do not set to relative, because of positioning problems of the map.*/
 }
     .marker-cluster-pie .child-count{
         position:absolute;
