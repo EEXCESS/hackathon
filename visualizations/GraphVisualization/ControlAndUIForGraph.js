@@ -586,13 +586,23 @@ var funcStore =	{
 				.To.SubElement()
 					.Change(bookmarkNodeId.nodeName,"svgrect",{
 						attr:{transform:"scale(2)"}});
-			
+
 			forceGraph.To.Object().To.Graph().ReDraw();	
 		}catch(e){}
+		
 		$("#"+bookmarkNodeId.bookmarkName+", "
 			+"#"+bookmarkNodeId.bookmarkName+" .bookmark_element_"+bookmarkNodeId.nodeId).css({
 			"outline-width":2,"outline-color":bookmarkNodeId.color,"outline-style":"dashed"});
 	
+		var nameArray = bookmarkNodeId.nodeId.split("_");
+
+		forceGraph.To.Object().To.Node()
+			.To.SubElement()
+				.Change(
+					nameArray[1]+"_"+nameArray[2],
+					"svgcircle",
+				{attr:{"fill-opacity":0.5}});
+		forceGraph.To.Object().To.Graph().ReDraw();
 		
 	},
 	"MouseOutBookmark":function(param){
@@ -603,12 +613,23 @@ var funcStore =	{
 				.To.SubElement()
 					.Change(bookmarkNodeId.nodeName,"svgrect",{
 						attr:{transform:"scale(1)"}});
-			
+						
 			forceGraph.To.Object().To.Graph().ReDraw();	
 		}catch(e){}
 		
 		$("#"+bookmarkNodeId.bookmarkName+", "+".bookmark_element_"+bookmarkNodeId.nodeId).css({
 			"outline-width":"","outline-color":"","outline-style":""});
+			
+		var nameArray = bookmarkNodeId.nodeId.split("_");
+
+		forceGraph.To.Object().To.Node()
+			.To.SubElement()
+				.Change(
+					nameArray[1]+"_"+nameArray[2],
+					"svgcircle",
+				{attr:{"fill-opacity":1.0}});
+		forceGraph.To.Object().To.Graph().ReDraw();
+		
 	}
 };
 
@@ -637,6 +658,9 @@ var DetailsFunction = function(){
 				;//.Change(resultNodeName,"svgtext",{event:EventDetailsParam(resultNodeName)});
 		};
 		ChangeResultNodes(ShowDetailsNode);
+		
+		
+		
 		
 		forceGraph.To.Object().To.Graph().ReDraw();	
 		toggleDetails = true;
@@ -898,10 +922,14 @@ var BuildControls = function(){
 
 	
 		//begin search
-		EEXCESS.messaging.callBG({
-			method: {parent: 'model', func: 'query'}, data:query //data: [{weight:1,text:dataParameter.text}]
-		});
 
+        EEXCESS.messaging.callBG({
+			method: {parent: 'model', func: 'query'}, 
+			data: {reason: {reason: 'manual', text: textinput}, terms: query}});
+      	/*EEXCESS.messaging.callBG({
+			method: {parent: 'model', func: 'query'}, 
+			data:query //data: [{weight:1,text:dataParameter.text}]
+		});*/
 	});
 	
 	
@@ -909,11 +937,13 @@ var BuildControls = function(){
 	//search finished with results, asynchronous call
 	EEXCESS.messaging.listener(
 		function(request, sender, sendResponse) {
+			console.log("--#: " + request.method);
 			
+			//'getTextualContext'){
 			if (request.method === 'newSearchTriggered') {
 				if(onlyResult){
 					onlyResult = false;
-					//console.log("finish search match");
+					console.log("finish search match");
 					return;
 				}
 				console.log("finish search XX");

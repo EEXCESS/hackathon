@@ -37,7 +37,7 @@ requestPlugin();
 
 function requestPlugin() {
 
-    var requestVisualizations = function(pluginResponse) {
+    var requestVisualization = function(pluginResponse) {
     	if((typeof pluginResponse == "undefined") || pluginResponse.results == null) {
             onDataReceived([], "no data available");
         }
@@ -67,16 +67,21 @@ function requestPlugin() {
     // Set listener to receive new data when a new query is triggered
     EEXCESS.messaging.listener(
     	function(request, sender, sendResponse) {
-    		if (request.method === 'newSearchTriggered') {
+
+            console.log(request.method);
+            if (request.method === 'newSearchTriggered') {
     			console.log('data received from plugin');
-   				requestVisualizations(request.data);
+   				requestVisualization(request.data);
    			}
    		}
     );
 
     
     // Retrieve current recommendations data
-    EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: null});
+    EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
+        console.log("first call for results");
+        requestVisualization(reqResult);
+    });
 
 }
 
