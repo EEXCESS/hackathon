@@ -98,13 +98,22 @@ function Geochart(root, visTemplate) {
             iconCreateFunction: function(cluster) {
                 //return new L.DivIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
                 //return new L.DivIcon({ html: '<div><span>' + cluster.getChildCount() + '</span></div>', className: 'marker-cluster', iconSize: new L.point(40, 40) });
-                return new L.DivIcon({ className:'marker-cluster-pie', iconSize: L.point(44, 44), html: '<svg width="44" height="44" viewbox="0 0 400 400"><path d="M200,200 L200,20 A180,180 0 0,1 377,231 z" style="fill:#ff0000;fill-opacity: 0.5;"/><path d="M200,200 L377,231 A180,180 0 0,1 138,369 z" style="fill:#00ff00;fill-opacity: 0.5;"/><path d="M200,200 L138,369 A180,180 0 0,1 20,194 z" style="fill:#0000ff;fill-opacity: 0.5;"/><path d="M200,200 L20,194 A180,180 0 0,1 75,71 z" style="fill:#ff00ff;fill-opacity: 0.5;"/><path d="M200,200 L75,71 A180,180 0 0,1 200,20 z" style="fill:#ffff00;fill-opacity: 0.5;"/></svg><div class="child-count">' + cluster.getChildCount() + '</div></div>'});
+                //return new L.DivIcon({ className:'marker-cluster-pie', iconSize: L.point(44, 44), html: '<svg width="44" height="44" viewbox="0 0 400 400"><path d="M200,200 L200,20 A180,180 0 0,1 377,231 z" style="fill:#ff0000;fill-opacity: 0.5;"/><path d="M200,200 L377,231 A180,180 0 0,1 138,369 z" style="fill:#00ff00;fill-opacity: 0.5;"/><path d="M200,200 L138,369 A180,180 0 0,1 20,194 z" style="fill:#0000ff;fill-opacity: 0.5;"/><path d="M200,200 L20,194 A180,180 0 0,1 75,71 z" style="fill:#ff00ff;fill-opacity: 0.5;"/><path d="M200,200 L75,71 A180,180 0 0,1 200,20 z" style="fill:#ffff00;fill-opacity: 0.5;"/></svg><div class="child-count">' + cluster.getChildCount() + '</div>'});
+                var markers = cluster.getAllChildMarkers();
+                for (var i=0; i<markers.length; i++){
+                    var data = markers[i].options.dataObject;
+                }
+                var svg = document.createElement("svg");
+                GEO.Render.drawArcs(svg, [GEO.Input.data.length, markers.length]);
+                return new L.DivIcon({ className:'marker-cluster-pie', iconSize: L.point(44, 44), html: '<svg width="44" height="44" viewbox="0 0 400 400">' + svg.innerHTML + '</svg><div class="child-count">' + cluster.getChildCount() + '</div>'});
             }
         });
 
         for(var i=0; i<GEO.Input.data.length; i++){
-            var marker = L.marker(GEO.Input.data[i].coordinate);
+            //var marker = L.marker(GEO.Input.data[i].coordinate);
             //var marker = L.marker([51.505, -0.09]);
+            var marker = new GEO.Render.Marker(GEO.Input.data[i].coordinate);
+            marker.options.dataObject = GEO.Input.data[i];
             marker.bindPopup(GEO.Input.data[i].title);
             GEO.markersGroup.addLayer(marker);
             GEO.Input.data[i].geoMarker = marker;
@@ -113,10 +122,42 @@ function Geochart(root, visTemplate) {
         GEO.map.addLayer(GEO.markersGroup);
     };
 
+    GEO.Render.Marker = L.Marker.extend({
+        options:{
+            dataObject: null
+        }
+    });
 
 
+    GEO.Render.makeSVG = function(tag, attrs) {
+        var el= document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (var k in attrs)
+            if (attrs.hasOwnProperty(k)) el.setAttribute(k, attrs[k]);
+        return el;
+    };
 
-
+    GEO.Render.drawArcs = function(paper, pieData){
+        var total = pieData.reduce(function (accu, that) { return that + accu; }, 0);
+        var sectorAngleArr = pieData.map(function (v) { return 360 * v / total; });
+        var startAngle = 0;
+        var endAngle = 0;
+        for (var i=0; i<sectorAngleArr.length; i++){
+            startAngle = endAngle;
+            endAngle = startAngle + sectorAngleArr[i];
+            var x1,x2,y1,y2 ;
+            x1 = parseInt(Math.round(200 + 195*Math.cos(Math.PI*startAngle/180)));
+            y1 = parseInt(Math.round(200 + 195*Math.sin(Math.PI*startAngle/180)));
+            x2 = parseInt(Math.round(200 + 195*Math.cos(Math.PI*endAngle/180)));
+            y2 = parseInt(Math.round(200 + 195*Math.sin(Math.PI*endAngle/180)));
+            var d = "M200,200  L" + x1 + "," + y1 + "  A195,195 0 " + ((endAngle-startAngle > 180) ? 1 : 0) + ",1 " + x2 + "," + y2 + " z";
+            //alert(d); // enable to see coords as they are displayed
+            var c = parseInt(i / sectorAngleArr.length * 360);
+            var arc = GEO.Render.makeSVG("path", {d: d, fill: "hsl(" + c + ", 66%, 50%)"});
+            paper.appendChild(arc);
+            //arc.onclick = clickHandler; // This is optional, of course
+        }
+        return paper;
+    };
 
 
 
