@@ -47,7 +47,14 @@ var GetDataFromIndexedDB = function(){
 			},
 			"MakeWordlists":function(){
 				oC.queryObjHistory.forEach(function(element){
-					oC.wordHistory.push(element.query.map(function(d){return d.text;}).join(" "));	
+					if(element.query != undefined){//console.log(element);
+						oC.wordHistory.push(element.query.map(function(d){
+							//console.log("..." + d.text);
+							return d.text;
+						}).join(" "));	
+					}else{
+						oC.wordHistory.push("");
+					}
 				});
 				//console.log(oC.wordHistory);
 				oC.uniqueWords = d3.set(oC.wordHistory).values();
@@ -124,7 +131,7 @@ var GetDataFromIndexedDB = function(){
 			//LastTestAction();
 
 			//BuildControls();
-				//forceGraph.InitGraph("#D3graph");
+				//forceNaviGraph.InitGraph("#D3graph");
 			
 			
 		}

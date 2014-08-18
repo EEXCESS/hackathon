@@ -39,167 +39,173 @@ and open the template in the editor.
 			<button id="explore_graph" class="eexcess_submit_btn margin_box searchmodus">Explore graph</button>
 			<button id="add_search" class="eexcess_submit_btn margin_box">Add to search</button>
 			<button id="bookmarks" class="eexcess_submit_btn margin_box">Bookmarks</button>
+			<input id="bookmarkgraphCheck" value="bookmarkgraphCheck" type="checkbox">bookmarkgraph
 		</header>
 		
-	<!--
-	
-		-->
-		<div id="content">
-			<div id="graphcontrol">
-				<!-- Graph-->
-				<div id="D3graph" class="eexcess_vis">
+
+		<div >		
+			<div id="navigraphControl">
+				<div id="graphcontrol">
+
+					<!-- Graph-->
+					<div id="D3graph" class="eexcess_vis">
+						<svg></svg>
+					</div>
+					
+					<!--
+					<svg width="800" height="400" >
+
+					</svg>
+					-->
+					<div id="slidercontrol" class="eexcess_vis">
+						<input id="growgraph" value="growgraph" type="checkbox" > grow graph</input>
+						<span>
+						&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+						&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+						&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+						&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+						
+						search history</span>
+						<br/>
+						<!--
+						preserveAspectRatio="xMinYMin meet"
+						-->
+						<svg  id="d3_slider" viewBox="0 0 1700 80" preserveAspectRatio="none">
+							<defs>
+								<linearGradient id="redblue" x1="0%" y1="0%" x2="100%" y2="0%">
+									<stop id="redgradient" offset="0%"  />
+									<stop id="bluegradient" offset="100%"  />
+								</linearGradient>
+							</defs>
+						</svg>
+					</div>
+				</div>
+
+						<!-- 
+				border:solid 1px;
+				float:right;
+				 style="border:solid 1px grey;"
+				 
+				-->
+				
+
+				<!-- show details, results and bookmark export -->
+				<!-- width:300px; height:620px;-->
+				<div id="sidebar" class="eexcess_vis">
+
+					<header id="graph_header" class="header_sidebar">
+						<button id="result_btn" class="eexcess_submit_btn margin_box grey_round_box">result</button>
+						<button id="work_btn" class="eexcess_submit_btn margin_box grey_round_box">work</button>
+					</header>
+
+					<div id="result_panel" style="display:none">
+					</div>
+					<div id="work_panel">
+						
+						<!-- show details panel-->
+						<div id="detail_panel" class="grey_round_box" >
+							<!--
+							<button id="cleardata" class="margin_box">clear data</button>
+							-->
+							<div class="margin_box type_bold">
+							bookmarks:
+							</div>
+							<ul id="bookmarklist" class="grey_round_box margin_box">
+							</ul>
+							<div class="margin_box type_bold">
+							title:
+							</div>
+							<textarea id="title_data" class="grey_round_box margin_box"></textarea>
+							<div  class="margin_box type_bold">
+							link:
+							</div>
+							<div class="grey_round_box margin_box" class="margin_box xoverflowauto" >
+								<a target="_blank" id="link_data"></a>
+							</div>
+							<div  class="margin_box type_bold">
+							image:
+							</div>   
+							 
+							
+							<div width="100px" height="150px" class="grey_round_box margin_box xoverflowauto resize">
+								<img width="100%" height="100%" id="image_data"></img>
+							</div>
+							<div class="margin_box type_bold">
+							id:
+							</div>  
+							<div class="grey_round_box margin_box" id="id_data" class="margin_box xoverflowauto">
+								
+							</div>
+							<div class="margin_box type_bold">
+							facets:
+							</div>  
+							<div class="grey_round_box margin_box">
+								<div>
+									<span class="type_bold margin_box">
+										language:
+									</span>
+									<span id="language_data">
+										
+									</span>
+								</div>
+								<div>
+									<span class="type_bold margin_box">
+										partner:
+									</span>
+									<span id="partner_data">
+										
+									</span>
+								</div>
+								<div class="xoverflowauto">
+									<span class="type_bold margin_box">
+										provider:
+									</span>
+									<span id="provider_data" >
+										
+									</span>
+								</div>
+								<div>
+									<span class="type_bold margin_box">
+										type:
+									</span>
+									<span id="type_data">
+										
+									</span>
+								</div>
+								<div>
+									<span class="type_bold margin_box">
+										year:
+									</span>
+									<span  id="year_data">
+										
+									</span>
+								</div>
+							</div>
+						</div>
+					
+						<!-- show bookmark panel -->
+							<!--	
+							class="grey_round_box"
+						-->
+						<div id="bookmark_panel" class="grey_round_box" style="display:none">
+							<div id="bookmark-header" class="green_round_box margin_box">
+								<input id="newbookmarkname" type="text"></input>
+								<input id="newcolor" type="color"></input>
+								<button id="addbookmark">+</button>
+								<a id="exportbookmark" >export</a>
+								<div id="message" class="grey_round_box">  
+								</div>
+							</div>
+							<div id="bookmark-body" class="green_round_box margin_box"></div>
+						</div>
+					</div>	
+				</div>
+			</div>
+			<div id="bookmarkgraphControl" style="display:none;">
+				<div id="Bookmarkgraph" class="eexcess_vis">
 					<svg></svg>
 				</div>
-				
-				<!--
-				<svg width="800" height="400" >
-
-				</svg>
-				-->
-				<div id="slidercontrol" class="eexcess_vis">
-					<input id="growgraph" value="growgraph" type="checkbox" > grow graph</input>
-					<span>
-					&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-					&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-					&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-					&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-					
-					search history</span>
-					<br/>
-					<!--
-					preserveAspectRatio="xMinYMin meet"
-					-->
-					<svg  id="d3_slider" viewBox="0 0 1700 80" preserveAspectRatio="none">
-						<defs>
-							<linearGradient id="redblue" x1="0%" y1="0%" x2="100%" y2="0%">
-								<stop id="redgradient" offset="0%"  />
-								<stop id="bluegradient" offset="100%"  />
-							</linearGradient>
-						</defs>
-					</svg>
-				</div>
 			</div>
-
-					<!-- 
-			border:solid 1px;
-			float:right;
-			 style="border:solid 1px grey;"
-			 
-			-->
-			
-
-			<!-- show details, results and bookmark export -->
-			<!-- width:300px; height:620px;-->
-			<div id="sidebar" class="eexcess_vis">
-
-				<header id="graph_header" class="header_sidebar">
-					<button id="result_btn" class="eexcess_submit_btn margin_box grey_round_box">result</button>
-					<button id="work_btn" class="eexcess_submit_btn margin_box grey_round_box">work</button>
-				</header>
-
-				<div id="result_panel" style="display:none">
-				</div>
-				<div id="work_panel">
-					
-					<!-- show details panel-->
-					<div id="detail_panel" class="grey_round_box" >
-						<!--
-						<button id="cleardata" class="margin_box">clear data</button>
-						-->
-						<div class="margin_box type_bold">
-						bookmarks:
-						</div>
-						<ul id="bookmarklist" class="grey_round_box margin_box">
-						</ul>
-						<div class="margin_box type_bold">
-						title:
-						</div>
-						<textarea id="title_data" class="grey_round_box margin_box"></textarea>
-						<div  class="margin_box type_bold">
-						link:
-						</div>
-						<div class="grey_round_box margin_box" class="margin_box xoverflowauto" >
-							<a target="_blank" id="link_data"></a>
-						</div>
-						<div  class="margin_box type_bold">
-						image:
-						</div>   
-						 
-						
-						<div width="100px" height="150px" class="grey_round_box margin_box xoverflowauto resize">
-							<img width="100%" height="100%" id="image_data"></img>
-						</div>
-						<div class="margin_box type_bold">
-						id:
-						</div>  
-						<div class="grey_round_box margin_box" id="id_data" class="margin_box xoverflowauto">
-							
-						</div>
-						<div class="margin_box type_bold">
-						facets:
-						</div>  
-						<div class="grey_round_box margin_box">
-							<div>
-								<span class="type_bold margin_box">
-									language:
-								</span>
-								<span id="language_data">
-									
-								</span>
-							</div>
-							<div>
-								<span class="type_bold margin_box">
-									partner:
-								</span>
-								<span id="partner_data">
-									
-								</span>
-							</div>
-							<div class="xoverflowauto">
-								<span class="type_bold margin_box">
-									provider:
-								</span>
-								<span id="provider_data" >
-									
-								</span>
-							</div>
-							<div>
-								<span class="type_bold margin_box">
-									type:
-								</span>
-								<span id="type_data">
-									
-								</span>
-							</div>
-							<div>
-								<span class="type_bold margin_box">
-									year:
-								</span>
-								<span  id="year_data">
-									
-								</span>
-							</div>
-						</div>
-					</div>
-				
-					<!-- show bookmark panel -->
-						<!--	
-						class="grey_round_box"
-					-->
-					<div id="bookmark_panel" class="grey_round_box" style="display:none">
-						<div id="bookmark-header" class="green_round_box margin_box">
-							<input id="newbookmarkname" type="text"></input>
-							<input id="newcolor" type="color"></input>
-							<button id="addbookmark">+</button>
-							<a id="exportbookmark" >export</a>
-							<div id="message" class="grey_round_box">  
-							</div>
-						</div>
-						<div id="bookmark-body" class="green_round_box margin_box"></div>
-					</div>
-				</div>	
-			</div>
-		
 		</div>
 
  
@@ -230,13 +236,13 @@ and open the template in the editor.
 		<script src="Libs/work.js" lang="javascript"></script>
 		
 		
-
+		<script src="DrawBookmarkGraph.js" lang="javascript"></script>
 		<script src="GetDataFromIndexedDB.js" lang="javascript"></script>
-		<script src="DrawGraph.js" lang="javascript"></script>
+		<script src="DrawNaviGraph.js" lang="javascript"></script>
 		
 		
-		<script src="ControlAndUIForGraph.js" lang="javascript"></script>
-		
+		<script src="ControlAndUIForNaviGraph.js" lang="javascript"></script>
+		<script src="UIControl.js" lang="javascript"></script>
 		
     </body>
 </html>

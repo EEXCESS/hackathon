@@ -98,17 +98,17 @@ function AddBookmark(bookmarkname,colorname){
             //delete bookmarks from nodes
 
 			//delete nodes from graph
-			//var test = forceGraph.Graph.GetGraphData();	
+			//var test = forceNaviGraph.Graph.GetGraphData();	
 			var resultNodelistObj = bookmarkDict.bookmarks[event.data.bookmarkname];
 			Object.keys(resultNodelistObj).forEach(function(resultNodeId){
 				var currentBookmarkName = "Bookmark_"+resultNodeId+"_"+event.data.bookmarkname;
-				if(forceGraph.Graph.GetGraphData().data.dict.node.hasOwnProperty(currentBookmarkName)){
-					forceGraph.To.Object()
+				if(forceNaviGraph.Graph.GetGraphData().data.dict.node.hasOwnProperty(currentBookmarkName)){
+					forceNaviGraph.To.Object()
 						.Node.Delete(currentBookmarkName);
 				}
 					
 			});
-			forceGraph.To.Object().To.Graph().ReDraw();
+			forceNaviGraph.To.Object().To.Graph().ReDraw();
 			
 			//work with dictionary 
 			var deletedNodes = bookmarkDict.bookmarks[event.data.bookmarkname];
