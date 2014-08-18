@@ -85,7 +85,7 @@ function createColorPicker( sender, options ){
     });
 
 
-    var pixelColor = '#000';    // updated on mousemove
+    var hexColor = '#000';    // updated on mousemove
 
     $('#picker').mousemove(function(e){
         //if(canPreviewFlag){
@@ -105,7 +105,7 @@ function createColorPicker( sender, options ){
             $('#rgbVal').val(pixel[0] + ', ' + pixel[1] + ', ' + pixel[2]);
 
             var dColor = pixel[2] + 256 * pixel[1] + 65536 * pixel[0];
-            var hexColor = '#' + ('00000' + dColor.toString(16)).substr(-6);
+            hexColor = '#' + ('00000' + dColor.toString(16)).substr(-6);
             $('#hexVal').val(hexColor);
 
             // Update preview color
@@ -119,7 +119,7 @@ function createColorPicker( sender, options ){
     var preview = $('#preview');
 
     $('#picker, #preview').click(function(e){
-        $('.colorpicked').css('backgroundColor', pixelColor);
+        $('.colorpicked').css('backgroundColor', hexColor);
         $('.colorpicker').fadeToggle('slow', 'linear');
     });
 
