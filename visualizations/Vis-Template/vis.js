@@ -706,7 +706,7 @@ function Visualization( EEXCESSobj ) {
             .attr('title', 'See item\'s bookmarks')
             .attr("src", BOOKMARK_DETAILS_ICON)
             .style("display", function(d){ if(d.bookmarked) return 'inline-block'; return 'none'; })
-            .on("click", EVTHANDLER.bookmarkDetailsIconClicked)
+            .on("click", EVTHANDLER.bookmarkDetailsIconClicked);
 
 
 		$( contentPanel ).scrollTo( "top" );
@@ -1015,7 +1015,7 @@ function Visualization( EEXCESSobj ) {
         currentBookmark :{
                         'bookmark-name': '',
                         'color': '',
-                        'type': ''      // new or existing
+                        'type': ''
                         },
 
         currentItem : {},
@@ -1040,8 +1040,7 @@ function Visualization( EEXCESSobj ) {
 
 
         setCurrentItem : function(item, index){
-            this.currentItem['item'] = item;
-
+            //this.currentItem['item'] = item;
             this.currentItem['item'] = {
                 'id': item.id,
                 'title': item.title,
@@ -1049,9 +1048,6 @@ function Visualization( EEXCESSobj ) {
                 'uri': item.uri,
                 'query': query
             };
-
-
-
             this.currentItem['index'] = index;
         },
 
@@ -1078,9 +1074,9 @@ function Visualization( EEXCESSobj ) {
 
 
     BOOKMARKS.updateBookmarkedItems = function(){
-            bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
-            console.log('----- BOOKMARKED ITEMS -----');
-            console.log(bookmarkedItems);
+        bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
+        console.log('----- BOOKMARKED ITEMS -----');
+        console.log(bookmarkedItems);
     };
 
 
@@ -1207,11 +1203,7 @@ function Visualization( EEXCESSobj ) {
         if( this.internal.validateBookmarkToSave() ){
             if(bookmark['type'] == 'new')
                 BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
-/*
-			//hack from steff begin
-			item.query = query;
-			//hack from steff end
-			*/
+
             console.log(BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], item));
 
             BOOKMARKS.destroyBookmarkDialog();
