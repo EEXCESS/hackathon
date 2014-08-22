@@ -53,6 +53,7 @@ function requestPlugin() {
             post
             	.done(function(reqData){
             		var data = JSON.parse(reqData);
+                    //console.log(JSON.stringify(data));
             		onDataReceived(data, "Post to EEXCESS/Belgin server status: success");
             	})
             	.fail(function(){

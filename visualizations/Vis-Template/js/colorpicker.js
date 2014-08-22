@@ -85,7 +85,7 @@ function createColorPicker( sender, options ){
     });
 
 
-    var pixelColor = '#000';    // updated on mousemove
+    var hexColor = '#000';    // updated on mousemove
 
     $('#picker').mousemove(function(e){
         //if(canPreviewFlag){
@@ -98,10 +98,6 @@ function createColorPicker( sender, options ){
             var imageData = ctx.getImageData(canvasX, canvasY, 1, 1);
             var pixel = imageData.data;
 
-            // Update preview color
-            pixelColor = 'rgb(' + pixel[0] + ', ' + pixel[1] + ', ' + pixel[2] + ')';
-            $('#preview').css('backgroundColor', pixelColor);
-
             // Update controls
             $('#rVal').val(pixel[0]);
             $('#gVal').val(pixel[1]);
@@ -109,7 +105,12 @@ function createColorPicker( sender, options ){
             $('#rgbVal').val(pixel[0] + ', ' + pixel[1] + ', ' + pixel[2]);
 
             var dColor = pixel[2] + 256 * pixel[1] + 65536 * pixel[0];
-            $('#hexVal').val('#' + ('00000' + dColor.toString(16)).substr(-6));
+            hexColor = '#' + ('00000' + dColor.toString(16)).substr(-6);
+            $('#hexVal').val(hexColor);
+
+            // Update preview color
+            //pixelColor = 'rgb(' + pixel[0] + ', ' + pixel[1] + ', ' + pixel[2] + ')';
+            $('#preview').css('backgroundColor', hexColor);
         //}
     });
 
@@ -118,7 +119,7 @@ function createColorPicker( sender, options ){
     var preview = $('#preview');
 
     $('#picker, #preview').click(function(e){
-        $('.colorpicked').css('backgroundColor', pixelColor);
+        $('.colorpicked').css('backgroundColor', hexColor);
         $('.colorpicker').fadeToggle('slow', 'linear');
     });
 

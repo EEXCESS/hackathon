@@ -102,6 +102,9 @@ String.prototype.contains = function(it) {
 };
 	
 	
+String.prototype.toBool = function() {
+    return (this == "true");
+};
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /**

@@ -375,7 +375,7 @@ function Timeline( root, visTemplate ){
 	*  
 	*****************************************************************************************************************************/	
 	
-	TIMEVIS.Render.draw = function(mapping, initData, iWidth, iHeight){
+	TIMEVIS.Render.draw = function(initData, mapping, iWidth, iHeight){
 
 		/******************************************************
 		 * Define canvas dimensions
@@ -967,8 +967,8 @@ function Timeline( root, visTemplate ){
 
 	TIMEVIS.Ext = {
 		
-		draw : function(mapping, initData, iWidth, iHeight){
-			TIMEVIS.Render.draw(mapping, initData, iWidth, iHeight);
+		draw : function(initData, mapping, iWidth, iHeight){
+			TIMEVIS.Render.draw(initData, mapping, iWidth, iHeight);
 		},
 		
 		reset : function(){

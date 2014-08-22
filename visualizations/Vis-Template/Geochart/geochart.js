@@ -75,7 +75,7 @@ function Geochart(root, visTemplate) {
 	*	Draw GEO vis
 	*
 	* ***************************************************************************************************************/
-	GEO.Render.draw = function( receivedData, iWidth, iHeight ){
+	GEO.Render.draw = function( receivedData, mappingCombination, iWidth, iHeight ){
 
 		// See settings.js
 
@@ -267,7 +267,7 @@ function Geochart(root, visTemplate) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	GEO.Ext = {
-		draw: function( receivedData, iWidth, iHeight ){ GEO.Render.draw( receivedData, iWidth, iHeight ); },
+		draw: function( receivedData, mappingCombination, iWidth, iHeight ){ GEO.Render.draw(receivedData, mappingCombination, iWidth, iHeight); },
 		reset: function(){ GEO.Render.reset();	},
         highlightItems: function(indexArray){ GEO.Render.highlightItems(indexArray); }
 	};
