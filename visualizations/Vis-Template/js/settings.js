@@ -1,7 +1,7 @@
 function Settings (chartType){
 
 	this.chartType = chartType;
-};
+}
 
 
 

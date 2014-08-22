@@ -48,6 +48,13 @@ function Geochart(root, visTemplate) {
             for(var i=0; i<data.length; i++){
                 data[i].coordinate = GEO.Internal.getRandomLatLon(i);
             }
+        },
+        getDataIndex: function(id){
+            for(var i=0; i<GEO.Input.data.length; i++){
+                if (GEO.Input.data[i].id == id)
+                    return i;
+            }
+            return null;
         }
     };
 
@@ -146,6 +153,13 @@ function Geochart(root, visTemplate) {
             var marker = new GEO.Render.Marker(GEO.Input.data[i].coordinate, { icon: GEO.Render.icon(currentDataObject.color) });
             marker.options.dataObject = currentDataObject;
             marker.bindPopup(GEO.Input.data[i].title);
+            marker.on('click', function(e){
+                if (e && e.target && e.target.options && e.target.options.dataObject){
+                    Vis.selectItems([GEO.Internal.getDataIndex(e.target.options.dataObject.id)]);
+                }
+            }).on('popupclose', function(){
+                    Vis.selectItems([]);
+            });
             GEO.markersGroup.addLayer(marker);
             GEO.Input.data[i].geoMarker = marker;
         }
@@ -239,6 +253,7 @@ function Geochart(root, visTemplate) {
 	*
 	* ***************************************************************************************************************/
 	GEO.Render.highlightItems = function(indexArray){
+        GEO.map.closePopup();
         indexArray.forEach(function(i) {
             GEO.markersGroup.zoomToShowLayer(GEO.Input.data[i].geoMarker, function() {
                 GEO.Input.data[i].geoMarker.openPopup();
