@@ -222,37 +222,36 @@ function Visualization( EEXCESSobj ) {
 	
 	
 	PREPROCESSING.dirtyFixForMappings = function(formattedMappings){
+
+		var i = formattedMappings.getIndexOf("barchart", "chart");
+		if (i != -1)
+            formattedMappings.splice(i, 1);
 		
-		var i = 0;
-		while (i < charts. length && formattedMappings[i].chart != 'barchart')
-			i++;
-		
-		
-		// if there exist combinations specified for barchart, clear the array, if not, create a new item in formattedMappings for barchart
-		if( i < charts.length)
-			formattedMappings[i].combinations = new Array();
-		else{
-			formattedMappings.push( {'chart': 'barchart', 'combinations': new Array()} );
-			charts.push('barchart');
-		}
+		i = formattedMappings.push( {'chart': 'barchart', 'combinations': new Array()} );
+        i--;
+		charts.push('barchart');
 		
 		var facets = ['language', 'provider'];
-		
-		facets.forEach(function(f){
-			
-			var combIndex = formattedMappings[i].combinations.length;		
+		facets.forEach(function(facet){
+			var combIndex = formattedMappings[i].combinations.length;
 			formattedMappings[i].combinations[combIndex] = new Array();
-			
-			formattedMappings[i].combinations[combIndex].push( {'facet': f, 'visualattribute': 'x-axis'} );
+			formattedMappings[i].combinations[combIndex].push( {'facet': facet, 'visualattribute': 'x-axis'} );
 			formattedMappings[i].combinations[combIndex].push( {'facet': 'count', 'visualattribute': 'y-axis'} );
-			formattedMappings[i].combinations[combIndex].push( {'facet': f, 'visualattribute': 'color'} );
-			
+			formattedMappings[i].combinations[combIndex].push( {'facet': facet, 'visualattribute': 'color'} );
 		});
 		
+        i = formattedMappings.getIndexOf("geochart", "chart");
+        if (i != -1)
+            formattedMappings.splice(i, 1);
 
-        // Add geo chart to mappings
-        formattedMappings.push( {'chart': 'geochart', 'combinations': new Array()} );
+        i = formattedMappings.push( {'chart': 'geochart', 'combinations': new Array()} );
+        i--;
         charts.push('geochart');
+        facets.forEach(function(facet){
+            var combIndex = formattedMappings[i].combinations.length;
+            formattedMappings[i].combinations[combIndex] = new Array();
+            formattedMappings[i].combinations[combIndex].push( {'facet': facet, 'visualattribute': 'color'} );
+        });
 
 		return formattedMappings;
 	};
@@ -369,9 +368,11 @@ function Visualization( EEXCESSobj ) {
 	EVTHANDLER.setSelectChangeHandlers = function(){
 		// Change event handler for visual channels' <select> elements
 		$(mappingSelectors).each(function(i, item){	
-			$(item).change(function(){
-				VISPANEL.drawChart( item );	
-			});
+
+            if($(item).attr('isDynamic').toBool())
+                $(item).change(function(){
+				    VISPANEL.drawChart( item );
+			 });
 		});
 		
 	};
@@ -537,31 +538,37 @@ function Visualization( EEXCESSobj ) {
 				    .attr("class", "eexcess_controls_title")
 				    .text(c.channel);
 			
+                var selector;
                 if(c.values.length > 1){
 
                     var channelSelect = divChannel
 				        .append("select")
-					   .attr("class", "eexcess_select")
-					   .attr("name", c.channel);
-					
-                    // the "mappingSelectors" array stores the selectors that allow to set change events for each visual channel <select> element in
-                    // the function "setSelectChangeHandlers"
-                    // E.g. mappingSelectors[0] = "#eexcess_mapping_container_0 .eexcess_select"
-                    mappingSelectors.push(divMappingInd + "" + i + " "+ mappingSelect);
+                            .attr("class", "eexcess_select")
+					        .attr("name", c.channel)
+                            .attr('isDynamic', true);
 			
                     var mappingOptions = "";
 
                     c.values.forEach(function(v){
 				        mappingOptions += "<option class=\"ui-selected\" value=\""+v+"\">"+v+"</option>";
                     });
-			
                     channelSelect.html( mappingOptions );
+
+                    selector = mappingSelect; // string for selecting a visual channel <select> element
                 }
                 else{
                     divChannel.append('div')
                         .attr('class', 'eexcess_controls_facet_static')
+                        .attr('name', c.channel)
+                        .attr('isDynamic', false)
                         .text(c.values[0]);
+                    selector = ".eexcess_controls_facet_static";
                 }
+
+                // the "mappingSelectors" array stores the selectors that allow to set change events for each visual channel <select> element in
+                // the function "setSelectChangeHandlers"
+                // E.g. mappingSelectors[0] = "#eexcess_mapping_container_0 .eexcess_select"
+                mappingSelectors.push(divMappingInd + "" + i + " "+ selector);
             });
 
 
@@ -583,7 +590,6 @@ function Visualization( EEXCESSobj ) {
 		$(mappingSelectors).each(function(i, item){
 			var channelName= $(item).attr("name");
 			var channelIndex = visChannelKeys.indexOf(channelName);
-
 			$(item + " option[value="+validMapping[channelIndex].facet+"]").prop("selected", true);
 		});
 	}
@@ -830,98 +836,92 @@ function Visualization( EEXCESSobj ) {
 	
 	VISPANEL.internal = {
 			
-			/**
-			 * Sets the chart and the mapping combination to be used, acording to the <select> elements' selected values 
-			 * */	
-			getSelectedMapping: function( item ) {
-				
-				// if "item" is undefined -> change triggered by chart <select>, otherwise triggered by one  of the visual channels' <select>
-				var changedItem = item || "undefined";
-		    	
-				// if the chart changes, reset array with indices to be  highlighted
-				if(VISPANEL.chartName != $(chartSelect).val())
-                    indicesToHighlight = [];
-				
-				VISPANEL.chartName = $(chartSelect).val();
-				
-				var selectedMapping = [];
-				
-			    if(changedItem == "undefined"){		    
-			    	// VISPANEL SELECTION CHANGED 	
-			    	// Empty current visual channels controls (<select> elements) 
-			    	$(divMapping).empty();
-			    	
-			    	// Re-build visual channels' controls
-			    	// Assign "selectedMapping" with the first possible mapping combination for the new chart, which is returned by the function below
-			    	var selectedMapping = CONTROLS.buildVisualChannelSelects();
-			    }
-			    else{
-			    	// VISUAL CHANNEL SELECTION CHANGED
-			    	// Update modified visual channel with new value
-			    	mappingSelectors.forEach(function(item){
-			    		
-						var channelName = $(item).attr("name");
-						var channelValue = $(item).val();
-						
-			    		selectedMapping.push({'facet': channelValue, 'visualattribute': channelName});
-			    	});
-			    	
-			    	var changedChannelName = $(changedItem).attr("name");
-			    	var changedChannelValue = $(changedItem).val();
-			    	
-			    	// selectedMapping remains unchanged if it contains a valid mapping combination, otherwise it's updated with the first valid one in the list 
-			    	selectedMapping = this.getValidatedMappings(selectedMapping, changedChannelName, changedChannelValue);
-			    }
+        /**
+         * Sets the chart and the mapping combination to be used, acording to the <select> elements' selected values
+         * */
+        getSelectedMapping: function( item ) {
 
-			    return selectedMapping;
-			},
-			
-			
-			/**
-			 * Checks if the mapping combination is valid. If not, it returns a valid one and calls
-			 * the method to change the visual attributes' selected values in the corresponding <select> elements  
-			 * 
-			 * */
-			getValidatedMappings: function( selectedMapping, changedChannelName, changedChannelValue ) {
-				
-				var validMapping = [];
-				var chartIndex = charts.indexOf( VISPANEL.chartName );
+            // if "item" is undefined -> change triggered by chart <select>, otherwise triggered by one  of the visual channels' <select>
+            var changedItem = item || "undefined";
 
-				// Go over each mapping combination
-				mappings[chartIndex].combinations.forEach(function(c){
-						
-					var flagIsValid = true;
-					var validMappingFound = false;
-					var j = 0;
-					
-					// 	Check each visual channel
-					while( j < visChannelKeys.length && flagIsValid ){
-						
-						var vcIndex = visChannelKeys.indexOf(c[j]['visualattribute']);
-						if(c[vcIndex]['facet'] != selectedMapping[vcIndex]['facet'])
-							flagIsValid = false;
-			
-						j++;
-					}
-						// As soon as the selected combination is validated, return it
-					if(flagIsValid)
-						return selectedMapping;
-				
-					var changedIndex = visChannelKeys.indexOf(changedChannelName);
-					if(c[changedIndex]['facet'] == changedChannelValue && !validMappingFound){
-						validMapping = c;
-						validMappingFound = true;
-					}
-					
-				});
-				
-				// if loop finishes it means the selectedMapping isn't valid
-				// Change <select> values according to the first valid mapping combination encountered (stored in validMapping)
-				CONTROLS.updateChannelsSelections( validMapping );
-				
-				// Return valid combination
-				return validMapping;
-			}	
+            // if the chart changes, reset array with indices to be  highlighted
+            if(VISPANEL.chartName != $(chartSelect).val())
+                indicesToHighlight = [];
+
+            VISPANEL.chartName = $(chartSelect).val();
+
+            var selectedMapping = [];
+
+            if(changedItem == "undefined"){
+                // VISPANEL SELECTION CHANGED
+                // Empty current visual channels controls (<select> elements)
+                $(divMapping).empty();
+
+                // Re-build visual channels' controls
+                // Assign "selectedMapping" with the first possible mapping combination for the new chart, which is returned by the function below
+                var selectedMapping = CONTROLS.buildVisualChannelSelects();
+            }
+            else{
+                // VISUAL CHANNEL SELECTION CHANGED
+                // Update modified visual channel with new value
+                mappingSelectors.forEach(function(item){
+                    var channelName = $(item).attr("name");
+                    var channelValue = $(item).attr('isDynamic').toBool() ? $(item).val() : $(item).text();
+                    selectedMapping.push({'facet': channelValue, 'visualattribute': channelName});
+                });
+
+                var changedChannelName = $(changedItem).attr("name");
+                var changedChannelValue = $(changedItem).val();
+
+                // selectedMapping remains unchanged if it contains a valid mapping combination, otherwise it's updated with the first valid one in the list
+                selectedMapping = this.getValidatedMappings(selectedMapping, changedChannelName, changedChannelValue);
+            }
+
+            return selectedMapping;
+        },
+
+
+        /**
+         * Checks if the mapping combination is valid. If not, it returns a valid one and calls
+         * the method to change the visual attributes' selected values in the corresponding <select> elements
+         *
+         * */
+        getValidatedMappings: function( selectedMapping, changedChannelName, changedChannelValue ) {
+
+            var validMapping = [];
+            var chartIndex = charts.indexOf( VISPANEL.chartName );
+
+            // Go over each mapping combination and and then over each visual channel for the current mapping combination
+            for(var combIndex = 0; combIndex < mappings[chartIndex].combinations.length; combIndex++) {
+
+                var flagIsValid = true;
+                var j = 0;
+
+                // 	Check each visual channel
+                while( j < visChannelKeys.length && flagIsValid ){
+                    var vcIndex = visChannelKeys.indexOf(mappings[chartIndex].combinations[combIndex][j]['visualattribute']);
+                    if(mappings[chartIndex].combinations[combIndex][vcIndex]['facet'] != selectedMapping[vcIndex]['facet'])
+                        flagIsValid = false;
+                    j++;
+                }
+                // As soon as the selected combination is validated, return it
+                if(flagIsValid)
+                    return selectedMapping;
+
+                var validMappingFound = false;
+                var changedIndex = visChannelKeys.indexOf(changedChannelName);
+                if(mappings[chartIndex].combinations[combIndex][changedIndex]['facet'] == changedChannelValue && !validMappingFound){
+                    validMapping = mappings[chartIndex].combinations[combIndex];
+                    validMappingFound = true;
+                }
+            }
+            // if loop finishes it means the selectedMapping isn't valid
+            // Change <select> values according to the first valid mapping combination encountered (stored in validMapping)
+            CONTROLS.updateChannelsSelections(validMapping);
+
+            // Return valid combination
+            return validMapping;
+        }
 					
 	};
 
@@ -946,9 +946,9 @@ function Visualization( EEXCESSobj ) {
 		var selectedMapping = this.internal.getSelectedMapping( item );
 
 		switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
-			case "timeline" : timeVis.draw( selectedMapping, data, width, height); break;
-			case "barchart":  barVis.draw( selectedMapping, data.slice(0), width, height); break;
-            case "geochart":  geoVis.draw(data, width, height); break;
+			case "timeline" : timeVis.draw(data, selectedMapping, width, height); break;
+			case "barchart":  barVis.draw(data, selectedMapping, width, height); break;
+            case "geochart":  geoVis.draw(data, selectedMapping, width, height); break;
 			default : d3.select(root).text("No Visualization");	
 		}
 

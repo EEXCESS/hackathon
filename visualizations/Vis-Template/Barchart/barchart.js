@@ -145,7 +145,7 @@ function Barchart( domRoot, visTemplate ) {
 	*	Draws main svg components (svg, focus & context), defines scales and axis.
 	* 
 	* ***************************************************************************************************************/
-	BARCHART.Render.draw = function( mappings, receivedData, iWidth, iHeight ){
+	BARCHART.Render.draw = function( receivedData, mappings, iWidth, iHeight ){
 		
 		
 		/******************************************************
@@ -439,8 +439,8 @@ function Barchart( domRoot, visTemplate ) {
 	
 	BARCHART.Ext = {
 			
-		draw: function( mappings, recomData, iWidth, iHeight ){
-		  BARCHART.Render.draw( mappings, recomData, iWidth, iHeight ); 
+		draw: function(recomData, mappings, iWidth, iHeight ){
+		  BARCHART.Render.draw( recomData, mappings, iWidth, iHeight );
 		},
 		
 		reset: function(){ BARCHART.Render.reset( 'animate_bars' );	},
