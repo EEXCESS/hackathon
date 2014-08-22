@@ -1,6 +1,6 @@
 
 
-var DrawGraph = function(){
+var DrawNaviGraph = function(){
 	var oC = {};//generate a object content json object;
 	
 	function getUniqueNodeName(index){
@@ -25,7 +25,7 @@ var DrawGraph = function(){
 		
 		
 
-		forceGraph.To.Object().To.Node()
+		forceNaviGraph.To.Object().To.Node()
 			.Add(resultNodeName)
 			.Change(resultNodeName,{
 				//drag:true,
@@ -121,7 +121,7 @@ var DrawGraph = function(){
 			AddResultNode(count,manyResult,uniqueNodeName,clusterDistancdArray[currentCount].distance);
 		}
 		var distance = clusterDistancdArray[currentCount].distance;
-		forceGraph.To.Object().To.Node()
+		forceNaviGraph.To.Object().To.Node()
 			.To.SubElement()
 				.Change(uniqueNodeName,"svgcircle",{
 					attr:{r:clusterDistancdArray[currentCount].radius}
@@ -138,11 +138,11 @@ var DrawGraph = function(){
 
 	function AddUniqueQueryNode(index,uniqueNodeName){
 
-		if(forceGraph.Graph.GetGraphData().data.dict.node[uniqueNodeName] == undefined){
+		if(forceNaviGraph.Graph.GetGraphData().data.dict.node[uniqueNodeName] == undefined){
 			var queries = getDataFromIndexedDB.wordHistory[index];
 			
 			// draw a query node
-			forceGraph.To.Object().To.Node()
+			forceNaviGraph.To.Object().To.Node()
 				.Add(uniqueNodeName)
 				.Change(uniqueNodeName,{title:queries,drag:true,cluster:{name:"clus_"+uniqueNodeName,distance:15,active:true}})
 				.To.Cluster()
@@ -203,10 +203,10 @@ var DrawGraph = function(){
 
 		var historyConnectionNameID = "HistoryConnectionID_"+index;
 
-		var test = forceGraph.Graph.GetGraphData();
-		if(forceGraph.Graph.GetGraphData().data.dict.node[historyNodeID] == undefined){
+		var test = forceNaviGraph.Graph.GetGraphData();
+		if(forceNaviGraph.Graph.GetGraphData().data.dict.node[historyNodeID] == undefined){
 		
-			var graphData = forceGraph.Graph.GetGraphData();
+			var graphData = forceNaviGraph.Graph.GetGraphData();
 			//var radius = graphData.data.dict.node[uniqueNodeName].object.nodeContent.subElements["svgcircle"].attr.r;
 			//radius = radius +2;
 			//var radius = graphData.data.dict.node[uniqueNodeName].object.nodeContent.subElements["svgtext1"].text;
@@ -215,7 +215,7 @@ var DrawGraph = function(){
 			clusterDistance = clusterDistance +2;
 			
 			//draw a subnode
-			forceGraph.To.Object().To.Node()
+			forceNaviGraph.To.Object().To.Node()
 				.Add(historyNodeID)
 				.Change(historyNodeID,{
 					//drag:true,
@@ -247,7 +247,7 @@ var DrawGraph = function(){
 			//draw a histrory link	
 			if(isPreviousNode){
 				var historyLinkNameID = "HistoryLinkID_"+index;
-				forceGraph.To.Object().To.Link()	
+				forceNaviGraph.To.Object().To.Link()	
 					//draw a histrory link			
 					.Add(previousNode,historyNodeID,historyLinkNameID)
 					.Change(historyLinkNameID,lineProperty);
@@ -273,14 +273,14 @@ var DrawGraph = function(){
 			var resultLinkBookmarks = FilterTextList(graphData.dict.node[resultNodeName].connections,"LinkBookmark_");
 			//console.log(resultLinkBookmarks);
 			resultLinkBookmarks.forEach(function(element){
-				forceGraph.To.Object().To.Node()
+				forceNaviGraph.To.Object().To.Node()
 					.Delete(element.substring(4,element.length));
 			});
 			
-			forceGraph.To.Object().To.Node()
+			forceNaviGraph.To.Object().To.Node()
 				.Delete(resultNodeName);
 		});
-		forceGraph.To.Object().To.Node()
+		forceNaviGraph.To.Object().To.Node()
 			.To.SubElement()
 				.Change(uniqueNodeId,"svgcircle",{
 					attr:{r:120}
@@ -296,11 +296,11 @@ var DrawGraph = function(){
 	
 	function DeleteHistoryQueryNode(index){
 		// get data from graph
-		var graphData = forceGraph.Graph.GetGraphData().data;	
+		var graphData = forceNaviGraph.Graph.GetGraphData().data;	
 		var uniqueNodeId = graphData.dict.link["HistoryConnectionID_"+index].source.elementId;
 
 		//delete history node
-		forceGraph.To.Object().To.Node()
+		forceNaviGraph.To.Object().To.Node()
 			.Delete("HistoryNodeID_"+index);
 
 		//delete nodes
@@ -311,7 +311,7 @@ var DrawGraph = function(){
 			oC.DeleteResultNode(uniqueNodeId,graphData);
 
 			//delete unique query node
-			forceGraph.To.Object().To.Node()
+			forceNaviGraph.To.Object().To.Node()
 				.Delete(uniqueNodeId)
 				.To.Cluster()
 					.Delete("clus_"+uniqueNodeId);
@@ -323,7 +323,7 @@ var DrawGraph = function(){
 			var clusterDistance = graphData.clusters["clus_"+uniqueNodeId].nodeContent.parameter.cluster.distance;
 			clusterDistance = clusterDistance -2;
 			
-			forceGraph.To.Object().To.Node()
+			forceNaviGraph.To.Object().To.Node()
 				//.Change(uniqueNodeId,{cluster:{distance:clusterDistance}})
 				.To.SubElement()//shrink node
 					//.Change(uniqueNodeId,"svgcircle",{attr:{r:radius}})
@@ -334,7 +334,7 @@ var DrawGraph = function(){
 
 	function DrawNode(firstOrlastNode,uniqueNode,startNodeID,startConnectionID,startLinkID){
 
-		forceGraph.To.Object().To.Node()
+		forceNaviGraph.To.Object().To.Node()
 			.Add(startNodeID)
 			.Change(startNodeID,{
 				cluster:{name:"clus_"+uniqueNode,distance:5,active:true}
@@ -357,7 +357,7 @@ var DrawGraph = function(){
 	
 	function AddFirstNode(firstNode,uniqueNode){
 		DrawNode(firstNode,uniqueNode,"StartNodeID","StartConnectionID","StartLinkID");
-		forceGraph.To.Object().To.Node().To.SubElement()
+		forceNaviGraph.To.Object().To.Node().To.SubElement()
 			//.Change("StartNodeID","svgcircle",{attr:{fill:"red"}})
 			.Change("StartNodeID","svgcircle",{attr:{fill:"none"}})
 			
@@ -371,7 +371,7 @@ var DrawGraph = function(){
 	
 	function AddLastNode(lastNode,uniqueNode){
 		DrawNode(lastNode,uniqueNode,"EndNodeID","EndConnectionID","EndLinkID");
-		forceGraph.To.Object().To.Node().To.SubElement()
+		forceNaviGraph.To.Object().To.Node().To.SubElement()
 			//.Change("EndNodeID","svgcircle",{attr:{fill:"blue"}})
 			.Change("EndNodeID","svgcircle",{attr:{fill:"none"}})
 			
@@ -419,7 +419,7 @@ var DrawGraph = function(){
 						//console.log(index);
 						//change lines and nodes properties.
 
-						//forceGraph.To.Object().To.Link()	
+						//forceNaviGraph.To.Object().To.Link()	
 						//	//draw a history link	
 						//	.Change("HistoryLinkID_"+index,{attr:{stroke:"blue"}})
 						//	.To.SubElement()
@@ -447,13 +447,13 @@ var DrawGraph = function(){
 		/*
 		//test history his edges
 		for(var i=0;i<getDataFromIndexedDB.wordHistory.length;i++){
-			var dataGraph = forceGraph.Graph.GetGraphData();
+			var dataGraph = forceNaviGraph.Graph.GetGraphData();
 			if(dataGraph.data.dict.node["HistoryNodeID_"+i] != undefined){
-				forceGraph.To.Object().To.Node()
+				forceNaviGraph.To.Object().To.Node()
 					.To.SubElement()
 						.Change("HistoryNodeID_"+i,"svgcircle",{attr:{fill:"grey"}});
 				if(Object.keys(dataGraph.data.dict.node["HistoryNodeID_"+i].connections).length != 3){
-					forceGraph.To.Object().To.Node()
+					forceNaviGraph.To.Object().To.Node()
 						.To.SubElement()
 							.Change("HistoryNodeID_"+i,"svgcircle",{attr:{fill:"red"}});
 				}
@@ -501,7 +501,7 @@ var DrawGraph = function(){
 			var currentLinkName = "";
 			var currentNodeName = "";
 			
-			var graphData = forceGraph.Graph.GetGraphData().data.dict;
+			var graphData = forceNaviGraph.Graph.GetGraphData().data.dict;
 			
 			var neightborNodes = {};
 			
@@ -511,7 +511,7 @@ var DrawGraph = function(){
 				//console.log(index);
 				currentLinkName = "HistoryLinkID_"+(index+1);
 				if(graphData.link.hasOwnProperty(currentLinkName)){/////////////
-					forceGraph.To.Object().To.Link()
+					forceNaviGraph.To.Object().To.Link()
 						.Change(currentLinkName,{attr:{
 							stroke:color(count),
 							"stroke-linecap":"round",
@@ -548,7 +548,7 @@ var DrawGraph = function(){
 				count++;
 			//}while(index <= max);
 			}while(index < max);
-			//forceGraph.To.Object().To.Graph().ReDraw();
+			//forceNaviGraph.To.Object().To.Graph().ReDraw();
 
 
 			
@@ -572,15 +572,15 @@ var DrawGraph = function(){
 			}).reverse();
 			
 			console.log("DEBUG 1---------------------------------------------");
-			console.log(sortedLinknumbers);
-			console.log(graphData);
-			console.log(JSON.parse(JSON.stringify(neightborNodes)));
+			//console.log(sortedLinknumbers);
+			//console.log(graphData);
+			//console.log(JSON.parse(JSON.stringify(neightborNodes)));
 			console.log("DEBUG 1---------------------------------------------");
 
 			
 			//change the neightbor table
 			sortedLinknumbers.forEach(function(element){
-				forceGraph.To.Object().To.Node()
+				forceNaviGraph.To.Object().To.Node()
 					.To.SubElement()
 						.Change(element.name,"svgtext1",{attr:{transform:"translate(0,-150)"},text:""});
 				if(neightborNodes.hasOwnProperty(element.name)){
@@ -596,7 +596,7 @@ var DrawGraph = function(){
 				}
 			});
 			console.log("DEBUG 2---------------------------------------------");
-			console.log(JSON.parse(JSON.stringify(neightborNodes)));
+			//console.log(JSON.parse(JSON.stringify(neightborNodes)));
 			console.log("DEBUG 2---------------------------------------------");
 			
 			
@@ -619,14 +619,14 @@ var DrawGraph = function(){
 			console.log(optimizedNeightborNodes);
 			
 			optimizedNeightborNodes.forEach(function(element){
-				forceGraph.To.Object().To.Node()
+				forceNaviGraph.To.Object().To.Node()
 					.To.SubElement()
 						.Change(element,"svgtext1",{
 							attr:{transform:"translate(0,-150)"},
 							text:neightborNodes[element].neightbors.length});
 			
 				neightborNodes[element].neightbors.forEach(function(neightbor){
-					forceGraph.To.Object().To.Link()
+					forceNaviGraph.To.Object().To.Link()
 						.Change(neightbor.line,{strength:0.5,distance:600});
 				});		
 					
@@ -638,7 +638,7 @@ var DrawGraph = function(){
 			/*
 			Object.keys(graphData.link).filter(function(element){
 				if(element.substr(0,"forceline_".length) == "forceline_"){
-					forceGraph.To.Object().To.Link().Delete(element);
+					forceNaviGraph.To.Object().To.Link().Delete(element);
 					return element;
 				}
 			});
@@ -647,13 +647,13 @@ var DrawGraph = function(){
 				//var firstNode = optimizedNeightborNodes.pop();
 				optimizedNeightborNodes.forEach(function(element,index){
 					if(index > 0){
-						forceGraph.To.Object().To.Link()		
+						forceNaviGraph.To.Object().To.Link()		
 							.Add(optimizedNeightborNodes[index-1],element,"forceline_first_"+index)
 							.Change("forceline_first_"+index,{strength:0.9,distance:1500});
 					}
 			
 					if(index > 1){
-						forceGraph.To.Object().To.Link()		
+						forceNaviGraph.To.Object().To.Link()		
 							.Add(optimizedNeightborNodes[index-2],element,"forceline_second_"+index)
 							.Change("forceline_second_"+index,{strength:0.9,distance:2000});
 					}
@@ -697,17 +697,17 @@ var DrawGraph = function(){
 				
 
 				
-				//forceGraph.To.Object().To.Graph().ReDraw();	
+				//forceNaviGraph.To.Object().To.Graph().ReDraw();	
 			};
 			
 			var drawOneResult = function(){
 			
-				forceGraph.To.Object()
+				forceNaviGraph.To.Object()
 					.To.Graph().Delete();
 				
 				//delete all nodes from search graph
-				var currentNode = forceGraph.To.Object().To.Node();			
-				Object.keys(forceGraph.Graph.GetGraphData().data.dict.node).forEach(function(key){
+				var currentNode = forceNaviGraph.To.Object().To.Node();			
+				Object.keys(forceNaviGraph.Graph.GetGraphData().data.dict.node).forEach(function(key){
 					currentNode.Delete(key);	
 				});	
 
@@ -716,7 +716,7 @@ var DrawGraph = function(){
 
 				AddFirstNode("HistoryNodeID_"+min,getUniqueNodeName(min));
 				
-				//forceGraph.To.Object().To.Graph().ReDraw();
+				//forceNaviGraph.To.Object().To.Graph().ReDraw();
 
 				AddLastNode("HistoryNodeID_"+(max),getUniqueNodeName(max));
 			}
@@ -724,16 +724,16 @@ var DrawGraph = function(){
 			var sliderBigJump = function(){
 				//console.log("slider big junp");
 				
-				forceGraph.To.Object()
+				forceNaviGraph.To.Object()
 					.To.Graph().Delete();
 				
 				//delete all nodes from search graph
-				var currentNode = forceGraph.To.Object().To.Node();			
-				Object.keys(forceGraph.Graph.GetGraphData().data.dict.node).forEach(function(key){
+				var currentNode = forceNaviGraph.To.Object().To.Node();			
+				Object.keys(forceNaviGraph.Graph.GetGraphData().data.dict.node).forEach(function(key){
 					currentNode.Delete(key);	
 				});	
 					
-				//var test = forceGraph.Graph.GetGraphData();
+				//var test = forceNaviGraph.Graph.GetGraphData();
 				
 
 				AddHistoryQueryNode(false,min,getUniqueNodeName(min),null,"HistoryNodeID_"+min);
@@ -756,7 +756,7 @@ var DrawGraph = function(){
 
 				AddHistoryQueryNode(false,min,getUniqueNodeName(min),null,"HistoryNodeID_"+min);
 				
-				forceGraph.To.Object().To.Node().Delete("StartNodeID");
+				forceNaviGraph.To.Object().To.Node().Delete("StartNodeID");
 				AddFirstNode("HistoryNodeID_"+min,getUniqueNodeName(min));
 				
 				var index = min+1;
@@ -772,7 +772,7 @@ var DrawGraph = function(){
 				var nextNode = "HistoryNodeID_"+sliderMin;
 				var previousNode = "HistoryNodeID_"+(sliderMin-1)//min;
 				var linkName = "HistoryLinkID_"+sliderMin;//min;/////////
-				forceGraph.To.Object().To.Link()	
+				forceNaviGraph.To.Object().To.Link()	
 					//draw a history link	
 					.Add(previousNode,nextNode,linkName)
 					.Change(linkName,{strength:0,attr:{
@@ -788,7 +788,7 @@ var DrawGraph = function(){
 				
 				//console.log("slider shrink on the left side");
 
-				forceGraph.To.Object().To.Node().Delete("StartNodeID");
+				forceNaviGraph.To.Object().To.Node().Delete("StartNodeID");
 				
 				
 				var index = sliderMin;
@@ -811,7 +811,7 @@ var DrawGraph = function(){
 				//console.log("slider shrink on the right side");
 				//delete nodes on right side of the search graph.
 				
-				forceGraph.To.Object().To.Node().Delete("EndNodeID");
+				forceNaviGraph.To.Object().To.Node().Delete("EndNodeID");
 
 				var index = max+1;
 
@@ -829,7 +829,7 @@ var DrawGraph = function(){
 			var sliderGrowRight = function(){
 				//console.log("slider grow on the rifght side");
 				
-				forceGraph.To.Object().To.Node().Delete("EndNodeID");
+				forceNaviGraph.To.Object().To.Node().Delete("EndNodeID");
 
 				var index = sliderMax+1;
 				do{
@@ -847,7 +847,7 @@ var DrawGraph = function(){
 				noUpdateGraph,sliderShrinkRight,sliderGrowRight,
 				drawOneResult);
 
-			var test = forceGraph.Graph.GetGraphData();
+			var test = forceNaviGraph.Graph.GetGraphData();
 		};
 	
 	//};
