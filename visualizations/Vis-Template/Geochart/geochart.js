@@ -87,6 +87,9 @@ function Geochart(root, visTemplate) {
 		height  = GEO.Dimensions.height;
 		colorScale   = d3.scale.category10();
         colorChannel = 'language';
+        for(var i=0; i<mappingCombination.length; i++)
+            if (mappingCombination[i].visualattribute == 'color')
+                colorChannel = mappingCombination[i].facet;
 
 
 
