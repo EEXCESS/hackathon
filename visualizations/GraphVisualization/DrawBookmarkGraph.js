@@ -6,7 +6,7 @@ var DrawBookmarkGraph = function(){
 	// convert json object in string json for jQuery name(id)
 	function JSON2JSONId(jsonObject){
 		return JSON.stringify(jsonObject).replace(
-			/({|}|\[|\]|"|\?|:|,|\ |')/g, 
+			/({|}|\[|\]|"|\?|:|;|,|\ |')/g, 
 			function(m){
 				switch(m) {
 					case '{': return '«';case '}': return '»';
@@ -14,13 +14,27 @@ var DrawBookmarkGraph = function(){
 					case '"': return '░';case ' ': return '°';
 					case ':': return '⌂';case ',': return '♦';
 					case '?': return '¿';case "'": return '▒';
-					
-					case ';': return '⌂';
+					case ';': return '↕';
 				}
 			}
 		);
 	};
-	
+	// convert jsonid string in string json 
+	function JSONId2JSONString(jsonStringId){
+		return jsonStringId.replace(
+			/(«|»|◄|►|░|¿|⌂|↕|♦|°|▒)/g, 
+			function(m){
+				switch(m) {
+					case '«': return '{';  case '»': return '}';
+					case '◄': return '[';  case '►': return ']';
+					case '░': return '"';  case '°': return ' ';
+					case '⌂': return ':';  case '♦': return ',';
+					case '¿': return '?';  case '▒': return "'";
+					case '↕': return ';'; 
+				}
+			}
+		);
+	};
 	
 	
 	function Addbookmark(bookmarkName,booknameProperties){
@@ -54,7 +68,7 @@ var DrawBookmarkGraph = function(){
 			.Change(bookmarkItemName,{
 				title:(
 					"query: "+ bookmarkItemNameObj[1]["name"][1]["query"]+
-					" | title: "+ bookmarkItemNameObj[1]["name"][2]["title"]) })
+					" | title: "+ JSONId2JSONString(bookmarkItemNameObj[1]["name"][2]["title"])) })
 			.To.SubElement()
 				.Change(bookmarkItemName,"svgcircle",{
 					attr:{fill:"grey",r:20}
@@ -88,7 +102,9 @@ var DrawBookmarkGraph = function(){
 	oC.AddBookmarkGraph = function(bookmarkDataParam){
 		bookmarkData = bookmarkDataParam;
 
-		var bookmarksInGraph =[];
+		var bookmarksInGraph ={};
+		var bookmarkNamesInGraph =[];
+		
 		var lineBetweenBookmarks ={};
 		//add bookmarks
 		Object.keys(bookmarkData).forEach(function(bookmark){
@@ -113,17 +129,35 @@ var DrawBookmarkGraph = function(){
 						"name":[
 							{"bookmark":bookmark},
 							{"query":item.query},
-							{"title":MD5(item.title)}
+							{"title":JSON2JSONId(item.title)}
 						]
 					}
 				];
 				AddbookmarkItem(bookmarkNameObj,bookmarkItemValue);
 				
 				//add and grow lines between bookmarks
-				bookmarksInGraph.forEach(function(bookmarkInGraph){
-					console.log(": " + bookmarkInGraph);
-					console.log(":: " + JSON2JSONId(bookmarkNameObj));
-					console.log("::: "+ JSON2JSONId(bookmarkItemValue));
+				bookmarkNamesInGraph.forEach(function(bookmarkName){
+					
+					//---Start Bookmark and Bookmark items output
+					console.log(": " + bookmarksInGraph[bookmarkName]);
+					console.log(": " + JSON2JSONId(bookmarkNameObj));
+					
+					var bookmarkItemValueObj = bookmarkItemValue[1].name;
+					console.log(":: " +bookmarkItemValueObj[0].bookmark);
+					console.log(":: | "+ 
+						JSONId2JSONString(bookmarkItemValueObj[1].query) + " | " + 
+						JSONId2JSONString(bookmarkItemValueObj[2].title));					
+						
+					console.log(":: " +bookmarkName);
+					bookmarkData[bookmarkName].items.forEach(function(itemOfOtherBookmark){
+						console.log(":: | " + itemOfOtherBookmark.query + " | " + itemOfOtherBookmark.title);
+						//TODO...
+					});
+
+					//---End Bookmark and Bookmark items output
+					
+					
+					
 					//add and grow line between bookmarks
 					
 					
@@ -131,7 +165,8 @@ var DrawBookmarkGraph = function(){
 				console.log(".....................");
 			});
 			
-			bookmarksInGraph.push(JSON2JSONId(bookmarkNameObj));
+			bookmarksInGraph[bookmark] = JSON2JSONId(bookmarkNameObj);
+			bookmarkNamesInGraph.push(bookmark);
 		});
 		
 		
