@@ -71,7 +71,7 @@ function requestPlugin() {
 
             console.log(request.method);
             if (request.method === 'newSearchTriggered') {
-    			console.log('data received from plugin');
+    			//console.log('data received from plugin');
    				requestVisualization(request.data);
    			}
    		}
@@ -80,7 +80,7 @@ function requestPlugin() {
     
     // Retrieve current recommendations data
     EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
-        console.log("first call for results");
+        //console.log("first call for results");
         requestVisualization(reqResult);
     });
 
@@ -96,6 +96,11 @@ function requestPlugin() {
 function deletedRdf(pluginResponse) {
 
     pluginResponse.results.results.forEach(function(d){
+        /*
+        var rdf = d.rdf;
+        if(d.facets.provider == 'europeana' || d.facets.provider == 'Europeana')
+            console.log(rdf);
+        */
         delete d.rdf;
     });
 
