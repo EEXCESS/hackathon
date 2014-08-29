@@ -132,7 +132,7 @@ function Visualization( EEXCESSobj ) {
         query = receivedQuery;													// string representing the query that triggered the current recommendations
         groupBy = receivedGroupBy;
 
-        //console.log(JSON.stringify(data));
+        console.log(JSON.stringify(data));
 
         // Initialize template's elements
         PREPROCESSING.setAncillaryVariables();
