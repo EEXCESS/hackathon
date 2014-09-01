@@ -113,12 +113,14 @@ function AddBookMarkInGraph(nodeId,bookmarkId,color){
 
 		
 		//console.log("boooooooookmark");
+		//bookmark
+		return true;
 	}//else{
-	//	console.log("noooooooooooo  boooooooookmark!!!!!!!!!!!!");
+		//console.log("noooooooooooo  boooooooookmark!!!!!!!!!!!!");
 	//}
 
-	
-	
+	//no bookmark
+	return false;
 
 }
 
@@ -154,6 +156,7 @@ var currentHover = null;
 function AddBookmarkItem(currentNodeId,currentSelectedBookmark,queryName){
 	
 	var bookmarkColor = $("#"+currentSelectedBookmark+" .editcolor").val();
+	var bookmarkItem = null;
 	
 	if(currentSelectedBookmark == null){
 		console.log("no bookmark selected");
@@ -171,7 +174,7 @@ function AddBookmarkItem(currentNodeId,currentSelectedBookmark,queryName){
 			
 			if(queryName != null ){
 
-				var bookmarkItem = getDataFromIndexedDB.wordsWithResults[queryName].results[
+				bookmarkItem = getDataFromIndexedDB.wordsWithResults[queryName].results[
 						getDataFromIndexedDB.wordsWithResults[queryName].resultList[queryNodePartNames[3]]
 					];
 				bookmarkItem.query = queryName;
@@ -278,14 +281,23 @@ function AddBookmarkItem(currentNodeId,currentSelectedBookmark,queryName){
 				
 				slidercontrol.ChangeSilderControl();
 			});	
-			AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,bookmarkColor);	
+			var drawBookmark = AddBookMarkInGraph(currentNodeId,currentSelectedBookmark,bookmarkColor);	
+
 			
 			bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={};
+
+			var queryVal = queryName;
+			if(queryName == null){
+				queryVal = $("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text();
+			}
+			
 			bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId] ={
 				color:$("#"+currentSelectedBookmark+" .editcolor").val(),
-				query:$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text(),
-				title:$("#"+currentNodeId+" title").text()
+				query:queryVal,//$("#"+queryNodePartNames[1] + "_" +queryNodePartNames[2]+" title").text(),
+				title:bookmarkItem.title//$("#"+currentNodeId+" title").text()
 			};
+
+
 			
 			if(!bookmarkDict.nodes.hasOwnProperty(currentNodeId)){
 				bookmarkDict.nodes[currentNodeId]={};
@@ -299,7 +311,7 @@ function AddBookmarkItem(currentNodeId,currentSelectedBookmark,queryName){
 
 			var queryNameVar = bookmarkDict.bookmarks[currentSelectedBookmark][currentNodeId].query;
 			
-			var bookmarkItem = getDataFromIndexedDB.wordsWithResults[queryNameVar].results[
+			bookmarkItem = getDataFromIndexedDB.wordsWithResults[queryNameVar].results[
 				getDataFromIndexedDB.wordsWithResults[queryNameVar].resultList[queryNodePartNames[3]]
 			];
 			bookmarkingAPI.deleteItemFromBookmark(bookmarkItem.id,currentSelectedBookmark);
@@ -414,6 +426,7 @@ var funcStore =	{
 		//var test = forceNaviGraph.Graph.GetGraphData();
 		
 		var bookmarkColor = $("#"+currentSelectedBookmark+" .editcolor").val();
+
 		AddBookmarkItem(currentNodeId,currentSelectedBookmark,null);
 		
 	},
