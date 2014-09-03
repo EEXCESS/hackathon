@@ -132,7 +132,14 @@ function Visualization( EEXCESSobj ) {
         query = receivedQuery;													// string representing the query that triggered the current recommendations
         groupBy = receivedGroupBy;
 
-        console.log(JSON.stringify(data));
+        var mendeleyData = [];
+
+        data.forEach(function(d){
+            if(d.facets.provider == 'mendeley')
+                mendeleyData.push(d);
+        });
+
+        console.log(JSON.stringify(mendeleyData));
 
         // Initialize template's elements
         PREPROCESSING.setAncillaryVariables();
