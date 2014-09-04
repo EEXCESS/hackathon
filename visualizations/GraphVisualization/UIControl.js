@@ -161,8 +161,8 @@ var BuildControls = function(){
 
 
 	//generate bookmark graph
-	drawBookmarkGraphObj.AddBookmarkGraph(bookmarkingAPI.getAllBookmarks());
-	forceBookmarkGraph.To.Object().To.Graph().ReDraw();	
+	//drawBookmarkGraphObj.AddBookmarkGraph(bookmarkingAPI.getAllBookmarks());
+	//forceBookmarkGraph.To.Object().To.Graph().ReDraw();	
 	
 	//console.log("build slider");
 	//console.log({"wl":getDataFromIndexedDB.queryObjHistory});
@@ -476,11 +476,30 @@ var BuildControls = function(){
 	$("#bookmarkgraphCheck").click(function(event){
 		if($("#bookmarkgraphCheck:checked" ).val() == "bookmarkgraphCheck"){
 			console.log($("#bookmarkgraphCheck:checked" ).val());
+			//TODO...
+
+			
+			console.log("******************");
+			console.log(bookmarkingAPI.getAllBookmarks());
+			console.log("******************");
+			
+			drawBookmarkGraphObj.AddBookmarkGraph(bookmarkingAPI.getAllBookmarks());
+			forceBookmarkGraph.To.Object().To.Graph().ReDraw();	
+
 			
 			$("#bookmarkgraphControl").show();
 			$("#navigraphControl").hide();
 
 		}else{
+			
+			//hack begin
+			$("#Bookmarkgraph").empty();
+			$("#Bookmarkgraph").append("<svg></svg>");
+			//forceBookmarkGraph = null;
+			forceBookmarkGraph = new FGraph();
+			forceBookmarkGraph.InitGraph("#Bookmarkgraph");
+			//hack end
+			
 			$("#bookmarkgraphControl").hide();
 			$("#navigraphControl").show();
 		}

@@ -33,6 +33,76 @@ function GetEqualValue(wordDict1,wordDict2,oneDifferent){
 
 
 
+function SpecialChars(){
+
+	var oC = {};
+
+	oC.charDict = {
+		'{':  '«',
+		'}':  '»',
+		'[':  '◄',
+		']':  '►',
+		'(':  '←',
+		')':  '→',
+		' ':  '°',
+		'?':  '¿',
+		':':  '⌂',
+		',':  '♦',
+		';':  '↕',
+		'.':  '▓',
+		'&':  '®',
+		'!':  'î',
+		"'":  '▒',
+		'-':  '↔',
+		'/':  '☼'
+	};
+	
+	oC.charDictInverse = KeyValue2ValueKey(oC.charDict);
+
+	
+	oC.charDictSpecial = {
+		'"': '░',
+	};
+	
+	oC.charDictSpecialInverse = KeyValue2ValueKey(oC.charDictSpecial);
+	
+	
+	function KeyValue2ValueKey(dict){
+		var newDict ={};
+		Object.keys(dict).forEach(function(key){
+			newDict[dict[key]] = key;
+		});
+		return newDict;
+	}
+	
+
+	
+	function CharDict2CharString(charDictInput,synStr){
+		var resultString = '';
+		
+		Object.keys(charDictInput).forEach(function(key){
+			resultString += synStr + key + '|'
+		});
+
+		return resultString.substring(0,resultString.length-1);
+	}
+
+	
+	oC.FromCharDict2String = function(){
+		var resultString = '';
+		resultString = CharDict2CharString(oC.charDict,"\\");
+		resultString += '|' + CharDict2CharString(oC.charDictSpecial,'\\');
+		return resultString;
+	};
+	
+	oC.FromCharDictInvers2String = function(){
+		var resultString = '';
+		resultString = CharDict2CharString(oC.charDictInverse,"\\");
+		resultString += '|' + CharDict2CharString(oC.charDictSpecialInverse,'\\');
+		return resultString;
+	};
+	return oC;
+}
 
 
 
@@ -42,23 +112,20 @@ var DrawBookmarkGraph = function(){
 	
 	// convert json object in string json for jQuery name(id)
 	function JSON2JSONId(jsonObject){
-		var TestString = "sewrr34545";
+
 		var resultStr = JSON.stringify(jsonObject);
 		
+		//var chars = new RegExp("(\\{|\\}|\\[|\\]|\"|\\?|\\:|\;|\\,|\\ |\\.|\\'|\\&|\\!|\\-|\\(|\\))", "g");
+		var chars = new RegExp("("+SpecialChars().FromCharDict2String()+")", "g");
 		var resultStrFiltered = resultStr.replace(
-			/({|}|\[|\]|\"|\?|:|;|,|\ |\.|\'|&|!|-|\(|\))/g, 
+			//(\{|\}|\[|\]|\"|\?|\:|\;|\,|\ |\.|\'|\&|\!|\-|\(|\))/g, 
+			chars, 
 			function(m){
-				switch(m) {
-					case '{': return '«';case '}': return '»';
-					case '[': return '◄';case ']': return '►';
-					case '(': return '←';case ')': return '→';
-					
-					case ' ': return '°';case '?': return '¿';
-					case ':': return '⌂';case ',': return '♦';
-					case ';': return '↕';case '.': return '▓';
-					case '&': return '®';case '!': return 'î';
-					case '\"': return '░';case "\'": return '▒';
-					case '-':return '↔';
+				if(SpecialChars().charDict.hasOwnProperty(m)){
+					return SpecialChars().charDict[m];
+				}
+				if(SpecialChars().charDictSpecial.hasOwnProperty(m)){
+					return SpecialChars().charDictSpecial[m];
 				}
 			}
 		);
@@ -66,9 +133,19 @@ var DrawBookmarkGraph = function(){
 	};
 	// convert jsonid string in string json 
 	function JSONId2JSONString(jsonStringId){
+		var chars = new RegExp("("+SpecialChars().FromCharDictInvers2String()+")", "g");
+	
 		return jsonStringId.replace(
-			/(«|»|◄|►|░|¿|⌂|↕|♦|°|▒|▓|®|î|↔|←|→)/g, 
+			//(«|»|◄|►|░|¿|⌂|↕|♦|°|▒|▓|®|î|↔|←|→)/g, 
+			chars,
 			function(m){
+				if(SpecialChars().charDictInverse.hasOwnProperty(m)){
+					return SpecialChars().charDictInverse[m];
+				}
+				if(SpecialChars().charDictSpecialInverse.hasOwnProperty(m)){
+					return SpecialChars().charDictSpecialInverse[m];
+				}
+			/*
 				switch(m) {
 					case '«': return '{'; case '»': return '}';
 					case '◄': return '['; case '►': return ']';
@@ -81,6 +158,7 @@ var DrawBookmarkGraph = function(){
 					case '░': return '"'; case '▒': return "'";
 					case '↔': return '-';
 				}
+				*/
 			}
 		);
 	};
@@ -108,7 +186,7 @@ var DrawBookmarkGraph = function(){
 
 	
 	
-	function AddbookmarkItem(bookmarkNameObj,bookmarkItemNameObj){
+	function DrawbookmarkItem(bookmarkNameObj,bookmarkItemNameObj){
 	
 		var bookmarkItemName = JSON2JSONId(bookmarkItemNameObj);
 		
@@ -142,13 +220,14 @@ var DrawBookmarkGraph = function(){
 	
 	function AddLineBetweenBookmarks(bookmarkNameObj1,bookmarkNameObj2,bookmarkLineName,lineWidth){
 		var widthVal = 0;
-		forceBookmarkGraph.To.Object().To.Link()
-			.Add(bookmarkNameObj1,bookmarkNameObj2,bookmarkLineName);
-			
+
 		if(lineWidth > 0){
+			forceBookmarkGraph.To.Object().To.Link()
+				.Add(bookmarkNameObj1,bookmarkNameObj2,bookmarkLineName);
+				
 			widthVal = lineWidth*2;
 			forceBookmarkGraph.To.Object().To.Link()
-				.Change(bookmarkLineName,{"distance":600,"attr":{"stroke-width":widthVal}})
+				.Change(bookmarkLineName,{"distance":800,"attr":{"stroke-width":widthVal}})
 				.To.SubElement()
 					.Change(
 						bookmarkLineName,
@@ -195,25 +274,26 @@ var DrawBookmarkGraph = function(){
 						]
 					}
 				];
-				AddbookmarkItem(bookmarkNameObj,bookmarkItemValue);
+				DrawbookmarkItem(bookmarkNameObj,bookmarkItemValue);
 				
 				//add and grow lines between bookmarks
 				bookmarkNamesInGraph.forEach(function(bookmarkName){
 					
 					//---Start Bookmark and Bookmark items output
-					console.log(": " + bookmarksInGraph[bookmarkName]);
-					console.log(": " + JSON2JSONId(bookmarkNameObj));
+					//console.log(": " + bookmarksInGraph[bookmarkName]);
+					//console.log(": " + JSON2JSONId(bookmarkNameObj));
 					
 					var bookmarkItemValueObj = bookmarkItemValue[1].name;
-					console.log(":: " +bookmarkItemValueObj[0].bookmark);
-					console.log(":: | "+ 
-						JSONId2JSONString(bookmarkItemValueObj[1].query) + " | " + 
-						JSONId2JSONString(bookmarkItemValueObj[2].title));					
+					//console.log(":: " +bookmarkItemValueObj[0].bookmark);
+					//console.log(":: | "+ 
+					//	JSONId2JSONString(bookmarkItemValueObj[1].query) + " | " + 
+					//	JSONId2JSONString(bookmarkItemValueObj[2].title));					
 						
-					console.log(":: " +bookmarkName);
+					
+					//console.log(":: " +bookmarkName);
 					var betweenBookmarks = bookmarkName+ "_" +bookmarkItemValueObj[0].bookmark;
 					bookmarkData[bookmarkName].items.forEach(function(itemOfOtherBookmark){
-						console.log(":: | " + itemOfOtherBookmark.query + " | " + itemOfOtherBookmark.title);
+						//console.log(":: | " + itemOfOtherBookmark.query + " | " + itemOfOtherBookmark.title);
 						
 						if(!relationBetweenBookmarks.hasOwnProperty(betweenBookmarks)){	
 							relationBetweenBookmarks[betweenBookmarks] = {
@@ -234,7 +314,7 @@ var DrawBookmarkGraph = function(){
 
 					//---End Bookmark and Bookmark items output
 				});
-				console.log(".....................");
+				//console.log(".....................");
 			});
 			
 
@@ -244,9 +324,10 @@ var DrawBookmarkGraph = function(){
 		});
 		
 		//add and lines between bookmarks
-		console.log("#------------#");
-		console.log(relationBetweenBookmarks);
-		console.log("#------------#");
+		//console.log("#------------#");
+		//console.log(relationBetweenBookmarks);
+		//console.log("#------------#");
+		
 		Object.keys(relationBetweenBookmarks).forEach(function(element){
 			AddLineBetweenBookmarks(
 				relationBetweenBookmarks[element].nodeOne,
@@ -254,7 +335,6 @@ var DrawBookmarkGraph = function(){
 				element,
 				relationBetweenBookmarks[element].differentCount);
 		});
-		//AddLineBetweenBookmarks
 		
 
 	};
