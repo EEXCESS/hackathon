@@ -126,8 +126,8 @@ function getTimelineInitData( processedData, initMapping ){
         mapping[m.visualattribute] = m.facet;
     });
 
-    var xAxisChannel = mapping['x-Axis'];
-    var yAxisChannel = mapping['y-Axis'];
+    var xAxisChannel = mapping['x-axis'];
+    var yAxisChannel = mapping['y-axis'];
     var colorChannel = mapping['color'];
     var data = [];
 

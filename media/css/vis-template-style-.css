@@ -362,7 +362,7 @@ input[type="button"]:hover{
 .eexcess_query_field{
     background-color: white;/*494949;*/
     color:#008746;
-    font-weight:regular;
+    font-weight:normal;
 	    font-size:1em;
 		height: 20px;
 		margin-top: 0.2em;
@@ -528,7 +528,7 @@ padding-top: 0.8em;
     margin-top: 2px;
     margin-bottom: 2px;
     margin-left: 40%;
-    margin right: auto;
+    margin-right: auto;
     padding-left: .4em;
     text-align: left;
     line-height: 1.4em;
@@ -725,7 +725,6 @@ Visualization Panel (center of screen)
     display: block;
 	width:16px;
     height:16px;
-    margin-top: 0.25em;
     margin-right: 0px;
     margin-left: 0.2em;
     box-shadow: 0.05em 0.05em 0.05em #ccc;

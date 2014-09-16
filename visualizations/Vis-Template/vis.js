@@ -116,9 +116,9 @@ function Visualization( EEXCESSobj ) {
      * 	Sets up the visualization-independent components and instantiates the visualization objects (e.g. timeVis)
      *
      * */
-    START.refresh = function( receivedData, receivedQuery, receivedCharts, receivedMappings, receivedGroupBy ){
+    START.refresh = function(input){
 
-        if(receivedData == 'undefined' || receivedData.length == 0 ){
+        if(typeof input == 'undefined' || input == 'undefined'){
             VISPANEL.clearCanvasAndShowMessage( STR_NO_DATA_RECEIVED );
             return;
         }
@@ -126,11 +126,10 @@ function Visualization( EEXCESSobj ) {
         width  = $(window).width();
         height = $(window).height();
 
-        data = receivedData;													// contains the data to be visualized
-        charts = receivedCharts;
-        mappings = PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
-        query = receivedQuery;													// string representing the query that triggered the current recommendations
-        groupBy = receivedGroupBy;
+        data = input.data; //receivedData;													// contains the data to be visualized
+        charts = input.charts; //receivedCharts;
+        mappings = input.mappingcombination; //PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
+        query = input.query;													// string representing the query that triggered the current recommendations
 
         // Initialize template's elements
         PREPROCESSING.setAncillaryVariables();
