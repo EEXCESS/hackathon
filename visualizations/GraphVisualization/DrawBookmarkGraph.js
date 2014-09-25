@@ -53,7 +53,8 @@ function SpecialChars(){
 		'&':  '®',
 		'!':  'î',
 		"'":  '▒',
-		'-':  '↔'
+		'-':  '↔',
+		'/':  '☼'
 	};
 	
 	oC.charDictInverse = KeyValue2ValueKey(oC.charDict);

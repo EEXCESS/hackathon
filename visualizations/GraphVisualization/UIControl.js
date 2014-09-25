@@ -477,11 +477,7 @@ var BuildControls = function(){
 		if($("#bookmarkgraphCheck:checked" ).val() == "bookmarkgraphCheck"){
 			console.log($("#bookmarkgraphCheck:checked" ).val());
 			//TODO...
-			forceBookmarkGraph.To.Object().To.Graph()
-				.Delete()
-				.ReDraw()
-				.ReOption()
-				.ReScale();
+
 			
 			console.log("******************");
 			console.log(bookmarkingAPI.getAllBookmarks());
@@ -489,12 +485,21 @@ var BuildControls = function(){
 			
 			drawBookmarkGraphObj.AddBookmarkGraph(bookmarkingAPI.getAllBookmarks());
 			forceBookmarkGraph.To.Object().To.Graph().ReDraw();	
-			
+
 			
 			$("#bookmarkgraphControl").show();
 			$("#navigraphControl").hide();
 
 		}else{
+			
+			//hack begin
+			$("#Bookmarkgraph").empty();
+			$("#Bookmarkgraph").append("<svg></svg>");
+			//forceBookmarkGraph = null;
+			forceBookmarkGraph = new FGraph();
+			forceBookmarkGraph.InitGraph("#Bookmarkgraph");
+			//hack end
+			
 			$("#bookmarkgraphControl").hide();
 			$("#navigraphControl").show();
 		}

@@ -1,67 +1,8 @@
 
 function Dummy(){
 
-	this.data = [
+	this.data =
 	             {
-	                 "groupedBy":[
-	                    {
-	                       "component":{
-	                          "facet":"keywords",
-	                          "datatype":"http://eexcess.eu/visualisation-ontology#nominal"
-	                       },
-	                       "gb":{
-	                          "Eigentumsrecht":1,
-	                          "Discrimination":1,
-	                          "Kettle":1,
-	                          "WI":3,
-	                          "Outings":1,
-	                          "microfinance services":1,
-	                          "Actors":1,
-	                          "Gleichberechtigung":1,
-	                          "Group portraits":1,
-	                          "Meeting":1,
-	                          "Christmas":1,
-	                          "British Legion":1,
-	                          "Play":1,
-	                          "Property Rights":1,
-	                          "Woman's organisations":2,
-	                          "Gender equality":1,
-	                          "Men":1,
-	                          "Jup":1,
-	                          "entrepreneurs":1,
-	                          "Teacups":1,
-	                          "World":1,
-	                          "Women-portraits":1,
-	                          "Hall":1,
-	                          "Women":7,
-	                          "Chairperson":1,
-	                          "British Home Front 1914-1918":1,
-	                          "Parties":1,
-	                          "Sale":1,
-	                          "Seated":1,
-	                          "Welt":1,
-	                          "Women's costume":3,
-	                          "Biscuits":1,
-	                          "Secretary":1,
-	                          "Diskriminierung":1,
-	                          "Show":1,
-	                          "Tea":1,
-	                          "Hats":1,
-	                          "Maenner":1,
-	                          "business enterprises":1,
-	                          "Village":1,
-	                          "Table":3,
-	                          "Woman's Institute":4,
-	                          "Frauen":2
-	                       }
-	                    },
-	                    {
-	                       "component":{
-	                          "facet":"value",
-	                          "datatype":"http://eexcess.eu/visualisation-ontology#quantitative"
-	                       }
-	                    }
-	                 ],
 	                 "data":{
 	                    "query":"women",
 	                    "results":{
@@ -69,36 +10,6 @@ function Dummy(){
 	                       "results":[
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"economy",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"peacebuilding",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"cooperatives",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"nepal",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"political",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"case",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "year":"2013",
 	                                "language":"de",
 	                                "provider":"ZBW"
@@ -109,16 +20,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"strikes",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "language":"nl",
 	                                "provider":"Europeana"
 	                             },
@@ -129,28 +30,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"uniform",
-	                                      "score":6.2270306184207485
-	                                   },
-	                                   {
-	                                      "term":"world",
-	                                      "score":6.204684017224499
-	                                   },
-	                                   {
-	                                      "term":"warwomen",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"war",
-	                                      "score":3.100092288878234
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "language":"en",
 	                                "provider":"Europeana"
 	                             },
@@ -161,44 +40,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"selection",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"measured",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"black",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"white",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"wage",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"gap",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"young",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"revisited",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "year":"2014",
 	                                "language":"de",
 	                                "provider":"ZBW"
@@ -209,12 +50,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"photograph",
-	                                      "score":3.1135153092103742
-	                                   }
-	                                ],
 	                                "language":"en",
 	                                "provider":"Europeana"
 	                             },
@@ -225,28 +60,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"russia",
-	                                      "score":6.2270306184207485
-	                                   },
-	                                   {
-	                                      "term":"world",
-	                                      "score":6.204684017224499
-	                                   },
-	                                   {
-	                                      "term":"warwomen",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"war",
-	                                      "score":3.100092288878234
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "language":"en",
 	                                "provider":"Europeana"
 	                             },
@@ -257,44 +70,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"women",
-	                                      "score":9.279937805678566
-	                                   },
-	                                   {
-	                                      "term":"beach",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"dressed",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"parasols",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"bathing",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"suits",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"hats",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"running",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"foreground",
-	                                      "score":3.1135153092103742
-	                                   }
-	                                ],
 	                                "language":"mul",
 	                                "provider":"Europeana"
 	                             },
@@ -305,56 +80,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"impacts",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"socio",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"outcomes",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"reduction",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"andhra",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"pradesh",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"rural",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"poverty",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"empowerment",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"program",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"economic",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "year":"2014",
 	                                "language":"de",
 	                                "provider":"ZBW"
@@ -365,20 +90,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"play",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"institute",
-	                                      "score":3.1023420086122493
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "language":"en",
 	                                "provider":"Europeana"
 	                             },
@@ -389,24 +100,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"world",
-	                                      "score":6.204684017224499
-	                                   },
-	                                   {
-	                                      "term":"war",
-	                                      "score":6.200184577756468
-	                                   },
-	                                   {
-	                                      "term":"1918women",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "language":"en",
 	                                "provider":"Europeana"
 	                             },
@@ -417,44 +110,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"selection",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"measured",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"black",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"white",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"wage",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"gap",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"young",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"revisited",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "year":"2014",
 	                                "language":"de",
 	                                "provider":"ZBW"
@@ -465,44 +120,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"women",
-	                                      "score":6.18662520378571
-	                                   },
-	                                   {
-	                                      "term":"quality",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"balance",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"employees",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"working",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"academics",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"work",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"life",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"case",
-	                                      "score":3.106080330722856
-	                                   }
-	                                ],
 	                                "year":"2013",
 	                                "language":"de",
 	                                "provider":"ZBW"
@@ -513,40 +130,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"adolescent",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"girls",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"employment",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"epag",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"project",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"liberia",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"impact",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"program",
-	                                      "score":3.106080330722856
-	                                   }
-	                                ],
 	                                "year":"2014",
 	                                "language":"de",
 	                                "provider":"ZBW"
@@ -557,20 +140,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"turkey",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"conscripts",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "year":"1936",
 	                                "language":"nl",
 	                                "provider":"Europeana"
@@ -582,20 +151,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"meeting",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"institute",
-	                                      "score":3.1023420086122493
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "language":"en",
 	                                "provider":"Europeana"
 	                             },
@@ -606,20 +161,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"riddings",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"foundry",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "language":"en",
 	                                "provider":"Europeana"
 	                             },
@@ -630,52 +171,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"empowerment",
-	                                      "score":6.212160661445712
-	                                   },
-	                                   {
-	                                      "term":"leaders",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"india",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"help",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"participation",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"force",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"labor",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"female",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"political",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"economic",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "year":"2013",
 	                                "language":"de",
 	                                "provider":"ZBW"
@@ -686,56 +181,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"marital",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"centers",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"counseling",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"effect",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"family",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"isfahan",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"education",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"social",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"satisfaction",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"attending",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"life",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"work",
-	                                      "score":3.106080330722856
-	                                   }
-	                                ],
 	                                "year":"2013",
 	                                "language":"de",
 	                                "provider":"ZBW"
@@ -746,32 +191,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"tea",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"table",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"jumble",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"sale",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"institute",
-	                                      "score":3.1023420086122493
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "language":"en",
 	                                "provider":"Europeana"
 	                             },
@@ -782,24 +201,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"heterogeneous",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"effects",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"hiv",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"testing",
-	                                      "score":3.1135153092103742
-	                                   }
-	                                ],
 	                                "year":"2014",
 	                                "language":"de",
 	                                "provider":"ZBW"
@@ -810,52 +211,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"scale",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"nigeria",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"microfinance",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"services",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"business",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"performance",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"state",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"enugu",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"entrepreneurs",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"impact",
-	                                      "score":3.106080330722856
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":3.093312601892855
-	                                   }
-	                                ],
 	                                "year":"2013",
 	                                "language":"de",
 	                                "provider":"ZBW"
@@ -866,36 +221,6 @@ function Dummy(){
 	                          },
 	                          {
 	                             "facets":{
-	                                "keywords":[
-	                                   {
-	                                      "term":"production",
-	                                      "score":9.340545927631123
-	                                   },
-	                                   {
-	                                      "term":"war",
-	                                      "score":9.300276866634702
-	                                   },
-	                                   {
-	                                      "term":"women",
-	                                      "score":9.279937805678566
-	                                   },
-	                                   {
-	                                      "term":"civilian",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"industrybritain",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"industrycivilian",
-	                                      "score":3.1135153092103742
-	                                   },
-	                                   {
-	                                      "term":"industry",
-	                                      "score":3.1135153092103742
-	                                   }
-	                                ],
 	                                "language":"en",
 	                                "provider":"Europeana"
 	                             },
@@ -1008,526 +333,8 @@ function Dummy(){
 	                       "charturi":"http://eexcess.eu/visualisation-ontologyBarchart"
 	                    }
 	                 ]
-	              }
-	           ];	//end this.data
+	              };	//end this.data
 	
-	
-	
-	this.keywords = [
-	                 {
-	                     "term":"women",
-	                     "score":7.298371945946959,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"war",
-	                     "score":1.6218604324326575,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"world",
-	                     "score":1.2163953243244932,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"institute",
-	                     "score":1.2163953243244932,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"white",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"warwomen",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"life",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"selection",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"measured",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"black",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"political",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"wage",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"gap",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"young",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"revisited",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"empowerment",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"program",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"economic",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"case",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"work",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"impact",
-	                     "score":0.8109302162163288,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"photograph",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"russia",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"beach",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"dressed",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"parasols",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"bathing",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"suits",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"hats",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"running",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"foreground",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"impacts",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"socio",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"outcomes",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"reduction",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"andhra",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"pradesh",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"rural",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"poverty",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"uniform",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"nepal",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"industry",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"play",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"peacebuilding",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"1918women",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"quality",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"balance",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"employees",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"working",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"academics",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"cooperatives",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"economy",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"adolescent",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"girls",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"employment",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"epag",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"project",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"liberia",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"strikes",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"turkey",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"conscripts",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"meeting",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"riddings",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"foundry",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"leaders",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"india",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"help",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"participation",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"force",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"labor",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"female",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"marital",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"centers",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"counseling",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"effect",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"family",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"isfahan",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"education",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"social",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"satisfaction",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"attending",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"tea",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"table",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"jumble",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"sale",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"heterogeneous",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"effects",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"hiv",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"testing",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"scale",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"nigeria",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"microfinance",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"services",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"business",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"performance",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"state",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"enugu",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"entrepreneurs",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"production",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"civilian",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"industrybritain",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  },
-	                  {
-	                     "term":"industrycivilian",
-	                     "score":0.4054651081081644,
-	                     "repeated":1
-	                  }
-	               ];	//end this.keywords
-	
-	
-	
-	
+
 
 }	//end function
