@@ -40,8 +40,8 @@ function Visualization( EEXCESSobj ) {
 	var NO_IMG = "../../media/no-img.png";
     var FAV_ICON_OFF = "../../media/icons/favicon_off.png";
     var FAV_ICON_ON = "../../media/icons/favicon_on.png";
-    var REMOVE_SMALL_ICON = "../../media/batchmaster/remove.png"
-    var BOOKMARK_DETAILS_ICON = "../../media/batchmaster/ellipsis.png"
+    var REMOVE_SMALL_ICON = "../../media/batchmaster/remove.png";
+    var BOOKMARK_DETAILS_ICON = "../../media/batchmaster/ellipsis.png";
     var IMG_COLOR_WHEEL_LARGE = "../../media/color-spectrum.jpg";
     var IMG_COLOR_WHEEL_MEDIUM = "../../media/color-wheel.jpg";
     var ICON_EUROPEANA =  "../../media/icons/Europeana-favicon.ico";
@@ -98,14 +98,20 @@ function Visualization( EEXCESSobj ) {
 	START.init = function(){
 
 		PREPROCESSING.bindEventHandlers();
-		timeVis = new Timeline(root, EXT );
-		barVis = new Barchart(root, EXT );
+		timeVis = new Timeline(root, EXT);
+		barVis = new Barchart(root, EXT);
         geoVis = new Geochart(root, EXT);
 
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();
 
         VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
+
+        // for Debugging Purposes
+        //$(searchField).val('Graz');
+        //QUERY.refreshResults();
+        //$(chartSelect).val("geochart");
+        //VISPANEL.drawChart();
 	};
 
 
@@ -116,9 +122,9 @@ function Visualization( EEXCESSobj ) {
      * 	Sets up the visualization-independent components and instantiates the visualization objects (e.g. timeVis)
      *
      * */
-    START.refresh = function( receivedData, receivedQuery, receivedCharts, receivedMappings, receivedGroupBy ){
+    START.refresh = function(input){
 
-        if(receivedData == 'undefined' || receivedData.length == 0 ){
+        if(typeof input == 'undefined' || input == 'undefined'){
             VISPANEL.clearCanvasAndShowMessage( STR_NO_DATA_RECEIVED );
             return;
         }
@@ -126,11 +132,10 @@ function Visualization( EEXCESSobj ) {
         width  = $(window).width();
         height = $(window).height();
 
-        data = receivedData;													// contains the data to be visualized
-        charts = receivedCharts;
-        mappings = PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
-        query = receivedQuery;													// string representing the query that triggered the current recommendations
-        groupBy = receivedGroupBy;
+        data = input.data; //receivedData;													// contains the data to be visualized
+        charts = input.charts; //receivedCharts;
+        mappings = input.mappingcombination; //PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
+        query = input.query;													// string representing the query that triggered the current recommendations
 
         var mendeleyData = [];
 

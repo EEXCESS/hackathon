@@ -8,23 +8,21 @@ visTemplate.init();
 
 
 var onDataReceived = function(dataReceived, status) {
-	
-	console.log(status);
-	
+
+    console.log(status);
+
     if(status == "no data available"){
-        visTemplate.refresh("");
+        visTemplate.refresh();
         return;
     }
 
-	globals.mappingcombination = dataReceived[0].mapping;
-	globals.groupedBy = dataReceived[0].groupedBy;
-	globals.data = dataReceived[0].data;
-	
-	console.log(globals);
+    globals["data"] = dataReceived.results.results;
+    globals["mappingcombination"] = getMappings();//dataReceived[0].mapping;
+    globals["query"] = dataReceived.query;
+    globals["charts"] = getCharts(globals.mappingcombination);
 
-	var charts = getCharts( globals.mappingcombination );
-	
-	visTemplate.refresh( globals.data.results.results, globals.data.query, charts, globals.mappingcombination, globals.groupedBy );
+    console.log(globals);
+    visTemplate.refresh(globals);
 };
 
 
@@ -38,49 +36,68 @@ requestPlugin();
 function requestPlugin() {
 
     var requestVisualization = function(pluginResponse) {
-    	if((typeof pluginResponse == "undefined") || pluginResponse.results == null) {
-            onDataReceived([], "no data available");
+        if((typeof pluginResponse == "undefined") || pluginResponse.results == null) {
+
+            /*  TO USE DUMMY DATA UNCOMMENT THE NEXT 2 LINES AND COMMENT THE NEXT ONE*/
+            var dummy = new Dummy();
+            onDataReceived(dummy.data.data, "No data received. Using dummy data");
+
+            //onDataReceived([], "no data available");
         }
         else {
-            
-        	var dataToSend = deletedRdf(pluginResponse);
-            var host = "http://eexcess.know-center.tugraz.at/";
-            var cmd = "getMappings";
+            onDataReceived(deletedRdf(pluginResponse), "Data requested successfully");
+            /*      CALL TO EEXCESS/Belgin SERVER
+             var dataToSend = deletedRdf(pluginResponse);
+             var host = "http://eexcess.know-center.tugraz.at/";
+             var cmd = "getMappings";
 
-            // Call server
-            var post = $.post(host + "/viz", { cmd: cmd, dataset: JSON.stringify(dataToSend) });
-            
-            post
-            	.done(function(reqData){
-            		var data = JSON.parse(reqData);
-                    //console.log(JSON.stringify(data));
-            		onDataReceived(data, "Post to EEXCESS/Belgin server status: success");
-            	})
-            	.fail(function(){
-            		var dummy = new Dummy();
-            		globals.keywords = dummy.keywords;
-            		onDataReceived(dummy.data, "Post to EEXCESS/Belgin server status: fail");
-            	});
+             // Call server
+             var post = $.post(host + "/viz", { cmd: cmd, dataset: JSON.stringify(dataToSend) });
+
+             post
+             .done(function(reqData){
+             var data = JSON.parse(reqData);
+             //console.log(JSON.stringify(data));
+             onDataReceived(data, "Post to EEXCESS/Belgin server status: success");
+             })
+             .fail(function(){
+             var dummy = new Dummy();
+             globals.keywords = dummy.keywords;
+             onDataReceived(dummy.data, "Post to EEXCESS/Belgin server status: fail");
+             });
+             */
         }
-    }
+    };
 
-    	
+
     // Set listener to receive new data when a new query is triggered
     EEXCESS.messaging.listener(
-    	function(request, sender, sendResponse) {
+        function(request, sender, sendResponse) {
 
             console.log(request.method);
             if (request.method === 'newSearchTriggered') {
+<<<<<<< HEAD
     			//console.log('data received from plugin');
    				requestVisualization(request.data);
    			}
    		}
+=======
+                console.log('data received from plugin');
+                requestVisualization(request.data);
+            }
+        }
+>>>>>>> origin/master
     );
 
-    
+
     // Retrieve current recommendations data
     EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
+<<<<<<< HEAD
         //console.log("first call for results");
+=======
+        console.log("first call for results");
+        console.log(reqResult);
+>>>>>>> origin/master
         requestVisualization(reqResult);
     });
 
@@ -110,11 +127,68 @@ function deletedRdf(pluginResponse) {
 
 function getCharts(combinations){
 
-	var charts = [];
-	combinations.forEach(function(mc){
-		if(charts.indexOf(mc.chartname) == -1)
-			charts.push(mc.chartname);
-	});
-	
-	return charts;
+    var charts = [];
+    /*  FORMAT OF MAPPING COMBINATIONS RETRIEVED FROM EEXCESS/Belgin
+     combinations.forEach(function(mc){
+     if(charts.indexOf(mc.chartname) == -1)
+     charts.push(mc.chartname);
+     });
+     */
+
+    combinations.forEach(function(c){
+        charts.push(c.chart);
+    });
+
+    return charts;
+}
+
+
+function getMappings(){
+
+    var mappings = [
+        {
+            "chart" : "timeline",
+            "combinations": [
+                [
+                    {"facet": "year", "visualattribute": "x-axis"},
+                    {"facet": "provider", "visualattribute": "y-axis"},
+                    {"facet": "language", "visualattribute": "color"}
+                ],
+                [
+                    {"facet": "year", "visualattribute": "x-axis"},
+                    {"facet": "language", "visualattribute": "y-axis"},
+                    {"facet": "provider", "visualattribute": "color"}
+                ]
+            ]
+        },
+        {
+            "chart" : "barchart",
+            "combinations": [
+                [
+                    {"facet": "language", "visualattribute": "x-axis"},
+                    {"facet": "count", "visualattribute": "y-axis"},
+                    {"facet": "language", "visualattribute": "color"}
+                ],
+                [
+                    {"facet": "provider", "visualattribute": "x-axis"},
+                    {"facet": "count", "visualattribute": "y-axis"},
+                    {"facet": "provider", "visualattribute": "color"}
+                ]
+            ]
+        },
+        {
+            "chart" : "geochart",
+            "combinations": [
+                [
+                    {"facet": "language", "visualattribute": "color"}
+                ],
+                [
+                    {"facet": "provider", "visualattribute": "color"}
+                ]
+            ]
+        }
+    ];
+
+    return mappings;
+
 }
