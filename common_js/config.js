@@ -27,6 +27,7 @@ EEXCESS.config = (function() {
         EEXCESS.storage.local('privacy.policy.uuid', 1);
     }
 
+    var _FR_BASE_URI = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/';
     var _PP_BASE_URI = 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/';
     var _LOG_RATING_URI = _PP_BASE_URI + 'log/rating';
     var _LOG_RVIEW_URI = _PP_BASE_URI + 'log/rview';
@@ -44,6 +45,7 @@ EEXCESS.config = (function() {
         LOG_SHOW_HIDE_URI: _LOG_SHOW_HIDE_URI,
         DISAMBIGUATE_URI:_DISAMBIGUATE_URI,
         LOG_FACETSCAPE_URI:_LOG_FACETSCAPE_URI,
-        LOG_QUERY_ACTIVATED_URI: _LOG_QUERY_ACTIVATED_URI
+        LOG_QUERY_ACTIVATED_URI: _LOG_QUERY_ACTIVATED_URI,
+        FR_BASE_URI: _FR_BASE_URI
     };
 })();

@@ -113,6 +113,21 @@ EEXCESS.profile = (function() {
         }
         return address;
     };
+    
+    // obtain list of selected sources
+    var getPartnerList = function() {
+        var partners = EEXCESS.storage.local('selected_sources');
+        if(typeof partners === 'undefined') {
+            return [{"systemId":"Europeana"},{"systemId":"Mendeley"},{"systemId":"ZBW"}];
+        } else {
+            partners = JSON.parse(partners);
+            var partnerList = [];
+            $.each(partners, function(index,value) {
+                partnerList.push({"systemId":value});
+            });
+            return partnerList;
+        }
+    };
 
 
     return {
@@ -166,6 +181,7 @@ EEXCESS.profile = (function() {
 //                }
                 var profile = {
                     //"history": results,
+                    "partnerList": getPartnerList(),
                     "firstName": applyFirstnamePolicy(),
                     "lastName": applyLastnamePolicy(),
                     "gender": applyGenderPolicy(),
