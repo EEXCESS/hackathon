@@ -34,3 +34,14 @@ nav {
 	padding: 0.8em;
 }
 
+#search_hover {
+    display:none;
+    border:1px solid #dbdbdb;
+    position:absolute;
+    top:30px;
+    width:96%;
+    background-color: white;
+    z-index: 9999;
+    padding:0.5em;
+}
+
