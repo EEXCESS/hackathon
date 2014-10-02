@@ -122,8 +122,8 @@ EEXCESS.frCall_impl = function(queryData, start, success, error) {
         
         if (queryData.hasOwnProperty('reason')) {
             profile['context'] = queryData['reason'];
-            // apply history policy 
-            if(profile['context']['reason'] === 'page' && JSON.parse(EEXCESS.storage.local("privacy.policy.history")) === 1) {
+            // apply query context policy
+            if(profile['context']['reason'] === 'page' && JSON.parse(EEXCESS.storage.local("privacy.policy.searchContextPage")) !== 1) {
                 profile['context']['context'] = 'disabled';
             }
         }
