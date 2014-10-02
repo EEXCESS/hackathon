@@ -5,6 +5,21 @@ var EEXCESS = EEXCESS || {};
  * @namespace EEXCESS.model
  */
 EEXCESS.model = (function() {
+    // init location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var loc = [{
+                longitude:position.coords.longitude,
+                latitude:position.coords.latitude,
+                accuracy:position.coords.accuracy,
+                timestamp:position.timestamp
+            }];
+            EEXCESS.storage.local('privacy.profile.currentLocation', JSON.stringify(loc));
+        });
+    } else {
+        EEXCESS.storage.local('privacy.profile.currentLocation', JSON.stringify([]));
+    }
+
     // general widget parameters
     var params = {
         visible: false,
@@ -81,7 +96,7 @@ EEXCESS.model = (function() {
     var _handleResult = function(res) {
         var execute = function(items) {
             res.data.results = items;
-            if(!params.visible || (res.hasOwnProperty('reason') && res['reason']['reason'] === 'page')) {
+            if (!params.visible || (res.hasOwnProperty('reason') && res['reason']['reason'] === 'page')) {
                 cachedResult = res;
                 EEXCESS.browserAction.setBadgeText({text: "" + res.data.totalResults});
             } else {
@@ -195,11 +210,11 @@ EEXCESS.model = (function() {
                 // TODO: search may return no results (although successful)
                 tmp['data'] = data;
 //                if (data.totalResults !== 0) {
-                    // create context
-                    var context = {query: tmp['query']};
-                    // log results
-                    EEXCESS.logging.logRecommendations(data.results, context, _queryTimestamp);
-                    _handleResult(tmp);
+                // create context
+                var context = {query: tmp['query']};
+                // log results
+                EEXCESS.logging.logRecommendations(data.results, context, _queryTimestamp);
+                _handleResult(tmp);
 //                }
 
             };
