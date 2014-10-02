@@ -168,9 +168,10 @@ EEXCESS.searchResultList = function(divContainer, options) {
             resCt.append(_link(item.uri, img, title));
             li.append(resCt);
 
-            // partner icon
+            // partner icon and name
             if (typeof item.facets.provider !== 'undefined') {
-                containerL.append($('<img src="' + settings.pathToMedia + 'icons/' + item.facets.provider + '-favicon.ico" class="partner_icon" />'));
+                var providerName = item.facets.provider.charAt(0).toUpperCase() + item.facets.provider.slice(1);
+                containerL.append($('<img alt="provided by '+providerName+'" title="provided by '+providerName+'" src="' + settings.pathToMedia + 'icons/' + item.facets.provider + '-favicon.ico" class="partner_icon" />'));
             }
 
             // show link
