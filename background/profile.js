@@ -128,6 +128,14 @@ EEXCESS.profile = (function() {
             return partnerList;
         }
     };
+    
+    var applyLocationPolicy = function() {
+        if(JSON.parse(EEXCESS.storage.local('privacy.policy.currentLocation')) === 1) {
+            return JSON.parse(EEXCESS.storage.local('privacy.profile.currentLocation'));
+        } else {
+            return [];
+        }
+    };
 
 
     return {
@@ -190,7 +198,8 @@ EEXCESS.profile = (function() {
                     "interests": _interests(),
                     "contextKeywords": {},
                     "numResults":99,
-                    "uuid": applyUuidPolicy()
+                    "uuid": applyUuidPolicy(),
+                    "userLocations": applyLocationPolicy()
                 };
                 callback(profile);
 //            });
