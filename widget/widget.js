@@ -17,6 +17,7 @@ EEXCESS.update = function(widget) {
 
 EEXCESS.newSearchTriggered = function(data) {
     $('#eexcess_query').val(data.query);
+    $('#search_hover').text(data.query);
 };
 
 
@@ -26,7 +27,26 @@ EEXCESS.newSearchTriggered = function(data) {
  * @param {Object} widget The current state of the widget's model in the background script
  */
 EEXCESS.init = function(widget) {
+    $('#eexcess_query').mouseenter(function(){
+        $('#search_hover').show();
+    });
+    
+    $('#eexcess_query').mouseleave(function(){
+        $('#search_hover').hide();
+    });
+    
+    $('#eexcess_query').focus(function(){
+        $('#search_hover').hide();
+    });
+    
+    $('#eexcess_query').keypress(function(){
+        $('#search_hover').hide();
+        $('#search_hover').text($('#eexcess_query').val());
+    });
+    
+    
     $('#eexcess_query').val(widget.results.query);
+    $('#search_hover').text(widget.results.query);
 
     $('a.fancybox_link').click(function(evt) {
         evt.preventDefault();
