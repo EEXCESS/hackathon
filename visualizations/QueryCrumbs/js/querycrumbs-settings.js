@@ -6,7 +6,7 @@ var QueryCrumbsConfiguration = {
     - Using colorbrewer library (http://colorbrewer2.org/). Color Set1 is suitable for colorblind people.
      */
     colorSettings : {
-    	baseColors:  colorbrewer["Set1"]["8"],
+    	baseColors: colorbrewer["BrBG"]["8"],
     	// params for color-coded similarity
 	    newDocOpacity : 0.1,
 	    oldDocOpacity : 0.5,
@@ -28,10 +28,17 @@ var QueryCrumbsConfiguration = {
 	    // node border and padding of additional info on mouse over
 	    rectBorderWidth : 2,
 	    rectInfoVertPadding : 15,
-	    edgeInfoVertPadding : 17
+	    edgeInfoVertPadding : 17,
+	    circle_cxy : 25,
+	    circle_r : 11,
+	    circle_bg_r : 12
     },
     // The skill level of an user. (BEGINNER, EXPERT)
-    skillLevel : "BEGINNER"
+    skillLevel : "EXPERT",
+    // Changes the form of the nodes. (SQUARE, CIRCLE)
+    nodeForm : "CIRCLE",
+    // The amount of items shown in the items list
+    itemsShown: 10
 }
 
 QueryCrumbsConfiguration.dimensions.docRectHeight = QueryCrumbsConfiguration.dimensions.rectHeight / QueryCrumbsConfiguration.dimensions.docRectVertical;

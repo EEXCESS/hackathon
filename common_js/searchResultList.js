@@ -1,6 +1,21 @@
 var EEXCESS = EEXCESS || {};
 
 /**
+ * Event handler on the pagination buttons
+ * 
+ */
+
+ $(document).on('click', '.page', function() {
+    $('.page.active').removeClass('active');
+    $(this).addClass('active');
+    var page = parseInt($(this).html()) - 1;
+    var min = page * QueryCrumbsConfiguration.itemsShown;
+    var max = min + QueryCrumbsConfiguration.itemsShown;
+
+    $("#recommendationList li").hide().slice(min, max).show();
+ })
+
+/**
  * Implements a search result list, which can be used by all components.
  * The list updates itself, if a new query was issued and new results arrive.
  * Ratings are updated as well.
@@ -39,11 +54,12 @@ EEXCESS.searchResultList = function(divContainer, options) {
         }
     }, options);
     var _loader = $('<div class="eexcess_loading" style="display:none"><img src="' + settings.pathToMedia + 'loading.gif" /></div>');
-    var _list = $('<ul class="block_list" data-total="0"></ul>').append($('<li>no results</li>'));
+    var _list = $('<ul id="recommendationList" class="block_list" data-total="0"></ul>').append($('<li>no results</li>'));
     var _dialog = $('<div style="display:none"><div>').append('<p></p>');
     var _error = $('<p style="display:none">sorry, something went wrong...<p>');
+
     var _link = function(url, img, title) {
-        var link = $('<a href="'+url+'">' + title + '</a>');
+    var link = $('<a href="'+url+'">' + title + '</a>');
         link.click(function(evt) {
             evt.preventDefault();
             settings.previewHandler(url);
@@ -126,19 +142,38 @@ EEXCESS.searchResultList = function(divContainer, options) {
     var showResults = function(data) {
         _error.hide();
         _loader.hide();
-        data = data.results;
+        data = data.results || null;
         _list.empty();
+
         if (data === null || data.totalResults === 0 || data.totalResults === '0') {
             _list.append($('<li>no results</li>'));
             return;
         }
         _list.attr('data-total', data.totalResults);
         moreResults(data.results);
+
+
+        var _pagination = $('<div class="pagination"></div>');
+        var pages = (Math.ceil(data.results.length / QueryCrumbsConfiguration.itemsShown) > 10) ? 10 : Math.ceil(data.results.length / QueryCrumbsConfiguration.itemsShown) ;
+        for(var i = 1; i <= pages; i++) {
+            var _btn = $('<a href="#" class="page gradient">' + i + '</a>');
+            if(i == 1) {
+                _btn.addClass('active');
+            }
+            _pagination.append(_btn);
+        }
+
+        if(divContainer.find('.pagination').length != 0) {
+            divContainer.find('.pagination').remove(); 
+        }
+
+        divContainer.append(_pagination)
     };
     var moreResults = function(items) {
 //            $('#eexcess_content').unbind('scroll'); TODO: check scrolling...
         var offset = _list.children('li').length;
         for (var i = 0, len = items.length; i < len; i++) {
+
             var item = items[i];
             var img = item.previewImage;
             if (typeof img === 'undefined' || img === '') {
@@ -150,9 +185,13 @@ EEXCESS.searchResultList = function(divContainer, options) {
                 title = 'no title';
             }
             var pos = i + offset;
-            var li = $('<li data-pos="' + pos + '" data-id="' + item.id + '"></li>');
+            var li = $('<li data-pos="' + pos + '" data-id="' + item.id + '"></li>'); 
 
             _list.append(li);
+
+            if(i >= QueryCrumbsConfiguration.itemsShown) {
+                li.hide();
+            }
 
             // rating
             var raty = $('<div class="eexcess_raty"  data-uri="' + item.uri + '" data-pos="' + pos + '"></div');
@@ -229,6 +268,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
     return {
         showResults: showResults,
         loading: function() {
+            divContainer.find('.pagination').remove();
             _error.hide();
             _list.empty();
             _loader.show();
