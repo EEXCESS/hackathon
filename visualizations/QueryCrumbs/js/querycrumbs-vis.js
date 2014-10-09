@@ -18,7 +18,7 @@ function display_querycrumbs(domElem) {
     var simResults = [];
 
     // The dimension of the svg panel
-    var width = QueryCrumbsConfiguration.dimensions.HISTORY_LENGTH * (QueryCrumbsConfiguration.dimensions.rectWidth + QueryCrumbsConfiguration.dimensions.edgeWidth) - QueryCrumbsConfiguration.dimensions.edgeWidth + 4;
+    var width = QueryCrumbsConfiguration.dimensions.HISTORY_LENGTH * (QueryCrumbsConfiguration.dimensions.rectWidth + QueryCrumbsConfiguration.dimensions.edgeWidth) - QueryCrumbsConfiguration.dimensions.edgeWidth + 5;
     var height = QueryCrumbsConfiguration.dimensions.rectHeight + QueryCrumbsConfiguration.dimensions.rectInfoVertPadding + QueryCrumbsConfiguration.dimensions.edgeInfoVertPadding;
 
     var svgContainer = domElem.append("svg")
@@ -28,7 +28,6 @@ function display_querycrumbs(domElem) {
 
     var INTERACTION = {
         onClick: function(d, i) {
-
             // TODO: log backnavigation
             var termsOfPreviouslyVisitedNode = currentNode.query;
             // end
@@ -49,91 +48,152 @@ function display_querycrumbs(domElem) {
             // TODO: log nacknavigation
             var termsOfCurrentNode = d.query;
             // end
-
             EEXCESS.searchResults.loading();
             EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason:'queryCrumbs',terms:weightedTerms}});
         },
         onMouseOverNode: function(d, i) {
-            var infoBox = svgContainer.select("g").append("g").attr("class", "infoBoxNode");
-            d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", true).style("cursor","pointer");
-            infoBox.append("text")
-                .text(d.query.toString())
-                .attr("class", "nodeInfo")
-                .attr("text-anchor", "start")
-                .attr("x", d.x_pos)
-                .attr("y", d.y_pos)
-                .attr("dy", -5);
-            var jqNode = $("g text.nodeInfo");
-            var w = jqNode.width();
-            var h = jqNode.height();
-            var ttX = d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth;
-            ttX = (ttX + w > width) ? width - w - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth): ttX - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth);
-            ttX = (ttX < 0) ? 0 : ttX;
-            infoBox.select("text.nodeInfo").attr("x", ttX);
-            infoBox.append("rect")
-                .attr("class", "nodeBg")
-                .attr("x", ttX)
-                .attr("y", d.y_pos - QueryCrumbsConfiguration.dimensions.rectInfoVertPadding)
-                .attr("width", w)
-                .attr("height", h)
-                .style("fill", d.base_color)
-            $("rect.nodeBg").insertBefore(jqNode);
+            
+            
+            if(QueryCrumbsConfiguration.nodeForm == "SQUARE") {
+                var infoBox = svgContainer.select("g").append("g").attr("class", "infoBoxNode");
+                d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", true).style("cursor","pointer");
 
-            simResults = [];
-            var rootGroup = d3.select(this.parentNode);
-            var iDocs = CORE.collectIdenticalDocs(i);
-            for(var n in iDocs) {
-                var docRects = rootGroup.selectAll("g.queryNode")
-                    .filter(function(d,i) { return (d.timestamp == visualData.visualDataNodes[n].timestamp);})
-                    .select("g").selectAll("rect.docNode")
-                    .filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
-                simResults.push(docRects);
-                docRects.classed("docNode", true).classed("docNode-highlighted", true).style("opacity", 1);
+                infoBox.append("text")
+                    .text(d.query.toString())
+                    .attr("class", "nodeInfo")
+                    .attr("text-anchor", "start")
+                    .attr("x", d.x_pos)
+                    .attr("y", d.y_pos)
+                    .attr("dy", -5);
+
+                var jqNode = $("g text.nodeInfo");
+                var w = jqNode.width();
+                var h = jqNode.height();
+                var ttX = d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth;
+                ttX = (ttX + w > width) ? width - w - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth): ttX - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth);
+                ttX = (ttX < 0) ? 0 : ttX;
+                infoBox.select("text.nodeInfo").attr("x", ttX);
+
+                infoBox.append("rect")
+                    .attr("class", "nodeBg")
+                    .attr("x", ttX + 1)
+                    .attr("y", d.y_pos - QueryCrumbsConfiguration.dimensions.rectInfoVertPadding)
+                    .attr("width", w)
+                    .attr("height", h)
+                    .style("fill", d.base_color)
+
+                $("rect.nodeBg").insertBefore(jqNode);
+
+                simResults = [];
+                var rootGroup = d3.select(this.parentNode);
+                var iDocs = CORE.collectIdenticalDocs(i);
+                for(var n in iDocs) {
+                    var docRects = rootGroup.selectAll("g.queryNode")
+                        .filter(function(d,i) { return (d.timestamp == visualData.visualDataNodes[n].timestamp);})
+                        .select("g").selectAll("rect.docNode")
+                        .filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
+                    simResults.push(docRects);
+                    docRects.classed("docNode", true).classed("docNode-highlighted", true).style("opacity", 1);
+                }
+            } else {
+
+                var infoBox = svgContainer.select("g").append("g").attr("class", "infoBoxNode");
+                d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", true).style("cursor","pointer");
+
+                infoBox.append("text")
+                    .text(d.query.toString())
+                    .attr("class", "nodeInfo")
+                    .attr("text-anchor", "start")
+                    .attr("x", d.x_pos)
+                    .attr("y", d.y_pos)
+                    .attr("dy", 10);
+
+                var jqNode = $("g text.nodeInfo");
+                var w = jqNode.width();
+                var h = jqNode.height();
+                var ttX = d.x_pos;
+                ttX = (ttX + w > width) ? width - w - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth): ttX - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth);
+                if(ttX < 0) {
+                    ttX = 5;
+                }
+                infoBox.select("text.nodeInfo").attr("x", ttX + QueryCrumbsConfiguration.dimensions.circle_r);
+
+                infoBox.append("rect")
+                    .attr("class", "nodeBg")
+                    .attr("x", ttX + QueryCrumbsConfiguration.dimensions.circle_r)
+                    .attr("y", d.y_pos)
+                    .attr("width", w)
+                    .attr("height", h)
+                    .style("fill", d.base_color)
+
+                $("rect.nodeBg").insertBefore(jqNode);
+
+                simResults = [];
+                var rootGroup = d3.select(this.parentNode);
+                var iDocs = CORE.collectIdenticalDocs(i);
+                for(var n in iDocs) {
+                    var queryNode = rootGroup.selectAll("g.queryNode")
+                        .filter(function(d,i) { return (d.timestamp == visualData.visualDataNodes[n].timestamp);})
+                        .select("g").selectAll("path.docNode")
+                        .filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
+                    simResults.push(queryNode);
+                    queryNode.classed("docNode", true).classed("docNode-highlighted", true).style("opacity", 1);
+                }
             }
         },
         onMouseOutNode: function(d) {
             svgContainer.selectAll("g.infoBoxNode").remove();
-            d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", false).style("cursor",null);
-            for(var n in simResults) {
-                simResults[n].classed("docNode", true).classed("docNode-highlighted", false)
-                    .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
-            }
-            simResults = [];
-        },
-        onMouseOverEdge: function(d, i) {
-
-            RENDERING.createGradient(d.baseColorStart, d.baseColorEnd);
-            d3.select(this).style("fill", "url(#gradient)").style("opacity", 1.0);
-
-            var infoBox = svgContainer.select("g").append("g").attr("class", "infoBoxEdge");
-
-            infoBox.append("text")
-                .text(d.diffTerms.toString())
-                .attr("class", "edgeInfo")
-                .attr("x", d.end_x)
-                .attr("y", d.end_y);
-            var jqNode = $("g text.edgeInfo");
-            var w = jqNode.width();
-            var h = jqNode.height();
-            var ttX = d.end_x - w / 2 - QueryCrumbsConfiguration.dimensions.edgeWidth / 2;
-            ttX = (ttX + w > width) ? width - w - 2: ttX;
-            ttX = (ttX < 0) ? 0 : ttX;
-            infoBox.select("text.edgeInfo").attr("x", ttX).attr("y", d.end_y + QueryCrumbsConfiguration.dimensions.edgeInfoVertPadding + 4/5 * h);
-
-            infoBox.append("rect")
-                .attr("class", "edgeBg")
-                .attr("x", ttX)
-                .attr("y", d.end_y + QueryCrumbsConfiguration.dimensions.edgeInfoVertPadding)
-                .attr("width", w)
-                .attr("height", h)
-                .style("fill", "url(#gradient)")
-            $("rect.edgeBg").insertBefore(jqNode);
-        },
-        onMouseOutEdge: function(d) {
-            d3.select(this).style("fill", null).style("opacity", function(d) { return d.simTerms;});
-            svgContainer.selectAll("g.infoBoxEdge").remove();
-            RENDERING.removeGradient();
+            if(QueryCrumbsConfiguration.nodeForm == "SQUARE") {
+                d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", false).style("cursor",null);
+                for(var n in simResults) {
+                    simResults[n].classed("docNode", true).classed("docNode-highlighted", false)
+                        .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
+                } 
+            } else {
+                d3.select(this).select("circle.queryCircleBg").classed("queryCircleBg", true).classed("queryCircleBgHovered", false).style("cursor",null);
+                for(var n in simResults) {
+                    simResults[n].classed("docNode", true).classed("docNode-highlighted", false)
+                        .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
+                } 
+          }
+          
+          simResults = [];
         }
+        // ,
+        // onMouseOverEdge: function(d, i) {
+
+        //     RENDERING.createGradient(d.baseColorStart, d.baseColorEnd);
+        //     d3.select(this).style("fill", "url(#gradient)").style("opacity", 1.0);
+
+        //     var infoBox = svgContainer.select("g").append("g").attr("class", "infoBoxEdge");
+
+        //     infoBox.append("text")
+        //         .text(d.diffTerms.toString())
+        //         .attr("class", "edgeInfo")
+        //         .attr("x", d.end_x)
+        //         .attr("y", d.end_y);
+        //     var jqNode = $("g text.edgeInfo");
+        //     var w = jqNode.width();
+        //     var h = jqNode.height();
+        //     var ttX = d.end_x - w / 2 - QueryCrumbsConfiguration.dimensions.edgeWidth / 2;
+        //     ttX = (ttX + w > width) ? width - w - 2: ttX;
+        //     ttX = (ttX < 0) ? 0 : ttX;
+        //     infoBox.select("text.edgeInfo").attr("x", ttX).attr("y", d.end_y + QueryCrumbsConfiguration.dimensions.edgeInfoVertPadding + 4/5 * h);
+
+        //     infoBox.append("rect")
+        //         .attr("class", "edgeBg")
+        //         .attr("x", ttX)
+        //         .attr("y", d.end_y + QueryCrumbsConfiguration.dimensions.edgeInfoVertPadding)
+        //         .attr("width", w)
+        //         .attr("height", h)
+        //         .style("fill", "url(#gradient)")
+        //     $("rect.edgeBg").insertBefore(jqNode);
+        // },
+        // onMouseOutEdge: function(d) {
+        //     d3.select(this).style("fill", null).style("opacity", function(d) { return d.simTerms;});
+        //     svgContainer.selectAll("g.infoBoxEdge").remove();
+        //     RENDERING.removeGradient();
+        // }
     };
 
     /*
@@ -297,12 +357,12 @@ function display_querycrumbs(domElem) {
                 vNode.results = [];
                 for(var docIdx = 0; docIdx < QueryCrumbsConfiguration.dimensions.DENSE_PIXELS; docIdx++) {
                     var vDoc = {};
+                    vDoc.index = docIdx;
                     vDoc.x_pos = vNode.x_pos + (docIdx % QueryCrumbsConfiguration.dimensions.docRectHorizontal) * QueryCrumbsConfiguration.dimensions.docRectWidth;
                     vDoc.y_pos = vNode.y_pos + Math.floor(docIdx / QueryCrumbsConfiguration.dimensions.docRectVertical) * QueryCrumbsConfiguration.dimensions.docRectHeight;
                     vDoc.width = QueryCrumbsConfiguration.dimensions.docRectWidth;
                     vDoc.height = QueryCrumbsConfiguration.dimensions.docRectHeight;
                     // Beginners see only the base colors
-                    console.log(QueryCrumbsConfiguration.skillLevel)
                     if(QueryCrumbsConfiguration.skillLevel == "BEGINNER") {
                         vDoc.sim = 1;
                         vDoc.preIdx = -1;
@@ -374,75 +434,154 @@ function display_querycrumbs(domElem) {
                 .attr("stop-color", color2)
                 .attr("stop-opacity", 0.8);
         },
+
         removeGradient: function() {
             d3.select("svg defs").remove();
         },
+
         redraw: function(visualData) {
+            svgContainer.selectAll("g.crumbs").selectAll("*").remove();
+
             var crumbsSel = svgContainer.selectAll("g.crumbs").data([visualData]);
             crumbsSel.enter().append("g").attr("class", "crumbs");
-            var crumbsUpd = crumbsSel.attr("transform", "translate(2, "+15+")");
-            crumbsSel.exit().remove();
 
-            var queryNodesSel = crumbsUpd.selectAll("g.queryNode").data(function(d) { return d.visualDataNodes; }, function(d) { return d.timestamp;});
-            var nodeEnter = queryNodesSel.enter().append("g");
-            queryNodesSel.classed("queryNode", true)
-                .on("mouseenter", INTERACTION.onMouseOverNode)
-                .on("mouseleave", INTERACTION.onMouseOutNode)
-                .on("click", INTERACTION.onClick);
-            nodeEnter.append("rect").attr("class", "queryRectBg");
-            nodeEnter.append("rect").attr("class", "queryRect");
-            nodeEnter.append("g");
-            queryNodesSel.exit().transition().style("opacity", 0).attr("transform", function(d,i) { if(fWait_BackNaviResults) { return "translate(0,0)"; } else { return ("translate(0, 100)");}}).remove();
-            nodeEnter.attr("transform", function(d,i) {
-                if(fWait_BackNaviResults) {
-                    return "translate(0,0)";
-                } else {
-                    var lOffset = QueryCrumbsConfiguration.dimensions.edgeWidth + QueryCrumbsConfiguration.dimensions.rectWidth;
-                    return ("translate("+parseInt(-lOffset)+", 0)");
-                }
-            });
+            if(QueryCrumbsConfiguration.nodeForm == "CIRCLE") {
+                
 
-            queryNodesSel.select("rect.queryRectBg").attr("x", function (d) { return d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth; })
-                .attr("y", function (d) { return d.y_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth; } )
-                .attr("width", function (d) { return d.width + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth; })
-                .attr("height", function (d) { return d.height + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth; })
-                .attr("ry", function(d,i) { return i == currentIdx ? 5 : 0 })
-                .classed("queryRectBg", true)
-                .classed("queryRectBg-selected", function(d,i) { return (i == currentIdx);});
+                var crumbsUpd = crumbsSel.attr("transform", "translate(-15, 10)");
+                crumbsSel.exit().remove();
 
-            queryNodesSel.select("rect.queryRect").attr("x", function (d) { return d.x_pos; })
-                .attr("y", function (d) { return d.y_pos; } )
-                .attr("width", function (d) { return d.width; })
-                .attr("height", function (d) { return d.height; })
-                .attr("ry", function(d,i) { return i == currentIdx ? 5 : 0 })
-                .style("fill", function (d) { return d.base_color; })
-                .classed("queryRect", true);
-            nodeEnter.transition().attr("transform", "translate(0,0)");
+                var queryNodesSel = crumbsUpd.selectAll("g.queryNode").data(function(d) { return d.visualDataNodes; }, function(d) { return d.timestamp;});
+                var nodeEnter = queryNodesSel.enter().append("g");
 
-            var queryDocRects = queryNodesSel.select("g").selectAll("rect.docNode").data(function(d) { return d.results; });
-            queryDocRects.enter().append("rect");
-            queryDocRects.attr("class", "docNode")
-                .attr("x", function(d) { return d.x_pos; })
-                .attr("y", function(d) { return d.y_pos; })
-                .attr("width", function(d) { return d.width; })
-                .attr("height", function(d) { return d.height; })
-                .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
+                queryNodesSel.classed("queryNode", true)
+                    .on("mouseenter", INTERACTION.onMouseOverNode)
+                    .on("mouseleave", INTERACTION.onMouseOutNode)
+                    .on("click", INTERACTION.onClick);
 
-            var queryEdgesSel = crumbsUpd.selectAll("rect.queryEdge").data(function(d) { return d.visualDataEdges;});
-            var queryEdgesEnter = queryEdgesSel.enter()
-                .append("rect")
-                .attr("class", "queryEdge")
-                .on("mouseover", INTERACTION.onMouseOverEdge)
-                .on("mouseout", INTERACTION.onMouseOutEdge);
+                nodeEnter.append("circle").attr("class", "queryCircleBg").attr({
+                    cx: QueryCrumbsConfiguration.dimensions.circle_cxy,
+                    cy: QueryCrumbsConfiguration.dimensions.circle_cxy,
+                    r:  function(d,i) { return (i == currentIdx) ? QueryCrumbsConfiguration.dimensions.circle_bg_r + 1 : QueryCrumbsConfiguration.dimensions.circle_bg_r }
+                }).classed("queryRectBg-selected", function(d,i) { return (i == currentIdx);});
 
-            queryEdgesSel.exit().transition().style("opacity", 0).attr("transform", function(d,i) { if(fWait_BackNaviResults) { return "translate(0,0)"; } else { return ("translate(0, 100)");}}).remove();
 
-            queryEdgesSel.attr("x",function (d) { return d.start_x; } )
-                .attr("y",function (d) { return d.start_y; } )
-                .attr("width", QueryCrumbsConfiguration.dimensions.edgeWidth )
-                .attr("height", QueryCrumbsConfiguration.dimensions.edgeHeight)
-                .style("opacity", function(d) { return d.simTerms;});
+                nodeEnter.append("circle").attr("class", "queryCircle").attr({
+                    cx: QueryCrumbsConfiguration.dimensions.circle_cxy,
+                    cy: QueryCrumbsConfiguration.dimensions.circle_cxy,
+                    r:  QueryCrumbsConfiguration.dimensions.circle_r
+                });      
 
+                nodeEnter.append("g");
+
+                queryNodesSel.select("circle.queryCircle")
+                    .attr("x", function (d) { return d.x_pos; })
+                    .attr("y", function (d) { return d.y_pos; } )
+                    .style("fill", function (d) { return d.base_color; })
+                    .classed("queryCircle", true);
+
+                nodeEnter.transition().attr("transform", function(d,i) { return ("translate("+ (d.x_pos + 2 ) +", 0)"); }); 
+
+
+                var arc = d3.svg.arc().outerRadius(QueryCrumbsConfiguration.dimensions.circle_r);
+
+                queryNodesSel.select("g").attr("transform", function(d,i) { return ("translate(25, 25)"); });
+
+                var queryDocRects = queryNodesSel.select("g").selectAll("path.docNode").data(function(d) { return d.results; });
+
+                var p = Math.PI * 2;
+
+                var arc = d3.svg.arc()
+                    .innerRadius(0)
+                    .outerRadius(QueryCrumbsConfiguration.dimensions.circle_r)
+                    .startAngle(function(d) { 
+                        return ((360 / 16) * (Math.PI / 180)) * d.index;     
+                    })
+                    .endAngle(function(d) {
+                       return ((360 / 16) * (Math.PI / 180)) * (d.index + 1);
+                    }) 
+
+                queryDocRects.enter().append("path").attr("d", arc);
+                queryDocRects.attr("class", "docNode")
+                    .attr("d", arc)
+                    .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
+
+            } else {
+
+                var crumbsUpd = crumbsSel.attr("transform", "translate(2, "+15+")");
+                crumbsSel.exit().remove();
+
+                var queryNodesSel = crumbsUpd.selectAll("g.queryNode").data(function(d) { return d.visualDataNodes; }, function(d) { return d.timestamp;});
+                var nodeEnter = queryNodesSel.enter().append("g");
+                queryNodesSel.classed("queryNode", true)
+                    .on("mouseenter", INTERACTION.onMouseOverNode)
+                    .on("mouseleave", INTERACTION.onMouseOutNode)
+                    .on("click", INTERACTION.onClick);
+
+                nodeEnter.append("rect").attr("class", "queryRectBg");
+                nodeEnter.append("rect").attr("class", "queryRect");
+                nodeEnter.append("g");
+                queryNodesSel.exit().transition().style("opacity", 0).attr("transform", function(d,i) { if(fWait_BackNaviResults) { return "translate(0,0)"; } else { return ("translate(0, 100)");}}).remove();
+                nodeEnter.attr("transform", function(d,i) {
+                  if(fWait_BackNaviResults) {
+                      return "translate(0,0)";
+                  } else {
+                      var lOffset = QueryCrumbsConfiguration.dimensions.edgeWidth + QueryCrumbsConfiguration.dimensions.rectWidth;
+                      return ("translate("+parseInt(-lOffset)+", 0)");
+                  }
+                });
+
+                queryNodesSel.select("rect.queryRectBg")
+                  .attr("x", function (d, i) { 
+                      return (i == currentIdx) ? (d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth) - 1 : d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth;
+                  })
+                  .attr("y", function (d, i) { 
+                      return (i == currentIdx) ? (d.y_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth) - 1 : d.y_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth; 
+                  })
+                  .attr("width", function (d, i) { 
+                      return (i == currentIdx) ? (d.width + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth) + 2 : d.width + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth; 
+                  })
+                  .attr("height", function (d, i) { 
+                      return (i == currentIdx) ? (d.height + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth) + 2 : d.height + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth; 
+                  })
+                  .attr("ry", 0)
+                  .classed("queryRectBg", true)
+                  .classed("queryRectBg-selected", function(d,i) { return (i == currentIdx);});
+
+                queryNodesSel.select("rect.queryRect").attr("x", function (d) { return d.x_pos; })
+                  .attr("y", function (d) { return d.y_pos; } )
+                  .attr("width", function (d) { return d.width; })
+                  .attr("height", function (d) { return d.height; })
+                  .attr("ry", 0)
+                  .style("fill", function (d) { return d.base_color; })
+                  .classed("queryRect", true);
+                nodeEnter.transition().attr("transform", "translate(0,0)");
+
+                var queryDocRects = queryNodesSel.select("g").selectAll("rect.docNode").data(function(d) { return d.results; });
+                queryDocRects.enter().append("rect");
+                queryDocRects.attr("class", "docNode")
+                  .attr("x", function(d) { return d.x_pos; })
+                  .attr("y", function(d) { return d.y_pos; })
+                  .attr("width", function(d) { return d.width; })
+                  .attr("height", function(d) { return d.height; })
+                  .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
+
+                var queryEdgesSel = crumbsUpd.selectAll("rect.queryEdge").data(function(d) { return d.visualDataEdges;});
+                var queryEdgesEnter = queryEdgesSel.enter()
+                  .append("rect")
+                  .attr("class", "queryEdge")
+                  .on("mouseover", INTERACTION.onMouseOverEdge)
+                  .on("mouseout", INTERACTION.onMouseOutEdge);
+
+                queryEdgesSel.exit().transition().style("opacity", 0).attr("transform", function(d,i) { if(fWait_BackNaviResults) { return "translate(0,0)"; } else { return ("translate(0, 100)");}}).remove();
+
+                queryEdgesSel.attr("x",function (d) { return d.start_x; } )
+                  .attr("y",function (d) { return d.start_y; } )
+                  .attr("width", QueryCrumbsConfiguration.dimensions.edgeWidth )
+                  .attr("height", QueryCrumbsConfiguration.dimensions.edgeHeight)
+                  .style("opacity", function(d) { return (QueryCrumbsConfiguration.skillLevel == "BEGINNER") ? 0 : d.simTerms;});  
+            } 
+            
 
 //            svgContainer.selectAll("g").remove();
 //            var group = svgContainer.append("g").attr("transform", "translate(2, "+15+")");
@@ -502,7 +641,9 @@ function display_querycrumbs(domElem) {
         },
         transitionTo: function(visualData, currIdx) {
             var nodesToFadeOut = svgContainer.selectAll("g.queryNode").filter(function(d,i) { return (i > currIdx);});
-            var edgesToFadeOut = svgContainer.selectAll("rect.queryEdge").filter(function(d,i) { return (i >= currIdx);});
+            if(QueryCrumbsConfiguration.skillLevel != "BEGINNER") {
+                var edgesToFadeOut = svgContainer.selectAll("rect.queryEdge").filter(function(d,i) { return (i >= currIdx);});
+            }
             nodesToFadeOut.transition()
                 .delay(0)
                 .duration(500)
@@ -511,14 +652,17 @@ function display_querycrumbs(domElem) {
                 .each("end",function() {
                     d3.select(this).remove();
                 });
-            edgesToFadeOut.transition()
-                .delay(0)
-                .duration(500)
-                .attr("transform", "translate(0,100)")
-                .style("opacity", 0)
-                .each("end", function() {
-                    d3.select(this).remove;
-                });
+
+            if(QueryCrumbsConfiguration.skillLevel != "BEGINNER") { 
+                edgesToFadeOut.transition()
+                    .delay(0)
+                    .duration(500)
+                    .attr("transform", "translate(0,100)")
+                    .style("opacity", 0)
+                    .each("end", function() {
+                        d3.select(this).remove;
+                    });
+            }
         }
     };
 
@@ -531,5 +675,6 @@ function display_querycrumbs(domElem) {
         similarities = CORE.calculateSimilarities(historyData);
         visualData = CORE.generateVisualData(historyData, similarities);
         RENDERING.redraw(visualData);
-    }
+    };
+    
 }

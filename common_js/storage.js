@@ -470,11 +470,13 @@ EEXCESS.storage = (function() {
                     var tx_sub = db.transaction("recommendations");
                     var recIndex = tx_sub.objectStore("recommendations").index("query");
                     var queryString = '';
-                    if(queries[q].query != undefined) {
-                        queries[q].query.forEach(function(d) {
-                            queryString += d.text + ' ';
-                        });  
+
+                    if(typeof queries[q].query != "undefined") {
+                            queries[q].query.forEach(function(d) {
+                     queryString += d.text + ' ';
+                    });
                     }
+                      
                     
                     queryString = queryString.trim();
                     queries[q].query = queryString.split(' ');

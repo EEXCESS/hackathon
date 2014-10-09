@@ -113,6 +113,29 @@ EEXCESS.profile = (function() {
         }
         return address;
     };
+    
+    // obtain list of selected sources
+    var getPartnerList = function() {
+        var partners = EEXCESS.storage.local('selected_sources');
+        if(typeof partners === 'undefined') {
+            return [{"systemId":"Europeana"},{"systemId":"Mendeley"},{"systemId":"ZBW"}];
+        } else {
+            partners = JSON.parse(partners);
+            var partnerList = [];
+            $.each(partners, function(index,value) {
+                partnerList.push({"systemId":value});
+            });
+            return partnerList;
+        }
+    };
+    
+    var applyLocationPolicy = function() {
+        if(JSON.parse(EEXCESS.storage.local('privacy.policy.currentLocation')) === 1) {
+            return JSON.parse(EEXCESS.storage.local('privacy.profile.currentLocation'));
+        } else {
+            return [];
+        }
+    };
 
 
     return {
@@ -132,40 +155,41 @@ EEXCESS.profile = (function() {
             }
         },
         getProfile: function(callback) {
-            var today = new Date();
-            var startTime = 0;
-            var maxResults = 1999999999;
-            switch (EEXCESS.storage.local("privacy.policy.history")) {
-                case '1':
-                    startTime = 0
-                    maxResults = 0
-                    break;
-                case '2':
-                    startTime = today.getTime() - 1000 * 60 * 60;
-                    break;
-                case '3':
-                    startTime = today.getTime() - 1000 * 60 * 60 * 24;
-                    break;
-                case '4':
-                    startTime = today.getTime() - 1000 * 60 * 60 * 24 * 7;
-                    break;
-                case '5':
-                    startTime = today.getTime() - 1000 * 60 * 60 * 24 * 30;
-                    break;
-                case '6':
-                    startTime = today.getTime() - 1000 * 60 * 60 * 24 * 365;
-                    break;
-                case '7':
-                    startTime = 0;
-                    break;
-            }
-            EEXCESS.history.search({'text': '', 'startTime': startTime, 'maxResults': maxResults}, function(results) {
-                for(var i=0, len=results.length; i<len; ++i) {
-                    delete results[i]['id'];
-                    results[i]['lastVisitTime'] = results[i]['lastVisitTime'].toFixed(0);
-                }
+//            var today = new Date();
+//            var startTime = 0;
+//            var maxResults = 1999999999;
+//            switch (EEXCESS.storage.local("privacy.policy.history")) {
+//                case '1':
+//                    startTime = 0
+//                    maxResults = 0
+//                    break;
+//                case '2':
+//                    startTime = today.getTime() - 1000 * 60 * 60;
+//                    break;
+//                case '3':
+//                    startTime = today.getTime() - 1000 * 60 * 60 * 24;
+//                    break;
+//                case '4':
+//                    startTime = today.getTime() - 1000 * 60 * 60 * 24 * 7;
+//                    break;
+//                case '5':
+//                    startTime = today.getTime() - 1000 * 60 * 60 * 24 * 30;
+//                    break;
+//                case '6':
+//                    startTime = today.getTime() - 1000 * 60 * 60 * 24 * 365;
+//                    break;
+//                case '7':
+//                    startTime = 0;
+//                    break;
+//            }
+//            EEXCESS.history.search({'text': '', 'startTime': startTime, 'maxResults': maxResults}, function(results) {
+//                for(var i=0, len=results.length; i<len; ++i) {
+//                    delete results[i]['id'];
+//                    results[i]['lastVisitTime'] = results[i]['lastVisitTime'].toFixed(0);
+//                }
                 var profile = {
-                    "history": results,
+                    //"history": results,
+                    "partnerList": getPartnerList(),
                     "firstName": applyFirstnamePolicy(),
                     "lastName": applyLastnamePolicy(),
                     "gender": applyGenderPolicy(),
@@ -173,11 +197,12 @@ EEXCESS.profile = (function() {
                     "address": applyAddressPolicy(),
                     "interests": _interests(),
                     "contextKeywords": {},
-                    "numResults":999,
-                    "uuid": applyUuidPolicy()
+                    "numResults":99,
+                    "uuid": applyUuidPolicy(),
+                    "userLocations": applyLocationPolicy()
                 };
                 callback(profile);
-            });
+//            });
         }
     };
 }());

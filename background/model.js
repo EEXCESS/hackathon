@@ -5,6 +5,21 @@ var EEXCESS = EEXCESS || {};
  * @namespace EEXCESS.model
  */
 EEXCESS.model = (function() {
+    // init location
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var loc = [{
+                longitude:position.coords.longitude,
+                latitude:position.coords.latitude,
+                accuracy:position.coords.accuracy,
+                timestamp:position.timestamp
+            }];
+            EEXCESS.storage.local('privacy.profile.currentLocation', JSON.stringify(loc));
+        });
+    } else {
+        EEXCESS.storage.local('privacy.profile.currentLocation', JSON.stringify([]));
+    }
+
     // general widget parameters
     var params = {
         visible: false,
@@ -81,15 +96,16 @@ EEXCESS.model = (function() {
     var _handleResult = function(res) {
         var execute = function(items) {
             res.data.results = items;
-            if ((res.hasOwnProperty('reason') && res['reason']['reason'] === 'manual') || params.visible && (results.data === null)) {
+            if (!params.visible || (res.hasOwnProperty('reason') && res['reason']['reason'] === 'page')) {
+                cachedResult = res;
+                EEXCESS.browserAction.setBadgeText({text: "" + res.data.totalResults});
+            } else {
+                EEXCESS.browserAction.setBadgeText({text: ""});
                 results = res;
                 EEXCESS.messaging.sendMsgAllTabs({
                     method: 'newSearchTriggered',
                     data: {query: results.query, results: results.data}
                 });
-            } else {
-                cachedResult = res;
-                EEXCESS.browserAction.setBadgeText({text: "" + res.data.totalResults});
             }
         };
 
@@ -193,13 +209,13 @@ EEXCESS.model = (function() {
             var success = function(data) { // success callback
                 // TODO: search may return no results (although successful)
                 tmp['data'] = data;
-                if (data.totalResults !== 0) {
-                    // create context
-                    var context = {query: tmp['query']};
-                    // log results
-                    EEXCESS.logging.logRecommendations(data.results, context, _queryTimestamp);
-                    _handleResult(tmp);
-                }
+//                if (data.totalResults !== 0) {
+                // create context
+                var context = {query: tmp['query']};
+                // log results
+                EEXCESS.logging.logRecommendations(data.results, context, _queryTimestamp);
+                _handleResult(tmp);
+//                }
 
             };
             var error = function(error) { // error callback
