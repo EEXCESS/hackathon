@@ -9,11 +9,11 @@ EEXCESS.model = (function() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             var loc = [{
-                longitude:position.coords.longitude,
-                latitude:position.coords.latitude,
-                accuracy:position.coords.accuracy,
-                timestamp:position.timestamp
-            }];
+                    longitude: position.coords.longitude,
+                    latitude: position.coords.latitude,
+                    accuracy: position.coords.accuracy,
+                    timestamp: position.timestamp
+                }];
             EEXCESS.storage.local('privacy.profile.currentLocation', JSON.stringify(loc));
         });
     } else {
@@ -25,6 +25,8 @@ EEXCESS.model = (function() {
         visible: false,
         tab: 'results'
     };
+    
+    var resultPage = false;
     /**
      * Represents the current query and according results
      */
@@ -94,7 +96,7 @@ EEXCESS.model = (function() {
     var _handleResult = function(res) {
         var execute = function(items) {
             res.data.results = items;
-            if (!params.visible || (res.hasOwnProperty('reason') && res['reason']['reason'] === 'page')) {
+            if (!params.visible || resultPage) {
                 cachedResult = res;
                 EEXCESS.browserAction.setBadgeText({text: "" + res.data.totalResults});
             } else {
@@ -182,9 +184,20 @@ EEXCESS.model = (function() {
             console.log(data);
             var tmp = {};
             _queryTimestamp = new Date().getTime();
+            resultPage = false;
             if (data.hasOwnProperty('reason')) {
                 tmp['weightedTerms'] = data['terms'];
                 tmp['reason'] = data['reason'];
+                
+                // check if automatic query was triggered by viewing the detail page of a result
+                if(data['reason'].hasOwnProperty('url') && results.data !== null) {
+                    for(var i = 0; i < results.data.results.length; i++) {
+                        if(results.data.results[i].eexcessURI === data.reason.url) {
+                            resultPage = true;
+                            break;
+                        }
+                    }
+                }
             } else {
                 tmp['weightedTerms'] = data;
             }
@@ -198,6 +211,10 @@ EEXCESS.model = (function() {
             if (tmp['query'] === '') {
                 EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: 'query is empty...'});
                 return;
+            }
+
+            if (tmp.hasOwnProperty('reason') && tmp['reason']['reason'] !== 'manual' && !resultPage) {
+                EEXCESS.messaging.sendMsgAllTabs({method: 'loading', data: {query: tmp['query']}});
             }
             params.tab = 'results';
             // log all queries in 'queries_full'

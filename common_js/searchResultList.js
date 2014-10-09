@@ -1,6 +1,18 @@
 var EEXCESS = EEXCESS || {};
 
 /**
+
+$(document).on('click', '.page', function() {
+    $('.page.active').removeClass('active');
+    $(this).addClass('active');
+    var page = parseInt($(this).html()) - 1;
+    var min = page * QueryCrumbsConfiguration.itemsShown;
+    var max = min + QueryCrumbsConfiguration.itemsShown;
+
+    $("#recommendationList li").hide().slice(min, max).show();
+})
+
+/**
  * Implements a search result list, which can be used by all components.
  * The list updates itself, if a new query was issued and new results arrive.
  * Ratings are updated as well.
@@ -25,7 +37,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
         pathToLibs: '../libs/',
         previewHandler: function(url) {
             window.open(url, '_blank');
-            EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:url});
+            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'resultOpened'}, data: url});
         },
         ratingHandler: function(uri, score, pos) {
             EEXCESS.messaging.callBG({
@@ -43,7 +55,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
     var _dialog = $('<div style="display:none"><div>').append('<p></p>');
     var _error = $('<p style="display:none">sorry, something went wrong...<p>');
     var _link = function(url, img, title) {
-        var link = $('<a href="'+url+'">' + title + '</a>');
+        var link = $('<a href="' + url + '">' + title + '</a>');
         link.click(function(evt) {
             evt.preventDefault();
             settings.previewHandler(url);
@@ -57,17 +69,16 @@ EEXCESS.searchResultList = function(divContainer, options) {
         var yOffset = 30;
         link.hover(
                 function(e) {
-                    $('body').append('<p id="eexcess_thumb"><img src="' + img
-                            + '" alt="img preview" /></p>');
+                    $('#eexcess_thumb_img').attr('src',img);
                     $('#eexcess_thumb')
                             .css('position', 'absolute')
                             .css('top', (e.pageY - xOffset) + 'px')
                             .css('left', (e.pageX + yOffset) + 'px')
                             .css('z-index', 9999)
-                            .fadeIn('fast');
+                            .show();
                 },
                 function() {
-                    $('#eexcess_thumb').remove();
+                    $('#eexcess_thumb').hide();
                 });
         link.mousemove(function(e) {
             $('#eexcess_thumb')
@@ -94,6 +105,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
     };
 
     // init
+    $('body').append('<p id="eexcess_thumb" style="display:none;"><img id="eexcess_thumb_img" alt="img preview" /></p>');
     divContainer.append(_loader);
     divContainer.append(_dialog);
     divContainer.append(_list);
@@ -110,16 +122,18 @@ EEXCESS.searchResultList = function(divContainer, options) {
                 if (request.method.parent === 'results') {
                     if (request.method.func === 'rating') {
                         _rating($('.eexcess_raty[data-uri="' + request.data.uri + '"]'), request.data.uri, request.data.score);
+                    } else if (request.method.func === 'error') {
+                        divContainer.find('.pagination').remove();
+                        _list.empty();
+                        _loader.hide();
+                        _error.show();
                     }
                 }
                 if (request.method === 'newSearchTriggered') {
                     showResults(request.data);
-                }
-                if (request.method.parent === 'results' && request.method.func === 'error') {
-                    _list.empty();
-                    _loader.hide();
-                    _error.show();
-                }
+                } else if (request.method === 'loading') {
+                        _loading();
+                    } 
             }
     );
 
@@ -134,6 +148,23 @@ EEXCESS.searchResultList = function(divContainer, options) {
         }
         _list.attr('data-total', data.totalResults);
         moreResults(data.results);
+
+
+        var _pagination = $('<div class="pagination"></div>');
+        var pages = (Math.ceil(data.results.length / QueryCrumbsConfiguration.itemsShown) > 10) ? 10 : Math.ceil(data.results.length / QueryCrumbsConfiguration.itemsShown);
+        for (var i = 1; i <= pages; i++) {
+            var _btn = $('<a href="#" class="page gradient">' + i + '</a>');
+            if (i == 1) {
+                _btn.addClass('active');
+            }
+            _pagination.append(_btn);
+        }
+
+        if (divContainer.find('.pagination').length != 0) {
+            divContainer.find('.pagination').remove();
+        }
+
+        divContainer.append(_pagination)
     };
     var moreResults = function(items) {
 //            $('#eexcess_content').unbind('scroll'); TODO: check scrolling...
@@ -154,6 +185,10 @@ EEXCESS.searchResultList = function(divContainer, options) {
 
             _list.append(li);
 
+            if (i >= QueryCrumbsConfiguration.itemsShown) {
+                li.hide();
+            }
+
             // rating
             var raty = $('<div class="eexcess_raty"  data-uri="' + item.uri + '" data-pos="' + pos + '"></div');
             _rating(raty, item.uri, item.rating);
@@ -171,7 +206,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
             // partner icon and name
             if (typeof item.facets.provider !== 'undefined') {
                 var providerName = item.facets.provider.charAt(0).toUpperCase() + item.facets.provider.slice(1);
-                containerL.append($('<img alt="provided by '+providerName+'" title="provided by '+providerName+'" src="' + settings.pathToMedia + 'icons/' + item.facets.provider + '-favicon.ico" class="partner_icon" />'));
+                containerL.append($('<img alt="provided by ' + providerName + '" title="provided by ' + providerName + '" src="' + settings.pathToMedia + 'icons/' + item.facets.provider + '-favicon.ico" class="partner_icon" />'));
             }
 
             // show link
@@ -225,15 +260,18 @@ EEXCESS.searchResultList = function(divContainer, options) {
             firstPart += "...";
         }
         return firstPart;
-    }
+    };
+    
+    var _loading = function() {
+            divContainer.find('.pagination').remove();
+            _error.hide();
+            _list.empty();
+            _loader.show();  
+    };
 //    };
     return {
         showResults: showResults,
-        loading: function() {
-            _error.hide();
-            _list.empty();
-            _loader.show();
-        }
+        loading: _loading
     };
 };
 
