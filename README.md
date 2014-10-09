@@ -198,5 +198,30 @@ A rating of a particular resource.
 * **privacy_email** [privacy proxy]
 * **traces** [privacy proxy]
 
+License
+-------
+(c) 2014, EEXCESS consortium, [MIT license](http://opensource.org/licenses/MIT)
+
+
+Acknowledgements
+----------------
+External libraries used (for copyright & licensing information please see the respective files in the folder "libs"):
+* md5.js
+* [json.js](http://www.JSON.org/js.html)
+* [jquery](http://www.jquery.com)
+* [jquery-ui](http://www.jqueryui.com)
+* [D3](http://www.d3js.org)
+* [colorbrewer](http://colorbrewer2.org/)
+* [clipper](http://www.angusj.com)
+* [tagit](http://aehlke.github.com/tag-it/)
+* [raty](wbotelhos.com/raty)
+* [flat_ui](http://designmodo.com/flat-free)
+* [fancybox](http://fancyapps.com/fancybox/)
+* [bootstrap](http://getbootstrap.com)
+* [boostrap-datepicker](http://www.eyecon.ro/bootstrap-datepicker)
+* [leaflet](http://leafletjs.com/)
+
+The research leading to these results has received funding from the European Union’s Seventh Framework Programme (FP7/2007-2013) under grant agreement nr 600601.
+
 
 

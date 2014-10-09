@@ -40,8 +40,8 @@ function Visualization( EEXCESSobj ) {
 	var NO_IMG = "../../media/no-img.png";
     var FAV_ICON_OFF = "../../media/icons/favicon_off.png";
     var FAV_ICON_ON = "../../media/icons/favicon_on.png";
-    var REMOVE_SMALL_ICON = "../../media/batchmaster/remove.png"
-    var BOOKMARK_DETAILS_ICON = "../../media/batchmaster/ellipsis.png"
+    var REMOVE_SMALL_ICON = "../../media/batchmaster/remove.png";
+    var BOOKMARK_DETAILS_ICON = "../../media/batchmaster/ellipsis.png";
     var IMG_COLOR_WHEEL_LARGE = "../../media/color-spectrum.jpg";
     var IMG_COLOR_WHEEL_MEDIUM = "../../media/color-wheel.jpg";
     var ICON_EUROPEANA =  "../../media/icons/Europeana-favicon.ico";
@@ -98,14 +98,20 @@ function Visualization( EEXCESSobj ) {
 	START.init = function(){
 
 		PREPROCESSING.bindEventHandlers();
-		timeVis = new Timeline(root, EXT );
-		barVis = new Barchart(root, EXT );
+		timeVis = new Timeline(root, EXT);
+		barVis = new Barchart(root, EXT);
         geoVis = new Geochart(root, EXT);
 
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();
 
         VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
+
+        // for Debugging Purposes
+        //$(searchField).val('Graz');
+        //QUERY.refreshResults();
+        //$(chartSelect).val("geochart");
+        //VISPANEL.drawChart();
 	};
 
 

@@ -1,0 +1,22 @@
+.marker-cluster-pie{
+    position:fixed; /* do not set to relative, because of positioning problems of the map.*/
+}
+    .marker-cluster-pie .child-count{
+        position:absolute;
+        background-color: rgba(255, 255, 255, 0.8);
+        /* sizes are set inline, as they need to be calculated 
+        border-radius: 12px;
+        height: 24px;
+        width: 24px;
+        line-height: 24px;
+        left: 10px;
+        top: 10px;*/
+    }
+    /*.marker-cluster-pie .slice{
+        fill-opacity: 1;
+        stroke:black;
+        stroke-width: 1
+    }
+        .marker-cluster-pie .slice-one{
+            fill:#ff0000;
+        }*/
