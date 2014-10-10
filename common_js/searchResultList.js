@@ -1,18 +1,6 @@
 var EEXCESS = EEXCESS || {};
 
 /**
-
-$(document).on('click', '.page', function() {
-    $('.page.active').removeClass('active');
-    $(this).addClass('active');
-    var page = parseInt($(this).html()) - 1;
-    var min = page * QueryCrumbsConfiguration.itemsShown;
-    var max = min + QueryCrumbsConfiguration.itemsShown;
-
-    $("#recommendationList li").hide().slice(min, max).show();
-})
-
-/**
  * Implements a search result list, which can be used by all components.
  * The list updates itself, if a new query was issued and new results arrive.
  * Ratings are updated as well.
@@ -32,9 +20,26 @@ $(document).on('click', '.page', function() {
  * @param {Object} options
  */
 EEXCESS.searchResultList = function(divContainer, options) {
+
+    /**
+     * Event handler on the pagination buttons
+     * 
+     */
+
+     $(document).on('click', '.page', function() {
+        $('.page.active').removeClass('active');
+        $(this).addClass('active');
+        var page = parseInt($(this).html()) - 1;
+        var min = page * settings.itemsShown;
+        var max = min + settings.itemsShown;
+
+        $("#recommendationList li").hide().slice(min, max).show();
+     })
+
     var settings = $.extend({
         pathToMedia: '../media/',
         pathToLibs: '../libs/',
+        itemsShown : 10,
         previewHandler: function(url) {
             window.open(url, '_blank');
             EEXCESS.messaging.callBG({method: {parent: 'model', func: 'resultOpened'}, data: url});
@@ -151,8 +156,8 @@ EEXCESS.searchResultList = function(divContainer, options) {
 
 
         var _pagination = $('<div class="pagination"></div>');
-        var pages = (Math.ceil(data.results.length / QueryCrumbsConfiguration.itemsShown) > 10) ? 10 : Math.ceil(data.results.length / QueryCrumbsConfiguration.itemsShown);
-        for (var i = 1; i <= pages; i++) {
+        var pages = (Math.ceil(data.results.length / settings.itemsShown) > 10) ? 10 : Math.ceil(data.results.length / settings.itemsShown) ;
+        for(var i = 1; i <= pages; i++) {
             var _btn = $('<a href="#" class="page gradient">' + i + '</a>');
             if (i == 1) {
                 _btn.addClass('active');
@@ -185,7 +190,8 @@ EEXCESS.searchResultList = function(divContainer, options) {
 
             _list.append(li);
 
-            if (i >= QueryCrumbsConfiguration.itemsShown) {
+
+            if(i >= settings.itemsShown) {
                 li.hide();
             }
 
@@ -203,7 +209,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
             resCt.append(_link(item.uri, img, title));
             li.append(resCt);
 
-            // partner icon and name
+            // partner icon
             if (typeof item.facets.provider !== 'undefined') {
                 var providerName = item.facets.provider.charAt(0).toUpperCase() + item.facets.provider.slice(1);
                 containerL.append($('<img alt="provided by ' + providerName + '" title="provided by ' + providerName + '" src="' + settings.pathToMedia + 'icons/' + item.facets.provider + '-favicon.ico" class="partner_icon" />'));
