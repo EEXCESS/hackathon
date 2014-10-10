@@ -39,7 +39,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
     var settings = $.extend({
         pathToMedia: '../media/',
         pathToLibs: '../libs/',
-        itemsShown : 10,
+        itemsShown: 10,
         previewHandler: function(url) {
             window.open(url, '_blank');
             EEXCESS.messaging.callBG({method: {parent: 'model', func: 'resultOpened'}, data: url});
@@ -75,7 +75,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
         var yOffset = 30;
         link.hover(
                 function(e) {
-                    $('#eexcess_thumb_img').attr('src',img);
+                    $('#eexcess_thumb_img').attr('src', img);
                     $('#eexcess_thumb')
                             .css('position', 'absolute')
                             .css('top', (e.pageY - xOffset) + 'px')
@@ -133,13 +133,14 @@ EEXCESS.searchResultList = function(divContainer, options) {
                         _list.empty();
                         _loader.hide();
                         _error.show();
+                        $('#eexcess_thumb').hide();
                     }
                 }
                 if (request.method === 'newSearchTriggered') {
                     showResults(request.data);
                 } else if (request.method === 'loading') {
-                        _loading();
-                    } 
+                    _loading();
+                }
             }
     );
 
@@ -269,14 +270,14 @@ EEXCESS.searchResultList = function(divContainer, options) {
         }
         return firstPart;
     };
-    
+
     var _loading = function() {
-            divContainer.find('.pagination').remove();
-            _error.hide();
-            _list.empty();
-            _loader.show();  
+        $('#eexcess_thumb').hide();
+        divContainer.find('.pagination').remove();
+        _error.hide();
+        _list.empty();
+        _loader.show();
     };
-//    };
     return {
         showResults: showResults,
         loading: _loading
