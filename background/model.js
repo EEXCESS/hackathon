@@ -25,7 +25,7 @@ EEXCESS.model = (function() {
         visible: false,
         tab: 'results'
     };
-    
+
     var resultPage = false;
     /**
      * Represents the current query and according results
@@ -188,13 +188,16 @@ EEXCESS.model = (function() {
             if (data.hasOwnProperty('reason')) {
                 tmp['weightedTerms'] = data['terms'];
                 tmp['reason'] = data['reason'];
-                
+
                 // check if automatic query was triggered by viewing the detail page of a result
-                if(data['reason'].hasOwnProperty('url') && results.data !== null) {
-                    for(var i = 0; i < results.data.results.length; i++) {
-                        if(results.data.results[i].eexcessURI === data.reason.url) {
-                            resultPage = true;
-                            break;
+                if (data['reason'].hasOwnProperty('url')) {
+                    delete tmp.reason.url;
+                    if (results.data !== null) {
+                        for (var i = 0; i < results.data.results.length; i++) {
+                            if (results.data.results[i].eexcessURI === data.reason.url) {
+                                resultPage = true;
+                                break;
+                            }
                         }
                     }
                 }
@@ -241,7 +244,7 @@ EEXCESS.model = (function() {
             if (tmp.hasOwnProperty('reason') && tmp['reason']['reason'] === 'manual') {
                 EEXCESS.logging.logQuery(tabID, tmp['weightedTerms'], _queryTimestamp, '', 'manual');
                 EEXCESS.messaging.sendMsgTab(tabID, {method: 'getTextualContext'}, function(ctxData) {
-                    tmp['reason']['context'] = ctxData['selectedText'];
+                    tmp['reason']['value'] = ctxData['selectedText'];
                     // call provider (resultlist should start with first item)
                     EEXCESS.backend.getCall()(data, 1, success, error);
                 });

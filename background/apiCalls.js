@@ -114,11 +114,17 @@ EEXCESS.frCall_impl = function(queryData, start, success, error) {
     }
     EEXCESS.profile.getProfile(function(profile) {
         profile['contextKeywords'] = weightedTerms;
+        var q = '';
+        for(var i=0; i < weightedTerms.length;i++) {
+            q += weightedTerms[i].text;
+        }
+        profile['queryID'] = '' + EEXCESS.djb2Code(q)+ new Date().getTime();
+        
         if (queryData.hasOwnProperty('reason')) {
             profile['context'] = queryData['reason'];
             // apply query context policy
             if(profile['context']['reason'] === 'page' && JSON.parse(EEXCESS.storage.local("privacy.policy.searchContextPage")) !== 1) {
-                profile['context']['context'] = 'disabled';
+                profile['context']['value'] = 'disabled';
             }
         }
         var xhr = $.ajax({
