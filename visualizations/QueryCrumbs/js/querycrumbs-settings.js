@@ -6,7 +6,7 @@ var QueryCrumbsConfiguration = {
     - Using colorbrewer library (http://colorbrewer2.org/). Color Set1 is suitable for colorblind people.
      */
     colorSettings : {
-    	baseColors: colorbrewer["Paired"]["11"],
+    	baseColors: colorbrewer["Set3"]["11"],
     	// params for color-coded similarity
 	    newDocOpacity : 0.1,
 	    oldDocOpacity : 0.5,
