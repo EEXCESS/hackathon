@@ -191,10 +191,11 @@ EEXCESS.model = (function() {
 
                 // check if automatic query was triggered by viewing the detail page of a result
                 if (data['reason'].hasOwnProperty('url')) {
+                    var result_url = data.reason.url;
                     delete tmp.reason.url;
                     if (results.data !== null) {
                         for (var i = 0; i < results.data.results.length; i++) {
-                            if (results.data.results[i].eexcessURI === data.reason.url) {
+                            if (results.data.results[i].eexcessURI === result_url) {
                                 resultPage = true;
                                 break;
                             }
