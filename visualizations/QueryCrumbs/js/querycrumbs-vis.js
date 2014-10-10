@@ -72,7 +72,7 @@ function display_querycrumbs(domElem) {
                 var ttX = d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth;
                 ttX = (ttX + w > width) ? width - w - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth): ttX - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth);
                 ttX = (ttX < 0) ? 0 : ttX;
-                infoBox.select("text.nodeInfo").attr("x", ttX);
+                infoBox.select("text.nodeInfo").attr("x", ttX + 1);
 
                 infoBox.append("rect")
                     .attr("class", "nodeBg")
