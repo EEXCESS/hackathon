@@ -115,7 +115,7 @@ EEXCESS.initiateQuery = function() {
             elements.push({text: node.nodeValue, parent: parent});
         }
     }
-    EEXCESS.triggerQuery(elements, {reason: 'page', context: window.location.protocol + '//' + window.location.host + window.location.pathname, url:window.location.href});
+    EEXCESS.triggerQuery(elements, {reason: 'page', value: window.location.protocol + '//' + window.location.host + window.location.pathname, url:window.location.href});
 }();
 
 EEXCESS.selectedText = '';
@@ -127,7 +127,7 @@ $(document).mouseup(function() {
             EEXCESS.selectedText = text;
             var elements = [];
             elements.push({text: text});
-            EEXCESS.triggerQuery(elements, {reason: 'selection', context: document.getSelection().toString()});
+            EEXCESS.triggerQuery(elements, {reason: 'selection', value: document.getSelection().toString()});
         }
     }
 });

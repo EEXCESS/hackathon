@@ -49,7 +49,7 @@ function display_querycrumbs(domElem) {
             var termsOfCurrentNode = d.query;
             // end
             EEXCESS.searchResults.loading();
-            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason:'queryCrumbs',terms:weightedTerms}});
+            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason:{reason:'queryCrumbs'},terms:weightedTerms}});
         },
         onMouseOverNode: function(d, i) {
             
