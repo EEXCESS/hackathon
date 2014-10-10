@@ -56,7 +56,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
         }
     }, options);
     var _loader = $('<div class="eexcess_loading" style="display:none"><img src="' + settings.pathToMedia + 'loading.gif" /></div>');
-    var _list = $('<ul class="block_list" data-total="0"></ul>').append($('<li>no results</li>'));
+    var _list = $('<ul id="recommendationList" class="block_list" data-total="0"></ul>').append($('<li>no results</li>'));
     var _dialog = $('<div style="display:none"><div>').append('<p></p>');
     var _error = $('<p style="display:none">sorry, something went wrong...<p>');
     var _link = function(url, img, title) {
