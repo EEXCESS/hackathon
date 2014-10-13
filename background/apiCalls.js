@@ -15,6 +15,8 @@ if (typeof String.prototype.startsWith !== 'function') {
 
 var EEXCESS = EEXCESS || {};
 
+EEXCESS.qXHR;
+
 /**
  * Sends a query with the specified parameters to europeana and hands the results
  * to the success callback or the error message to the error callback.
@@ -68,11 +70,14 @@ EEXCESS.euCall = function(queryData, start, success, error) {
         return facet_list;
     };
     console.log('query: ' + query + ' start:' + start);
-    var xhr = $.ajax(EEXCESS.backend.getURL()
+    if (EEXCESS.qXHR && EEXCESS.qXHR.readystate !== 4) {
+        EEXCESS.qXHR.abort();
+    }
+    EEXCESS.qXHR = $.ajax(EEXCESS.backend.getURL()
             + '&query=' + query
             + '&start=' + start
             + '&rows=96&profile=standard');
-    xhr.done(function(data) {
+    EEXCESS.qXHR.done(function(data) {
         console.log(data);
         if (data.totalResults !== 0) {
             $.map(data.items, function(n, i) {
@@ -89,12 +94,19 @@ EEXCESS.euCall = function(queryData, start, success, error) {
                     data.results[i].title = data.results[i].title[0];
                 }
             }
+        } else {
+            data.results = [];
         }
         console.log(data);
         success(data);
     });
-    xhr.fail(function(textStatus) {
-        error(textStatus.statusText);
+    EEXCESS.qXHR.fail(function(jqxhr, textStatus, errorThrown) {
+        if(textStatus !== 'abort') {
+            console.log(jqxhr);
+            console.log(textStatus);
+            console.log(errorThrown);
+            error(textStatus);
+        } 
     });
 };
 
@@ -115,36 +127,41 @@ EEXCESS.frCall_impl = function(queryData, start, success, error) {
     EEXCESS.profile.getProfile(function(profile) {
         profile['contextKeywords'] = weightedTerms;
         var q = '';
-        for(var i=0; i < weightedTerms.length;i++) {
+        for (var i = 0; i < weightedTerms.length; i++) {
             q += weightedTerms[i].text;
         }
-        profile['queryID'] = '' + EEXCESS.djb2Code(q)+ new Date().getTime();
-        
+        profile['queryID'] = '' + EEXCESS.djb2Code(q) + new Date().getTime();
+
         if (queryData.hasOwnProperty('reason')) {
             profile['context'] = queryData['reason'];
             // apply query context policy
-            if(profile['context']['reason'] === 'page' && JSON.parse(EEXCESS.storage.local("privacy.policy.searchContextPage")) !== 1) {
+            if (profile['context']['reason'] === 'page' && JSON.parse(EEXCESS.storage.local("privacy.policy.searchContextPage")) !== 1) {
                 profile['context']['value'] = 'disabled';
             }
         }
-        var xhr = $.ajax({
+        if (EEXCESS.qXHR && EEXCESS.qXHR.readystate !== 4) {
+            EEXCESS.qXHR.abort();
+        }
+        EEXCESS.qXHR = $.ajax({
             url: EEXCESS.backend.getURL(),
             data: JSON.stringify(profile),
             type: 'POST',
             contentType: 'application/json; charset=UTF-8',
             dataType: 'json'
         });
-        xhr.done(function(data) {
+        EEXCESS.qXHR.done(function(data) {
             console.log(data);
             data['results'] = data['result'];
             delete data['result'];
             success(data);
         });
-        xhr.fail(function(jqXHR, textStatus, errorThrown) {
+        EEXCESS.qXHR.fail(function(jqXHR, textStatus, errorThrown) {
+            if(textStatus !== 'abort') {
             console.log(jqXHR);
             console.log(textStatus);
             console.log(errorThrown);
             error(textStatus);
+            }
         });
     });
 };
@@ -161,7 +178,7 @@ EEXCESS.backend = (function() {
     return {
         setProvider: function(tabID, provider) {
             backend = provider;
-                EEXCESS.storage.local('backend', provider);
+            EEXCESS.storage.local('backend', provider);
             switch (provider) {
                 case 'eu':
                     console.log('eu');
@@ -183,14 +200,14 @@ EEXCESS.backend = (function() {
                     call = EEXCESS.frCall_impl;
                     url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
                     fr_url = url;
-                        var local_url = EEXCESS.storage.local('local_url');
-                        if (typeof local_url !== 'undefined' && local_url !== null) {
-                            url = local_url;
-                        }
-                        var local_fr_url = EEXCESS.storage.local('federated_url');
-                        if (typeof local_fr_url !== 'undefined' && local_fr_url !== null) {
-                            fr_url = local_fr_url;
-                        }
+                    var local_url = EEXCESS.storage.local('local_url');
+                    if (typeof local_url !== 'undefined' && local_url !== null) {
+                        url = local_url;
+                    }
+                    var local_fr_url = EEXCESS.storage.local('federated_url');
+                    if (typeof local_fr_url !== 'undefined' && local_fr_url !== null) {
+                        fr_url = local_fr_url;
+                    }
             }
         },
         setURL: function(tabID, urls) {
