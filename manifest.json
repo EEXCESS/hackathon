@@ -1,6 +1,6 @@
 {
     "name": "EEXCESS",
-    "version": "0.30",
+    "version": "0.40",
     "background": {
         "page": "background/background.html"
     },
@@ -26,7 +26,7 @@
             "css": ["media/css/sidebar.css"]
         }
     ],
-    
+
     "web_accessible_resources": [
         "media/*",
         "widget/*",
@@ -42,7 +42,7 @@
         "<all_urls>",
         "geolocation",
         "history",
-        "background", 
+        "background",
         "storage"
     ],
     "icons": {"16": "media/icons/16.png",
