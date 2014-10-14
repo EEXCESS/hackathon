@@ -26,6 +26,8 @@ EEXCESS.model = (function() {
         tab: 'results'
     };
 
+    var currentQuery = {};
+
     var resultPage = false;
     /**
      * Represents the current query and according results
@@ -140,6 +142,25 @@ EEXCESS.model = (function() {
         }
     };
     var _queryTimestamp;
+    
+    
+    var _replayQuery = function(tabID, numResults, callback) {
+            var replayData = {
+                reason: 'replay',
+                terms: currentQuery['terms'],
+                numResults: numResults
+            };
+            console.log(replayData);
+            var success = function(results) {
+                _handleResult({query:currentQuery['query'],data: results});
+                callback({query:currentQuery['query'],results:results});
+            };
+            var error = function(error) { // error callback
+                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
+            };
+            EEXCESS.backend.getCall()(replayData, 1, numResults, success, error);
+        };
+    
     return {
         /**
          * Toggles the visibility of the widget
@@ -219,12 +240,22 @@ EEXCESS.model = (function() {
                 return;
             }
 
+            // set how many results to retrieve
+            var numResults = EEXCESS.config.NUM_RESULTS;
+            if (data.hasOwnProperty('numResults')) {
+                numResults = data.numResults;
+            }
+
             if (tmp.hasOwnProperty('reason') && tmp['reason']['reason'] !== 'manual' && !resultPage) {
                 EEXCESS.messaging.sendMsgAllTabs({method: 'loading', data: {query: tmp['query']}});
             }
             params.tab = 'results';
             // log all queries in 'queries_full'
             EEXCESS.logging.logQuery(tabID, tmp['weightedTerms'], _queryTimestamp, '_full');
+
+            // cache current query
+            currentQuery['terms'] = tmp['weightedTerms'];
+            currentQuery['query'] = tmp['query'];
 
 
             var success = function(data) { // success callback
@@ -249,11 +280,11 @@ EEXCESS.model = (function() {
                 EEXCESS.messaging.sendMsgTab(tabID, {method: 'getTextualContext'}, function(ctxData) {
                     tmp['reason']['value'] = ctxData['selectedText'];
                     // call provider (resultlist should start with first item)
-                    EEXCESS.backend.getCall()(data, 1, success, error);
+                    EEXCESS.backend.getCall()(data, 1, numResults, success, error);
                 });
             } else {
                 // call provider (resultlist should start with first item)
-                EEXCESS.backend.getCall()(data, 1, success, error);
+                EEXCESS.backend.getCall()(data, 1, numResults, success, error);
             }
         },
         /**
@@ -321,8 +352,15 @@ EEXCESS.model = (function() {
          * @param {Function} callback
          */
         getResults: function(tabID, data, callback) {
+            if(typeof data !== 'undefined' && data !== null) {
+                if(data.numResults > results.data.totalResults) {
+                    _replayQuery(tabID, data.numResults, callback);
+                    return;
+                }
+            }
             callback({query: results.query, results: results.data});
         },
+        replayQuery: _replayQuery,
         resultOpened: function(tabID, data, callback) {
             EEXCESS.windows.getCurrent({populate: true}, function(win) {
                 for (var i = 0; i < win.tabs.length; ++i) {

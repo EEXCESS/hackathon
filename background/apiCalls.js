@@ -26,7 +26,7 @@ EEXCESS.qXHR;
  * @param {querySuccess} success callback on success, receives the retrieved results as parameter
  * @param {queryError} error callback on error, receives the error message as parameter
  */
-EEXCESS.euCall = function(queryData, start, success, error) {
+EEXCESS.euCall = function(queryData, start, numResults, success, error) {
     var weightedTerms;
     if (queryData.hasOwnProperty('reason')) {
         weightedTerms = queryData['terms'];
@@ -117,7 +117,7 @@ EEXCESS.euCall = function(queryData, start, success, error) {
  * @param {Function} success success callback, receives the retrieved results as parameter
  * @param {Function} error error callback, receives the error message as parameter
  */
-EEXCESS.frCall_impl = function(queryData, start, success, error) {
+EEXCESS.frCall_impl = function(queryData, start, numResults, success, error) {
     var weightedTerms;
     if (queryData.hasOwnProperty('reason')) {
         weightedTerms = queryData['terms'];
@@ -131,6 +131,7 @@ EEXCESS.frCall_impl = function(queryData, start, success, error) {
             q += weightedTerms[i].text;
         }
         profile['queryID'] = '' + EEXCESS.djb2Code(q) + new Date().getTime();
+        profile['numResults'] = numResults;
 
         if (queryData.hasOwnProperty('reason')) {
             profile['context'] = queryData['reason'];
