@@ -49,13 +49,13 @@ function updatePolicy() {
         if(jsonTopicsPolicy) {
             topics = JSON.parse(jsonTopicsPolicy);
         }
-        for (var i=0;i<topics.length;i++) {
+        for (var i=0 ; i < topics.length ; i++) {
         	if(topics[i]['label'] === fieldName) {
         		topics[i]['policy'] = value;
                 break;
         	}
         }
-        EEXCESS.storage.local('privacy.profile.topics',JSON.stringify(topics));
+        EEXCESS.storage.local('privacy.profile.topics', JSON.stringify(topics));
         updateDisclosedValue("topics");
 	} else {
 		// general case
@@ -89,7 +89,7 @@ function updateDisclosedValue(fieldName) {
                 topics = JSON.parse(jsonTopicsPolicy);
             }
             var value = 0;
-            for (var i=0;i<topics.length;i++) {
+            for (var i=0 ; i < topics.length ; i++) {
             	if (topics[i]['policy'] === 1) {
             		value += 1;
             	}
@@ -306,15 +306,16 @@ function initPolicyPanel() {
         }
         for (var i=0;i<topics.length;i++) {
         	$("div[class='container'][data-eexcess-policy-field]").each(
-        			function() {
-        				if ($(this).attr("data-eexcess-policy-field") === topics[i]['label']) {
+        		function() {
+        			if ($(this).attr("data-eexcess-policy-field") === topics[i]['label']) {
+        				$(this).find(".progress-bar").eq(topics[i]['policy']).each(doProgressClick);
+        				if(topics[i]['policy'] == 0) {
+        					// Hack, simulate 2 clicks to get zero and update other info
         					$(this).find(".progress-bar").eq(topics[i]['policy']).each(doProgressClick);
-        					if(topics[i]['policy'] == 0) {
-        						// Hack, simulate 2 clicks to get zero and update other info
-        						$(this).find(".progress-bar").eq(topics[i]['policy']).each(doProgressClick);
-        					}
         				}
-        			});
+        			}
+        		}
+        	);
         }
 	}
 	if($(this).find(".progress-bar").size() <= 2) {
