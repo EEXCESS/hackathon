@@ -230,7 +230,7 @@ EEXCESS.model = (function() {
                         for (var i = 0; i < results.data.results.length; i++) {
                             var parser = document.createElement('a');
                             parser.href = results.data.results[i].eexcessURI;
-                            if (_getDomain(parser.host) === _getDomain(result_url)) {
+                            if (_getDomain(parser.hostname) === _getDomain(result_url)) {
                                 resultPage = true;
                                 break;
                             }
