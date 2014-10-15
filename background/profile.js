@@ -102,7 +102,7 @@ EEXCESS.profile = (function() {
             setAddressValue('country', address);
         }
         if (level > 2) {
-            setAddressValue('zipcode', address);
+            setAddressValue('zipCode', address);
         }
         if (level > 3) {
             setAddressValue('city', address);
