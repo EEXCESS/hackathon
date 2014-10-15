@@ -115,7 +115,7 @@ EEXCESS.initiateQuery = function() {
             elements.push({text: node.nodeValue, parent: parent});
         }
     }
-    EEXCESS.triggerQuery(elements, {reason: 'page', value: window.location.protocol + '//' + window.location.host + window.location.pathname, url:window.location.host});
+    EEXCESS.triggerQuery(elements, {reason: 'page', value: window.location.protocol + '//' + window.location.host + window.location.pathname, url:window.location.hostname});
 }();
 
 EEXCESS.selectedText = '';

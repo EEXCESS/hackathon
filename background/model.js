@@ -141,6 +141,15 @@ EEXCESS.model = (function() {
     };
     var _queryTimestamp;
     
+    var _getDomain = function(hostname) {
+        var domain = hostname.substring(0,hostname.lastIndexOf('.'));
+        if(domain.indexOf('.') === -1) {
+            return domain;
+        } else {
+            return domain.substr(domain.indexOf('.')+1);
+        }
+    };
+    
     
     var _replayQuery = function(tabID, numResults, callback) {
             var replayData = {
@@ -213,14 +222,13 @@ EEXCESS.model = (function() {
 
                 // check if automatic query was triggered by viewing the detail page of a result
                 if (data['reason'].hasOwnProperty('url')) {
-                    console.log(data.reason.url);
                     var result_url = data.reason.url;
                     delete tmp.reason.url;
                     if (results.data !== null) {
                         for (var i = 0; i < results.data.results.length; i++) {
                             var parser = document.createElement('a');
                             parser.href = results.data.results[i].eexcessURI;
-                            if (parser.host === result_url) {
+                            if (_getDomain(parser.host) === _getDomain(result_url)) {
                                 resultPage = true;
                                 break;
                             }
