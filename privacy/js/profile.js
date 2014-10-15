@@ -124,7 +124,7 @@ $(document).ready(function() {
         // check selected partners
         var sources = EEXCESS.storage.local('selected_sources');
         if (typeof sources === 'undefined') {
-            sources = ['Europeana', 'Mendeley', 'ZBW'];
+            sources = ['Europeana', 'Mendeley', 'ZBW', 'KIMCollect'];
         }  else {
             sources = JSON.parse(sources);
         }

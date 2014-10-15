@@ -204,6 +204,7 @@ EEXCESS.model = (function() {
          * @param {Object} data The query data 
          */
         query: function(tabID, data) {
+            EEXCESS.browserAction.setBadgeText({text: ""});
             console.log(data);
             var tmp = {};
             _queryTimestamp = new Date().getTime();
@@ -214,11 +215,14 @@ EEXCESS.model = (function() {
 
                 // check if automatic query was triggered by viewing the detail page of a result
                 if (data['reason'].hasOwnProperty('url')) {
+                    console.log(data.reason.url);
                     var result_url = data.reason.url;
                     delete tmp.reason.url;
                     if (results.data !== null) {
                         for (var i = 0; i < results.data.results.length; i++) {
-                            if (results.data.results[i].eexcessURI === result_url) {
+                            var parser = document.createElement('a');
+                            parser.href = results.data.results[i].eexcessURI;
+                            if (parser.host === result_url) {
                                 resultPage = true;
                                 break;
                             }
