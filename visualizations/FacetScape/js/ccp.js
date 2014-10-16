@@ -92,7 +92,6 @@ var PROVIDER = (function() {
             request: function(queryTerms, action) {
 
                 var updateFacetScape = function(response) {
-                    console.log(response);
                     if ((typeof response == "undefined") || response == null) {
                         d3.select("#facetScape").text("no data available");
                     } else if (typeof response.results === 'undefined' || response.results === null) {
