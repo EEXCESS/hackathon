@@ -107,16 +107,16 @@ function Geochart(root, visTemplate) {
         }).addTo(GEO.map);
         GEO.Render.drawMarkers();
 
-        // Initialise the FeatureGroup to store editable layers
-        var drawnItems = new L.FeatureGroup();
-        GEO.map.addLayer(drawnItems);
-        // Initialise the draw control and pass it the FeatureGroup of editable layers
-        var drawControl = new L.Control.Draw({
-            edit: {
-                featureGroup: drawnItems
-            }
-        });
-        GEO.map.addControl(drawControl);
+        // Leaflet Draw
+        // TODO @Stefan: uncomment the following lines
+        //var drawnItems = new L.FeatureGroup();
+        //GEO.map.addLayer(drawnItems);
+        //var drawControl = new L.Control.Draw({
+        //    edit: {
+        //        featureGroup: drawnItems
+        //    }
+        //});
+        //GEO.map.addControl(drawControl);
 	};
 
     GEO.Render.centerMap = function(){
