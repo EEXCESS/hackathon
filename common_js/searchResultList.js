@@ -58,7 +58,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
     var _loader = $('<div class="eexcess_loading" style="display:none"><img src="' + settings.pathToMedia + 'loading.gif" /></div>');
     var _list = $('<ul id="recommendationList" class="block_list" data-total="0"></ul>').append($('<li>no results</li>'));
     var _dialog = $('<div style="display:none"><div>').append('<p></p>');
-    var _error = $('<p style="display:none">sorry, something went wrong...<p>');
+    var _error = $('<p style="display:none">sorry, something went wrong...</p>');
     var _link = function(url, img, title) {
         var link = $('<a href="' + url + '">' + title + '</a>');
         link.click(function(evt) {
@@ -128,11 +128,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
                     if (request.method.func === 'rating') {
                         _rating($('.eexcess_raty[data-uri="' + request.data.uri + '"]'), request.data.uri, request.data.score);
                     } else if (request.method.func === 'error') {
-                        divContainer.find('.pagination').remove();
-                        _list.empty();
-                        _loader.hide();
-                        _error.show();
-                        $('#eexcess_thumb').hide();
+                        _showError(request.data);
                     }
                 }
                 if (request.method === 'newSearchTriggered') {
@@ -269,6 +265,19 @@ EEXCESS.searchResultList = function(divContainer, options) {
         return firstPart;
     };
 
+    var _showError = function(errorData) {
+        divContainer.find('.pagination').remove();
+        _list.empty();
+        _loader.hide();
+        if(errorData.msg === 'timeout') {
+            _error.text('Sorry, the server takes too long to respond. Please try again later');
+        } else {
+            _error.text('Sorry, something went wrong');
+        }
+        _error.show();
+        $('#eexcess_thumb').hide();
+    };
+
     var _loading = function() {
         $('#eexcess_thumb').hide();
         divContainer.find('.pagination').remove();
@@ -276,6 +285,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
         _list.empty();
         _loader.show();
     };
+
     return {
         showResults: showResults,
         loading: _loading

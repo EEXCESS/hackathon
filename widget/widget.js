@@ -27,24 +27,24 @@ EEXCESS.newSearchTriggered = function(data) {
  * @param {Object} widget The current state of the widget's model in the background script
  */
 EEXCESS.init = function(widget) {
-    $('#eexcess_query').mouseenter(function(){
+    $('#eexcess_query').mouseenter(function() {
         $('#search_hover').show();
     });
-    
-    $('#eexcess_query').mouseleave(function(){
+
+    $('#eexcess_query').mouseleave(function() {
         $('#search_hover').hide();
     });
-    
-    $('#eexcess_query').focus(function(){
+
+    $('#eexcess_query').focus(function() {
         $('#search_hover').hide();
     });
-    
-    $('#eexcess_query').keypress(function(){
+
+    $('#eexcess_query').keypress(function() {
         $('#search_hover').hide();
         $('#search_hover').text($('#eexcess_query').val());
     });
-    
-    
+
+
     $('#eexcess_query').val(widget.results.query);
     $('#search_hover').text(widget.results.query);
 
@@ -53,9 +53,9 @@ EEXCESS.init = function(widget) {
         EEXCESS.messaging.callBG({method: 'fancybox', data: 'chrome-extension://' + EEXCESS.utils.extID + '/' + $(evt.target).parent('a').attr('href')});
     });
 
-    $('#eexcess_hide_btn').click(function(evt){
+    $('#eexcess_hide_btn').click(function(evt) {
         evt.preventDefault();
-        EEXCESS.messaging.callBG({method: {parent:'model',func:'toggleVisibility'}, data:-1});
+        EEXCESS.messaging.callBG({method: {parent: 'model', func: 'toggleVisibility'}, data: -1});
     });
 
 
@@ -102,5 +102,8 @@ EEXCESS.messaging.listener(function(request, sender, sendResponse) {
         } else {
             EEXCESS[request.method](request.data);
         }
+    } else if (request.method.parent === 'results' && request.method.func === 'error' && typeof request.data['query'] !== 'undefined') {
+        $('#eexcess_query').val(request.data.query);
+        $('#search_hover').text(request.data.query);
     }
 });
