@@ -118,7 +118,7 @@ EEXCESS.profile = (function() {
     var getPartnerList = function() {
         var partners = EEXCESS.storage.local('selected_sources');
         if(typeof partners === 'undefined') {
-            return [{"systemId":"Europeana"},{"systemId":"Mendeley"},{"systemId":"ZBW"}];
+            return [{"systemId":"Europeana"},{"systemId":"Mendeley"},{"systemId":"ZBW"},{"systemId":"KIMCollect"}];
         } else {
             partners = JSON.parse(partners);
             var partnerList = [];
@@ -197,7 +197,6 @@ EEXCESS.profile = (function() {
                     "address": applyAddressPolicy(),
                     "interests": _interests(),
                     "contextKeywords": {},
-                    "numResults":99,
                     "uuid": applyUuidPolicy(),
                     "userLocations": applyLocationPolicy()
                 };

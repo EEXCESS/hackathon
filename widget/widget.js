@@ -79,7 +79,7 @@ EEXCESS.init = function(widget) {
                 };
                 query.push(tmp);
             }
-            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason: {reason: 'manual', text: $('#eexcess_query').val()}, terms: query}});
+            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason: {reason: 'manual', value: $('#eexcess_query').val()}, terms: query}});
         }
         return false;
     });
@@ -97,6 +97,8 @@ EEXCESS.messaging.listener(function(request, sender, sendResponse) {
     if (request.method !== 'privacySandbox' && request.method !== 'visibility' && request.method !== 'fancybox' && request.method !== 'getTextualContext' && request.method.parent !== 'results') {
         if (typeof request.method.parent !== 'undefined') {
             EEXCESS[request.method.parent][request.method.func](request.data);
+        } else if (request.method === 'loading') {
+            EEXCESS.newSearchTriggered(request.data);
         } else {
             EEXCESS[request.method](request.data);
         }

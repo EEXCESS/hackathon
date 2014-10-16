@@ -49,7 +49,7 @@ function display_querycrumbs(domElem) {
             var termsOfCurrentNode = d.query;
             // end
             EEXCESS.searchResults.loading();
-            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason:'queryCrumbs',terms:weightedTerms}});
+            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason:{reason:'queryCrumbs'},terms:weightedTerms}});
         },
         onMouseOverNode: function(d, i) {
             
@@ -72,7 +72,7 @@ function display_querycrumbs(domElem) {
                 var ttX = d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth;
                 ttX = (ttX + w > width) ? width - w - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth): ttX - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth);
                 ttX = (ttX < 0) ? 0 : ttX;
-                infoBox.select("text.nodeInfo").attr("x", ttX);
+                infoBox.select("text.nodeInfo").attr("x", ttX + 1);
 
                 infoBox.append("rect")
                     .attr("class", "nodeBg")
@@ -84,16 +84,19 @@ function display_querycrumbs(domElem) {
 
                 $("rect.nodeBg").insertBefore(jqNode);
 
-                simResults = [];
-                var rootGroup = d3.select(this.parentNode);
-                var iDocs = CORE.collectIdenticalDocs(i);
-                for(var n in iDocs) {
-                    var docRects = rootGroup.selectAll("g.queryNode")
-                        .filter(function(d,i) { return (d.timestamp == visualData.visualDataNodes[n].timestamp);})
-                        .select("g").selectAll("rect.docNode")
-                        .filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
-                    simResults.push(docRects);
-                    docRects.classed("docNode", true).classed("docNode-highlighted", true).style("opacity", 1);
+
+                if(QueryCrumbsConfiguration.skillLevel == "EXPERT") {
+                    simResults = [];
+                    var rootGroup = d3.select(this.parentNode);
+                    var iDocs = CORE.collectIdenticalDocs(i);
+                    for(var n in iDocs) {
+                        var docRects = rootGroup.selectAll("g.queryNode")
+                            .filter(function(d,i) { return (d.timestamp == visualData.visualDataNodes[n].timestamp);})
+                            .select("g").selectAll("rect.docNode")
+                            .filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
+                        simResults.push(docRects);
+                        docRects.classed("docNode", true).classed("docNode-highlighted", true).style("opacity", 1);
+                    }
                 }
             } else {
 
@@ -107,37 +110,38 @@ function display_querycrumbs(domElem) {
                     .attr("x", d.x_pos)
                     .attr("y", d.y_pos)
                     .attr("dy", 10);
-
                 var jqNode = $("g text.nodeInfo");
-                var w = jqNode.width();
-                var h = jqNode.height();
-                var ttX = d.x_pos;
-                ttX = (ttX + w > width) ? width - w - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth): ttX - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth);
-                if(ttX < 0) {
-                    ttX = 5;
-                }
-                infoBox.select("text.nodeInfo").attr("x", ttX + QueryCrumbsConfiguration.dimensions.circle_r);
+                    var w = jqNode.width();
+                    var h = jqNode.height();
+                    var ttX = d.x_pos;
+                    ttX = (ttX + w > width) ? width - w - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth): ttX - (2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth);
+                    if(ttX < 0) {
+                        ttX = 5;
+                    }
+                    infoBox.select("text.nodeInfo").attr("x", ttX + QueryCrumbsConfiguration.dimensions.circle_r);
 
-                infoBox.append("rect")
-                    .attr("class", "nodeBg")
-                    .attr("x", ttX + QueryCrumbsConfiguration.dimensions.circle_r)
-                    .attr("y", d.y_pos)
-                    .attr("width", w)
-                    .attr("height", h)
-                    .style("fill", d.base_color)
+                    infoBox.append("rect")
+                        .attr("class", "nodeBg")
+                        .attr("x", ttX + QueryCrumbsConfiguration.dimensions.circle_r)
+                        .attr("y", d.y_pos)
+                        .attr("width", w)
+                        .attr("height", h)
+                        .style("fill", d.base_color)
 
-                $("rect.nodeBg").insertBefore(jqNode);
+                    $("rect.nodeBg").insertBefore(jqNode);
 
-                simResults = [];
-                var rootGroup = d3.select(this.parentNode);
-                var iDocs = CORE.collectIdenticalDocs(i);
-                for(var n in iDocs) {
-                    var queryNode = rootGroup.selectAll("g.queryNode")
-                        .filter(function(d,i) { return (d.timestamp == visualData.visualDataNodes[n].timestamp);})
-                        .select("g").selectAll("path.docNode")
-                        .filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
-                    simResults.push(queryNode);
-                    queryNode.classed("docNode", true).classed("docNode-highlighted", true).style("opacity", 1);
+                if(QueryCrumbsConfiguration.skillLevel == "EXPERT") {
+                    simResults = [];
+                    var rootGroup = d3.select(this.parentNode);
+                    var iDocs = CORE.collectIdenticalDocs(i);
+                    for(var n in iDocs) {
+                        var queryNode = rootGroup.selectAll("g.queryNode")
+                            .filter(function(d,i) { return (d.timestamp == visualData.visualDataNodes[n].timestamp);})
+                            .select("g").selectAll("path.docNode")
+                            .filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
+                        simResults.push(queryNode);
+                        queryNode.classed("docNode", true).classed("docNode-highlighted", true).style("opacity", 1);
+                    }   
                 }
             }
         },
@@ -533,16 +537,16 @@ function display_querycrumbs(domElem) {
 
                 queryNodesSel.select("rect.queryRectBg")
                   .attr("x", function (d, i) { 
-                      return (i == currentIdx) ? (d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth) - 1 : d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth;
+                      return (i == currentIdx) ? (d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth + 1;
                   })
                   .attr("y", function (d, i) { 
-                      return (i == currentIdx) ? (d.y_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth) - 1 : d.y_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth; 
+                      return (i == currentIdx) ? (d.y_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.y_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth + 1; 
                   })
                   .attr("width", function (d, i) { 
-                      return (i == currentIdx) ? (d.width + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth) + 2 : d.width + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth; 
+                      return (i == currentIdx) ? (d.width + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.width + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth - 2; 
                   })
                   .attr("height", function (d, i) { 
-                      return (i == currentIdx) ? (d.height + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth) + 2 : d.height + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth; 
+                      return (i == currentIdx) ? (d.height + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.height + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth - 2; 
                   })
                   .attr("ry", 0)
                   .classed("queryRectBg", true)
@@ -566,20 +570,20 @@ function display_querycrumbs(domElem) {
                   .attr("height", function(d) { return d.height; })
                   .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
 
-                var queryEdgesSel = crumbsUpd.selectAll("rect.queryEdge").data(function(d) { return d.visualDataEdges;});
-                var queryEdgesEnter = queryEdgesSel.enter()
-                  .append("rect")
-                  .attr("class", "queryEdge")
-                  .on("mouseover", INTERACTION.onMouseOverEdge)
-                  .on("mouseout", INTERACTION.onMouseOutEdge);
+                // var queryEdgesSel = crumbsUpd.selectAll("rect.queryEdge").data(function(d) { return d.visualDataEdges;});
+                // var queryEdgesEnter = queryEdgesSel.enter()
+                //   .append("rect")
+                //   .attr("class", "queryEdge")
+                //   .on("mouseover", INTERACTION.onMouseOverEdge)
+                //   .on("mouseout", INTERACTION.onMouseOutEdge);
 
-                queryEdgesSel.exit().transition().style("opacity", 0).attr("transform", function(d,i) { if(fWait_BackNaviResults) { return "translate(0,0)"; } else { return ("translate(0, 100)");}}).remove();
+                // queryEdgesSel.exit().transition().style("opacity", 0).attr("transform", function(d,i) { if(fWait_BackNaviResults) { return "translate(0,0)"; } else { return ("translate(0, 100)");}}).remove();
 
-                queryEdgesSel.attr("x",function (d) { return d.start_x; } )
-                  .attr("y",function (d) { return d.start_y; } )
-                  .attr("width", QueryCrumbsConfiguration.dimensions.edgeWidth )
-                  .attr("height", QueryCrumbsConfiguration.dimensions.edgeHeight)
-                  .style("opacity", function(d) { return (QueryCrumbsConfiguration.skillLevel == "BEGINNER") ? 0 : d.simTerms;});  
+                // queryEdgesSel.attr("x",function (d) { return d.start_x; } )
+                //   .attr("y",function (d) { return d.start_y; } )
+                //   .attr("width", QueryCrumbsConfiguration.dimensions.edgeWidth )
+                //   .attr("height", QueryCrumbsConfiguration.dimensions.edgeHeight)
+                //   .style("opacity", function(d) { return (QueryCrumbsConfiguration.skillLevel == "BEGINNER") ? 0 : d.simTerms;});  
             } 
             
 
@@ -641,9 +645,6 @@ function display_querycrumbs(domElem) {
         },
         transitionTo: function(visualData, currIdx) {
             var nodesToFadeOut = svgContainer.selectAll("g.queryNode").filter(function(d,i) { return (i > currIdx);});
-            if(QueryCrumbsConfiguration.skillLevel != "BEGINNER") {
-                var edgesToFadeOut = svgContainer.selectAll("rect.queryEdge").filter(function(d,i) { return (i >= currIdx);});
-            }
             nodesToFadeOut.transition()
                 .delay(0)
                 .duration(500)
@@ -653,16 +654,16 @@ function display_querycrumbs(domElem) {
                     d3.select(this).remove();
                 });
 
-            if(QueryCrumbsConfiguration.skillLevel != "BEGINNER") { 
-                edgesToFadeOut.transition()
-                    .delay(0)
-                    .duration(500)
-                    .attr("transform", "translate(0,100)")
-                    .style("opacity", 0)
-                    .each("end", function() {
-                        d3.select(this).remove;
-                    });
-            }
+            // var edgesToFadeOut = svgContainer.selectAll("rect.queryEdge").filter(function(d,i) { return (i >= currIdx);});
+
+            // edgesToFadeOut.transition()
+            //     .delay(0)
+            //     .duration(500)
+            //     .attr("transform", "translate(0,100)")
+            //     .style("opacity", 0)
+            //     .each("end", function() {
+            //         d3.select(this).remove;
+            //     });
         }
     };
 
