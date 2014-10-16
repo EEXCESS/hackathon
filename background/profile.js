@@ -149,7 +149,6 @@ EEXCESS.profile = (function() {
                 });
             } else {
                 EEXCESS.history.search({'text': '', 'startTime': 0, 'maxResults': 1999999999}, function(results) {
-                    console.log(data);
                     callback(results);
                 });
             }

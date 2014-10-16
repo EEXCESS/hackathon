@@ -60,9 +60,7 @@ EEXCESS.init = function(widget) {
 
 
     $('#eexcess_privacy').click(function(evt) {
-        console.log("Click sent");
         evt.preventDefault();
-        //console.log();
         EEXCESS.messaging.callBG({method: 'privacySandbox', data: 'chrome-extension://' + EEXCESS.utils.extID + '/' + $(evt.target).parent('a').attr('href')});
     });
     var form = $('#eexcess_searchForm');
