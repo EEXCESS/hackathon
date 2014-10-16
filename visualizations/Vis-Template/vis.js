@@ -487,18 +487,18 @@ function Visualization( EEXCESSobj ) {
 					.text(function(d){ return d.title; });
 
 
-		contentDiv.append("p")
-			.attr("class", "eexcess_ritem_short")
-			.html(function(d){
-				var facetKeys = Object.keys(d.facets);
-				var string = "";
-				
-				facetKeys.forEach(function(facetKey){
-					if( !Array.isArray(d.facets[facetKey]) )
-						string += d.facets[facetKey] + ", ";
-				});
-				return string.substring(0, string.length - 2); 
-			});
+//		contentDiv.append("p")
+//			.attr("class", "eexcess_ritem_short")
+//			.html(function(d){
+//				var facetKeys = Object.keys(d.facets);
+//				var string = "";
+//				
+//				facetKeys.forEach(function(facetKey){
+//					if( !Array.isArray(d.facets[facetKey]) )
+//						string += d.facets[facetKey] + ", ";
+//				});
+//				return string.substring(0, string.length - 2); 
+//			});
 		
 		$( contentPanel ).scrollTo( "top" );
 	};
