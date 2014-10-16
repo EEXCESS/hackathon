@@ -41,6 +41,13 @@ EEXCESS.config = (function() {
     var _LOG_QUERY_ACTIVATED_URI = _PP_BASE_URI + 'log/query_activated';
     var _NUM_RESULTS = 40;
     var _NUM_RESULTS_FACET_SCAPE = 100;
+    var _TIMEOUT = function(param) {
+        if(typeof param !== 'undefined') {
+            // TODO add specific timeouts
+            return 10000;
+        }
+        return 10000;
+    };
 
     return {
         PP_BASE_URI: _PP_BASE_URI,
@@ -53,6 +60,7 @@ EEXCESS.config = (function() {
         LOG_QUERY_ACTIVATED_URI: _LOG_QUERY_ACTIVATED_URI,
         FR_BASE_URI: _FR_BASE_URI,
         NUM_RESULTS: _NUM_RESULTS,
-        NUM_RESULTS_FACET_SCAPE:_NUM_RESULTS_FACET_SCAPE
+        NUM_RESULTS_FACET_SCAPE:_NUM_RESULTS_FACET_SCAPE,
+        TIMEOUT: _TIMEOUT
     };
 })();

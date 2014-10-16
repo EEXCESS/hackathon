@@ -283,7 +283,11 @@ EEXCESS.model = (function() {
 
             };
             var error = function(error) { // error callback
-                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
+                var tmp_data = {
+                    msg: error,
+                    query: currentQuery['query']
+                };
+                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: tmp_data});
             };
 
             // log manual query and obtain selection

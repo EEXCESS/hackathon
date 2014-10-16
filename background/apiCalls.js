@@ -148,7 +148,8 @@ EEXCESS.frCall_impl = function(queryData, start, numResults, success, error) {
             data: JSON.stringify(profile),
             type: 'POST',
             contentType: 'application/json; charset=UTF-8',
-            dataType: 'json'
+            dataType: 'json',
+            timeout: EEXCESS.config.TIMEOUT()
         });
         EEXCESS.qXHR.done(function(data) {
             console.log(data);
