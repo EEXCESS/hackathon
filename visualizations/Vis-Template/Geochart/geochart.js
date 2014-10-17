@@ -106,6 +106,17 @@ function Geochart(root, visTemplate) {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(GEO.map);
         GEO.Render.drawMarkers();
+
+        // Leaflet Draw
+        // TODO @Stefan: uncomment the following lines
+        //var drawnItems = new L.FeatureGroup();
+        //GEO.map.addLayer(drawnItems);
+        //var drawControl = new L.Control.Draw({
+        //    edit: {
+        //        featureGroup: drawnItems
+        //    }
+        //});
+        //GEO.map.addControl(drawControl);
 	};
 
     GEO.Render.centerMap = function(){
