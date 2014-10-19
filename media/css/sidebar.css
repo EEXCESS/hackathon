@@ -28,13 +28,12 @@ particular page */
     right:0px;
     z-index:99998;
     opacity: 0.8;
-    width: 20px;
+    width: 30px;
     height:100%;
 }
 
 #eexcess_button img {
-    width: 10px;
-    height: 10px;
+    width:30px;
     float:right;
-    display:none;
+    display:block;
 }

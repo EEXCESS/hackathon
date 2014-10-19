@@ -39,7 +39,7 @@ EEXCESS.handleWidgetVisibility = function(visible) {
  * visibility in the background's model.
  */
 
-$('<div id="eexcess_button"><img src="chrome-extension://' + EEXCESS.utils.extID + '/media/icons/16.png" /></div>').appendTo('body').mouseenter(function() {
+$('<div id="eexcess_button"><img src="chrome-extension://' + EEXCESS.utils.extID + '/media/icons/page_curl2.png" /></div>').appendTo('body').mouseenter(function() {
     $('#eexcess_sidebar').show('fast');
 });
 
@@ -81,6 +81,7 @@ EEXCESS.messaging.listener(
                     EEXCESS.handlePrivacyBoxVisibility(request.data);
                     break;
                 case 'fancybox':
+                    $('#eexcess_sidebar').hide();
                     // open fancybox preview of the url provided in request.data
                     $('<a href="' + request.data + '"></a>').fancybox({
                         'autoSize': false,
