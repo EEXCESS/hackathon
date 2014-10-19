@@ -94,8 +94,7 @@ EEXCESS.messaging.listener(
                     break;
                 case 'newSearchTriggered':
                     if (EEXCESS.widgetVisible && typeof request.data.results !== 'undefined' && request.data.results.totalResults !== 0) {
-                        console.log($('iframe'));
-                        var iframes = $('iframe');
+                        var iframes = $('.fancybox-overlay').find('iframe');
                         for(var i=0; i<iframes.length;i++ ) {
                             if(iframes[i].src.indexOf('chrome-extension') !== -1) {
                                 return;
