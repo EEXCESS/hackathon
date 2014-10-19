@@ -17,14 +17,17 @@ EEXCESS.widgetVisible = false;
 EEXCESS.handleWidgetVisibility = function(visible) {
     if (EEXCESS.widgetVisible !== visible) {
         if (visible) { // show widget
-            var width = $(window).width() - 333;
+            $('#eexcess_button').show();
             $('#eexcess_sidebar').show();
-            $('html').css('overflow', 'auto').css('position', 'absolute').css('height', '100%').css('width', width + 'px');
-            $('body').css('overflow-x', 'auto').css('position', 'relative').css('overflow-y', 'scroll').css('height', '100%');
+//            var width = $(window).width() - 333;
+//            $('#eexcess_sidebar').show();
+//            $('html').css('overflow', 'auto').css('position', 'absolute').css('height', '100%').css('width', width + 'px');
+//            $('body').css('overflow-x', 'auto').css('position', 'relative').css('overflow-y', 'scroll').css('height', '100%');
         } else { // hide widget
+            $('#eexcess_button').hide();
             $('#eexcess_sidebar').hide();
-            $('html').css('overflow', '').css('position', '').css('height', '').css('width', '');
-            $('body').css('overflow-x', '').css('position', '').css('overflow-y', '').css('height', '');
+//            $('html').css('overflow', '').css('position', '').css('height', '').css('width', '');
+//            $('body').css('overflow-x', '').css('position', '').css('overflow-y', '').css('height', '');
         }
         EEXCESS.widgetVisible = visible;
     }
@@ -36,8 +39,34 @@ EEXCESS.handleWidgetVisibility = function(visible) {
  * visibility in the background's model.
  */
 
-$('<iframe id="eexcess_sidebar" src="chrome-extension://' + EEXCESS.utils.extID + '/widget/widget.html"></iframe>').appendTo('body');
-EEXCESS.messaging.callBG({method: {parent: 'model', func: 'visibility'}}, EEXCESS.handleWidgetVisibility);
+$('<div id="eexcess_button"><img src="chrome-extension://' + EEXCESS.utils.extID + '/media/icons/16.png" /></div>').appendTo('body').mouseenter(function() {
+    $('#eexcess_sidebar').show('fast');
+});
+
+$('<iframe id="eexcess_sidebar" src="chrome-extension://' + EEXCESS.utils.extID + '/widget/widget.html"></iframe>').appendTo('body').mouseleave(function(evt) {
+    if (evt.clientX < $(this).offset().left) {
+        $(this).hide('slow', function() {
+            $('#eexcess_button').show();
+        });
+
+    }
+});
+EEXCESS.messaging.callBG({method: {parent: 'model', func: 'visibility'}}, function(visible) {
+    EEXCESS.widgetVisible = visible;
+    if (visible) {
+        $('#eexcess_button').show();
+    }
+});
+
+EEXCESS.mousePosition = {
+    x: 0,
+    y: 0
+};
+
+$(window).mousemove(function(e) {
+    EEXCESS.mousePosition.x = e.pageX;
+    EEXCESS.mousePosition.y = e.pageY;
+});
 
 // Listen to messages from the background script
 EEXCESS.messaging.listener(
@@ -63,6 +92,27 @@ EEXCESS.messaging.listener(
                 case 'getTextualContext':
                     sendResponse({selectedText: document.getSelection().toString(), url: document.URL});
                     break;
+                case 'newSearchTriggered':
+                    if (EEXCESS.widgetVisible && typeof request.data.results !== 'undefined' && request.data.results.totalResults !== 0) {
+                        console.log($('iframe'));
+                        var iframes = $('iframe');
+                        for(var i=0; i<iframes.length;i++ ) {
+                            if(iframes[i].src.indexOf('chrome-extension') !== -1) {
+                                return;
+                            }
+                        }
+                        var sidebar_visible = $('#eexcess_sidebar').is(':visible');
+                        $('#eexcess_sidebar').show(function() {
+                            $('#eexcess_button').show();
+                        });
+                        if (!request.data.results.hasOwnProperty('iconClicked') && !sidebar_visible) {
+                            window.setTimeout(function() {
+                                if (EEXCESS.mousePosition.x < $(window).width() - 360) {
+                                    $('#eexcess_sidebar').hide('slow');
+                                }
+                            }, 2000);
+                        }
+                    }
             }
         }
 );
@@ -81,4 +131,3 @@ EEXCESS.handlePrivacyBoxVisibility = function() {
         EEXCESS.privacyVisible = visible;
     }
 };
-$('<div style="border: 0; margin:0; padding: 0; display:none; position:fixed; bottom: 100px; right: 349px; width: 40%; height: 60%;" id="eexcess_privacy"><iframe style="border: 0; width:100%; height: 100%" id="eexcess_privacy_frame" src="chrome-extension://' + EEXCESS.utils.extID + '/privacy/policy.html"></iframe></div>').appendTo('body');

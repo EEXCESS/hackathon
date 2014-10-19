@@ -12,8 +12,29 @@ particular page */
  width:348px;
  height:100%;
  border:0px; 
- z-index:999;
+ z-index:99999;
  background-color:white;
  font-size:11pt;
  font-family:Helvetica;
+ border-left:2px solid gray;
+}
+
+#eexcess_button {
+    display:none;
+    position:fixed;
+    top:0px;
+    margin:0;
+    padding:0;
+    right:0px;
+    z-index:99998;
+    opacity: 0.8;
+    width: 20px;
+    height:100%;
+}
+
+#eexcess_button img {
+    width: 10px;
+    height: 10px;
+    float:right;
+    display:none;
 }

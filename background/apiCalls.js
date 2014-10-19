@@ -82,6 +82,7 @@ EEXCESS.euCall = function(queryData, start, numResults, success, error) {
         if (data.totalResults !== 0) {
             $.map(data.items, function(n, i) {
                 n.uri = n.guid;
+                n.eexcessURI = n.guid;
                 n.previewImage = n.edmPreview;
                 delete n.edmPreview;
             });

@@ -34,7 +34,9 @@ EEXCESS.model = (function() {
      */
     var results = {
         query: 'Search',
-        data: null,
+        data: {
+            totalResults:0
+        },
         weightedTerms: null
     };
 
@@ -46,9 +48,19 @@ EEXCESS.model = (function() {
     var openResult = null;
 
     EEXCESS.browserAction.clickedListener(function(tab) {
+        console.log('icon clicked');
         EEXCESS.browserAction.getBadgeText({}, function(badgeText) {
             if (badgeText === '') {
-                EEXCESS.model.toggleVisibility(tab.id, tab.url);
+//                EEXCESS.model.toggleVisibility(tab.id, tab.url);
+                if (!params.visible) {
+                    EEXCESS.model.toggleVisibility(tab.id, tab.url);
+                }
+                    var tmp_results = results;
+                    tmp_results['data']['iconClicked'] = true;
+                    EEXCESS.messaging.sendMsgAllTabs({
+                        method: 'newSearchTriggered',
+                        data: {query: results.query, results: results.data}
+                    });
             } else {
                 results = cachedResult;
                 EEXCESS.browserAction.setBadgeText({text: ""});
@@ -59,9 +71,11 @@ EEXCESS.model = (function() {
                 // log activated query
                 if (results['weightedTerms'] !== null) {
                     EEXCESS.logging.logQuery(tab.id, results['weightedTerms'], new Date().getTime(), '');
+                    var tmp_results = results;
+                    tmp_results['data']['iconClicked'] = true;
                     EEXCESS.messaging.sendMsgAllTabs({
                         method: 'newSearchTriggered',
-                        data: {query: cachedResult.query, results: cachedResult.data}
+                        data: {query: results.query, results: results.data}
                     });
                 }
             }
@@ -226,7 +240,7 @@ EEXCESS.model = (function() {
                 if (data['reason'].hasOwnProperty('url')) {
                     var result_url = data.reason.url;
                     delete tmp.reason.url;
-                    if (results.data !== null) {
+                    if (results.data !== null && typeof results.data.results !== 'undefined') {
                         for (var i = 0; i < results.data.results.length; i++) {
                             var parser = document.createElement('a');
                             parser.href = results.data.results[i].eexcessURI;
