@@ -143,6 +143,15 @@ EEXCESS.model = (function() {
     };
     var _queryTimestamp;
     
+    var _getDomain = function(hostname) {
+        var domain = hostname.substring(0,hostname.lastIndexOf('.'));
+        if(domain.indexOf('.') === -1) {
+            return domain;
+        } else {
+            return domain.substr(domain.indexOf('.')+1);
+        }
+    };
+    
     
     var _replayQuery = function(tabID, numResults, callback) {
             var replayData = {
@@ -204,6 +213,7 @@ EEXCESS.model = (function() {
          * @param {Object} data The query data 
          */
         query: function(tabID, data) {
+            EEXCESS.browserAction.setBadgeText({text: ""});
             console.log(data);
             var tmp = {};
             _queryTimestamp = new Date().getTime();
@@ -218,7 +228,9 @@ EEXCESS.model = (function() {
                     delete tmp.reason.url;
                     if (results.data !== null) {
                         for (var i = 0; i < results.data.results.length; i++) {
-                            if (results.data.results[i].eexcessURI === result_url) {
+                            var parser = document.createElement('a');
+                            parser.href = results.data.results[i].eexcessURI;
+                            if (_getDomain(parser.hostname) === _getDomain(result_url)) {
                                 resultPage = true;
                                 break;
                             }
@@ -271,7 +283,11 @@ EEXCESS.model = (function() {
 
             };
             var error = function(error) { // error callback
-                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
+                var tmp_data = {
+                    msg: error,
+                    query: currentQuery['query']
+                };
+                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: tmp_data});
             };
 
             // log manual query and obtain selection

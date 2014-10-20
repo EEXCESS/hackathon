@@ -94,7 +94,14 @@ var PROVIDER = (function() {
                 var updateFacetScape = function(response) {
                     if ((typeof response == "undefined") || response == null) {
                         d3.select("#facetScape").text("no data available");
-                    } else {
+                    } else if (typeof response.results === 'undefined' || response.results === null) {
+                        var queryTerms = '';
+                        var data = {results: []};
+                        var facets = internal.EEXCESS.preprocessFacets(data);
+                        var results = internal.EEXCESS.preprocessResults(data);
+                        internal.onReceiveData(queryTerms, facets, results);
+                    }
+                    else {
                         var queryTerms = response.query;
                         var data = response.results;
                         var facets = internal.EEXCESS.preprocessFacets(data);
@@ -103,7 +110,7 @@ var PROVIDER = (function() {
                     }
                 }
                 if (typeof action == "undefined") {
-                    
+
                     EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(reqResult) {
                         updateFacetScape(reqResult);
                     });
@@ -118,6 +125,14 @@ var PROVIDER = (function() {
                             function(request, sender, sendResponse) {
                                 if (request.method === 'newSearchTriggered') {
                                     updateFacetScape(request.data);
+                                }
+                                if (request.method.parent === 'results' && request.method.func === 'error') {
+                                    $('#loader img').hide();
+                                    if(request.data.msg === 'timeout') {
+                                        $('#loader p').text('Sorry, the server takes too long to respond. Please try again later.').show();
+                                    } else {
+                                        $('#loader p').text('Sorry, something went wrong.').show();
+                                    }
                                 }
                             }
                     );

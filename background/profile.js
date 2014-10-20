@@ -102,7 +102,7 @@ EEXCESS.profile = (function() {
             setAddressValue('country', address);
         }
         if (level > 2) {
-            setAddressValue('zipcode', address);
+            setAddressValue('zipCode', address);
         }
         if (level > 3) {
             setAddressValue('city', address);
@@ -118,7 +118,7 @@ EEXCESS.profile = (function() {
     var getPartnerList = function() {
         var partners = EEXCESS.storage.local('selected_sources');
         if(typeof partners === 'undefined') {
-            return [{"systemId":"Europeana"},{"systemId":"Mendeley"},{"systemId":"ZBW"}];
+            return [{"systemId":"Europeana"},{"systemId":"Mendeley"},{"systemId":"ZBW"},{"systemId":"KIMCollect"}];
         } else {
             partners = JSON.parse(partners);
             var partnerList = [];
@@ -149,7 +149,6 @@ EEXCESS.profile = (function() {
                 });
             } else {
                 EEXCESS.history.search({'text': '', 'startTime': 0, 'maxResults': 1999999999}, function(results) {
-                    console.log(data);
                     callback(results);
                 });
             }

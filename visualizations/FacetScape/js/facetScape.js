@@ -730,6 +730,8 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
                 $('#facetScape').hide();
                 $('#RS_ResultList').hide();
                 $('#moreHint').hide();
+                $('#loader p').hide();
+                $('#loader img').show();
                 $('#loader').show();
                 QUERYING.search(e.currentTarget.value);
             }
@@ -738,7 +740,9 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
             $('#facetScape').hide();
             $('#RS_ResultList').hide();
             $('#moreHint').hide();
-            $('#loader').show();
+                $('#loader p').hide();
+                $('#loader img').show();
+                $('#loader').show();
             QUERYING.search($('#RS_Query')[0].value);
         });
         
@@ -759,6 +763,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
 
         var loaderDiv = root.append('div').attr('id', 'loader');
         loaderDiv.append('img').attr('src', '../../media/loading.gif').attr('alt', 'loading');
+        loaderDiv.append('p').attr('id','errorMsg');
     }
 
     function FSResultLayout() {
