@@ -52,8 +52,6 @@ function display_querycrumbs(domElem) {
             EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason:{reason:'queryCrumbs'},terms:weightedTerms}});
         },
         onMouseOverNode: function(d, i) {
-            
-            
             if(QueryCrumbsConfiguration.nodeForm == "SQUARE") {
                 var infoBox = svgContainer.select("g").append("g").attr("class", "infoBoxNode");
                 d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", true).style("cursor","pointer");
@@ -300,21 +298,35 @@ function display_querycrumbs(domElem) {
         calcResultSetSimilarity: function(predecessor, current) {
             var sim = 0;
             var recurrence = [];
-            for(var i = 0; i < current.length; i++) {
-                var docAlreadyKnown = false;
-                var docAlreadyKnownIdx = -1;
-                for(var j = 0; j < predecessor.length; j++) {
-                    if(current[i].uri == predecessor[j].uri) {
-                        sim++;
-                        docAlreadyKnown = true;
-                        docAlreadyKnownIdx = j;
-                        break;
+            
+            if(predecessor.length > 0) {
+                for(var i = 0; i < current.length; i++) {
+                    var docAlreadyKnown = false;
+                    var docAlreadyKnownIdx = -1;
+                    for(var j = 0; j < predecessor.length; j++) {
+                        if(current[i].uri == predecessor[j].uri) {
+                            docAlreadyKnown = true;
+                            docAlreadyKnownIdx = j;
+                            break;
+                        }
                     }
-                }
 
-                recurrence.push(docAlreadyKnownIdx);
+                    recurrence.push(docAlreadyKnownIdx);
+                }
+            
+                var a = [], b = [];  
+                predecessor.forEach(function(e) {
+                    a.push(e.uri)
+                })
+
+                current.forEach(function(e) {
+                    b.push(e.uri)
+                })
+
+                sim = jaccard.index(a, b); 
             }
-            return {sim: sim/current.length, recurrence: recurrence};
+
+            return {sim: sim, recurrence: recurrence};
         },
         /*
             A simple heuristic to determine the similarity of two queries (nodes) based on the number of query terms
@@ -450,7 +462,6 @@ function display_querycrumbs(domElem) {
             crumbsSel.enter().append("g").attr("class", "crumbs");
 
             if(QueryCrumbsConfiguration.nodeForm == "CIRCLE") {
-                
 
                 var crumbsUpd = crumbsSel.attr("transform", "translate(-15, 10)");
                 crumbsSel.exit().remove();
@@ -499,10 +510,10 @@ function display_querycrumbs(domElem) {
                     .innerRadius(0)
                     .outerRadius(QueryCrumbsConfiguration.dimensions.circle_r)
                     .startAngle(function(d) { 
-                        return ((360 / 16) * (Math.PI / 180)) * d.index;     
+                        return ((360 / QueryCrumbsConfiguration.dimensions.circle_segments) * (Math.PI / 180)) * d.index;     
                     })
                     .endAngle(function(d) {
-                       return ((360 / 16) * (Math.PI / 180)) * (d.index + 1);
+                       return ((360 / QueryCrumbsConfiguration.dimensions.circle_segments) * (Math.PI / 180)) * (d.index + 1);
                     }) 
 
                 queryDocRects.enter().append("path").attr("d", arc);

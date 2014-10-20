@@ -31,7 +31,8 @@ var QueryCrumbsConfiguration = {
 	    edgeInfoVertPadding : 17,
 	    circle_cxy : 25,
 	    circle_r : 11,
-	    circle_bg_r : 12
+	    circle_bg_r : 12,
+	    circle_segments : 16
     },
     // The skill level of an user. (BEGINNER, EXPERT)
     skillLevel : "EXPERT",

@@ -160,19 +160,21 @@ EEXCESS.searchResultList = function(divContainer, options) {
 
         var _pagination = $('<div class="pagination"></div>');
         var pages = (Math.ceil(data.results.length / settings.itemsShown) > 10) ? 10 : Math.ceil(data.results.length / settings.itemsShown);
-        for (var i = 1; i <= pages; i++) {
+        if(pages > 1) {
+            for (var i = 1; i <= pages; i++) {
             var _btn = $('<a href="#" class="page gradient">' + i + '</a>');
             if (i == 1) {
                 _btn.addClass('active');
             }
             _pagination.append(_btn);
-        }
+            }
 
-        if (divContainer.find('.pagination').length != 0) {
-            divContainer.find('.pagination').remove();
-        }
+            if (divContainer.find('.pagination').length != 0) {
+                divContainer.find('.pagination').remove();
+            }
 
-        divContainer.append(_pagination)
+            divContainer.append(_pagination)  
+        }
     };
     var moreResults = function(items) {
 //            $('#eexcess_content').unbind('scroll'); TODO: check scrolling...
