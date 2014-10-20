@@ -46,7 +46,7 @@ EEXCESS.topKcorpus = function(corpus, k) {
     }
 
     // extract title keywords
-    var title_keywords_raw = document.title.match(/([äöüÄÖÜß\w-_]{3,})/g);
+    var title_keywords_raw = document.title.match(/([äöüÄÖÜß\w-_]{3,})/g) || [];
     var title_keywords = [];
     for (var i = 0; i < title_keywords_raw.length; i++) {
         var tmp = title_keywords_raw[i].toLowerCase();
