@@ -1395,12 +1395,12 @@ function Visualization( EEXCESSobj ) {
 				data = input.data;
 				
 				        // Initialize template's elements
-				PREPROCESSING.setAncillaryVariables();
+				//PREPROCESSING.setAncillaryVariables();
 				BOOKMARKS.updateBookmarkedItems();
-				PREPROCESSING.extendDataWithAncillaryDetails();
+				//PREPROCESSING.extendDataWithAncillaryDetails();
 				QUERY.updateHeaderText( "Query Results : " + data.length );
 				QUERY.updateSearchField( query );
-				CONTROLS.buildChartSelect();
+				//CONTROLS.buildChartSelect();
 				LIST.buildContentList();
 
 				
