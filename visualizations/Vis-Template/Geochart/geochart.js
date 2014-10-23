@@ -61,11 +61,6 @@ function Geochart(root, visTemplate) {
 			var rectBounds = layer.getBounds();
 			var inputData = GEO.Input.data;
 		    for(var i=0; i < inputData.length; i++){
-				console.log(rectBounds.getWest() <= inputData[i].coordinate[0]);
-				console.log(inputData[i].coordinate[0] <= rectBounds.getEast());
-				console.log(rectBounds.getNorth() >= inputData[i].coordinate[1]);
-				console.log(inputData[i].coordinate[1] >= rectBounds.getSouth());
-				console.log(i);
 				if(
 					rectBounds.getWest() <= inputData[i].coordinate[1] &&
 					inputData[i].coordinate[1] <= rectBounds.getEast() &&
@@ -170,9 +165,8 @@ function Geochart(root, visTemplate) {
 				GEO.Render.deleteCurrentSelect();
 				GEO.map.addLayer(layer);
 				currentOneLayer = layer;
-				console.log(layer.getBounds());//getNorth();
-				console.log(GEO.Input.data);
-				Vis.selectItems([]);//////////delete data
+				Vis.selectItems([]);//delete selection list
+				//make selection list
 				Vis.selectItems(
 					GEO.Internal.getDataIndexArrayPerSelection(layer)
 				);
