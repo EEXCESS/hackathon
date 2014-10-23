@@ -55,7 +55,30 @@ function Geochart(root, visTemplate) {
                     return i;
             }
             return null;
-        }
+        },
+		getDataIndexArrayPerSelection: function(layer){
+			var indexArray = [];
+			var rectBounds = layer.getBounds();
+			var inputData = GEO.Input.data;
+		    for(var i=0; i < inputData.length; i++){
+				console.log(rectBounds.getWest() <= inputData[i].coordinate[0]);
+				console.log(inputData[i].coordinate[0] <= rectBounds.getEast());
+				console.log(rectBounds.getNorth() >= inputData[i].coordinate[1]);
+				console.log(inputData[i].coordinate[1] >= rectBounds.getSouth());
+				console.log(i);
+				if(
+					rectBounds.getWest() <= inputData[i].coordinate[1] &&
+					inputData[i].coordinate[1] <= rectBounds.getEast() &&
+					rectBounds.getSouth() <= inputData[i].coordinate[0] &&
+					inputData[i].coordinate[0] <= rectBounds.getNorth()
+					)
+				{
+					indexArray.push(i);
+				}
+            }
+			console.log(indexArray);
+            return indexArray;
+		}
     };
 
 
@@ -110,7 +133,7 @@ function Geochart(root, visTemplate) {
         // Leaflet Draw
         // TODO @Stefan: uncomment the following lines
         var drawnItems = new L.FeatureGroup();
-        //GEO.map.addLayer(drawnItems);
+        GEO.map.addLayer(drawnItems);
         var drawControl = new L.Control.Draw({
             edit: {
                 featureGroup: drawnItems,
@@ -122,13 +145,12 @@ function Geochart(root, visTemplate) {
 				rectangle:{
 			        shapeOptions: {
 						stroke: true,
-						color: '#2A6E57',
+						color: '#1E28EC',
 						weight: 2,
 						opacity: 0.7,
 						fill: true,
 						fillColor: null, //same as color by default
 						fillOpacity: 0.1
-						//clickable: true
 					}
 				},
 				polygon: false,
@@ -148,6 +170,12 @@ function Geochart(root, visTemplate) {
 				GEO.Render.deleteCurrentSelect();
 				GEO.map.addLayer(layer);
 				currentOneLayer = layer;
+				console.log(layer.getBounds());//getNorth();
+				console.log(GEO.Input.data);
+				Vis.selectItems([]);//////////delete data
+				Vis.selectItems(
+					GEO.Internal.getDataIndexArrayPerSelection(layer)
+				);
 			}
 
 			// Do whatever else you need to. (save to db, add to map etc)
