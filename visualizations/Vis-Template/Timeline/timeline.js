@@ -67,6 +67,21 @@ function Timeline( root, visTemplate ){
 		TIMEVIS.Render.redraw();
 	};
 	
+	//experimental function
+	TIMEVIS.Evt.filterListPerTime = function(minDateInYears,maxDateInYears){
+		var indicesToHighlight = [];
+		var currentYear = 0;
+		data.forEach(function(d, i){
+			if(d.hasOwnProperty("year")){	
+				currentYear = d.year.getFullYear();
+				if(minDateInYears <= currentYear && currentYear <= maxDateInYears){
+					indicesToHighlight.push(i);
+				}
+			}
+		});
+		Vis.selectItems( indicesToHighlight );
+
+	}
 	
 	TIMEVIS.Evt.brushended = function(){
 	
@@ -78,6 +93,8 @@ function Timeline( root, visTemplate ){
 		
 		zoom.scale(scale);
 		zoom.translate([tx, ty]);	
+		
+		TIMEVIS.Evt.filterListPerTime(x.invert(0).getFullYear(),x.invert(width).getFullYear());
 	};
 	
 	
@@ -104,6 +121,9 @@ function Timeline( root, visTemplate ){
 		rightHandle.attr("x", x2(brushExtent[1]) - 8);
 	
 		TIMEVIS.Render.redraw();
+		
+		TIMEVIS.Evt.filterListPerTime(brushExtent[0].getFullYear(),brushExtent[1].getFullYear());
+		
 	};
 	
 	

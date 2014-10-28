@@ -341,9 +341,9 @@ input[type="button"]:hover{
     Currently Unused
 */
 #eexcess_header_filter {
-	width: 29%;
+	/*width: 29%;*/
 	float: right;
-    text-align:right;
+    /*text-align:right;*/
     padding-right: 1%;
 }
 
