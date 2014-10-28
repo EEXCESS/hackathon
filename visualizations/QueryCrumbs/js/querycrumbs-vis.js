@@ -371,7 +371,7 @@ function display_querycrumbs(domElem) {
                 vNode.width = QueryCrumbsConfiguration.dimensions.rectWidth;
                 vNode.height = QueryCrumbsConfiguration.dimensions.rectHeight;
                 vNode.results = [];
-                for(var docIdx = 0; docIdx < QueryCrumbsConfiguration.dimensions.DENSE_PIXELS; docIdx++) {
+                for(var docIdx = 0; docIdx < QueryCrumbsConfiguration.dimensions.SEGMENTS; docIdx++) {
                     var vDoc = {};
                     vDoc.index = docIdx;
                     vDoc.x_pos = vNode.x_pos + (docIdx % QueryCrumbsConfiguration.dimensions.docRectHorizontal) * QueryCrumbsConfiguration.dimensions.docRectWidth;
@@ -510,10 +510,10 @@ function display_querycrumbs(domElem) {
                     .innerRadius(0)
                     .outerRadius(QueryCrumbsConfiguration.dimensions.circle_r)
                     .startAngle(function(d) { 
-                        return ((360 / QueryCrumbsConfiguration.dimensions.circle_segments) * (Math.PI / 180)) * d.index;     
+                        return ((360 / QueryCrumbsConfiguration.dimensions.SEGMENTS) * (Math.PI / 180)) * d.index;     
                     })
                     .endAngle(function(d) {
-                       return ((360 / QueryCrumbsConfiguration.dimensions.circle_segments) * (Math.PI / 180)) * (d.index + 1);
+                       return ((360 / QueryCrumbsConfiguration.dimensions.SEGMENTS) * (Math.PI / 180)) * (d.index + 1);
                     }) 
 
                 queryDocRects.enter().append("path").attr("d", arc);

@@ -16,11 +16,11 @@ var QueryCrumbsConfiguration = {
     // Query Crumbs dimensions
     dimensions : {
 		HISTORY_LENGTH : 11,
-		DENSE_PIXELS : 16,
+		SEGMENTS : 25,
 	    rectHeight : 20,
 	    rectWidth : 20,
-	    docRectHorizontal : 4,
-	    docRectVertical : 4,
+	    docRectHorizontal : 5,
+	    docRectVertical : 5,
 	    docRectHeight : null,
 	    docRectWidth : null,
 	    edgeWidth : 10,
@@ -31,8 +31,7 @@ var QueryCrumbsConfiguration = {
 	    edgeInfoVertPadding : 17,
 	    circle_cxy : 25,
 	    circle_r : 11,
-	    circle_bg_r : 12,
-	    circle_segments : 16
+	    circle_bg_r : 12
     },
     // The skill level of an user. (BEGINNER, EXPERT)
     skillLevel : "EXPERT",
