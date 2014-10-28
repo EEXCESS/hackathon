@@ -18,9 +18,9 @@ var QueryCrumbsConfiguration = {
 		// the number of visuals (= the number of queries to show)
 		HISTORY_LENGTH : 11,
 	    // the number of areas to show in total in each visual (each area corresponds to one document)
-         DENSE_PIXELS : 100,
+        SEGMENTS : 100,
         /* Dimensions for the SQUARE visual type
-          docRectHorizontal * docRectVertical == DENSE_PIXELS
+          docRectHorizontal * docRectVertical == SEGMENTS
         */
 		// the number of columns - valid for the type SQUARE only
 	    docRectHorizontal : 10,
@@ -42,8 +42,7 @@ var QueryCrumbsConfiguration = {
         */
 	    circle_cxy : 25,
 	    circle_r : 11,
-	    circle_bg_r : 12,
-	    circle_segments : 16
+	    circle_bg_r : 12
     },
     // The skill level of an user. (BEGINNER, EXPERT)
     skillLevel : "EXPERT",
