@@ -149,13 +149,15 @@ function display_querycrumbs(domElem) {
                 d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", false).style("cursor",null);
                 for(var n in simResults) {
                     simResults[n].classed("docNode", true).classed("docNode-highlighted", false)
-                        .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
+                        //.style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
+                        .style("opacity", QueryCrumbsConfiguration.colorSettings.newDocOpacity);
                 } 
             } else {
                 d3.select(this).select("circle.queryCircleBg").classed("queryCircleBg", true).classed("queryCircleBgHovered", false).style("cursor",null);
                 for(var n in simResults) {
                     simResults[n].classed("docNode", true).classed("docNode-highlighted", false)
-                        .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
+                        //.style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
+                        .style("opacity", QueryCrumbsConfiguration.colorSettings.newDocOpacity);
                 } 
           }
           
@@ -300,6 +302,16 @@ function display_querycrumbs(domElem) {
             var recurrence = [];
             
             if(predecessor.length > 0) {
+
+                if(current.length > QueryCrumbsConfiguration.dimensions.SEGMENTS && predecessor.length > QueryCrumbsConfiguration.dimensions.SEGMENTS) {
+                    current = current.slice(0, QueryCrumbsConfiguration.dimensions.SEGMENTS);
+                    predecessor = predecessor.slice(0, QueryCrumbsConfiguration.dimensions.SEGMENTS);
+                } else if(current.length > predecessor.length) {
+                    current = current.slice(0, predecessor.length);
+                } else if(predecessor.length > current.length) {
+                    predecessor = predecessor.slice(0, acurrent.length);
+                }
+                
                 for(var i = 0; i < current.length; i++) {
                     var docAlreadyKnown = false;
                     var docAlreadyKnownIdx = -1;
@@ -519,8 +531,8 @@ function display_querycrumbs(domElem) {
                 queryDocRects.enter().append("path").attr("d", arc);
                 queryDocRects.attr("class", "docNode")
                     .attr("d", arc)
-                    .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
-
+                    //.style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
+                    .style("opacity", QueryCrumbsConfiguration.colorSettings.newDocOpacity);
             } else {
 
                 var crumbsUpd = crumbsSel.attr("transform", "translate(2, "+15+")");
@@ -579,8 +591,8 @@ function display_querycrumbs(domElem) {
                   .attr("y", function(d) { return d.y_pos; })
                   .attr("width", function(d) { return d.width; })
                   .attr("height", function(d) { return d.height; })
-                  .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
-
+                 // .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
+                  .style("opacity", QueryCrumbsConfiguration.colorSettings.newDocOpacity);
                 // var queryEdgesSel = crumbsUpd.selectAll("rect.queryEdge").data(function(d) { return d.visualDataEdges;});
                 // var queryEdgesEnter = queryEdgesSel.enter()
                 //   .append("rect")

@@ -17,15 +17,15 @@ var QueryCrumbsConfiguration = {
     dimensions : {
 		// the number of visuals (= the number of queries to show)
 		HISTORY_LENGTH : 11,
-	    // the number of areas to show in total in each visual (each area corresponds to one document)
-        SEGMENTS : 100,
+	    // the number of segments to show in total in each visual (each area corresponds to one document)
+        SEGMENTS : null,
         /* Dimensions for the SQUARE visual type
-          docRectHorizontal * docRectVertical == SEGMENTS
+           This will be initialized below (docRectHorizontal * docRectVertical == SEGMENTS)
         */
 		// the number of columns - valid for the type SQUARE only
-	    docRectHorizontal : 10,
+	    docRectHorizontal : 4,
 	    // the number of rows - valid for the type SQUARE only
-        docRectVertical : 10,
+        docRectVertical : 4,
 	    rectHeight : 20,
 	    rectWidth : 20,
 	    docRectHeight : null,
@@ -52,6 +52,8 @@ var QueryCrumbsConfiguration = {
 
 QueryCrumbsConfiguration.dimensions.docRectHeight = QueryCrumbsConfiguration.dimensions.rectHeight / QueryCrumbsConfiguration.dimensions.docRectVertical;
 QueryCrumbsConfiguration.dimensions.docRectWidth = QueryCrumbsConfiguration.dimensions.rectWidth / QueryCrumbsConfiguration.dimensions.docRectHorizontal;
+// Calculate and initialize the amount of segments for the nodes. 
+QueryCrumbsConfiguration.dimensions.SEGMENTS = QueryCrumbsConfiguration.dimensions.docRectHorizontal * QueryCrumbsConfiguration.dimensions.docRectVertical;
 
 /*
   Uses the base colors defined in QueryCrumbsConfiguration.base_colors. Several basic distinct colors can be defined here. When appending a new node to the QueryCrumbs, we assign

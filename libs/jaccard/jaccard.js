@@ -40,10 +40,6 @@ jaccard.index = function (a, b) {
 /*
  * Dissimilarity
  */
-jaccard.distance = function (a, b, c) {
-  if (c) {
-    c(1 - jaccard.index(a, b));
-  } else {
-    return 1 - jaccard.index(a, b);
-  }
+jaccard.distance = function (a, b) {
+  return 1 - jaccard.index(a, b);
 }

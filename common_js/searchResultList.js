@@ -39,7 +39,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
     var settings = $.extend({
         pathToMedia: '../media/',
         pathToLibs: '../libs/',
-        itemsShown: 10,
+        itemsShown: null,
         previewHandler: function(url) {
             window.open(url, '_blank');
             EEXCESS.messaging.callBG({method: {parent: 'model', func: 'resultOpened'}, data: url});
@@ -152,6 +152,9 @@ EEXCESS.searchResultList = function(divContainer, options) {
         }
         _list.attr('data-total', data.totalResults);
         moreResults(data.results);
+        
+        var height = (window.innerHeight || document.body.clientHeight) - 250;
+        settings.itemsShown = Math.floor(height / 50);
 
 
         var _pagination = $('<div class="pagination"></div>');
