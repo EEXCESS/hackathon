@@ -33,8 +33,9 @@ function Visualization( EEXCESSobj ) {
     var bookmarkDialogInputWrapper = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-input-wrapper"; // Wrapper for input containing new bookmark name
     var detailsBookmarkDialogId = "#eexcess-see-and-edit-bookmark-dialog";                         // Dialog displaying bookmark detials (when click on 3-dotted icon)
     var bookmarkedInId = 'eexcess-bookmark-bookmarked-in-';                                        // Divs in bookamark details dialog showing bookmarks in which the current item is recorded
-
-
+	
+	
+	
 	// Icon & Image Constants
 	var LOADING_IMG = "../../media/loading.gif";
 	var NO_IMG = "../../media/no-img.png";
@@ -145,7 +146,9 @@ function Visualization( EEXCESSobj ) {
         QUERY.updateSearchField( query );
         CONTROLS.buildChartSelect();
         LIST.buildContentList();
-
+		FILTER.buildFilterBookmark();
+		
+		
         // Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)
         VISPANEL.drawChart();
 
@@ -446,6 +449,7 @@ function Visualization( EEXCESSobj ) {
     ////////	'Save' button clicked in save bookmark dialog 	////////
     EVTHANDLER.bookmarkSaveButtonClicked = function(){
         BOOKMARKS.saveBookmark();
+		FILTER.changeDropDownList();
     };
 
 
@@ -1323,7 +1327,106 @@ function Visualization( EEXCESSobj ) {
 	};
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    var FILTER = {};
+	var inputData;
+	var STR_SHOWALLRESULTS = "Results...";	
+	
+	var filterBookmarkDialogId ="#eexcess-filter-bookmark-dialog";
+	var filterBookmarkDropdownList = "#eexcess-filter-bookmark-dialog .eexcess-bookmark-dropdown-list"; 
+	var filterSelect = "#eexcess_header_filter";
+	
+	//change new Bookmarks
+	FILTER.changeDropDownList = function(){
+	
+		$( filterBookmarkDialogId ).remove();
+		
+		var topOffset = $(filterSelect).offset().top;
+		var dialogBookmark = d3.select(filterSelect).append("div")
+		//.attr("id", "eexcess-save-bookmark-dialog")
+		.attr("id", "eexcess-filter-bookmark-dialog")
+		.attr("class", "eexcess-filter-bookmark-dialog")
+
+		
+		//eexcess-bookmark-dropdown-list wrapper-dropdown active
+		//.attr("class", "eexcess-bookmark-dialog")
+		
+		//.style('display', 'none')
+		.style("top", topOffset + "px" )
+		.style("width","200px");
+		
+		var bookmarksListContainer = dialogBookmark.append("div")
+			.attr("class", "eexcess-bookmark-dropdown-list")
+			.append('ul');
+			
+	    var optionsData =  $.merge([{'bookmark-name': STR_SHOWALLRESULTS, 'color': ''}], BookmarkingAPI.getAllBookmarkNamesAndColors());
+		var bookmarksListData = bookmarksListContainer.selectAll('li').data(optionsData);
+
+        var bookmarksList = bookmarksListData.enter().append('li');
+        bookmarksList.append('a').text(function(b){ return b["bookmark-name"];})
+        bookmarksList.append('div').text(function(b){ return b.color; });
+		
+        $(filterBookmarkDropdownList  ).dropdown({
+		   'change':function(evt,index){
+
+				var input ={};
+				input.data = [];
+				
+				
+				if(evt == STR_SHOWALLRESULTS){
+					input.data = inputData;
+				}else{
+					//filtered bookmark from data
+					var currentBookmark = BookmarkingAPI.getAllBookmarks()[evt].items;
+					//console.log(currentBookmark);
+					inputData.forEach(function(elementData,indexData){
+						currentBookmark.forEach(function(elementBookmark,indexBookmark){
+							if(elementData.id == elementBookmark.id){
+								input.data.push(inputData[indexData]);
+							}
+						});
+						
+					});
+
+				}
+									
+				data = input.data;
+				
+				        // Initialize template's elements
+				//PREPROCESSING.setAncillaryVariables();
+				BOOKMARKS.updateBookmarkedItems();
+				//PREPROCESSING.extendDataWithAncillaryDetails();
+				QUERY.updateHeaderText( "Query Results : " + data.length );
+				QUERY.updateSearchField( query );
+				//CONTROLS.buildChartSelect();
+				LIST.buildContentList();
+
+				
+				// Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)
+				VISPANEL.drawChart();
+		
+		   }
+        });
+		
+		$(filterBookmarkDialogId).slideDown('slow')
+	}
+	
+	FILTER.buildFilterBookmark = function(){
+	
+	    BOOKMARKS.destroyBookmarkDialog();
+		inputData=data;
+
+		FILTER.changeDropDownList();
+	}
+	
+	
+	
     return START;
-
-
 }
+
+
+	
+	
+

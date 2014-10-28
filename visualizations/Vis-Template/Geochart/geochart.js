@@ -55,7 +55,25 @@ function Geochart(root, visTemplate) {
                     return i;
             }
             return null;
-        }
+        },
+		getDataIndexArrayPerSelection: function(layer){
+			var indexArray = [];
+			var rectBounds = layer.getBounds();
+			var inputData = GEO.Input.data;
+		    for(var i=0; i < inputData.length; i++){
+				if(
+					rectBounds.getWest() <= inputData[i].coordinate[1] &&
+					inputData[i].coordinate[1] <= rectBounds.getEast() &&
+					rectBounds.getSouth() <= inputData[i].coordinate[0] &&
+					inputData[i].coordinate[0] <= rectBounds.getNorth()
+					)
+				{
+					indexArray.push(i);
+				}
+            }
+			console.log(indexArray);
+            return indexArray;
+		}
     };
 
 
@@ -109,16 +127,64 @@ function Geochart(root, visTemplate) {
 
         // Leaflet Draw
         // TODO @Stefan: uncomment the following lines
-        //var drawnItems = new L.FeatureGroup();
-        //GEO.map.addLayer(drawnItems);
-        //var drawControl = new L.Control.Draw({
-        //    edit: {
-        //        featureGroup: drawnItems
-        //    }
-        //});
-        //GEO.map.addControl(drawControl);
-	};
+        var drawnItems = new L.FeatureGroup();
+        GEO.map.addLayer(drawnItems);
+        var drawControl = new L.Control.Draw({
+            edit: {
+                featureGroup: drawnItems,
+				edit:false,
+				remove:false
+				
+            },
+			draw: {
+				rectangle:{
+			        shapeOptions: {
+						stroke: true,
+						color: '#1E28EC',
+						weight: 2,
+						opacity: 0.7,
+						fill: true,
+						fillColor: null, //same as color by default
+						fillOpacity: 0.1
+					}
+				},
+				polygon: false,
+				marker: false,
+				polyline: false,
+				circle:false
+			},
+        });
+        GEO.map.addControl(drawControl);
+		
+		GEO.map.on('draw:created', function (e) {
+			var type = e.layerType,
+				layer = e.layer;
 
+			if (type === 'rectangle') {
+				// Do marker specific actions
+				GEO.Render.deleteCurrentSelect();
+				GEO.map.addLayer(layer);
+				currentOneLayer = layer;
+				Vis.selectItems([]);//delete selection list
+				//make selection list
+				Vis.selectItems(
+					GEO.Internal.getDataIndexArrayPerSelection(layer)
+				);
+			}
+
+			// Do whatever else you need to. (save to db, add to map etc)
+			//GEO.map.addLayer(layer);
+		});
+	};
+	GEO.Render.deleteCurrentSelect = function(){
+		if(currentOneLayer != null && GEO.map.hasLayer(currentOneLayer)){
+			GEO.map.removeLayer(currentOneLayer);
+			currentOneLayer = null;
+		}
+	};
+	
+    var currentOneLayer = null;
+	
     GEO.Render.centerMap = function(){
         GEO.map.setView([51.505, -0.09], 2);
     };
@@ -169,6 +235,7 @@ function Geochart(root, visTemplate) {
             marker.bindPopup(GEO.Input.data[i].title);
             marker.on('click', function(e){
                 if (e && e.target && e.target.options && e.target.options.dataObject){
+					GEO.Render.deleteCurrentSelect();
                     Vis.selectItems([GEO.Internal.getDataIndex(e.target.options.dataObject.id)]);
                 }
             }).on('popupclose', function(){
@@ -256,6 +323,8 @@ function Geochart(root, visTemplate) {
         GEO.map.removeLayer(GEO.markersGroup);
         GEO.Render.drawMarkers();
         GEO.Render.centerMap();
+		GEO.Render.deleteCurrentSelect();
+		
 	};
 
 
@@ -274,6 +343,7 @@ function Geochart(root, visTemplate) {
             });
             //GEO.Input.data[i].geoMarker.openPopup();
         });
+		GEO.Render.deleteCurrentSelect();
     };
 
 

@@ -15,23 +15,35 @@ var QueryCrumbsConfiguration = {
     },
     // Query Crumbs dimensions
     dimensions : {
+		// the number of visuals (= the number of queries to show)
 		HISTORY_LENGTH : 11,
-		SEGMENTS : 25,
+	    // the number of areas to show in total in each visual (each area corresponds to one document)
+         DENSE_PIXELS : 100,
+        /* Dimensions for the SQUARE visual type
+          docRectHorizontal * docRectVertical == DENSE_PIXELS
+        */
+		// the number of columns - valid for the type SQUARE only
+	    docRectHorizontal : 10,
+	    // the number of rows - valid for the type SQUARE only
+        docRectVertical : 10,
 	    rectHeight : 20,
 	    rectWidth : 20,
-	    docRectHorizontal : 5,
-	    docRectVertical : 5,
 	    docRectHeight : null,
 	    docRectWidth : null,
+	    rectBorderWidth : 2,
+        rectInfoVertPadding : 15,
+        /* Dimensions for the edges between single visuals
+          */
 	    edgeWidth : 10,
 	    edgeHeight : 10,
 	    // node border and padding of additional info on mouse over
-	    rectBorderWidth : 2,
-	    rectInfoVertPadding : 15,
 	    edgeInfoVertPadding : 17,
+	    /* Dimensions for the CIRCLE visual type
+        */
 	    circle_cxy : 25,
 	    circle_r : 11,
-	    circle_bg_r : 12
+	    circle_bg_r : 12,
+	    circle_segments : 16
     },
     // The skill level of an user. (BEGINNER, EXPERT)
     skillLevel : "EXPERT",

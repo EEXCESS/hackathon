@@ -164,6 +164,7 @@ input[type="button"]:hover{
     background: #fff;
     border: 1px solid rgba(0,0,0,0.2);
     border-top: none;
+	z-index:1;
 }
 
 .wrapper-dropdown .dropdown li {
@@ -804,7 +805,7 @@ p.eexcess_ritem_short {
 ********************************************************************************************************************************************/
 
 
-.eexcess-bookmark-dialog {
+.eexcess-bookmark-dialog, .eexcess-bookmark-filter-dialog{
     position: absolute;
     right: 4.6em;
     width: 18em;
