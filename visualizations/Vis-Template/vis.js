@@ -5,7 +5,10 @@ function Visualization( EEXCESSobj ) {
 	
     var width;		// Screen width
     var height;	    // Screen height
-    
+	
+    var inputData;
+
+	
     // DOM Selectors
     var root = "div#eexcess_canvas";											                   // String to select the area where the visualization should be displayed
 	var searchField = "#eexcess_search_field";									                   // String to select search field in the header
@@ -23,17 +26,20 @@ function Visualization( EEXCESSobj ) {
 	var colorIcon = ".color_icon";												                   // Class selector for div icon colored according to legend categories
 	var favIconClass = ".eexcess_fav_icon";                                                        // img element fpr favicon (either on or off)
     var bookmarkDetailsIconClass = ".eexcess_details_icon";                                        // img element with 3-dot icon in each list item used to display bookmarked item's details on click
-    var loadingMsgId = "#eexcess_message_on_canvas";
+    var loadingMsgId = "#eexcess_message_on_canvas";											
+	var filterSelect = "#eexcess_header_filter";												   // String to select in the right of the header
 
+	
     var bookmarkDialogClass = ".eexcess-bookmark-dialog";                                          // Class selector for both types of dialog: save bookmark and see-and-edit-bookmark
     var saveBookmarkDialogId = "#eexcess-save-bookmark-dialog";                                    // Id for dialog poping up upon clicking on a "star" icon
-    var bookmarkDropdownList = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dropdown-list";    // Div wrapping drop down list in boofmark dialog
+    var bookmarkDropdownList = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dropdown-list";    // Div wrapping drop down list in bookmark dialog
     var newBookmarkOptionsId = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-optional";  // Div wrapping color picker and input element in bookmark dialog
     var colorPickerId = "#eexcess-bookmak-dialog-color-picker";                                    // Div tranformed into a colorpicekr in bookmark dialog
     var bookmarkDialogInputWrapper = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-input-wrapper"; // Wrapper for input containing new bookmark name
     var detailsBookmarkDialogId = "#eexcess-see-and-edit-bookmark-dialog";                         // Dialog displaying bookmark detials (when click on 3-dotted icon)
     var bookmarkedInId = 'eexcess-bookmark-bookmarked-in-';                                        // Divs in bookamark details dialog showing bookmarks in which the current item is recorded
-	
+	var filterBookmarkDialogId ="#eexcess-filter-bookmark-dialog";								   // Id for dialog filter bookmark
+	var filterBookmarkDropdownList = "#eexcess-filter-bookmark-dialog .eexcess-bookmark-dropdown-list"; // Div wrapping drop down list in filter bookmark dialog
 	
 	
 	// Icon & Image Constants
@@ -57,8 +63,9 @@ function Visualization( EEXCESSobj ) {
     var STR_NO_DATA_RECEIVED = "No Data Received";
     var STR_NEW = "New...";
 	var STR_BOOKMARK_NAME_MISSING = "Indicate new bookmark name";
-	
+	var STR_SHOWALLRESULTS = "Search results...";	
 
+	
 	// Main variables
 	var data;							// contains the data to be visualized
 	var mappings;						// contains all the possible mapping combiantions for each type of visualization
@@ -1334,12 +1341,8 @@ function Visualization( EEXCESSobj ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     var FILTER = {};
-	var inputData;
-	var STR_SHOWALLRESULTS = "Search results...";	
-	
-	var filterBookmarkDialogId ="#eexcess-filter-bookmark-dialog";
-	var filterBookmarkDropdownList = "#eexcess-filter-bookmark-dialog .eexcess-bookmark-dropdown-list"; 
-	var filterSelect = "#eexcess_header_filter";
+
+
 	
 	//change new Bookmarks
 	FILTER.changeDropDownList = function(){
