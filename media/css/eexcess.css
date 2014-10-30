@@ -37,7 +37,8 @@ header {
 
 /*ceci*/
 header #eexcess_searchForm{
-    width: 66%;
+    /*width: 66%;*/
+    widt: 60%;
 }
 
 /*ceci*/

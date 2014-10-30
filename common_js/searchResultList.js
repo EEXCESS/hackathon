@@ -152,12 +152,16 @@ EEXCESS.searchResultList = function(divContainer, options) {
         }
         _list.attr('data-total', data.totalResults);
         moreResults(data.results);
-        
-        var height = (window.innerHeight || document.body.clientHeight) - 250;
-        settings.itemsShown = Math.floor(height / 50);
 
-
+        // We need the pagination only if the options menu does not provide information about this value
+        if(!options || !options.itemsShown) {
+            var height = (window.innerHeight || document.body.clientHeight) - 250;
+            // If the sidebar is hidden at the start, the a default of 10 items are displayed
+            settings.itemsShown = (height > 0) ? Math.floor(height / 50) : 10;   
+        }
+ 
         var _pagination = $('<div class="pagination"></div>');
+        // Display a maximum of 10 pages
         var pages = (Math.ceil(data.results.length / settings.itemsShown) > 10) ? 10 : Math.ceil(data.results.length / settings.itemsShown);
         if(pages > 1) {
             for (var i = 1; i <= pages; i++) {

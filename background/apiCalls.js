@@ -73,10 +73,16 @@ EEXCESS.euCall = function(queryData, start, numResults, success, error) {
     if (EEXCESS.qXHR && EEXCESS.qXHR.readystate !== 4) {
         EEXCESS.qXHR.abort();
     }
+
+    var startTime = new Date().getTime();
     EEXCESS.qXHR = $.ajax(EEXCESS.backend.getURL()
             + '&query=' + query
             + '&start=' + start
             + '&rows=96&profile=standard');
+
+    var completionTime = new Date().getTime() - startTime;
+    localStorage.setItem("callCompletionTime", completionTime);
+
     EEXCESS.qXHR.done(function(data) {
         console.log(data);
         if (data.totalResults !== 0) {
@@ -143,6 +149,7 @@ EEXCESS.frCall_impl = function(queryData, start, numResults, success, error) {
         if (EEXCESS.qXHR && EEXCESS.qXHR.readystate !== 4) {
             EEXCESS.qXHR.abort();
         }
+        var startTime = new Date().getTime();
         EEXCESS.qXHR = $.ajax({
             url: EEXCESS.backend.getURL(),
             data: JSON.stringify(profile),
@@ -151,6 +158,9 @@ EEXCESS.frCall_impl = function(queryData, start, numResults, success, error) {
             dataType: 'json',
             timeout: EEXCESS.config.TIMEOUT()
         });
+        var completionTime = new Date().getTime() - startTime;
+        localStorage.setItem("callCompletionTime", completionTime);
+
         EEXCESS.qXHR.done(function(data) {
             console.log(data);
             data['results'] = data['result'];

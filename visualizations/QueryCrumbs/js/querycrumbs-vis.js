@@ -1,5 +1,47 @@
 function display_querycrumbs(domElem) {
 
+
+    /**
+     * Variable and event handler for the evaluation
+     */
+
+    var taskStart = 0;
+    var userID = 0;
+    var taskID = 0;
+
+    $(document).on("click", "#eexcess_start_btn", function() {
+        var template = 
+        "<div id='evalContainer'><span>User ID: </span><input id='evalUID'><br><span>Task ID: </span><input id='taskID'><button id='evalInfos'>OK</button></div>";
+        $("#eexcess_main").after(template);
+    })
+
+    $(document).on("click", "#evalInfos", function() {
+        userID = $('#evalUID').val();
+        taskID = $('#taskID').val();
+        $('#evalContainer').remove();
+        taskStart = new Date().getTime();   
+    })
+
+    $(document).on("click", "#eexcess_stop_btn", function() {
+        var tmp =  new Date().getTime() - taskStart;
+        var taskCompletionTime = tmp - localStorage.getItem("callCompletionTime");
+        var inSeconds = taskCompletionTime / 1000;
+        inSeconds = inSeconds.toFixed(2);
+        var evaluationObject = localStorage.getItem("evaluation");
+        evaluationObject = JSON.parse(evaluationObject);
+
+        if(evaluationObject == null) {
+            localStorage.setItem("lastname", {});
+            evaluationObject = {};
+        }
+
+        if(!evaluationObject[userID]) {
+            evaluationObject[userID] = {}
+        }
+        evaluationObject[userID][taskID] = inSeconds;
+        localStorage.setItem("evaluation", JSON.stringify(evaluationObject));
+    })
+
     // A list of the HISTORY_LENGTH recent queries
     var historyData = [];
     // A list of similarities of one node to its predecessor
@@ -309,9 +351,9 @@ function display_querycrumbs(domElem) {
                 } else if(current.length > predecessor.length) {
                     current = current.slice(0, predecessor.length);
                 } else if(predecessor.length > current.length) {
-                    predecessor = predecessor.slice(0, acurrent.length);
+                    predecessor = predecessor.slice(0, current.length);
                 }
-                
+
                 for(var i = 0; i < current.length; i++) {
                     var docAlreadyKnown = false;
                     var docAlreadyKnownIdx = -1;
