@@ -71,7 +71,6 @@ function Geochart(root, visTemplate) {
 					indexArray.push(i);
 				}
             }
-			console.log(indexArray);
             return indexArray;
 		}
     };
@@ -165,7 +164,6 @@ function Geochart(root, visTemplate) {
 				GEO.Render.deleteCurrentSelect();
 				GEO.map.addLayer(layer);
 				currentOneLayer = layer;
-				Vis.selectItems([]);//delete selection list
 				//make selection list
 				Vis.selectItems(
 					GEO.Internal.getDataIndexArrayPerSelection(layer)

@@ -76,6 +76,8 @@ function Bookmarking() {
         if( BOOKMARKING.Dictionary[bookmarkName].items.getIndexOf(item.id, 'id') != -1 )
             return 'Item already exists in ' + bookmarkName;
 
+		item.bookmarked = true; //do to ask cicilia??
+		
         BOOKMARKING.Dictionary[bookmarkName].items.push(item);
 
         INTERNAL.saveToLocalStorage( BOOKMARKING.Dictionary );

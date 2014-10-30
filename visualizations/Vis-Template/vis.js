@@ -420,7 +420,15 @@ function Visualization( EEXCESSobj ) {
     EVTHANDLER.faviconClicked = function(d, i){
 
         d3.event.stopPropagation();
-        BOOKMARKS.buildSaveBookmarkDialog(d, i, this);
+        //BOOKMARKS.buildSaveBookmarkDialog(d, i, this);//ask cecillia ????????
+		BOOKMARKS.buildSaveBookmarkDialog(
+			function(thisValue){
+				thisValue.internal.setCurrentItem(d, i);
+			},
+			function(bookmarkDetails){
+				bookmarkDetails.append('p').text(d.title);
+			},EVTHANDLER.bookmarkSaveButtonClicked,
+			this);
     };
 
 
@@ -829,8 +837,9 @@ function Visualization( EEXCESSobj ) {
         d3.select(listItem + '' +index).select(favIconClass).transition().attr("src", FAV_ICON_ON).duration(2000);
         // show bookmark details icon
         $(listItem + '' +index + ' ' + bookmarkDetailsIconClass).fadeIn('slow');
-        // Update item's property 'bookmarked'
-        data[index].bookmarked = true;
+		
+		data[index].bookmarked = true;
+		
     };
 
 
@@ -840,7 +849,8 @@ function Visualization( EEXCESSobj ) {
         // Hide bookmark details icon
         $(listItem + '' +index + ' ' + bookmarkDetailsIconClass).fadeOut('slow');
         // Update item's property 'bookmarked'
-        data[index].bookmarked = false;
+		
+		data[index].bookmarked = false;
     }
 
 	
@@ -1090,19 +1100,53 @@ function Visualization( EEXCESSobj ) {
 
 
     BOOKMARKS.updateBookmarkedItems = function(){
-        bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
+        
+		//experimental code begin to do ask cecillia ??
+		//bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
+		//console.log('bisher: ');
+		//console.log(bookmarkedItems);
+		 
+		bookmarkedItems = {};
+		var allBookmarks = BookmarkingAPI.getAllBookmarks();
+		Object.keys(allBookmarks).forEach(function(bookmarkKey){
+			allBookmarks[bookmarkKey].items.forEach(function(itemsElement){	
+				
+				var itemEntry = itemsElement['id'];
+				if(typeof bookmarkedItems[itemEntry] == 'undefined' || bookmarkedItems[itemEntry] == 'undefined'){
+					bookmarkedItems[itemEntry] = { 'bookmarked' : new Array() };
+				}
+
+				bookmarkedItems[itemEntry].bookmarked.push({
+					'bookmark-name' : bookmarkKey,
+					'bookmark-id' : allBookmarks[bookmarkKey].id,
+					'color' : allBookmarks[bookmarkKey].color,
+				});
+				
+			});
+		});
+		
+		//experimental code end to do ask cecillia ??
+		//console.log('neu: ');
+		//console.log(bookmarkedItems);
+		
         console.log('----- BOOKMARKED ITEMS -----');
         console.log(bookmarkedItems);
     };
 
 
+//call first func
+//call title output (bookmarkD3Obj)
+//call savebutton
 
-    BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
+    //BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
+	BOOKMARKS.buildSaveBookmarkDialog = function(firstFunc,titleOutput,savebutton, sender) {
+
 
         BOOKMARKS.destroyBookmarkDialog();
         isBookmarkDialogOpen = true;
 
-        this.internal.setCurrentItem(d, i);
+		firstFunc(this);
+        //this.internal.setCurrentItem(d, i);
 
         var topOffset = $(contentPanel).offset().top;
 
@@ -1124,7 +1168,8 @@ function Visualization( EEXCESSobj ) {
             .attr('class', 'eexcess-boookmark-dialog-details');
 
         bookmarkDetails.append('span').text('Title:');
-        bookmarkDetails.append('p').text(d.title);
+        //bookmarkDetails.append('p').text(d.title);
+		titleOutput(bookmarkDetails);
         bookmarkDetails.append('span').text('Query:');
         bookmarkDetails.append('p').text(query);
 
@@ -1178,7 +1223,8 @@ function Visualization( EEXCESSobj ) {
             .attr("type", "button")
             .attr("class", "eexcess-bookmark-button")
             .attr("value", "Save")
-            .on("click", EVTHANDLER.bookmarkSaveButtonClicked);
+			.on("click",savebutton);
+            //.on("click", EVTHANDLER.bookmarkSaveButtonClicked);
 
         bookmarkButtonsWrapper.append("input")
             .attr("type", "button")
@@ -1306,7 +1352,9 @@ function Visualization( EEXCESSobj ) {
 
         // sender is img element with remove icon
         $(sender.parentNode).remove();
-        BOOKMARKS.updateBookmarkedItems();
+		
+		
+		BOOKMARKS.updateBookmarkedItems();
 
         if(typeof bookmarkedItems[itemId] == 'undefined' || bookmarkedItems[itemId] == 'undefined')
             LIST.turnFaviconOffAndHideDetailsIcon(itemIndex);
@@ -1350,7 +1398,7 @@ function Visualization( EEXCESSobj ) {
 		$( filterBookmarkDialogId ).remove();
 		
 		var topOffset = $(filterSelect).offset().top;
-		var dialogBookmark = d3.select(filterSelect).append("div")
+		var dialogBookmark = d3.select(filterSelect).append("span")//div
 		//.attr("id", "eexcess-save-bookmark-dialog")
 		.attr("id", "eexcess-filter-bookmark-dialog")
 		.attr("class", "eexcess-filter-bookmark-dialog")
@@ -1373,11 +1421,12 @@ function Visualization( EEXCESSobj ) {
 		var bookmarkCount = 0;
 		bookmarks.forEach(function(elementData,indexData){
 			bookmarkCount = 0;
-			FILTER.filterBookmark(inputData,
-				BookmarkingAPI.getAllBookmarks()[elementData["bookmark-name"]].items,
-				function(){
-					bookmarkCount++;
-				});
+			//FILTER.filterBookmark(inputData,
+			//	BookmarkingAPI.getAllBookmarks()[elementData["bookmark-name"]].items,
+			//	function(){
+			//		bookmarkCount++;
+			//	});
+			bookmarkCount = BookmarkingAPI.getAllBookmarks()[elementData["bookmark-name"]].items.length;
 			elementData["bookmark-name"] = elementData["bookmark-name"] + " : ("+bookmarkCount+")";
 		
 		});
@@ -1402,12 +1451,24 @@ function Visualization( EEXCESSobj ) {
 				
 				if(evt == STR_SHOWALLRESULTS){
 					input.data = inputData;
+					// update bookmarking changes:
+					input.data.forEach(function(dataItem){
+						if(typeof bookmarkedItems[dataItem.id] != 'undefined' && bookmarkedItems[dataItem.id] != 'undefined')
+							dataItem['bookmarked'] = true;
+						else
+							dataItem['bookmarked'] = false;
+					});
 				}else{
 					//filtered bookmark from data
-					var currentBookmark = BookmarkingAPI.getAllBookmarks()[evt].items;
+					var currentBookmarkItems = BookmarkingAPI.getAllBookmarks()[evt].items;
 
-					FILTER.filterBookmark(inputData,currentBookmark,function(inputData,indexData){
-						input.data.push(inputData[indexData]);
+					//FILTER.filterBookmark(inputData,currentBookmarkItems,function(inputData,indexData){
+					//	input.data.push(inputData[indexData]);
+					//});
+					
+					input.data = [];
+					currentBookmarkItems.forEach(function(item){
+						input.data.push(item);
 					});
 				}
 									
@@ -1447,8 +1508,28 @@ function Visualization( EEXCESSobj ) {
 		inputData=data;
 
 		FILTER.changeDropDownList();
+		
+		d3.select("#eexcess_addBookmarkItems_button").on("click", FILTER.buildAddBookmarkItems);
+
 	}
 	
+	//experimental region begin
+	FILTER.buildAddBookmarkItems = function(d, i){
+
+        d3.event.stopPropagation();
+		BOOKMARKS.buildSaveBookmarkDialog(
+			function(thisValue){
+			
+			},
+			function(bookmarkDetails){
+				bookmarkDetails.append('p').text("selected bookmarks items");
+			},function(){
+			console.log("hello");
+			},
+			this
+		);
+	}
+	//experimental region end
 	
 	
     return START;
