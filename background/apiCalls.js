@@ -187,6 +187,11 @@ EEXCESS.backend = (function() {
                     call = EEXCESS.euCall;
                     url = 'http://europeana.eu/api//v2/search.json?wskey=HT6JwVWha';
                     break;
+                case 'eu2':
+                    console.log('eu2');
+                    call = EEXCESS.frCall_impl;
+                    url = 'http://localhost:8080/privacy-proxy/api/v1/recommendEU';
+                    break;
                 case 'fr-devel':
                     console.log('fr-devel');
                     call = EEXCESS.frCall_impl;

@@ -27,6 +27,30 @@ EEXCESS.newSearchTriggered = function(data) {
  * @param {Object} widget The current state of the widget's model in the background script
  */
 EEXCESS.init = function(widget) {
+    if (EEXCESS.storage.local('backend') === 'eu2') {
+        $('#euOnly img').attr('src', '/media/batchmaster/bell.png');
+        $('#euOnly').attr('title', 'Europeana only (click to change)');
+    } else {
+        $('#euOnly img').attr('src', '/media/batchmaster/bell-mute.png');
+        $('#euOnly').attr('title', 'All partners (click to change)');
+    }
+    $('#euOnly').click(function(evt) {
+        evt.preventDefault();
+        var backend = EEXCESS.storage.local('backend');
+        if (backend !== 'eu2') {
+            EEXCESS.messaging.callBG({method: {parent: 'backend', func: 'setProvider'}, data: 'eu2'});
+            $('#euOnly img').attr('src', '/media/batchmaster/bell.png');
+            $('#euOnly').attr('title', 'Europeana only (click to change)');
+        } else {
+            EEXCESS.messaging.callBG({method: {parent: 'backend', func: 'setProvider'}, data: 'fr-stable'});
+            $('#euOnly img').attr('src', '/media/batchmaster/bell-mute.png');
+            $('#euOnly').attr('title', 'All partners (click to change)');
+        }
+    });
+
+
+
+
     $('#eexcess_query').mouseenter(function() {
         $('#search_hover').show();
     });

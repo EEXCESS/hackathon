@@ -140,34 +140,34 @@ EEXCESS.model = (function() {
         }
     };
     var _queryTimestamp;
-    
+
     var _getDomain = function(hostname) {
-        var domain = hostname.substring(0,hostname.lastIndexOf('.'));
-        if(domain.indexOf('.') === -1) {
+        var domain = hostname.substring(0, hostname.lastIndexOf('.'));
+        if (domain.indexOf('.') === -1) {
             return domain;
         } else {
-            return domain.substr(domain.indexOf('.')+1);
+            return domain.substr(domain.indexOf('.') + 1);
         }
     };
-    
-    
+
+
     var _replayQuery = function(tabID, numResults, callback) {
-            var replayData = {
-                reason: 'replay',
-                terms: currentQuery['terms'],
-                numResults: numResults
-            };
-            console.log(replayData);
-            var success = function(results) {
-                _handleResult({query:currentQuery['query'],data: results});
-                callback({query:currentQuery['query'],results:results});
-            };
-            var error = function(error) { // error callback
-                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
-            };
-            EEXCESS.backend.getCall()(replayData, 1, numResults, success, error);
+        var replayData = {
+            reason: 'replay',
+            terms: currentQuery['terms'],
+            numResults: numResults
         };
-    
+        console.log(replayData);
+        var success = function(results) {
+            _handleResult({query: currentQuery['query'], data: results});
+            callback({query: currentQuery['query'], results: results});
+        };
+        var error = function(error) { // error callback
+            EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
+        };
+        EEXCESS.backend.getCall()(replayData, 1, numResults, success, error);
+    };
+
     return {
         /**
          * Toggles the visibility of the widget
@@ -217,6 +217,12 @@ EEXCESS.model = (function() {
             _queryTimestamp = new Date().getTime();
             resultPage = false;
             if (data.hasOwnProperty('reason')) {
+                if (data['reason']['reason'] !== 'manual') {
+                    var backend = EEXCESS.storage.local('backend');
+                    if (typeof backend !== 'undefined' && backend === 'eu2') {
+                        data['terms'] = data['terms'].slice(0, 3);
+                    }
+                }
                 tmp['weightedTerms'] = data['terms'];
                 tmp['reason'] = data['reason'];
 
@@ -236,6 +242,9 @@ EEXCESS.model = (function() {
                     }
                 }
             } else {
+                if (typeof backend !== 'undefined' && backend === 'eu2') {
+                    data = data.slice(0, 3);
+                }
                 tmp['weightedTerms'] = data;
             }
             tmp['query'] = '';
@@ -366,8 +375,8 @@ EEXCESS.model = (function() {
          * @param {Function} callback
          */
         getResults: function(tabID, data, callback) {
-            if(typeof data !== 'undefined' && data !== null) {
-                if(data.numResults > results.data.totalResults) {
+            if (typeof data !== 'undefined' && data !== null) {
+                if (data.numResults > results.data.totalResults) {
                     _replayQuery(tabID, data.numResults, callback);
                     return;
                 }
