@@ -278,3 +278,7 @@ EEXCESS.browserAction = (function() {
         setBadgeText: _setBadgeText
     };
 })();
+
+EEXCESS.installListener = function(callback) {
+    chrome.runtime.onInstalled.addListener(callback);
+};

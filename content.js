@@ -21,6 +21,22 @@ EEXCESS.handleWidgetVisibility = function(visible) {
             $('#eexcess_sidebar').show();
             $('html').css('overflow', 'auto').css('position', 'absolute').css('height', '100%').css('width', width + 'px');
             $('body').css('overflow-x', 'auto').css('position', 'relative').css('overflow-y', 'scroll').css('height', '100%');
+
+            // account for fixed elements
+            var dist_top = 0;
+            var fixed_el = $(':visible').filter(function() {
+                return $(this).css("position") === 'fixed';
+            });
+            for (var i = 0; i < fixed_el.length; i++) {
+                if (fixed_el[i].clientLeft + fixed_el[i].clientWidth > width) {
+                    var tmp_top = fixed_el[i].clientTop + fixed_el[i].clientHeight;
+                    if (tmp_top > dist_top) {
+                        dist_top = tmp_top;
+                    }
+                }
+            }
+            var sidebar_height = $(window).height() - dist_top;
+            $('#eexcess_sidebar').css('margin-top', dist_top).height(sidebar_height);
         } else { // hide widget
             $('#eexcess_sidebar').hide();
             $('html').css('overflow', '').css('position', '').css('height', '').css('width', '');

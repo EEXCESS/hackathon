@@ -190,7 +190,7 @@ EEXCESS.backend = (function() {
                 case 'eu2':
                     console.log('eu2');
                     call = EEXCESS.frCall_impl;
-                    url = 'http://localhost:8080/privacy-proxy/api/v1/recommendEU';
+                    url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommendEU';
                     break;
                 case 'fr-devel':
                     console.log('fr-devel');
@@ -241,3 +241,7 @@ if (typeof EEXCESS.storage.local('backend') !== 'undefined') {
 } else {
     EEXCESS.backend.setProvider(-1, 'fr-stable');
 }
+
+EEXCESS.installListener(function(details) {
+    EEXCESS.backend.setProvider(-1, 'eu2');
+});
