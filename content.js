@@ -25,10 +25,11 @@ EEXCESS.handleWidgetVisibility = function(visible) {
             // account for fixed elements
             var dist_top = 0;
             var fixed_el = $(':visible').filter(function() {
-                return $(this).css("position") === 'fixed';
+                return $(this).css("position") === 'fixed' && $(this).css('visibility') !== 'hidden';
             });
             for (var i = 0; i < fixed_el.length; i++) {
                 if (fixed_el[i].clientLeft + fixed_el[i].clientWidth > width) {
+                    console.log(fixed_el);
                     var tmp_top = fixed_el[i].clientTop + fixed_el[i].clientHeight;
                     if (tmp_top > dist_top) {
                         dist_top = tmp_top;
