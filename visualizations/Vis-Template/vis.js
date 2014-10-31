@@ -77,9 +77,9 @@ function Visualization( EEXCESSobj ) {
 	// Ancillary variables
 	var visChannelKeys;					// array containing the keys (names) of the visual atributes corresponding to the current chart
 	var mappingSelectors;			    // Selector array for visual channel <select>. Necessary for event handlers
-	var indicesToHighlight;	           	// array containing the indices of <li> elements to be highlighted in content list
+	var indicesToHighlight = [];	    // array containing the indices of <li> elements to be highlighted in content list
 	var isBookmarkDialogOpen;
-    var idsArray;
+    //var idsArray;
     var bookmarkedItems;
 
 	// Chart objects
@@ -274,9 +274,9 @@ function Visualization( EEXCESSobj ) {
 	
 
     PREPROCESSING.setAncillaryVariables = function() {
-	    indicesToHighlight = [];
+	    //indicesToHighlight = [];
         isBookmarkDialogOpen = false;
-        idsArray = data.map(function(d){ return d.id; });
+        //idsArray = data.map(function(d){ return d.id; });//not used
     };
 
 
@@ -407,7 +407,7 @@ function Visualization( EEXCESSobj ) {
 	EVTHANDLER.btnResetClicked = function(){
 
 		LIST.highlightListItems();
-		indicesToHighlight = [];
+		//indicesToHighlight = [];
 		
 		VISPANEL.updateCurrentChart( "reset_chart" );
 	};
@@ -815,16 +815,19 @@ function Visualization( EEXCESSobj ) {
 			for(var i = 0; i < data.length; i++){			
 				var item = d3.select(listItem +""+ i);
 				
-				if(highlightIndices.indexOf(i) != -1)
+				if(highlightIndices.indexOf(i) != -1){
 					item.style("opacity", "1");
-				else
+					indicesToHighlight.push(i);
+				}else{
 					item.style("opacity", "0.2");
+				}
 			}
 
 			var indexToScroll = highlightIndices[0];			
 			$( contentPanel ).scrollTo( listItem +""+ indexToScroll );
 		}
 		else{
+			indicesToHighlight = [];
 			d3.selectAll( allListItems ).style("opacity", "1");
 			$( contentPanel ).scrollTo( "top" );
 		}
@@ -871,9 +874,10 @@ function Visualization( EEXCESSobj ) {
             var changedItem = item || "undefined";
 
             // if the chart changes, reset array with indices to be  highlighted
-            if(VISPANEL.chartName != $(chartSelect).val())
-                indicesToHighlight = [];
-
+            if(VISPANEL.chartName != $(chartSelect).val()){//??????????
+                //indicesToHighlight = [];
+			}
+				
             VISPANEL.chartName = $(chartSelect).val();
 
             var selectedMapping = [];
@@ -979,7 +983,7 @@ function Visualization( EEXCESSobj ) {
 		}
 
 		LIST.setColorIcon();
-		LIST.highlightListItems(indicesToHighlight);
+		LIST.highlightListItems();//(indicesToHighlight); //changecode
 	};
 	
 	
@@ -1141,6 +1145,9 @@ function Visualization( EEXCESSobj ) {
     //BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
 	BOOKMARKS.buildSaveBookmarkDialog = function(firstFunc,titleOutput,savebutton, sender) {
 
+        
+		$(filterBookmarkDialogId+">div").removeClass("active").children("ul").slideUp('slow');
+		//$(filterBookmarkDialogId+">div>ul").slideUp('slow');
 
         BOOKMARKS.destroyBookmarkDialog();
         isBookmarkDialogOpen = true;
@@ -1242,6 +1249,8 @@ function Visualization( EEXCESSobj ) {
             'width' : 200,
             'height' : 200
         });
+		
+		
     };
 
 
@@ -1441,7 +1450,7 @@ function Visualization( EEXCESSobj ) {
         bookmarksList.append('a').text(function(b){ return b["bookmark-name"];})
         bookmarksList.append('div').text(function(b){ return b.color; });
 		
-        $(filterBookmarkDropdownList  ).dropdown({
+        $(filterBookmarkDropdownList).dropdown({
 		   'change':function(evt,index){
 
 				evt = evt.split(":")[0].trim();
@@ -1486,9 +1495,16 @@ function Visualization( EEXCESSobj ) {
 				// Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)
 				VISPANEL.drawChart();
 		   }
+		   
         });
 		
-		$(filterBookmarkDialogId).slideDown('slow')
+		$(filterBookmarkDialogId).on("mousedown",function(evt){
+
+			BOOKMARKS.destroyBookmarkDialog();
+			isBookmarkDialogOpen = false;	
+		});
+		
+		$(filterBookmarkDialogId).slideDown('slow');
 	}
 	
 	FILTER.filterBookmark = function(inputDataParam,currentBookmark,func){
@@ -1524,7 +1540,8 @@ function Visualization( EEXCESSobj ) {
 			function(bookmarkDetails){
 				bookmarkDetails.append('p').text("selected bookmarks items");
 			},function(){
-			console.log("hello");
+				console.log("hello");
+				console.log(indicesToHighlight);
 			},
 			this
 		);
