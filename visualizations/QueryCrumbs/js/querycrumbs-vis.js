@@ -1,3 +1,5 @@
+var evaluationUserID = -1;
+
 function display_querycrumbs(domElem) {
 
 
@@ -6,18 +8,21 @@ function display_querycrumbs(domElem) {
      */
 
     var taskStart = 0;
-    var userID = 0;
-    var taskID = 0;
+    
+    var taskID;
 
     $(document).on("click", "#eexcess_start_btn", function() {
         var template = 
-        "<div id='evalContainer'><span>User ID: </span><input id='evalUID'><br><span>Task ID: </span><input id='taskID'><button id='evalInfos'>OK</button></div>";
+        "<div id='evalContainer'><span>User ID: </span><input id='evalUID'><br><span>Task ID: </span><input id='taskID'><button id='evalInfos'>Start</button></div>";
         $("#eexcess_main").after(template);
+        if(evaluationUserID > 0) {
+            $('#evalUID').val(evaluationUserID);
+        }
     })
 
     $(document).on("click", "#evalInfos", function() {
-        userID = $('#evalUID').val();
         taskID = $('#taskID').val();
+        evaluationUserID = $('#evalUID').val();  
         $('#evalContainer').remove();
         taskStart = new Date().getTime();   
     })
@@ -35,10 +40,10 @@ function display_querycrumbs(domElem) {
             evaluationObject = {};
         }
 
-        if(!evaluationObject[userID]) {
-            evaluationObject[userID] = {}
+        if(!evaluationObject[evaluationUserID]) {
+            evaluationObject[evaluationUserID] = {}
         }
-        evaluationObject[userID][taskID] = inSeconds;
+        evaluationObject[evaluationUserID][taskID] = inSeconds;
         localStorage.setItem("evaluation", JSON.stringify(evaluationObject));
     })
 
@@ -344,7 +349,6 @@ function display_querycrumbs(domElem) {
             var recurrence = [];
             
             if(predecessor.length > 0) {
-
                 if(current.length > QueryCrumbsConfiguration.dimensions.SEGMENTS && predecessor.length > QueryCrumbsConfiguration.dimensions.SEGMENTS) {
                     current = current.slice(0, QueryCrumbsConfiguration.dimensions.SEGMENTS);
                     predecessor = predecessor.slice(0, QueryCrumbsConfiguration.dimensions.SEGMENTS);
