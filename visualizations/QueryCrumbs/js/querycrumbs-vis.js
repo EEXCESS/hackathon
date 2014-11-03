@@ -47,6 +47,13 @@ function display_querycrumbs(domElem) {
         localStorage.setItem("evaluation", JSON.stringify(evaluationObject));
     })
 
+    $(document).on("click", "#eexcess_print_btn", function() {
+        console.log(localStorage.getItem("evaluation"))
+        window.open("data:text/json," + localStorage.getItem("evaluation"),'_blank');
+        $("body").append("<button>hier</button>")
+        //window.open = "data:text/json," + localStorage.getItem("evaluation")
+    })
+
     // A list of the HISTORY_LENGTH recent queries
     var historyData = [];
     // A list of similarities of one node to its predecessor
