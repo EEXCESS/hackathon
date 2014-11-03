@@ -405,9 +405,12 @@ function Visualization( EEXCESSobj ) {
 	////////	Reset Button Click	////////
 	
 	EVTHANDLER.btnResetClicked = function(){
-
+	
+		FILTER.showAllResults();		
 		LIST.highlightListItems();
-		//indicesToHighlight = [];
+		$(filterBookmarkDialogId+">div>span").text(STR_SHOWALLRESULTS);
+		$(filterBookmarkDialogId+">div>div").css("background","inherit");
+		indicesToHighlight = [];
 		
 		VISPANEL.updateCurrentChart( "reset_chart" );
 	};
@@ -807,7 +810,7 @@ function Visualization( EEXCESSobj ) {
 	LIST.highlightListItems = function( indices ){
 
 		// "indices" is an array indicating the indices of the list items that should be highlighted 
-		
+		indicesToHighlight =[];
 		var highlightIndices = indices || [];
 		
 		if(highlightIndices.length > 0){
@@ -1137,17 +1140,10 @@ function Visualization( EEXCESSobj ) {
         console.log(bookmarkedItems);
     };
 
-
-//call first func
-//call title output (bookmarkD3Obj)
-//call savebutton
-
     //BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
 	BOOKMARKS.buildSaveBookmarkDialog = function(firstFunc,titleOutput,savebutton, sender) {
 
-        
 		$(filterBookmarkDialogId+">div").removeClass("active").children("ul").slideUp('slow');
-		//$(filterBookmarkDialogId+">div>ul").slideUp('slow');
 
         BOOKMARKS.destroyBookmarkDialog();
         isBookmarkDialogOpen = true;
@@ -1408,22 +1404,14 @@ function Visualization( EEXCESSobj ) {
 		
 		var topOffset = $(filterSelect).offset().top;
 		var dialogBookmark = d3.select(filterSelect).append("span")//div
-		//.attr("id", "eexcess-save-bookmark-dialog")
 		.attr("id", "eexcess-filter-bookmark-dialog")
 		.attr("class", "eexcess-filter-bookmark-dialog")
-
-		
-		//eexcess-bookmark-dropdown-list wrapper-dropdown active
-		//.attr("class", "eexcess-bookmark-dialog")
-		
-		//.style('display', 'none')
 		.style("top", topOffset + "px" )
 		.style("width","200px");
 		
 		var bookmarksListContainer = dialogBookmark.append("div")
 			.attr("class", "eexcess-bookmark-dropdown-list")
 			.append('ul');
-		
 
 		var bookmarks = BookmarkingAPI.getAllBookmarkNamesAndColors();
 		
@@ -1437,7 +1425,6 @@ function Visualization( EEXCESSobj ) {
 			//	});
 			bookmarkCount = BookmarkingAPI.getAllBookmarks()[elementData["bookmark-name"]].items.length;
 			elementData["bookmark-name"] = elementData["bookmark-name"] + " : ("+bookmarkCount+")";
-		
 		});
 
 	    var optionsData =  $.merge([{'bookmark-name': STR_SHOWALLRESULTS, 'color': ''}], 
@@ -1454,19 +1441,11 @@ function Visualization( EEXCESSobj ) {
 		   'change':function(evt,index){
 
 				evt = evt.split(":")[0].trim();
-		   
 				var input ={};
-				input.data = [];
+				indicesToHighlight =[];
 				
 				if(evt == STR_SHOWALLRESULTS){
-					input.data = inputData;
-					// update bookmarking changes:
-					input.data.forEach(function(dataItem){
-						if(typeof bookmarkedItems[dataItem.id] != 'undefined' && bookmarkedItems[dataItem.id] != 'undefined')
-							dataItem['bookmarked'] = true;
-						else
-							dataItem['bookmarked'] = false;
-					});
+					FILTER.showAllResults();
 				}else{
 					//filtered bookmark from data
 					var currentBookmarkItems = BookmarkingAPI.getAllBookmarks()[evt].items;
@@ -1476,30 +1455,19 @@ function Visualization( EEXCESSobj ) {
 					//});
 					
 					input.data = [];
+					var bookmarkCount = 0;
 					currentBookmarkItems.forEach(function(item){
 						input.data.push(item);
+						indicesToHighlight.push(++bookmarkCount);
 					});
+					data = input.data;
+					
+					FILTER.updateData();
 				}
-									
-				data = input.data;
-				
-				// Initialize template's elements
-				//PREPROCESSING.setAncillaryVariables();
-				BOOKMARKS.updateBookmarkedItems();
-				//PREPROCESSING.extendDataWithAncillaryDetails();
-				QUERY.updateHeaderText( "Query Results : " + data.length );
-				QUERY.updateSearchField( query );
-				//CONTROLS.buildChartSelect();
-				LIST.buildContentList();
-				
-				// Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)
-				VISPANEL.drawChart();
 		   }
-		   
         });
 		
 		$(filterBookmarkDialogId).on("mousedown",function(evt){
-
 			BOOKMARKS.destroyBookmarkDialog();
 			isBookmarkDialogOpen = false;	
 		});
@@ -1507,6 +1475,7 @@ function Visualization( EEXCESSobj ) {
 		$(filterBookmarkDialogId).slideDown('slow');
 	}
 	
+	/*
 	FILTER.filterBookmark = function(inputDataParam,currentBookmark,func){
 		inputDataParam.forEach(function(elementData,indexData){
 			currentBookmark.forEach(function(elementBookmark,indexBookmark){
@@ -1516,6 +1485,7 @@ function Visualization( EEXCESSobj ) {
 			});
 		});
 	}
+	*/
 	
 	
 	FILTER.buildFilterBookmark = function(){
@@ -1529,9 +1499,41 @@ function Visualization( EEXCESSobj ) {
 
 	}
 	
+	FILTER.showAllResults = function(){
+		var input ={};
+		input.data = [];
+		input.data = inputData;
+		// update bookmarking changes:
+		input.data.forEach(function(dataItem){
+			if(typeof bookmarkedItems[dataItem.id] != 'undefined' &&
+				bookmarkedItems[dataItem.id] != 'undefined'){
+				dataItem['bookmarked'] = true;
+			}else{
+				dataItem['bookmarked'] = false;
+			}	
+		});
+		data = input.data;	
+		
+		FILTER.updateData();
+	}
+	
+	FILTER.updateData = function(){
+		// Initialize template's elements
+		//PREPROCESSING.setAncillaryVariables();
+		BOOKMARKS.updateBookmarkedItems();
+		//PREPROCESSING.extendDataWithAncillaryDetails();
+		QUERY.updateHeaderText( "Query Results : " + data.length );
+		QUERY.updateSearchField( query );
+		//CONTROLS.buildChartSelect();
+		LIST.buildContentList();
+		VISPANEL.drawChart();
+	}
+	
+	
+	
 	//experimental region begin
 	FILTER.buildAddBookmarkItems = function(d, i){
-
+//BookmarkingAPI.deleteBookmark("");
         d3.event.stopPropagation();
 		BOOKMARKS.buildSaveBookmarkDialog(
 			function(thisValue){
@@ -1540,12 +1542,55 @@ function Visualization( EEXCESSobj ) {
 			function(bookmarkDetails){
 				bookmarkDetails.append('p').text("selected bookmarks items");
 			},function(){
-				console.log("hello");
-				console.log(indicesToHighlight);
+
+				FILTER.addBookmarkItems();
 			},
 			this
 		);
 	}
+	
+	FILTER.addBookmarkItems = function(){
+		console.log(indicesToHighlight);
+		
+		var bookmark = BOOKMARKS.internal.getCurrentBookmark();
+		if(bookmark['type'] == 'new'){
+			BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
+		}	
+
+		var addBookmarkFunc = function(currentData,index){
+			var bookmarkItem = {
+				'id': currentData.id,
+				'title': currentData.title,
+				'facets': currentData.facets,
+				'uri': currentData.uri,
+				'query': query
+			};
+			BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], bookmarkItem);
+			LIST.turnFaviconOnAndShowDetailsIcon(index);
+		}
+		
+		if(indicesToHighlight.length == 0){
+			//console.log("all bookmarks!");
+
+			data.forEach(function(currentData,index){
+				addBookmarkFunc(currentData,index);
+			});
+			
+		}else{
+			var currentData;
+			indicesToHighlight.forEach(function(indexValue){
+				//console.log(indexValue);
+				//console.log(data[indexValue]);
+				
+				currentData = data[indexValue];
+				addBookmarkFunc(currentData,indexValue);
+			});
+		}
+		
+		BOOKMARKS.destroyBookmarkDialog();
+		FILTER.changeDropDownList();
+	}
+	
 	//experimental region end
 	
 	
