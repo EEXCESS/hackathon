@@ -66,9 +66,11 @@ EEXCESS.storage = (function() {
             var req = store.put(value);
             req.onsuccess = function() {
                 _empty_callback(success);
+                db.close();
             };
             req.onerror = function() {
                 _empty_callback(error);
+                db.close();
             };
         }, _empty_callback(error));
     };
@@ -88,9 +90,11 @@ EEXCESS.storage = (function() {
             var req = store.add(value);
             req.onsuccess = function() {
                 _empty_callback(success);
+                db.close();
             };
             req.onerror = function() {
                 _empty_callback(error);
+                db.close();
             };
         }, _empty_callback(error));
     };
@@ -122,9 +126,11 @@ EEXCESS.storage = (function() {
                 } else {
                     _empty_callback(error);
                 }
+                db.close();
             };
             curreq.onerror = function() {
                 _empty_callback(error);
+                db.close();
             };
         }, _empty_callback(error));
     };
@@ -157,6 +163,7 @@ EEXCESS.storage = (function() {
                         cursor.continue();
                     }
                 }
+                db.close();
             };
 
             // add new rating to database
@@ -172,9 +179,11 @@ EEXCESS.storage = (function() {
                         _empty_callback(error);
                     };
                 }
+                db.close();
             };
             tx.onerror = function() {
                 _empty_callback(error);
+                db.close();
             };
         }, _empty_callback(error));
     };
@@ -213,9 +222,11 @@ EEXCESS.storage = (function() {
                 } else {
                     _optional_callback(error, 'no entry found');
                 }
+                db.close();
             };
             curreq.onerror = function() {
                 _optional_callback(error, 'db error');
+                db.close();
             };
         }, _optional_callback(error, 'db error'));
     };
@@ -264,12 +275,15 @@ EEXCESS.storage = (function() {
                         }
                     };
                 }
+                db.close();
             }
             tx.oncomplete = function() {
                 success(items);
+                db.close();
             };
             tx.onerror = function() {
                 _empty_callback(error);
+                db.close();
             };
         });
     };
@@ -294,6 +308,7 @@ EEXCESS.storage = (function() {
                     visitItem.referrer = '';
                 }
                 store.add(visitItem);
+                db.close();
             };
         });
     };
@@ -313,6 +328,7 @@ EEXCESS.storage = (function() {
             var idx = store.index('uri');
             var i = 0;
             handleNext(); // initial item (others get handled by callback on success)
+            db.close();
             // handle a single item
             function handleNext() {
                 if (i < recommendations.length) {
@@ -504,6 +520,7 @@ EEXCESS.storage = (function() {
                 for (var q = 0; q < queries.length; q++) {
                     pushResults(q);
                 }
+                db.close();
             };
         }, _empty_callback(error));
     };

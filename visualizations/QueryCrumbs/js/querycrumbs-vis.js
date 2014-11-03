@@ -77,7 +77,20 @@ function display_querycrumbs(domElem) {
     })
 
     $(document).on("click", "#eexcess_print_btn", function() {
-        console.save(localStorage.getItem("evaluation"), "evaluation.json")
+        console.save(localStorage.getItem("evaluation"), "evaluation.json");
+
+        localStorage.removeItem("evaluation");
+        console.log( window.indexedDB)
+        var req =  window.indexedDB.deleteDatabase("eexcess_db");
+        req.onsuccess = function () {
+            console.log("Deleted database successfully");
+        };
+        req.onerror = function () {
+            console.error("Couldn't delete database");
+        };
+        req.onblocked = function () {
+            console.error("Couldn't delete database due to the operation being blocked");
+        };
     })
 
     /**

@@ -39,7 +39,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
     var settings = $.extend({
         pathToMedia: '../media/',
         pathToLibs: '../libs/',
-        itemsShown: null,
+        itemsShown: 10,
         previewHandler: function(url) {
             window.open(url, '_blank');
             EEXCESS.messaging.callBG({method: {parent: 'model', func: 'resultOpened'}, data: url});
@@ -118,9 +118,10 @@ EEXCESS.searchResultList = function(divContainer, options) {
     divContainer.append(_error);
 
     // obtain current results
+    /* Evaluation
     EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(reqResult) {
         showResults(reqResult);
-    });
+    }); */
 
     // listen for updates
     EEXCESS.messaging.listener(
@@ -159,7 +160,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
             // If the sidebar is hidden at the start, the a default of 10 items are displayed
             settings.itemsShown = (height > 0) ? Math.floor(height / 50) : 10;   
         }
- 
+
         var _pagination = $('<div class="pagination"></div>');
         // Display a maximum of 10 pages
         var pages = (Math.ceil(data.results.length / settings.itemsShown) > 10) ? 10 : Math.ceil(data.results.length / settings.itemsShown);
@@ -198,7 +199,6 @@ EEXCESS.searchResultList = function(divContainer, options) {
             var li = $('<li data-pos="' + pos + '" data-id="' + item.id + '"></li>');
 
             _list.append(li);
-
             if (i >= settings.itemsShown) {
                 li.hide();
             }

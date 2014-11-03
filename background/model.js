@@ -213,6 +213,12 @@ EEXCESS.model = (function() {
          * @param {Object} data The query data 
          */
         query: function(tabID, data) {
+            // Evaluation
+            if(!data.hasOwnProperty("reason") || (data.reason.reason != "manual"  && data.reason.reason != "queryCrumbs") ) {
+                return;   
+            }
+
+            // Evaluation
             EEXCESS.browserAction.setBadgeText({text: ""});
             console.log(data);
             var tmp = {};
@@ -302,6 +308,7 @@ EEXCESS.model = (function() {
                 // call provider (resultlist should start with first item)
                 EEXCESS.backend.getCall()(data, 1, numResults, success, error);
             }
+
         },
         /**
          * Sends the current model state to the specified callback

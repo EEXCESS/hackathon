@@ -88,7 +88,9 @@ EEXCESS.init = function(widget) {
 
 
 // Initalize the widget with the current state in the background script's model on execution of this script
-EEXCESS.messaging.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);
+//EEXCESS.messaging.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);
+// Evaluation
+EEXCESS.init({ results : { query : "" } });
 
 
 EEXCESS.messaging.listener(function(request, sender, sendResponse) {
