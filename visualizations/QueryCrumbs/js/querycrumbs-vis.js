@@ -1,4 +1,33 @@
+// Evaluation 
+(function(console){
+
+    console.save = function(data, filename){
+
+        if(!data) {
+            console.error('Console.save: No data')
+            return;
+        }
+
+        if(!filename) filename = 'console.json'
+
+        if(typeof data === "object"){
+            data = JSON.stringify(data, undefined, 4)
+        }
+
+        var blob = new Blob([data], {type: 'text/json'}),
+            e    = document.createEvent('MouseEvents'),
+            a    = document.createElement('a')
+
+        a.download = filename
+        a.href = window.URL.createObjectURL(blob)
+        a.dataset.downloadurl =  ['text/json', a.download, a.href].join(':')
+        e.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null)
+        a.dispatchEvent(e)
+    }
+})(console)
+
 var evaluationUserID = -1;
+// END
 
 function display_querycrumbs(domElem) {
 
@@ -48,11 +77,12 @@ function display_querycrumbs(domElem) {
     })
 
     $(document).on("click", "#eexcess_print_btn", function() {
-        console.log(localStorage.getItem("evaluation"))
-        window.open("data:text/json," + localStorage.getItem("evaluation"),'_blank');
-        $("body").append("<button>hier</button>")
-        //window.open = "data:text/json," + localStorage.getItem("evaluation")
+        console.save(localStorage.getItem("evaluation"), "evaluation.json")
     })
+
+    /**
+     * Evaluation end
+     */ 
 
     // A list of the HISTORY_LENGTH recent queries
     var historyData = [];

@@ -74,6 +74,7 @@ EEXCESS.euCall = function(queryData, start, numResults, success, error) {
         EEXCESS.qXHR.abort();
     }
 
+    // Evaluation
     var startTime = new Date().getTime();
     EEXCESS.qXHR = $.ajax(EEXCESS.backend.getURL()
             + '&query=' + query
@@ -149,6 +150,7 @@ EEXCESS.frCall_impl = function(queryData, start, numResults, success, error) {
         if (EEXCESS.qXHR && EEXCESS.qXHR.readystate !== 4) {
             EEXCESS.qXHR.abort();
         }
+        // Evaluation
         var startTime = new Date().getTime();
         EEXCESS.qXHR = $.ajax({
             url: EEXCESS.backend.getURL(),
