@@ -555,11 +555,13 @@ var DrawNaviGraph = function(){
 			////////////////////////////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////////////////////////////
 			
-			//build table for neightbor table
+			//xxxxx build table for neightbor table
+			//sort nodes
 			var sortedLinknumbers = Object.keys(neightborNodes).map(function(element){
 				return {
 					name:element,
 					length:neightborNodes[element].neightbors.length,
+					neightbors:neightborNodes[element].neightbors,
 					status:0//0 = free, 1 = no use for central force node.
 				};
 			}).sort(function(a,b){
@@ -577,7 +579,47 @@ var DrawNaviGraph = function(){
 			//console.log(JSON.parse(JSON.stringify(neightborNodes)));
 			console.log("DEBUG 1---------------------------------------------");
 
+			function getNodeNameDict(currentNode){
+				var nameDict ={};
+				currentNode.neightbors.forEach(function(element){
+					nameDict[element.node] = "";
+				});
+				return nameDict;
+			}
 			
+			
+			function setNodeList(nodeArray,nodeNameDict){
+				nodeArray.forEach(function(element){
+					if(nodeNameDict.hasOwnProperty(element.name)){
+						element.status = 1;
+					}
+				});
+			}
+			
+			function getNextOpenNode(nodeArray,value){
+				//nodeArray[value].status;
+				var returnValue = value;
+				var isFound = false;
+				for(var count=value;count<nodeArray.length;count++){
+					if(nodeArray[value].status == 0){
+						returnValue = count;
+						isFound = true;
+						break;
+					}
+				}
+				
+				return {found:isFound,value:returnValue};
+			}
+			
+			
+			var initValue = 0;
+			
+			sortedLinknumbers[0].status = 2;
+			
+			
+			
+			
+			/*
 			//change the neightbor table
 			sortedLinknumbers.forEach(function(element){
 				forceNaviGraph.To.Object().To.Node()
@@ -631,7 +673,7 @@ var DrawNaviGraph = function(){
 				});		
 					
 			});
-			
+			*/
 			////////////////////////////////////////////////////////////////////////////////
 			////////////////////////////////////////////////////////////////////////////////
 			

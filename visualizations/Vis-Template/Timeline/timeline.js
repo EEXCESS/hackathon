@@ -310,6 +310,8 @@ function Timeline( root, visTemplate ){
 		
 		if(legendDatum.selected === true){
 			$(this).find('text').css('font-weight', 'bold');
+		}else{
+			Vis.selectItems(Vis.getAllSelectListItems());
 		}
 		
 		d3.selectAll('.legend').select("div")

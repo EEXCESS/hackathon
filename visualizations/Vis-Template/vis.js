@@ -407,13 +407,13 @@ function Visualization( EEXCESSobj ) {
 	////////	Reset Button Click	////////
 	
 	EVTHANDLER.btnResetClicked = function(){
-	
+		indicesToHighlight = VISPANEL.getAllSelectListItems();
 		FILTER.showAllResults();		
-		LIST.highlightListItems();
+		LIST.highlightListItems(indicesToHighlight);
 		$(filterBookmarkDialogId+">div>span").text(STR_SHOWALLRESULTS);
 		$(filterBookmarkDialogId+">div>div").css("background","inherit");
-		$(deleteBookmark).prop("disabled",true);
-		indicesToHighlight = [];
+		$(deleteBookmark).prop("disabled",true).css("background","silver");
+		
 		
 		VISPANEL.updateCurrentChart( "reset_chart" );
 	};
@@ -795,7 +795,7 @@ function Visualization( EEXCESSobj ) {
 				VISPANEL.updateCurrentChart( 'highlight_item_selected', [index] );
 		}
 		else{
-			LIST.highlightListItems();
+			LIST.highlightListItems(VISPANEL.getAllSelectListItems());
 			VISPANEL.updateCurrentChart( 'highlight_item_selected', [] );
 		}
 	};
@@ -834,7 +834,9 @@ function Visualization( EEXCESSobj ) {
 		}
 		else{
 			indicesToHighlight = [];
-			d3.selectAll( allListItems ).style("opacity", "1");
+			//change code !!!!!!!!!!!!!
+			d3.selectAll( allListItems ).style("opacity", "0.2");
+			//d3.selectAll( allListItems ).style("opacity", "1");
 			$( contentPanel ).scrollTo( "top" );
 		}
 	};
@@ -989,11 +991,17 @@ function Visualization( EEXCESSobj ) {
 		}
 
 		LIST.setColorIcon();
-		LIST.highlightListItems();//(indicesToHighlight); //changecode
+		LIST.highlightListItems(VISPANEL.getAllSelectListItems());//(indicesToHighlight); //changecode
 	};
 	
 	
-	
+	VISPANEL.getAllSelectListItems = function(){
+		var array =[];
+		data.forEach(function(element,index){
+			array.push(index);
+		});
+		return array;
+	};
 	
 	VISPANEL.updateCurrentChart = function( action, arg ){
 		
@@ -1096,7 +1104,9 @@ function Visualization( EEXCESSobj ) {
             var $message = $(newBookmarkOptionsId).find('p');
 
             // validation for new bookmark name
-            if(this.currentBookmark['type'] == 'new' && this.currentBookmark['bookmark-name'] == '') {
+            if(
+				(this.currentBookmark['type'] == 'new' && this.currentBookmark['bookmark-name'] == '') ||
+				this.currentBookmark['bookmark-name'].length > 15) {
                 $message.fadeIn('slow');
                 return false;
             }
@@ -1391,6 +1401,9 @@ function Visualization( EEXCESSobj ) {
 		LIST.highlightListItems( itemIndicesArray, true );
 	};
 
+	EXT.getAllSelectListItems = function(){
+		return VISPANEL.getAllSelectListItems();
+	};
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1406,10 +1419,10 @@ function Visualization( EEXCESSobj ) {
 		
 		var topOffset = $(filterSelect).offset().top;
 		var dialogBookmark = d3.select(filterSelect+">span").append("span")//div
-		.attr("id", "eexcess-filter-bookmark-dialog")
-		.attr("class", "eexcess-filter-bookmark-dialog")
-		.style("top", topOffset + "px" )
-		.style("width","200px");
+			.attr("id", "eexcess-filter-bookmark-dialog")
+			.attr("class", "eexcess-filter-bookmark-dialog")
+			.style("top", topOffset + "px" )
+			.style("width","200px");
 		
 		var bookmarksListContainer = dialogBookmark.append("div")
 			.attr("class", "eexcess-bookmark-dropdown-list")
@@ -1443,7 +1456,7 @@ function Visualization( EEXCESSobj ) {
 				
 				if(evt == STR_SHOWALLRESULTS){
 					FILTER.showAllResults();
-					$(deleteBookmark).prop("disabled",true);
+					$(deleteBookmark).prop("disabled",true).css("background","silver");
 				}else{
 					//filtered bookmark from data
 					var currentBookmarkItems = BookmarkingAPI.getAllBookmarks()[evt].items;
@@ -1461,7 +1474,7 @@ function Visualization( EEXCESSobj ) {
 					data = input.data;
 					
 					FILTER.updateData();
-					$(deleteBookmark).prop("disabled",false);
+					$(deleteBookmark).prop("disabled",false).css("background","");
 				}
 		   }
         });
@@ -1472,7 +1485,7 @@ function Visualization( EEXCESSobj ) {
 		});
 		
 		$(filterBookmarkDialogId).slideDown('slow');
-	}
+	};
 	
 	/*
 	FILTER.filterBookmark = function(inputDataParam,currentBookmark,func){
@@ -1497,17 +1510,17 @@ function Visualization( EEXCESSobj ) {
 		d3.select(addBookmarkItems).on("click", FILTER.buildAddBookmarkItems);
 		
 		d3.select(deleteBookmark).on("click",function(){
-			
-			var bookmarkName = $(filterBookmarkDialogId+">div>span").text().split(":")[0].trim();
-			BookmarkingAPI.deleteBookmark(bookmarkName);
-			FILTER.changeDropDownList();
-			EVTHANDLER.btnResetClicked();
-			console.log("gggggggggggg:");
-		});
-		$(deleteBookmark).prop("disabled",true);
-		
 
-	}
+			if (confirm("Delete current bookmark?") == true) {
+				var bookmarkName = $(filterBookmarkDialogId+">div>span").text().split(":")[0].trim();
+				BookmarkingAPI.deleteBookmark(bookmarkName);
+				FILTER.changeDropDownList();
+				EVTHANDLER.btnResetClicked();
+			} 
+
+		});
+		$(deleteBookmark).prop("disabled",true).css("background","silver");
+	};
 	
 	FILTER.showAllResults = function(){
 		var input ={};
@@ -1525,7 +1538,7 @@ function Visualization( EEXCESSobj ) {
 		data = input.data;	
 		
 		FILTER.updateData();
-	}
+	};
 	
 	FILTER.updateData = function(){
 		// Initialize template's elements
@@ -1537,7 +1550,7 @@ function Visualization( EEXCESSobj ) {
 		//CONTROLS.buildChartSelect();
 		LIST.buildContentList();
 		VISPANEL.drawChart();
-	}
+	};
 	
 	
 	
@@ -1555,54 +1568,56 @@ function Visualization( EEXCESSobj ) {
 			},
 			this
 		);
-	}
+	};
 
 	
 	
 	FILTER.addBookmarkItems = function(){
-		console.log(indicesToHighlight);
-		
+		//console.log(indicesToHighlight);
 		var bookmark = BOOKMARKS.internal.getCurrentBookmark();
-		if(bookmark['type'] == 'new'){
-			BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
-		}	
-
-		var addBookmarkFunc = function(currentData,index){
-			var bookmarkItem = {
-				'id': currentData.id,
-				'title': currentData.title,
-				'facets': currentData.facets,
-				'uri': currentData.uri,
-				'query': query
-			};
-			BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], bookmarkItem);
-			LIST.turnFaviconOnAndShowDetailsIcon(index);
-		}
 		
-		if(indicesToHighlight.length == 0){
-			//console.log("all bookmarks!");
+		if( BOOKMARKS.internal.validateBookmarkToSave() ){
+		
+			//var bookmark = BOOKMARKS.internal.getCurrentBookmark();
+			if(bookmark['type'] == 'new'){
+				BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
+			}	
 
-			data.forEach(function(currentData,index){
-				addBookmarkFunc(currentData,index);
-			});
+			function addBookmarkFunc(currentData,index){
+				var bookmarkItem = {
+					'id': currentData.id,
+					'title': currentData.title,
+					'facets': currentData.facets,
+					'uri': currentData.uri,
+					'query': query
+				};
+				BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], bookmarkItem);
+				LIST.turnFaviconOnAndShowDetailsIcon(index);
+			}
 			
-		}else{
-			var currentData;
-			indicesToHighlight.forEach(function(indexValue){
-				//console.log(indexValue);
-				//console.log(data[indexValue]);
-				
-				currentData = data[indexValue];
-				addBookmarkFunc(currentData,indexValue);
-			});
-		}
-		
-		BOOKMARKS.destroyBookmarkDialog();
-		FILTER.changeDropDownList();
-	}
+			if(indicesToHighlight.length == 0){
+				//console.log("all bookmarks!");
 
-	
-	
+				data.forEach(function(currentData,index){
+					addBookmarkFunc(currentData,index);
+				});
+				
+			}else{
+				var currentData;
+				indicesToHighlight.forEach(function(indexValue){
+					//console.log(indexValue);
+					//console.log(data[indexValue]);
+					
+					currentData = data[indexValue];
+					addBookmarkFunc(currentData,indexValue);
+				});
+			}
+			
+			BOOKMARKS.destroyBookmarkDialog();
+			FILTER.changeDropDownList();
+		}
+	};
+
     return START;
 }
 

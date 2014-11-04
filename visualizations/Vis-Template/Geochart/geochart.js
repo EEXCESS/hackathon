@@ -16,6 +16,7 @@ function Geochart(root, visTemplate) {
         minAmount:2,
         maxAmount:8
     };
+	
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -125,9 +126,11 @@ function Geochart(root, visTemplate) {
         GEO.Render.drawMarkers();
 
         // Leaflet Draw
-        // TODO @Stefan: uncomment the following lines
         var drawnItems = new L.FeatureGroup();
         GEO.map.addLayer(drawnItems);
+		
+		L.drawLocal.draw.toolbar.buttons.rectangle = "selection tool";
+
         var drawControl = new L.Control.Draw({
             edit: {
                 featureGroup: drawnItems,
@@ -153,6 +156,7 @@ function Geochart(root, visTemplate) {
 				circle:false
 			},
         });
+		
         GEO.map.addControl(drawControl);
 		
 		GEO.map.on('draw:created', function (e) {
