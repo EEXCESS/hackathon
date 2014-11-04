@@ -40,6 +40,8 @@ function Visualization( EEXCESSobj ) {
     var bookmarkedInId = 'eexcess-bookmark-bookmarked-in-';                                        // Divs in bookamark details dialog showing bookmarks in which the current item is recorded
 	var filterBookmarkDialogId ="#eexcess-filter-bookmark-dialog";								   // Id for dialog filter bookmark
 	var filterBookmarkDropdownList = "#eexcess-filter-bookmark-dialog .eexcess-bookmark-dropdown-list"; // Div wrapping drop down list in filter bookmark dialog
+	var deleteBookmark = "#eexcess_deleteBookmark_button";
+	var addBookmarkItems = "#eexcess_addBookmarkItems_button";
 	
 	
 	// Icon & Image Constants
@@ -410,6 +412,7 @@ function Visualization( EEXCESSobj ) {
 		LIST.highlightListItems();
 		$(filterBookmarkDialogId+">div>span").text(STR_SHOWALLRESULTS);
 		$(filterBookmarkDialogId+">div>div").css("background","inherit");
+		$(deleteBookmark).prop("disabled",true);
 		indicesToHighlight = [];
 		
 		VISPANEL.updateCurrentChart( "reset_chart" );
@@ -1108,7 +1111,6 @@ function Visualization( EEXCESSobj ) {
 
     BOOKMARKS.updateBookmarkedItems = function(){
         
-		//experimental code begin to do ask cecillia ??
 		//bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
 		//console.log('bisher: ');
 		//console.log(bookmarkedItems);
@@ -1395,15 +1397,15 @@ function Visualization( EEXCESSobj ) {
 
     var FILTER = {};
 
-
 	
+
 	//change new Bookmarks
 	FILTER.changeDropDownList = function(){
 	
 		$( filterBookmarkDialogId ).remove();
 		
 		var topOffset = $(filterSelect).offset().top;
-		var dialogBookmark = d3.select(filterSelect).append("span")//div
+		var dialogBookmark = d3.select(filterSelect+">span").append("span")//div
 		.attr("id", "eexcess-filter-bookmark-dialog")
 		.attr("class", "eexcess-filter-bookmark-dialog")
 		.style("top", topOffset + "px" )
@@ -1418,11 +1420,6 @@ function Visualization( EEXCESSobj ) {
 		var bookmarkCount = 0;
 		bookmarks.forEach(function(elementData,indexData){
 			bookmarkCount = 0;
-			//FILTER.filterBookmark(inputData,
-			//	BookmarkingAPI.getAllBookmarks()[elementData["bookmark-name"]].items,
-			//	function(){
-			//		bookmarkCount++;
-			//	});
 			bookmarkCount = BookmarkingAPI.getAllBookmarks()[elementData["bookmark-name"]].items.length;
 			elementData["bookmark-name"] = elementData["bookmark-name"] + " : ("+bookmarkCount+")";
 		});
@@ -1446,6 +1443,7 @@ function Visualization( EEXCESSobj ) {
 				
 				if(evt == STR_SHOWALLRESULTS){
 					FILTER.showAllResults();
+					$(deleteBookmark).prop("disabled",true);
 				}else{
 					//filtered bookmark from data
 					var currentBookmarkItems = BookmarkingAPI.getAllBookmarks()[evt].items;
@@ -1463,6 +1461,7 @@ function Visualization( EEXCESSobj ) {
 					data = input.data;
 					
 					FILTER.updateData();
+					$(deleteBookmark).prop("disabled",false);
 				}
 		   }
         });
@@ -1487,7 +1486,7 @@ function Visualization( EEXCESSobj ) {
 	}
 	*/
 	
-	
+	// build filter bookmark and delete bookmark control.
 	FILTER.buildFilterBookmark = function(){
 	
 	    BOOKMARKS.destroyBookmarkDialog();
@@ -1495,7 +1494,18 @@ function Visualization( EEXCESSobj ) {
 
 		FILTER.changeDropDownList();
 		
-		d3.select("#eexcess_addBookmarkItems_button").on("click", FILTER.buildAddBookmarkItems);
+		d3.select(addBookmarkItems).on("click", FILTER.buildAddBookmarkItems);
+		
+		d3.select(deleteBookmark).on("click",function(){
+			
+			var bookmarkName = $(filterBookmarkDialogId+">div>span").text().split(":")[0].trim();
+			BookmarkingAPI.deleteBookmark(bookmarkName);
+			FILTER.changeDropDownList();
+			EVTHANDLER.btnResetClicked();
+			console.log("gggggggggggg:");
+		});
+		$(deleteBookmark).prop("disabled",true);
+		
 
 	}
 	
@@ -1531,14 +1541,12 @@ function Visualization( EEXCESSobj ) {
 	
 	
 	
-	//experimental region begin
+
 	FILTER.buildAddBookmarkItems = function(d, i){
 //BookmarkingAPI.deleteBookmark("");
         d3.event.stopPropagation();
 		BOOKMARKS.buildSaveBookmarkDialog(
-			function(thisValue){
-			
-			},
+			function(thisValue){},
 			function(bookmarkDetails){
 				bookmarkDetails.append('p').text("selected bookmarks items");
 			},function(){
@@ -1548,6 +1556,8 @@ function Visualization( EEXCESSobj ) {
 			this
 		);
 	}
+
+	
 	
 	FILTER.addBookmarkItems = function(){
 		console.log(indicesToHighlight);
@@ -1590,8 +1600,7 @@ function Visualization( EEXCESSobj ) {
 		BOOKMARKS.destroyBookmarkDialog();
 		FILTER.changeDropDownList();
 	}
-	
-	//experimental region end
+
 	
 	
     return START;

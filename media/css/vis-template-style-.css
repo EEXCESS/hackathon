@@ -343,21 +343,35 @@ input[type="button"]:hover{
 #eexcess_header_filter {
 	/*width: 29%;*/
 	/*width: 19%;*/
-	width:350px;
+	width:400px;
 	
 	float: right;
+	height:28px;
     /*text-align:right;*/
     /*padding-right: 5%;*/
 }
 
-
 #eexcess_header_filter > a > img {
-    float: right;
+	float:right;
     width: 20px;
     height: 20px;
 }
 
+#eexcess_header_filter > span{
+	float:right;
+	height: 20px;
+}
 
+#eexcess_addBookmarkItems_button{
+	float:right;
+	width:80px;
+	margin:5px 18px 5px 5px;
+}
+#eexcess_deleteBookmark_button{
+	float:right;
+	width:16px;
+	margin:5px;
+}
 
 
 /*
@@ -824,7 +838,7 @@ p.eexcess_ritem_short {
 .eexcess-bookmark-dialog span {
     display: inline-block;
     float: left;
-    width: 19%;
+    /*width: 19%;*/
     margin-top: .1em;
     margin-left: 0.4em;
     margin-right: 0.4em;
@@ -880,14 +894,14 @@ p.eexcess_ritem_short {
 
 .eexcess-bookmark-dropdown-list {
     display: inline-block;
-	/*width:85%*/
-    
+	width:65%;
+	
     height: 1.8em;
     border: 0.1em #ddd solid;
 
 }
 #eexcess-filter-bookmark-dialog>.eexcess-bookmark-dropdown-list{
-	width: 120%;
+	width: 90%;
 }
 
 
