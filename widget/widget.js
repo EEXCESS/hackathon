@@ -99,7 +99,9 @@ EEXCESS.init = function(widget) {
                     weight: 1,
                     text: query_terms[i]
                 };
-                query.push(tmp);
+                if (query_terms[i].length > 0) {
+                    query.push(tmp);
+                }
             }
             EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason: {reason: 'manual', value: $('#eexcess_query').val()}, terms: query}});
         }
