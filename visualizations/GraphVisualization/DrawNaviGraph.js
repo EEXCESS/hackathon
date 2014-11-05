@@ -588,10 +588,10 @@ var DrawNaviGraph = function(){
 			}
 			
 			
-			function setNodeList(nodeArray,nodeNameDict){
+			function setNodeNeigthborList(nodeArray,nodeNameDict,data){
 				nodeArray.forEach(function(element){
-					if(nodeNameDict.hasOwnProperty(element.name)){
-						element.status = 1;
+					if(nodeNameDict.hasOwnProperty(element.name) && element.status == 0){
+						element.status = data;
 					}
 				});
 			}
@@ -601,7 +601,7 @@ var DrawNaviGraph = function(){
 				var returnValue = value;
 				var isFound = false;
 				for(var count=value;count<nodeArray.length;count++){
-					if(nodeArray[value].status == 0){
+					if(nodeArray[count].status == 0){
 						returnValue = count;
 						isFound = true;
 						break;
@@ -611,14 +611,98 @@ var DrawNaviGraph = function(){
 				return {found:isFound,value:returnValue};
 			}
 			
-			
+
+
 			var initValue = 0;
+			var forceClusterNumber = 1;
+			var currentNode;
+			var resultOpenNode;
+			do{
+				currentNode = sortedLinknumbers[initValue];
+				
+				currentNode.status = forceClusterNumber;
+				forceClusterNumber++
+				
+				setNodeNeigthborList(sortedLinknumbers,getNodeNameDict(currentNode),forceClusterNumber);
+				forceClusterNumber++
+				
+				resultOpenNode = getNextOpenNode(sortedLinknumbers,initValue);
+				if(resultOpenNode.found == true){
+					initValue = resultOpenNode.value;
+				}
+				console.log("ttt");
+			}while(resultOpenNode.found == true);
 			
-			sortedLinknumbers[0].status = 2;
+			console.log("---");
+			
+			//set force nodes
+			function getNodeNameDictPerStatus(nodeArray,status){
+				var nameDict ={};
+				
+				nodeArray.forEach(function(element){
+					if(element.status == status){
+						nameDict[element.node] = "";
+					}
+				});
+				
+				return nameDict;
+			}
+			
+			var currentStatus = 0;
+			
+			
+			currentStatus++;//1,3,5,...
+			//......
+			
+			currentStatus++;//2,4,6,...
+			var nodeNameDict = getNodeNameDictPerStatus(sortedLinknumbers,currentStatus);
+			//....
+			
+			//while(Object.keys(nodeNameDict).length >0);
+			
+			
+
+			
+			
+			/*
+			
+			forceNaviGraph.To.Object().To.Link()	
+				.Add(uniqueNodeName,resultNodeName,resultLinkName)
+				.Change(resultLinkName,{strength:0.2,attr:{fill:"none",stroke:"none"}});
+			
+			
+			forceNaviGraph.To.Object().To.Node()
+				.Delete(uniqueNodeId);
+			
+			
+			forceNaviGraph.To.Object().To.Node()
+				.Delete(uniqueNodeId)
+				.To.Cluster()
+					.Delete("clus_"+uniqueNodeId);
+			
+			
+			
+			forceNaviGraph.To.Object().To.Node()
+				.Add(uniqueNodeName)
+				.Change(uniqueNodeName,{cluster:{name:"clus_"+uniqueNodeName,distance:15,active:true}})
+				.To.Cluster()
+					.Add("clus_"+uniqueNodeName,uniqueNodeName)
+			
+			
+			forceNaviGraph.To.Object().To.Node()
+				.Add(resultNodeName)
+				.Change(resultNodeName,{
+					cluster:{name:"clus_"+uniqueNodeName,distance:clusterDistance,active:true},
+					});
+			*/	
 			
 			
 			
 			
+			
+			
+			
+			//////////////////////////////////////////////////////////////////////////////
 			/*
 			//change the neightbor table
 			sortedLinknumbers.forEach(function(element){

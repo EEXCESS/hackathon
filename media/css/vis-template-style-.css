@@ -335,6 +335,14 @@ input[type="button"]:hover{
     text-align:center;
 }
 
+#eexcess_btnreset {
+	width:150px;
+	height:32px;
+	font-size:15px;
+	font-weight:bold;
+}
+
+
 
 /*
     Third and last <div> aligned inside "#eexcess_inner_header"
