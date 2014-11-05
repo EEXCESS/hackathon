@@ -68,6 +68,10 @@ EEXCESS.messaging = (function() {
         });
     };
 
+    var _broadCastMessage = function(tabID, msg, callback) {
+        _sendMsgAllTabs(msg);
+    };
+
     /**
      * Listens for incoming messages
      * @param {Function} callback a function that looks like this: 
@@ -82,7 +86,8 @@ EEXCESS.messaging = (function() {
         sendMsgAllTabs: _sendMsgAllTabs,
         sendMsgOtherTabs: _sendMsgOtherTabs,
         listener: _listener,
-        callBG: _callBG
+        callBG: _callBG,
+        broadCastMessage : _broadCastMessage
     };
 })();
 

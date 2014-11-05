@@ -24,6 +24,8 @@
 	                                    </div>
 	                                 </div>
 	                            </div> 
+                </div>
+                <div class="row">
 					<div class="col-lg-8">
 						<!-- IDENTITY -->
 						<div class="panel panel-info">
@@ -111,8 +113,9 @@
 						</div>
 						<!-- /DEMOGRAPHICS-->
 					</div>
-					
-					<div class="col-lg-12">
+				</div>
+				<div class="row">
+					<div class="col-lg-8">
 						<!-- TOPICS -->
 						<div id="topics" class="panel panel-info">
 							<div class="panel-heading">
@@ -131,6 +134,35 @@
 						</div>
 						<!-- /TOPICS-->
 					</div>
+					<div class="col-lg-4">
+						<!-- NODE FORM -->
+						<div class="panel panel-info">
+							<div class="panel-heading">
+								<h3 class="panel-title">
+									Display Settings <span class="badge pull-right setting"></span>
+								</h3>
+							</div>
+							<div class="panel-body">
+								<div class="form-group">
+									<label for="" class="control-label">Node Form</label>
+									<select data-eexcess-profile-field="nodeForm" class="form-control">
+										<option value="SQUARE">Square</option>
+										<option value="CIRCLE">Circle</option>
+									</select>
+								</div>
+							</div>
+							<div class="panel-body">
+								<div class="form-group">
+									<label for="" class="control-label">Mode</label>
+									<select data-eexcess-profile-field="skillLevel" id="profile-mode" class="form-control">
+										<option value="BEGINNER">Query Crumbs 1</option>
+										<option value="EXPERT">Query Crumbs 1</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<!-- /NODE FORM -->
+					</div>
 				</div>
 			</div>
 		</div>
@@ -142,6 +174,7 @@
 		<script src="/libs/tagit/tag-it.js"></script>
 	    <script type="text/javascript" src="../common_js/storage.js"></script>
 	    <script src="../common_js/config.js" type="text/javascript"></script>
+		<script type="text/javascript" src="../common_js/browser_specific.js"></script>
 		<script src="js/profile.js"></script>
 	</body>
 </html>

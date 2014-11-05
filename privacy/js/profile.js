@@ -3,6 +3,9 @@ function doProfileItemChange() {
     var value = $(this).val();
     console.log("Updating profile entry '" + fieldName + "' to " + value);
     EEXCESS.storage.local("privacy.profile." + fieldName, value);
+    if(fieldName == "skillLevel" || fieldName == "nodeForm") {
+        EEXCESS.messaging.callBG({method: {parent: 'messaging', func: 'broadCastMessage'}, data: { "method" : "queryCrumbsSettingsUpdate", "fieldName" : fieldName, "value" : value }});
+    }
 }
 
 function loadProfileItem() {

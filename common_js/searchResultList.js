@@ -126,7 +126,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
     // listen for updates
     EEXCESS.messaging.listener(
             function(request, sender, sendResponse) {
-                if (request.method.parent === 'results') {
+                if (typeof request.method != "undefined" && request.method.parent === 'results') {
                     if (request.method.func === 'rating') {
                         _rating($('.eexcess_raty[data-uri="' + request.data.uri + '"]'), request.data.uri, request.data.score);
                     } else if (request.method.func === 'error') {

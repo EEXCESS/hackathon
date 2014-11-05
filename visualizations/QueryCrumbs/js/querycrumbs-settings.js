@@ -45,15 +45,21 @@ var QueryCrumbsConfiguration = {
 	    circle_bg_r : 12
     },
     // The skill level of an user. (BEGINNER, EXPERT)
-    skillLevel : "EXPERT",
+    skillLevel : "",
     // Changes the form of the nodes. (SQUARE, CIRCLE)
-    nodeForm : "SQUARE"
+    nodeForm : ""
 }
 
 QueryCrumbsConfiguration.dimensions.docRectHeight = QueryCrumbsConfiguration.dimensions.rectHeight / QueryCrumbsConfiguration.dimensions.docRectVertical;
 QueryCrumbsConfiguration.dimensions.docRectWidth = QueryCrumbsConfiguration.dimensions.rectWidth / QueryCrumbsConfiguration.dimensions.docRectHorizontal;
 // Calculate and initialize the amount of segments for the nodes. 
 QueryCrumbsConfiguration.dimensions.SEGMENTS = QueryCrumbsConfiguration.dimensions.docRectHorizontal * QueryCrumbsConfiguration.dimensions.docRectVertical;
+
+var EEXCESS = EEXCESS || {};
+var profile = EEXCESS.profile.getProfile();
+QueryCrumbsConfiguration.skillLevel = profile.skillLevel;
+QueryCrumbsConfiguration.nodeForm = profile.nodeForm;
+
 
 /*
   Uses the base colors defined in QueryCrumbsConfiguration.base_colors. Several basic distinct colors can be defined here. When appending a new node to the QueryCrumbs, we assign

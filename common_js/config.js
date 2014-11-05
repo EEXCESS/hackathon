@@ -29,6 +29,14 @@ EEXCESS.config = (function() {
     if(typeof EEXCESS.storage.local('privacy.policy.searchContextPage') === 'undefined') {
         EEXCESS.storage.local('privacy.policy.searchContextPage', 1);
     }
+    // Evaluation
+    if(typeof EEXCESS.storage.local('privacy.profile.nodeForm') === 'undefined') {
+        EEXCESS.storage.local('privacy.profile.nodeForm', "SQUARE");
+    }
+    if(typeof EEXCESS.storage.local('privacy.profile.skillLevel') === 'undefined') {
+        EEXCESS.storage.local('privacy.profile.skillLevel', "BEGINNER");
+    }
+    // /Evaluation
 
     var _FR_BASE_URI = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/';
     var _PP_BASE_URI = 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/';

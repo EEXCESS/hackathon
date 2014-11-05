@@ -44,6 +44,18 @@ EEXCESS.profile = (function() {
         return [];
     };
 
+    // Evaluation
+
+    var applyNodeForm = function() {
+        return EEXCESS.storage.local('privacy.profile.nodeForm');
+    }
+
+    var applyMode = function() {
+        return EEXCESS.storage.local('privacy.profile.skillLevel');
+    }
+
+    // /Evaluation 
+
     var applyGenderPolicy = function() {
         if (EEXCESS.storage.local('privacy.policy.gender') === 1 || "1") {
             return EEXCESS.storage.local('privacy.profile.gender');
@@ -197,9 +209,16 @@ EEXCESS.profile = (function() {
                     "interests": _interests(),
                     "contextKeywords": {},
                     "uuid": applyUuidPolicy(),
-                    "userLocations": applyLocationPolicy()
+                    "userLocations": applyLocationPolicy(),
+                    "nodeForm" : applyNodeForm(),
+                    "skillLevel" : applyMode()
                 };
-                callback(profile);
+                if(!callback) {
+                    return profile;
+                } else {
+                    callback(profile);  
+                }
+                
 //            });
         }
     };

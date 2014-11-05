@@ -27,17 +27,14 @@
 })(console)
 
 var evaluationUserID = -1;
-// END
+
+// Evaluation END
 
 function display_querycrumbs(domElem) {
-
-
     /**
      * Variable and event handler for the evaluation
      */
-
-    var taskStart = 0;
-    
+    var taskStart = 0;   
     var taskID;
 
     $(document).on("click", "#eexcess_start_btn", function() {
@@ -80,7 +77,7 @@ function display_querycrumbs(domElem) {
         console.save(localStorage.getItem("evaluation"), "evaluation.json");
 
         localStorage.removeItem("evaluation");
-        console.log( window.indexedDB)
+
         var req =  window.indexedDB.deleteDatabase("eexcess_db");
         req.onsuccess = function () {
             console.log("Deleted database successfully");
@@ -566,6 +563,10 @@ function display_querycrumbs(domElem) {
         redraw: function(visualData) {
             svgContainer.selectAll("g.crumbs").selectAll("*").remove();
 
+            // Evaluation
+            var dataTotal = $('#recommendationList').attr("data-total");
+            // /Evaluation
+
             var crumbsSel = svgContainer.selectAll("g.crumbs").data([visualData]);
             crumbsSel.enter().append("g").attr("class", "crumbs");
 
@@ -585,9 +586,8 @@ function display_querycrumbs(domElem) {
                 nodeEnter.append("circle").attr("class", "queryCircleBg").attr({
                     cx: QueryCrumbsConfiguration.dimensions.circle_cxy,
                     cy: QueryCrumbsConfiguration.dimensions.circle_cxy,
-                    r:  function(d,i) { return (i == currentIdx) ? QueryCrumbsConfiguration.dimensions.circle_bg_r + 1 : QueryCrumbsConfiguration.dimensions.circle_bg_r }
-                }).classed("queryRectBg-selected", function(d,i) { return (i == currentIdx);});
-
+                    r:  function(d,i) { return ((i == currentIdx) && (dataTotal > 0)) ? QueryCrumbsConfiguration.dimensions.circle_bg_r + 1 : QueryCrumbsConfiguration.dimensions.circle_bg_r }
+                }).classed("queryRectBg-selected", function(d,i) { return ( (i == currentIdx) && (dataTotal > 0) );});
 
                 nodeEnter.append("circle").attr("class", "queryCircle").attr({
                     cx: QueryCrumbsConfiguration.dimensions.circle_cxy,
@@ -656,20 +656,20 @@ function display_querycrumbs(domElem) {
 
                 queryNodesSel.select("rect.queryRectBg")
                   .attr("x", function (d, i) { 
-                      return (i == currentIdx) ? (d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth + 1;
+                      return ((i == currentIdx) && (dataTotal > 0)) ? (d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth + 1;
                   })
                   .attr("y", function (d, i) { 
-                      return (i == currentIdx) ? (d.y_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.y_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth + 1; 
+                      return ((i == currentIdx) && (dataTotal > 0)) ? (d.y_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.y_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth + 1; 
                   })
                   .attr("width", function (d, i) { 
-                      return (i == currentIdx) ? (d.width + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.width + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth - 2; 
+                      return ((i == currentIdx) && (dataTotal > 0)) ? (d.width + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.width + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth - 2; 
                   })
                   .attr("height", function (d, i) { 
-                      return (i == currentIdx) ? (d.height + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.height + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth - 2; 
+                      return ((i == currentIdx) && (dataTotal > 0)) ? (d.height + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.height + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth - 2; 
                   })
                   .attr("ry", 0)
                   .classed("queryRectBg", true)
-                  .classed("queryRectBg-selected", function(d,i) { return (i == currentIdx);});
+                  .classed("queryRectBg-selected", function(d,i) { return ((i == currentIdx) && (dataTotal > 0));});
 
                 queryNodesSel.select("rect.queryRect").attr("x", function (d) { return d.x_pos; })
                   .attr("y", function (d) { return d.y_pos; } )
@@ -787,6 +787,16 @@ function display_querycrumbs(domElem) {
     };
 
     EEXCESS.messaging.listener(QUERYING.SearchTriggeredListener);
+    // Evaluation
+    EEXCESS.messaging.listener(function(msg) {
+        if(msg.fieldName) {
+            QueryCrumbsConfiguration[msg.fieldName] = msg.value;
+            if(visualData != null) {
+                RENDERING.redraw(visualData);   
+            }
+        }
+    });
+    // /Evaluation
 
     function init(data) {
         historyData = data.reverse();
@@ -796,5 +806,8 @@ function display_querycrumbs(domElem) {
         visualData = CORE.generateVisualData(historyData, similarities);
         RENDERING.redraw(visualData);
     };
+
+    QUERYING.loadDataFromIndexedDB();
     
 }
+

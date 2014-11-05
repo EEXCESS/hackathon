@@ -7,8 +7,14 @@
         <link rel="stylesheet" href="../media/css/eexcess.css" />
         <link rel="stylesheet" href="../media/css/widget.css" />
         <link rel="stylesheet" href="../media/css/searchResultList.css" />
+        <script type="text/javascript" src="../libs/jquery-1.10.1.min.js"></script>
+        <script type="text/javascript" src="../libs/rating/jquery.raty.min.js"></script>
+        <script type="text/javascript" src="../libs/jquery-ui/jquery-ui.min.js"></script>
         <script type="text/javascript" src="../libs/d3.v3.js" charset="utf-8"></script>
         <script type="text/javascript" src="../common_js/storage.js"></script>   
+        <script type="text/javascript" src="../background/uuid.js" ></script>
+        <script type="text/javascript" src="../visualizations/QueryCrumbs/js/querycrumbs-vis.js" charset="utf-8"></script>  
+        <script type="text/javascript" src="../background/profile.js" ></script>
         <link rel="stylesheet" type="text/css" href="../media/css/queryCrumbsVis.css">
     </head>
     <body>
@@ -22,11 +28,12 @@
             
             <nav>
                 <ul id="eexcess_tab">
-                    <li><a href="visualizations/FacetScape/index.html" class="fancybox_link" title="explore the results"><img src="/media/batchmaster/grid.png" /></a></li>
-                    <li><a href="visualizations/GraphVisualization/index.html" class="fancybox_link" title="explore your search history"><img src="/media/batchmaster/map-2.png" /></a></li>
-                    <li><a href="visualizations/Vis-Template/index.html" class="fancybox_link" title="display the results in a timeline"><img src="/media/batchmaster/timeline.png" /></a></li>
+                   <!--  <li><a href="visualizations/FacetScape/index.html" class="fancybox_link" title="explore the results"><img src="/media/batchmaster/grid.png" /></a></li>
+                    <li><a href="visualizations/GraphVisualization/index.html" class="fancybox_link" title="explore your search history"><img src="/media/batchmaster/map-2.png" /></a></li> 
+                    <li><a href="visualizations/Vis-Template/index.html" class="fancybox_link" title="display the results in a timeline"><img src="/media/batchmaster/timeline.png" /></a></li> -->
                     <li><a href="privacy/profile.html" class="fancybox_link" title="edit your profile"> <img src="/media/batchmaster/user-4.png" /></a></li>
-                    <li><a id="eexcess_hide_btn" href="#" title="hide results"> <img src="/media/batchmaster/options.png" /></a></li>
+                   <!-- <li><a id="eexcess_hide_btn" href="#" title="hide results"> <img src="/media/batchmaster/options.png" /></a></li>
+                    <!--<li><a id="eexcess_hide_btn" href="#" title="hide results"> <img src="/media/batchmaster/options.png" /></a></li> -->
                     <!-- Evaluation: This buttons are only necessary for the evaluation and should be removed afterwards! -->
                     <li><a id="eexcess_start_btn" href="#" title="Start evaluation"> <img src="/media/batchmaster/play.png" /></a></li>
                     <li><a id="eexcess_stop_btn" href="#" title="Stop evaluation"> <img src="/media/batchmaster/stop.png" /></a></li>
@@ -38,15 +45,11 @@
             <div id="queryCrumbs"></div>
             <script type="text/javascript" src="../libs/colorbrewer.v1.min.js" charset="utf-8"></script>
             <script type="text/javascript" src="../visualizations/QueryCrumbs/js/querycrumbs-settings.js" charset="utf-8"></script>
-            <script type="text/javascript" src="../visualizations/QueryCrumbs/js/querycrumbs-vis.js" charset="utf-8"></script>
         </header>
 
         <div id="eexcess_content" class="content_sidebar"></div>
 
         <!--<img src="../media/EEXCESS__Logo_RGB.jpg" id="eexcess_logo" />-->
-        <script type="text/javascript" src="../libs/jquery-1.10.1.min.js"></script>
-        <script type="text/javascript" src="../libs/rating/jquery.raty.min.js"></script>
-        <script type="text/javascript" src="../libs/jquery-ui/jquery-ui.min.js"></script>
         <script type="text/javascript" src="../libs/jaccard/jaccard.js"></script>
         <script type="text/javascript" src="../common_js/browser_specific.js"></script>
         <script type="text/javascript" src="../common_js/searchResultList.js"></script>

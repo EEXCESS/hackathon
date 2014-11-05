@@ -94,7 +94,7 @@ EEXCESS.init({ results : { query : "" } });
 
 
 EEXCESS.messaging.listener(function(request, sender, sendResponse) {
-    if (request.method !== 'privacySandbox' && request.method !== 'visibility' && request.method !== 'fancybox' && request.method !== 'getTextualContext' && request.method.parent !== 'results') {
+    if (request.method !== 'privacySandbox' && request.method !== 'visibility' && request.method !== 'fancybox' && request.method !== 'getTextualContext' && request.method.parent !== 'results' && request.method !== "queryCrumbsSettingsUpdate" ) {
         if (typeof request.method.parent !== 'undefined') {
             EEXCESS[request.method.parent][request.method.func](request.data);
         } else if (request.method === 'loading') {
