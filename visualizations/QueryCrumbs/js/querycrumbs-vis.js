@@ -99,6 +99,14 @@ function display_querycrumbs(domElem) {
             return;
         }
 
+        clear_browser_data();
+    })
+
+    $(document).on("click", '#eexcess_delete_btn', function() {
+        clear_browser_data();
+    })
+
+    var clear_browser_data = function() {
         localStorage.removeItem("evaluation");
 
         var req =  window.indexedDB.deleteDatabase("eexcess_db");
@@ -111,8 +119,7 @@ function display_querycrumbs(domElem) {
         req.onblocked = function () {
             console.error("Couldn't delete database due to the operation being blocked");
         };
-    })
-
+    }
 
     var display_error = function(msg) {
         $("#eexcess_main").after("<div id='errorContainer' style='color: red; margin: 5px; text-align: center'>" + msg + "</div>");
