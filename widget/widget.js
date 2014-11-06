@@ -75,7 +75,9 @@ EEXCESS.init = function(widget) {
                     weight: 1,
                     text: query_terms[i]
                 };
-                query.push(tmp);
+                if (query_terms[i].length > 0) {
+                    query.push(tmp);
+                }
             }
             EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason: {reason: 'manual', value: $('#eexcess_query').val()}, terms: query}});
         }
@@ -90,11 +92,11 @@ EEXCESS.init = function(widget) {
 // Initalize the widget with the current state in the background script's model on execution of this script
 //EEXCESS.messaging.callBG({method: {parent: 'model', func: 'widget'}}, EEXCESS.init);
 // Evaluation
-EEXCESS.init({ results : { query : "" } });
+EEXCESS.init({results: {query: ""}});
 
 
 EEXCESS.messaging.listener(function(request, sender, sendResponse) {
-    if (request.method !== 'privacySandbox' && request.method !== 'visibility' && request.method !== 'fancybox' && request.method !== 'getTextualContext' && request.method.parent !== 'results' && request.method !== "queryCrumbsSettingsUpdate" ) {
+    if (request.method !== 'privacySandbox' && request.method !== 'visibility' && request.method !== 'fancybox' && request.method !== 'getTextualContext' && request.method.parent !== 'results' && request.method !== "queryCrumbsSettingsUpdate") {
         if (typeof request.method.parent !== 'undefined') {
             EEXCESS[request.method.parent][request.method.func](request.data);
         } else if (request.method === 'loading') {
