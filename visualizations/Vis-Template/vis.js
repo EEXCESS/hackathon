@@ -1595,14 +1595,15 @@ function Visualization( EEXCESSobj ) {
 				LIST.turnFaviconOnAndShowDetailsIcon(index);
 			}
 			
-			if(indicesToHighlight.length == 0){
+			//if(indicesToHighlight.length == 0){
 				//console.log("all bookmarks!");
 
-				data.forEach(function(currentData,index){
-					addBookmarkFunc(currentData,index);
-				});
+				//data.forEach(function(currentData,index){
+				//	addBookmarkFunc(currentData,index);
+				//});
 				
-			}else{
+			//}else{
+			if(indicesToHighlight.length > 0){
 				var currentData;
 				indicesToHighlight.forEach(function(indexValue){
 					//console.log(indexValue);

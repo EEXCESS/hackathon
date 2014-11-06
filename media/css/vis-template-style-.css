@@ -317,7 +317,8 @@ input[type="button"]:hover{
 */
 #eexcess_header_search {
     float:left;
-    width: 29%;
+    /*width: 29%;*/
+	width:30%;
 
 }
 
@@ -328,7 +329,8 @@ input[type="button"]:hover{
 */
 #eexcess_header_text {
 	float: left;
-	width: 40%;
+	/*width: 40%;*/
+	width:30%;
     color: #008746;
     font-family:Arial;
     font-size: 1.1em;
@@ -351,7 +353,8 @@ input[type="button"]:hover{
 #eexcess_header_filter {
 	/*width: 29%;*/
 	/*width: 19%;*/
-	width:400px;
+	/*width:400px;*/
+	width:40%;
 	
 	float: right;
 	height:28px;
