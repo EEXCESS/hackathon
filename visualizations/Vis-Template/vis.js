@@ -180,6 +180,7 @@ function Visualization( EEXCESSobj ) {
 	 * */
 	PREPROCESSING.bindEventHandlers = function(){
 		$( btnSearch  ).click( function(){ EVTHANDLER.btnSearchClicked(); });
+		$( searchField ).on('keypress', function(e){ if (e.keyCode == 13) EVTHANDLER.btnSearchClicked(); });
 		$( btnReset   ).click( function(){ EVTHANDLER.btnResetClicked(); });
         $( 'html' ).click(function(){ if(isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
 	};
@@ -704,8 +705,10 @@ function Visualization( EEXCESSobj ) {
         contentDiv.append("h1")
 				.append("a")
 					.attr("class", "eexcess_ritem_title")
-					.attr("href", "#")
+					.attr("href", function(d){return d.uri;})
                     .on("click", function(d){
+                        d3.event.preventDefault();
+                        d3.event.stopPropagation();
                         window.open(d.uri, '_blank');
                         EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:d.uri}); })
 					.text(function(d){ return d.title; });
@@ -1090,6 +1093,7 @@ function Visualization( EEXCESSobj ) {
                 'title': item.title,
                 'facets': item.facets,
                 'uri': item.uri,
+                'coordinate': item.coordinate,
                 'query': query
             };
             this.currentItem['index'] = index;
@@ -1589,6 +1593,7 @@ function Visualization( EEXCESSobj ) {
 					'title': currentData.title,
 					'facets': currentData.facets,
 					'uri': currentData.uri,
+					'coordinate': currentData.coordinate,
 					'query': query
 				};
 				BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], bookmarkItem);
