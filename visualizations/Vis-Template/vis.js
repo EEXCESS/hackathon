@@ -408,14 +408,17 @@ function Visualization( EEXCESSobj ) {
 	
 	EVTHANDLER.btnResetClicked = function(){
 		indicesToHighlight = VISPANEL.getAllSelectListItems();
-		FILTER.showAllResults();		
+	
 		LIST.highlightListItems(indicesToHighlight);
-		$(filterBookmarkDialogId+">div>span").text(STR_SHOWALLRESULTS);
-		$(filterBookmarkDialogId+">div>div").css("background","inherit");
-		$(deleteBookmark).prop("disabled",true).css("background","silver");
+		//$(filterBookmarkDialogId+">div>span").text(STR_SHOWALLRESULTS);
+		//$(filterBookmarkDialogId+">div>div").css("background","inherit");
+		//$(deleteBookmark).prop("disabled",true).css("background","silver");
 		
+		//FILTER.showStars();	
+		//FILTER.updateData();	
 		
 		VISPANEL.updateCurrentChart( "reset_chart" );
+		
 	};
 
 
@@ -1453,9 +1456,12 @@ function Visualization( EEXCESSobj ) {
 				evt = evt.split(":")[0].trim();
 				var input ={};
 				indicesToHighlight =[];
-				
+
 				if(evt == STR_SHOWALLRESULTS){
-					FILTER.showAllResults();
+				
+					FILTER.showStars();
+					FILTER.updateData();
+					
 					$(deleteBookmark).prop("disabled",true).css("background","silver");
 				}else{
 					//filtered bookmark from data
@@ -1476,6 +1482,8 @@ function Visualization( EEXCESSobj ) {
 					FILTER.updateData();
 					$(deleteBookmark).prop("disabled",false).css("background","");
 				}
+
+				
 		   }
         });
 		
@@ -1514,15 +1522,20 @@ function Visualization( EEXCESSobj ) {
 			if (confirm("Delete current bookmark?") == true) {
 				var bookmarkName = $(filterBookmarkDialogId+">div>span").text().split(":")[0].trim();
 				BookmarkingAPI.deleteBookmark(bookmarkName);
+				
 				FILTER.changeDropDownList();
-				EVTHANDLER.btnResetClicked();
+				
+				FILTER.showStars();
+				FILTER.updateData();
+				FILTER.showStars();
+				FILTER.updateData();
 			} 
 
 		});
 		$(deleteBookmark).prop("disabled",true).css("background","silver");
 	};
 	
-	FILTER.showAllResults = function(){
+	FILTER.showStars = function(){
 		var input ={};
 		input.data = [];
 		input.data = inputData;
@@ -1537,7 +1550,7 @@ function Visualization( EEXCESSobj ) {
 		});
 		data = input.data;	
 		
-		FILTER.updateData();
+		//FILTER.updateData();
 	};
 	
 	FILTER.updateData = function(){
@@ -1616,6 +1629,12 @@ function Visualization( EEXCESSobj ) {
 			
 			BOOKMARKS.destroyBookmarkDialog();
 			FILTER.changeDropDownList();
+
+			FILTER.showStars();
+			FILTER.updateData();
+			FILTER.showStars();
+			FILTER.updateData();
+			
 		}
 	};
 

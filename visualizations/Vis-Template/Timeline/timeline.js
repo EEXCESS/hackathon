@@ -591,6 +591,40 @@ function Timeline( root, visTemplate ){
 		/**
 		 *	Main nodes 
 		 * */
+		//steff experimental code begin
+		//console.log(data);
+		//console.log(mapping[1].facet);
+		 
+		//get information(number) about nodes with same x- and y-axis;
+		var keyForData = mapping[1].facet;
+		 
+		var dataDictWithTime ={}; //double dict
+		 
+		var workInXAxis = function(dataVal,dateString,key){
+			if(dataVal[key].hasOwnProperty(dateString)){ //work in x axis
+				dataVal[key][dateString] += 1;
+			}
+			else{
+				dataVal[key][dateString] = 1;
+			}
+		}
+		
+		var yearInString;
+		var currentKeyValue;
+		data.forEach(function(currentData){
+			yearInString = currentData.year.getFullYear().toString();
+			currentKeyValue = currentData[keyForData];
+			
+			if(dataDictWithTime.hasOwnProperty(currentKeyValue)){//work in y axis
+				workInXAxis(dataDictWithTime,yearInString,currentKeyValue);
+			}
+			else{
+				dataDictWithTime[currentKeyValue] ={};
+				workInXAxis(dataDictWithTime,yearInString,currentKeyValue);
+			}
+		});
+		//steff experimental code end
+		 
 		currentExtent = Math.abs(new Date(x.invert(width)) - new Date(x.invert(0)));
 		
 		var nodesData = chart.selectAll(".node").data(data);
@@ -609,6 +643,19 @@ function Timeline( root, visTemplate ){
 			.transition()	
 				.style("opacity", 1)
 				.duration(1500);
+
+		//steff experimental code begin
+		nodes.append("text")
+			.attr("x", function(d) { return x(d[xAxisChannel])-3; })
+			.attr("y", function(d) { return y(d[yAxisChannel])+2; })
+			.text(function(d){
+				var numberWithSameTime = dataDictWithTime[d[keyForData]][d.year.getFullYear().toString()];
+				if(numberWithSameTime>1){
+					//return numberWithSameTime;
+				} 
+				//count same node with same y-axis and time
+			});
+		//steff experimental code end
 		
 		circles = chart.selectAll(".dot");
 		
