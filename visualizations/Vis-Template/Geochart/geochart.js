@@ -47,7 +47,8 @@ function Geochart(root, visTemplate) {
         },
         spatializeData: function(data){
             for(var i=0; i<data.length; i++){
-                data[i].coordinate = GEO.Internal.getRandomLatLon(i);
+                if (!data[i].coordinate)
+                    data[i].coordinate = GEO.Internal.getRandomLatLon(i);
             }
         },
         getDataIndex: function(id){
@@ -63,6 +64,7 @@ function Geochart(root, visTemplate) {
 			var inputData = GEO.Input.data;
 		    for(var i=0; i < inputData.length; i++){
 				if(
+                    inputData[i].coordinate && inputData[i].coordinate.length == 2 &&
 					rectBounds.getWest() <= inputData[i].coordinate[1] &&
 					inputData[i].coordinate[1] <= rectBounds.getEast() &&
 					rectBounds.getSouth() <= inputData[i].coordinate[0] &&
@@ -230,6 +232,9 @@ function Geochart(root, visTemplate) {
         for(var i=0; i<GEO.Input.data.length; i++){
             //var marker = L.marker(GEO.Input.data[i].coordinate);
             //var marker = L.marker([51.505, -0.09]);
+            if (!GEO.Input.data[i].coordinate || GEO.Input.data[i].coordinate.length < 2)
+                continue;
+
             var currentDataObject = GEO.Input.data[i];
             currentDataObject.color = colorScale(currentDataObject.facets[colorChannel]);
             var marker = new GEO.Render.Marker(GEO.Input.data[i].coordinate, { icon: GEO.Render.icon(currentDataObject.color) });
