@@ -1,11 +1,11 @@
 // Evaluation 
+
+// This function allows us to download the task completion times from the local storage. 
 (function(console){
 
     console.save = function(data, filename){
-
         if(!data) {
-            console.error('Console.save: No data')
-            return;
+            return "No data to download";
         }
 
         if(!filename) filename = 'console.json'
@@ -25,7 +25,7 @@
         a.dispatchEvent(e)
     }
 })(console)
-
+    
 var evaluationUserID = -1;
 
 // Evaluation END
@@ -49,11 +49,28 @@ function display_querycrumbs(domElem) {
     $(document).on("click", "#evalInfos", function() {
         taskID = $('#taskID').val();
         evaluationUserID = $('#evalUID').val();  
+
+        if(!evaluationUserID) {
+            display_error("User ID is missing");
+            return;
+        }
+
+        if(!taskID) {
+            display_error("Task ID is missing");
+            return;
+        }
+
         $('#evalContainer').remove();
         taskStart = new Date().getTime();   
+        display_status("Task started")
     })
 
     $(document).on("click", "#eexcess_stop_btn", function() {
+        if(taskStart == 0) {
+            display_error("Start the task first");
+            return;
+        }
+
         var tmp =  new Date().getTime() - taskStart;
         var taskCompletionTime = tmp - localStorage.getItem("callCompletionTime");
         var inSeconds = taskCompletionTime / 1000;
@@ -71,10 +88,16 @@ function display_querycrumbs(domElem) {
         }
         evaluationObject[evaluationUserID][taskID] = inSeconds;
         localStorage.setItem("evaluation", JSON.stringify(evaluationObject));
+        display_status("Task stopped")
     })
 
     $(document).on("click", "#eexcess_print_btn", function() {
-        console.save(localStorage.getItem("evaluation"), "evaluation.json");
+        var msg = console.save(localStorage.getItem("evaluation"), "evaluation.json");
+
+        if(msg) {
+            display_error(msg)
+            return;
+        }
 
         localStorage.removeItem("evaluation");
 
@@ -89,6 +112,17 @@ function display_querycrumbs(domElem) {
             console.error("Couldn't delete database due to the operation being blocked");
         };
     })
+
+
+    var display_error = function(msg) {
+        $("#eexcess_main").after("<div id='errorContainer' style='color: red; margin: 5px; text-align: center'>" + msg + "</div>");
+        setTimeout(function(){ $("#errorContainer").remove() }, 5000);
+    }
+
+    var display_status = function(msg) {
+        $("#eexcess_main").after("<div id='statusContainer' style='color: green; margin: 5px; text-align: center'>" + msg + "</div>");
+        setTimeout(function(){ $("#statusContainer").remove() }, 3000);
+    }
 
     /**
      * Evaluation end
