@@ -32,6 +32,10 @@ EEXCESS.config = (function() {
     if(typeof EEXCESS.storage.local('privacy.policy.currentLocation') === 'undefined') {
         EEXCESS.storage.local('privacy.policy.currentLocation', 0);
     }
+    
+    if(typeof EEXCESS.storage.local('autoQuery') === 'undefined') {
+        EEXCESS.storage.local('autoQuery',JSON.stringify(true));
+    };
 
     var _FR_BASE_URI = 'http://eexcess.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/';
     var _PP_BASE_URI = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/';

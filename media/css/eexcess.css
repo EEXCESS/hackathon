@@ -35,10 +35,7 @@ header {
     padding-bottom: 35px;   
 }
 
-/*ceci*/
-header #eexcess_searchForm{
-    width: 70%;
-}
+
 
 /*ceci*/
 fieldset {
@@ -50,11 +47,7 @@ fieldset {
     width: 98%;
 }
 
-/*ceci*/
-header #eexcess_query{
-    width: 70%;
 
-}
 
 header .searchfield{
     background-color: white;/*494949;*/
@@ -67,7 +60,7 @@ header .searchfield{
 
     padding-left: 0.3em;
     padding-right: 0.7em;
-    width: 98%;
+    width: 60%;
     border: solid #cdcfd2 1px;
    -moz-box-shadow:    inset 4px 4px 6px -6px #666666;
    -webkit-box-shadow: inset 4px 4px 6px -6px #666666;

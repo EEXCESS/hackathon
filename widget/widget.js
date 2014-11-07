@@ -47,6 +47,28 @@ EEXCESS.init = function(widget) {
             $('#euOnly').attr('title', 'All partners (click to change)');
         }
     });
+    
+    if (EEXCESS.storage.local('autoQuery')!== 'undefined' && JSON.parse(EEXCESS.storage.local('autoQuery'))) {
+        $('#autoQuery img').attr('src', '/media/icons/power-on.png');
+        $('#autoQuery').attr('title', 'auto query activated');
+    } else {
+        $('#autoQuery img').attr('src', '/media/icons/power-off.png');
+        $('#autoQuery').attr('title', 'auto query deactivated');
+        EEXCESS.storage.local('autoQuery',JSON.stringify(false));
+    }
+    $('#autoQuery').click(function(evt) {
+        evt.preventDefault();
+        var autoOn = JSON.parse(EEXCESS.storage.local('autoQuery'));
+        autoOn = !autoOn;
+        EEXCESS.storage.local('autoQuery', JSON.stringify(autoOn));
+        if (autoOn) {
+            $('#autoQuery img').attr('src', '/media/icons/power-on.png');
+            $('#autoQuery').attr('title', 'auto query activated');
+        } else {
+            $('#autoQuery img').attr('src', '/media/icons/power-off.png');
+            $('#autoQuery').attr('title', 'auto query deactivated');
+        }
+    });
 
 
 

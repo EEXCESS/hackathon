@@ -211,6 +211,12 @@ EEXCESS.model = (function() {
          * @param {Object} data The query data 
          */
         query: function(tabID, data) {
+            if(!JSON.parse(EEXCESS.storage.local('autoQuery'))) {
+                console.log('nope');
+                if(!data.hasOwnProperty('reason') || data.reason.reason === 'page' || data.reason.reason === 'selection') {
+                    return;
+                }
+            }
             EEXCESS.browserAction.setBadgeText({text: ""});
             console.log(data);
             var tmp = {};
