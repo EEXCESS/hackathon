@@ -375,15 +375,35 @@ input[type="button"]:hover{
 
 #eexcess_addBookmarkItems_button{
 	float:right;
-	width:80px;
+	width:110px;
 	margin:5px 18px 5px 5px;
 }
 #eexcess_deleteBookmark_button{
 	float:right;
 	width:16px;
-	margin:5px;
+	margin:0px 10px;
 }
-
+#eexcess_export_bookmark{
+	float:right;
+	width:16px;
+}
+#eexcess_import_bookmark{
+	display: none;
+}
+#eexcess_export_bookmark{
+	border: silver solid 1px;
+	float:right;
+	width:14px;
+	height:14px;
+}
+#eexcess_export_bookmark div{
+	margin: -8px 0px 0px 5px;
+	height:14px;
+}
+#eexcess_import_bookmark_style{
+	float:right;
+	width:16px;
+}
 
 /*
     <input> field text on left upper corner of screen
