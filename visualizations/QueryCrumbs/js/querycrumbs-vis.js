@@ -38,11 +38,15 @@ function display_querycrumbs(domElem) {
     var taskID;
 
     $(document).on("click", "#eexcess_start_btn", function() {
-        var template = 
-        "<div id='evalContainer'><span>User ID: </span><input id='evalUID'><br><span>Task ID: </span><input id='taskID'><button id='evalInfos'>Start</button></div>";
-        $("#eexcess_main").after(template);
-        if(evaluationUserID > 0) {
-            $('#evalUID').val(evaluationUserID);
+        if($('#evalContainer'). length == 0) {
+            var template = 
+            "<div id='evalContainer' style='margin-bottom: 10px'><span>User ID: </span><input id='evalUID'><br><span>Task ID: </span><input id='taskID'><button id='evalInfos'>Start</button></div>";
+            $("#eexcess_main").after(template);
+        
+        
+            if(evaluationUserID > 0) {
+                $('#evalUID').val(evaluationUserID);
+            }
         }
     })
 
