@@ -119,6 +119,10 @@ function display_querycrumbs(domElem) {
         req.onblocked = function () {
             console.error("Couldn't delete database due to the operation being blocked");
         };
+
+        RENDERING.redraw(CORE.generateVisualData([], []));
+        EEXCESS.searchResults.showResults({ "results" : null});
+        $('#eexcess_query').val("");
     }
 
     var display_error = function(msg) {
@@ -613,7 +617,7 @@ function display_querycrumbs(domElem) {
 
             if(QueryCrumbsConfiguration.nodeForm == "CIRCLE") {
 
-                var crumbsUpd = crumbsSel.attr("transform", "translate(-15, 10)");
+                var crumbsUpd = crumbsSel.attr("transform", "translate(-13, 10)");
                 crumbsSel.exit().remove();
 
                 var queryNodesSel = crumbsUpd.selectAll("g.queryNode").data(function(d) { return d.visualDataNodes; }, function(d) { return d.timestamp;});

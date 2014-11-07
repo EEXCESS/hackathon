@@ -149,6 +149,9 @@ EEXCESS.searchResultList = function(divContainer, options) {
 
         if (data === null || data.totalResults === 0 || data.totalResults === '0') {
             _list.append($('<li>no results</li>'));
+            //Evaluation: 
+                $('.pagination').remove()
+            // Evaluation END
             return;
         }
         _list.attr('data-total', data.totalResults);
@@ -158,7 +161,6 @@ EEXCESS.searchResultList = function(divContainer, options) {
             var height = (window.innerHeight || document.body.clientHeight) - 250;
             // If the sidebar is hidden at the start, the a default of 10 items are displayed
             settings.itemsShown = (height > 0) ? Math.floor(height / 50) : 10;   
-            console.log(settings.itemsShown)
         }
 
         moreResults(data.results);
