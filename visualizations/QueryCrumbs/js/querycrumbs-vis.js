@@ -112,7 +112,6 @@ function display_querycrumbs(domElem) {
 
     var clear_browser_data = function() {
         localStorage.removeItem("evaluation");
-
         var req =  window.indexedDB.deleteDatabase("eexcess_db");
         req.onsuccess = function () {
             console.log("Deleted database successfully");
@@ -127,6 +126,12 @@ function display_querycrumbs(domElem) {
         RENDERING.redraw(CORE.generateVisualData([], []));
         EEXCESS.searchResults.showResults({ "results" : null});
         $('#eexcess_query').val("");
+        visualData = {};
+        historyData = [];
+        similarities = [];
+        simResults = [];
+        currentNode = null;
+        currentIdx = 0;
     }
 
     var display_error = function(msg) {
@@ -165,7 +170,7 @@ function display_querycrumbs(domElem) {
     var height = QueryCrumbsConfiguration.dimensions.rectHeight + QueryCrumbsConfiguration.dimensions.rectInfoVertPadding + QueryCrumbsConfiguration.dimensions.edgeInfoVertPadding;
 
     var svgContainer = domElem.append("svg")
-        .attr("width", width)
+        .attr("width", width + 3)
         .attr("height", height)
         .attr("id", "queryCrumbs-svg");
 
@@ -174,7 +179,6 @@ function display_querycrumbs(domElem) {
             // TODO: log backnavigation
             var termsOfPreviouslyVisitedNode = currentNode.query;
             // end
-
             var weightedTerms = [];
             for(var term in d.query) {
                 var weightedTerm = {
@@ -183,6 +187,7 @@ function display_querycrumbs(domElem) {
                 }
                 weightedTerms.push(weightedTerm);
             }
+
             currentNode = d;
             currentIdx = i;
 
@@ -366,6 +371,7 @@ function display_querycrumbs(domElem) {
                     var latestNode = {
                         query: request.data.query.split(" "),
                         timestamp: new Date().getTime(),
+                        displayQueryCrumb : true,
                         results: []
                     }
                     for(var r in request.data.results.results) {
@@ -385,7 +391,14 @@ function display_querycrumbs(domElem) {
                             BaseColorManager.currentFirstBaseColor = visualData.visualDataNodes[1].base_color;
                         } else {
                             currentIdx += 1;
+                            // Evaluation
+                            for(var j = currentIdx; j < historyData.length; j++) {
+                                historyData[j].displayQueryCrumb = false;
+                                EEXCESS.storage.update("queries", historyData[j].id)
+                            }
+                            // Evaluation END
                             historyData = historyData.splice(0, currentIdx);
+                            
                         }
                         historyData.push(latestNode);
                     }
@@ -517,6 +530,7 @@ function display_querycrumbs(domElem) {
             for(var nodeIdx = 0; nodeIdx < history.length; nodeIdx++) {
                 var vNode = {};
                 vNode.query = history[nodeIdx].query;
+                vNode.displayQueryCrumb = history[nodeIdx].displayQueryCrumb;
                 vNode.timestamp = history[nodeIdx].timestamp;
                 vNode.sim = similarities[nodeIdx].rsSimScore.sim;
                 vNode.base_color = (visualDataNodes[nodeIdx-1]) ? BaseColorManager.getColor(visualDataNodes[nodeIdx-1].base_color, vNode.sim) : BaseColorManager.getFirstColor();

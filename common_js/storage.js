@@ -99,6 +99,21 @@ EEXCESS.storage = (function() {
         }, _empty_callback(error));
     };
 
+    var _update = function(objectStore, id) {
+        _getDB(function(db) {
+            var tx = db.transaction(objectStore, 'readwrite');
+            var store = tx.objectStore(objectStore);
+            if(id) {
+                store.get(id).onsuccess = function(event) {
+                    var queryCrumb = event.target.result;
+                    queryCrumb.displayQueryCrumb = false;
+                    store.put(queryCrumb);
+                }
+            }
+
+        })
+    }
+
     /**
      * Stores the closing of a result with to the database. This means updating
      * an existing entry for a started view with the duration of the view.
@@ -412,7 +427,6 @@ EEXCESS.storage = (function() {
             os.createIndex('query', 'query');
             os.createIndex('timestamp', 'timestamp');
 
-
             // remove existing object store 'queries_full' if present
             if (EEXCESS.DB.objectStoreNames.contains('queries_full') && clear) {
                 EEXCESS.DB.deleteObjectStore('queries_full');
@@ -472,8 +486,10 @@ EEXCESS.storage = (function() {
             index.openCursor(null, "prev").onsuccess = function(event) {
                 var cursor = event.target.result;
                 if (cursor && i < history_length) {
-                    queries.push(cursor.value);
-                    i += 1;
+                    if(cursor.value.displayQueryCrumb) {
+                        queries.push(cursor.value);
+                        i += 1;   
+                    }
                     cursor.continue();
                 }
             };
@@ -488,9 +504,9 @@ EEXCESS.storage = (function() {
                     var queryString = '';
 
                     if(typeof queries[q].query != "undefined") {
-                            queries[q].query.forEach(function(d) {
-                     queryString += d.text + ' ';
-                    });
+                        queries[q].query.forEach(function(d) {
+                            queryString += d.text + ' ';
+                        });
                     }
                       
                     
@@ -529,6 +545,7 @@ EEXCESS.storage = (function() {
         local: _local,
         put: _put,
         add: _add,
+        update: _update,
         storeVisit: _storeVisit,
         storeRecommendations: _storeRecommendations,
         getRating: _getRating,

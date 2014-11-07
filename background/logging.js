@@ -49,7 +49,11 @@ EEXCESS.logging = (function() {
              * execute database transaction on callback
              */
             EEXCESS.messaging.sendMsgTab(tabID, {method: 'getTextualContext'}, function(data) {
-                EEXCESS.storage.put('queries' + suffix, {query: query, timestamp: timestamp, context: data});
+                if(suffix == "") {
+                    EEXCESS.storage.put('queries' + suffix, {query: query, timestamp: timestamp, context: data, displayQueryCrumb : true});
+                } else {
+                    EEXCESS.storage.put('queries' + suffix, {query: query, timestamp: timestamp, context: data});
+                }
                 // log activated queries on privacy proxy
                 if (suffix === '' && (typeof reason === 'undefined' || reason !== 'manual')) {
                     var xhr = $.ajax({
