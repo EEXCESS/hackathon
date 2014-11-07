@@ -44,7 +44,7 @@ function Visualization( EEXCESSobj ) {
 	var addBookmarkItems = "#eexcess_addBookmarkItems_button";									   // Button for add boookmarkitems.
 	var exportBookmark = "#eexcess_export_bookmark";											   // Export bookmark data.
 	var importBookmark = "#eexcess_import_bookmark";											   // Import bookmark data.
-	
+	var importBookmarkStyle = "#eexcess_import_bookmark_style";									   // Styles import bookmark button control.
 	// Icon & Image Constants
 	var LOADING_IMG = "../../media/loading.gif";
 	var NO_IMG = "../../media/no-img.png";
@@ -1390,15 +1390,19 @@ function Visualization( EEXCESSobj ) {
 	
 	
 	BOOKMARKS.exportBookmarks = function(){
-	
-	
 		window.URL = window.URL;// || window.webkitURL;
 
-		var bookmarkData = JSON.stringify(BookmarkingAPI.getAllBookmarks());
-		var blob = new Blob([bookmarkData], {type: 'text/plain'});
+		console.log(BookmarkingAPI.getAllBookmarks());
 
-		$(exportBookmark).attr("href", window.URL.createObjectURL(blob));
-		$(exportBookmark).attr("download", "bookmarks.txt");
+
+		$(exportBookmark).on("click",function(evt){
+			var bookmarkData = JSON.stringify(BookmarkingAPI.getAllBookmarks());
+			var blob = new Blob([bookmarkData], {type: 'text/plain'});
+			$(exportBookmark).attr("href", window.URL.createObjectURL(blob));
+			$(exportBookmark).attr("download", "bookmarks.txt");
+		});
+		//$(exportBookmark).attr("href", window.URL.createObjectURL(blob));
+		//$(exportBookmark).attr("download", "bookmarks.txt");
 		
 
 	};
@@ -1413,11 +1417,11 @@ function Visualization( EEXCESSobj ) {
 			reader.readAsText(files[0]);
 		}
 		
-		$("#eexcess_import_bookmark_style").on("click",function(evt){
-			$("#eexcess_import_bookmark").trigger("click");
+		$(importBookmarkStyle).on("click",function(evt){
+			$(importBookmark).trigger("click");
 		});
 
-		$("#eexcess_import_bookmark").on("change",function(evt){
+		$(importBookmark).on("change",function(evt){
 			doOpen(evt,function(dataString){
 				var importBookmarks = JSON.parse(dataString);
 				console.log(importBookmarks);
@@ -1435,21 +1439,21 @@ function Visualization( EEXCESSobj ) {
 				}
 				
 				//compare and create bookmark items
-				function importItems(currentBookmarks){
-					importBookmarks[currentBookmarks].items.forEach(function(currentItem){
-						if(!searchItemId(allBookmarks[currentBookmarks].items,currentItem.id)){
-							BookmarkingAPI.addItemToBookmark(currentBookmarks,currentItem);
+				function importItems(bookmark){
+					importBookmarks[bookmark].items.forEach(function(currentItem){
+						if(!searchItemId(allBookmarks[bookmark].items,currentItem.id)){
+							BookmarkingAPI.addItemToBookmark(bookmark,currentItem);
 						}
 					});
 				}
 				
 				//compare and create two bookmarks
-				Object.keys(importBookmarks).forEach(function(currentBookmarks){
-					if(allBookmarks.hasOwnProperty(currentBookmarks)){
-						importItems(currentBookmarks);
+				Object.keys(importBookmarks).forEach(function(currentBookmark){
+					if(allBookmarks.hasOwnProperty(currentBookmark)){
+						importItems(currentBookmark);
 					}else{
-						BookmarkingAPI.createBookmark(currentBookmarks,importBookmarks[currentBookmarks].color);
-						importItems(currentBookmarks);
+						BookmarkingAPI.createBookmark(currentBookmark,importBookmarks[currentBookmark].color);
+						importItems(currentBookmark);
 					}
 				});
 				
@@ -1461,6 +1465,12 @@ function Visualization( EEXCESSobj ) {
 				FILTER.showStars();
 				FILTER.updateData();
 			});
+			
+			FILTER.showStars();
+			FILTER.updateData();
+			FILTER.showStars();
+			FILTER.updateData();
+			
 		});
 	
 	};
