@@ -65,8 +65,7 @@ function Timeline( root, visTemplate ){
 		
 		x.domain(brush.empty() ? x2.domain() : brushExtent);
 		TIMEVIS.Render.redraw();
-		
-		console.log("-");
+
 	};
 	
 	//experimental function
@@ -649,8 +648,9 @@ function Timeline( root, visTemplate ){
 		//steff experimental code begin
 		nodes.append("text")
 			.attr("class", "number")
-			.attr("x", function(d) { return x(d[xAxisChannel])-3; })
-			.attr("y", function(d) { return y(d[yAxisChannel])+2; })
+			.attr("x", function(d) { return x(d[xAxisChannel])-5; })
+			.attr("y", function(d) { return y(d[yAxisChannel])+3; })
+			//.style("opacity", 0.3)
 			.text(function(d){
 				var numberWithSameTime = dataDictWithTime[d[keyForData]][d.year.getFullYear().toString()];
 				if(numberWithSameTime>1){
@@ -659,6 +659,9 @@ function Timeline( root, visTemplate ){
 				//count same node with same y-axis and time
 			});
 		textInCircles = chart.selectAll(".number");
+		
+		textInCircles
+			.on( "click", TIMEVIS.Evt.nodeClicked );
 		//steff experimental code end
 		
 		circles = chart.selectAll(".dot");
@@ -864,8 +867,8 @@ function Timeline( root, visTemplate ){
 		
 		// redraw text
 		textInCircles
-			.attr("x", function(d) { return x(d[xAxisChannel])-3; })
-			.attr("y", function(d) { return y(d[yAxisChannel])+2; });
+			.attr("x", function(d) { return x(d[xAxisChannel])-5; })
+			.attr("y", function(d) { return y(d[yAxisChannel])+3; });
 		
 		// if lines are already drawn, redraw them
 		if(flagLines){
@@ -948,6 +951,9 @@ function Timeline( root, visTemplate ){
 			.style("stroke", "darkgrey")
 			.style("opacity", "1");
 	
+		textInCircles
+			.style("opacity", "1");
+			
 		data.forEach(function(d){ d.isHighlighted = false; });
 			
 		$('.legend').find('text').css('font-weight', 'normal');
@@ -991,6 +997,14 @@ function Timeline( root, visTemplate ){
 						return 1;
 					return 0.1;
 				});
+				
+			textInCircles
+				.style("opacity", function(d, i){
+					if(nodesToHighlight.indexOf(i) != -1)
+						return 1;
+					return 0.1;
+				});
+				
 		}
         else{
 
@@ -998,6 +1012,9 @@ function Timeline( root, visTemplate ){
                 .attr("r", radius)
                 .style("stroke", "darkgrey")
                 .style("opacity", 1);
+				
+			textInCircles	
+				.style("opacity", 1);
         }
 
 		if(sender !== 'legend')

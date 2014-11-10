@@ -40,10 +40,11 @@ function Visualization( EEXCESSobj ) {
     var bookmarkedInId = 'eexcess-bookmark-bookmarked-in-';                                        // Divs in bookamark details dialog showing bookmarks in which the current item is recorded
 	var filterBookmarkDialogId ="#eexcess-filter-bookmark-dialog";								   // Id for dialog filter bookmark
 	var filterBookmarkDropdownList = "#eexcess-filter-bookmark-dialog .eexcess-bookmark-dropdown-list"; // Div wrapping drop down list in filter bookmark dialog
-	var deleteBookmark = "#eexcess_deleteBookmark_button";
-	var addBookmarkItems = "#eexcess_addBookmarkItems_button";
-	
-	
+	var deleteBookmark = "#eexcess_deleteBookmark_button";										   // Button for boookmark deleted.
+	var addBookmarkItems = "#eexcess_addBookmarkItems_button";									   // Button for add boookmarkitems.
+	var exportBookmark = "#eexcess_export_bookmark";											   // Export bookmark data.
+	var importBookmark = "#eexcess_import_bookmark";											   // Import bookmark data.
+	var importBookmarkStyle = "#eexcess_import_bookmark_style";									   // Styles import bookmark button control.
 	// Icon & Image Constants
 	var LOADING_IMG = "../../media/loading.gif";
 	var NO_IMG = "../../media/no-img.png";
@@ -156,7 +157,8 @@ function Visualization( EEXCESSobj ) {
         CONTROLS.buildChartSelect();
         LIST.buildContentList();
 		FILTER.buildFilterBookmark();
-		
+		BOOKMARKS.exportBookmarks();
+		BOOKMARKS.importBookmarks();
 		
         // Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)
         VISPANEL.drawChart();
@@ -1384,9 +1386,102 @@ function Visualization( EEXCESSobj ) {
             LIST.turnFaviconOffAndHideDetailsIcon(itemIndex);
 			
 		FILTER.changeDropDownList();	
-    }
+    };
+	
+	
+	BOOKMARKS.exportBookmarks = function(){
+
+		window.URL = window.URL;// || window.webkitURL;
+
+		console.log(BookmarkingAPI.getAllBookmarks());
 
 
+		$(exportBookmark).on("click",function(evt){
+
+			var bookmarkData = JSON.stringify(BookmarkingAPI.getAllBookmarks());
+			var blob = new Blob([bookmarkData], {type: 'text/plain'});
+			$(exportBookmark).attr("href", window.URL.createObjectURL(blob));
+			$(exportBookmark).attr("download", "bookmarks.txt");
+		});
+		//$(exportBookmark).attr("href", window.URL.createObjectURL(blob));
+		//$(exportBookmark).attr("download", "bookmarks.txt");
+		
+		
+		
+
+	};
+
+	BOOKMARKS.importBookmarks = function(){
+		function doOpen(evt,func) {
+			var files = evt.target.files;
+			var reader = new FileReader();
+			reader.onload = function() {
+				func(this.result);
+			};
+			reader.readAsText(files[0]);
+		}
+		
+		$(importBookmarkStyle).on("click",function(evt){
+			$(importBookmark).trigger("click");
+		});
+
+		$(importBookmark).on("change",function(evt){
+			doOpen(evt,function(dataString){
+			
+				//update control
+				FILTER.changeDropDownList();
+				
+				FILTER.showStars();
+				FILTER.updateData();
+				FILTER.showStars();
+				FILTER.updateData();
+			
+			
+				var importBookmarks = JSON.parse(dataString);
+				console.log(importBookmarks);
+				var allBookmarks = BookmarkingAPI.getAllBookmarks();
+				console.log(allBookmarks);
+				
+				//compare items id's
+				function searchItemId(items,searchedId){
+					items.forEach(function(item){
+						if(item.id == searchedId){
+							return true;
+						}
+					});
+					return false;
+				}
+				
+				//compare and create bookmark items
+				function importItems(bookmark){
+					importBookmarks[bookmark].items.forEach(function(currentItem){
+						if(!searchItemId(allBookmarks[bookmark].items,currentItem.id)){
+							BookmarkingAPI.addItemToBookmark(bookmark,currentItem);
+						}
+					});
+				}
+				
+				//compare and create two bookmarks
+				Object.keys(importBookmarks).forEach(function(currentBookmark){
+					if(allBookmarks.hasOwnProperty(currentBookmark)){
+						importItems(currentBookmark);
+					}else{
+						BookmarkingAPI.createBookmark(currentBookmark,importBookmarks[currentBookmark].color);
+						importItems(currentBookmark);
+					}
+				});
+				
+
+			});
+			
+			FILTER.showStars();
+			FILTER.updateData();
+			FILTER.showStars();
+			FILTER.updateData();
+			
+		});
+	
+	};
 
 
 	
@@ -1417,7 +1512,7 @@ function Visualization( EEXCESSobj ) {
 
     var FILTER = {};
 
-	
+	var currentSelectIndex = 0;
 
 	//change new Bookmarks
 	FILTER.changeDropDownList = function(){
@@ -1456,7 +1551,9 @@ function Visualization( EEXCESSobj ) {
 		
         $(filterBookmarkDropdownList).dropdown({
 		   'change':function(evt,index){
-
+				currentSelectIndex = index;
+				//console.log(currentSelectIndex);
+				
 				evt = evt.split(":")[0].trim();
 				var input ={};
 				indicesToHighlight =[];
@@ -1486,8 +1583,6 @@ function Visualization( EEXCESSobj ) {
 					FILTER.updateData();
 					$(deleteBookmark).prop("disabled",false).css("background","");
 				}
-
-				
 		   }
         });
 		
@@ -1582,6 +1677,18 @@ function Visualization( EEXCESSobj ) {
 			},function(){
 
 				FILTER.addBookmarkItems();
+
+				//$(filterBookmarkDialogId+">div").trigger("click");
+				$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
+
+				$(filterBookmarkDialogId+">div>ul").css("display","none");
+				$(filterBookmarkDialogId+">div").removeClass("active");
+
+				
+				console.log("X-------: ");
+				
+			
+				
 			},
 			this
 		);
@@ -1613,14 +1720,6 @@ function Visualization( EEXCESSobj ) {
 				LIST.turnFaviconOnAndShowDetailsIcon(index);
 			}
 			
-			//if(indicesToHighlight.length == 0){
-				//console.log("all bookmarks!");
-
-				//data.forEach(function(currentData,index){
-				//	addBookmarkFunc(currentData,index);
-				//});
-				
-			//}else{
 			if(indicesToHighlight.length > 0){
 				var currentData;
 				indicesToHighlight.forEach(function(indexValue){
@@ -1634,11 +1733,14 @@ function Visualization( EEXCESSobj ) {
 			
 			BOOKMARKS.destroyBookmarkDialog();
 			FILTER.changeDropDownList();
+			
+			FILTER.showStars();
+			FILTER.updateData();
+			FILTER.showStars();
+			FILTER.updateData();
+			
 
-			FILTER.showStars();
-			FILTER.updateData();
-			FILTER.showStars();
-			FILTER.updateData();
+			
 			
 		}
 	};
