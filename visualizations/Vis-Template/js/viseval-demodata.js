@@ -82,7 +82,7 @@ var renaissanceBuildings =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "2010-08-28",
       "license": "restricted"
     },
@@ -172,7 +172,7 @@ var renaissanceBuildings =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "2009",
       "license": "restricted"
     },
@@ -222,7 +222,7 @@ var renaissanceBuildings =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "1998",
       "license": "restricted"
     },
@@ -238,7 +238,7 @@ var renaissanceBuildings =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "2000-02-01",
       "license": "restricted"
     },
@@ -254,7 +254,7 @@ var renaissanceBuildings =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "2002-05",
       "license": "restricted"
     },
@@ -270,7 +270,7 @@ var renaissanceBuildings =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "2000-02",
       "license": "restricted"
     },
@@ -286,7 +286,7 @@ var renaissanceBuildings =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "2010",
       "license": "restricted"
     },
@@ -683,7 +683,7 @@ var castleItaly =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "1892-08-13",
       "license": "restricted"
     },
@@ -735,7 +735,7 @@ var castleItaly =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "1892-08-13",
       "license": "restricted"
     },
@@ -765,7 +765,7 @@ var castleItaly =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "1988",
       "license": "restricted"
     },
@@ -963,7 +963,7 @@ var buildingVenice =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "2010",
       "license": "restricted"
     },
@@ -995,7 +995,7 @@ var buildingVenice =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "2008-10",
       "license": "restricted"
     },
@@ -1033,7 +1033,7 @@ var buildingsRome =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "1966",
       "license": "restricted"
     },
@@ -1048,7 +1048,7 @@ var buildingsRome =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "1992",
       "license": "restricted"
     },
@@ -1063,7 +1063,7 @@ var buildingsRome =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "2009",
       "license": "restricted"
     },
@@ -1078,7 +1078,7 @@ var buildingsRome =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "1949",
       "license": "restricted"
     },
@@ -1093,7 +1093,7 @@ var buildingsRome =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "unkown",
       "license": "restricted"
     },
@@ -1108,7 +1108,7 @@ var buildingsRome =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "1968",
       "license": "restricted"
     },
@@ -1129,7 +1129,7 @@ var buildingFlorence =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "2004",
       "license": "restricted"
     },
@@ -1144,7 +1144,7 @@ var buildingFlorence =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "1981",
       "license": "restricted"
     },
@@ -1159,7 +1159,7 @@ var buildingFlorence =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "2001-02",
       "license": "restricted"
     },
@@ -1174,7 +1174,7 @@ var buildingFlorence =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "it",
       "year": "2004-01-01",
       "license": "restricted"
     },
@@ -1189,7 +1189,7 @@ var buildingFlorence =
     "facets": {
       "provider": "ZBW",
       "type": "unkown",
-      "language": "de",
+      "language": "en",
       "year": "1992",
       "license": "restricted"
     },
