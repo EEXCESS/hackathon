@@ -1423,6 +1423,16 @@ function Visualization( EEXCESSobj ) {
 
 		$(importBookmark).on("change",function(evt){
 			doOpen(evt,function(dataString){
+			
+				//update control
+				FILTER.changeDropDownList();
+				
+				FILTER.showStars();
+				FILTER.updateData();
+				FILTER.showStars();
+				FILTER.updateData();
+			
+			
 				var importBookmarks = JSON.parse(dataString);
 				console.log(importBookmarks);
 				var allBookmarks = BookmarkingAPI.getAllBookmarks();
@@ -1457,13 +1467,7 @@ function Visualization( EEXCESSobj ) {
 					}
 				});
 				
-				//update control
-				FILTER.changeDropDownList();
-				
-				FILTER.showStars();
-				FILTER.updateData();
-				FILTER.showStars();
-				FILTER.updateData();
+
 			});
 			
 			FILTER.showStars();
