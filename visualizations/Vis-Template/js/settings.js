@@ -110,6 +110,7 @@ function fixMissingAndMalformattedValues( data ){
         obj['facets']['year'] = parseDate(String(d.facets.year));
         obj['facets']['country'] = d.facets.country || "";
         obj['facets']['keywords'] = d.facets.keywords || [];
+        obj['coordinate'] = d.coordinate || null;
         dataArray.push(obj);
     });
 
