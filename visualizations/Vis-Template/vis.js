@@ -1390,12 +1390,14 @@ function Visualization( EEXCESSobj ) {
 	
 	
 	BOOKMARKS.exportBookmarks = function(){
+
 		window.URL = window.URL;// || window.webkitURL;
 
 		console.log(BookmarkingAPI.getAllBookmarks());
 
 
 		$(exportBookmark).on("click",function(evt){
+
 			var bookmarkData = JSON.stringify(BookmarkingAPI.getAllBookmarks());
 			var blob = new Blob([bookmarkData], {type: 'text/plain'});
 			$(exportBookmark).attr("href", window.URL.createObjectURL(blob));
@@ -1403,6 +1405,8 @@ function Visualization( EEXCESSobj ) {
 		});
 		//$(exportBookmark).attr("href", window.URL.createObjectURL(blob));
 		//$(exportBookmark).attr("download", "bookmarks.txt");
+		
+		
 		
 
 	};
@@ -1508,7 +1512,7 @@ function Visualization( EEXCESSobj ) {
 
     var FILTER = {};
 
-	
+	var currentSelectIndex = 0;
 
 	//change new Bookmarks
 	FILTER.changeDropDownList = function(){
@@ -1547,7 +1551,9 @@ function Visualization( EEXCESSobj ) {
 		
         $(filterBookmarkDropdownList).dropdown({
 		   'change':function(evt,index){
-
+				currentSelectIndex = index;
+				//console.log(currentSelectIndex);
+				
 				evt = evt.split(":")[0].trim();
 				var input ={};
 				indicesToHighlight =[];
@@ -1577,8 +1583,6 @@ function Visualization( EEXCESSobj ) {
 					FILTER.updateData();
 					$(deleteBookmark).prop("disabled",false).css("background","");
 				}
-
-				
 		   }
         });
 		
@@ -1673,6 +1677,18 @@ function Visualization( EEXCESSobj ) {
 			},function(){
 
 				FILTER.addBookmarkItems();
+
+				//$(filterBookmarkDialogId+">div").trigger("click");
+				$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
+
+				$(filterBookmarkDialogId+">div>ul").css("display","none");
+				$(filterBookmarkDialogId+">div").removeClass("active");
+
+				
+				console.log("X-------: ");
+				
+			
+				
 			},
 			this
 		);
@@ -1704,14 +1720,6 @@ function Visualization( EEXCESSobj ) {
 				LIST.turnFaviconOnAndShowDetailsIcon(index);
 			}
 			
-			//if(indicesToHighlight.length == 0){
-				//console.log("all bookmarks!");
-
-				//data.forEach(function(currentData,index){
-				//	addBookmarkFunc(currentData,index);
-				//});
-				
-			//}else{
 			if(indicesToHighlight.length > 0){
 				var currentData;
 				indicesToHighlight.forEach(function(indexValue){
@@ -1725,11 +1733,14 @@ function Visualization( EEXCESSobj ) {
 			
 			BOOKMARKS.destroyBookmarkDialog();
 			FILTER.changeDropDownList();
+			
+			FILTER.showStars();
+			FILTER.updateData();
+			FILTER.showStars();
+			FILTER.updateData();
+			
 
-			FILTER.showStars();
-			FILTER.updateData();
-			FILTER.showStars();
-			FILTER.updateData();
+			
 			
 		}
 	};
