@@ -56,7 +56,7 @@ QueryCrumbsConfiguration.dimensions.docRectWidth = QueryCrumbsConfiguration.dime
 QueryCrumbsConfiguration.dimensions.SEGMENTS = QueryCrumbsConfiguration.dimensions.docRectHorizontal * QueryCrumbsConfiguration.dimensions.docRectVertical;
 
 var EEXCESS = EEXCESS || {};
-var profile = EEXCESS.profile.getProfile();
+var profile = EEXCESS.profile.getProfileForQueryCrumbs();
 QueryCrumbsConfiguration.skillLevel = profile.skillLevel;
 QueryCrumbsConfiguration.nodeForm = profile.nodeForm;
 

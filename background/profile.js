@@ -209,6 +209,28 @@ EEXCESS.profile = (function() {
                     "interests": _interests(),
                     "contextKeywords": {},
                     "uuid": applyUuidPolicy(),
+                    "userLocations": applyLocationPolicy()
+                };
+                if(!callback) {
+                    return profile;
+                } else {
+                    callback(profile);  
+                }
+                
+//            });
+        },
+        getProfileForQueryCrumbs: function(callback) { 
+            var profile = {
+                    //"history": results,
+                    "partnerList": getPartnerList(),
+                    "firstName": applyFirstnamePolicy(),
+                    "lastName": applyLastnamePolicy(),
+                    "gender": applyGenderPolicy(),
+                    "birthDate": applyBirthdayPolicy(),
+                    "address": applyAddressPolicy(),
+                    "interests": _interests(),
+                    "contextKeywords": {},
+                    "uuid": applyUuidPolicy(),
                     "userLocations": applyLocationPolicy(),
                     "nodeForm" : applyNodeForm(),
                     "skillLevel" : applyMode()
@@ -218,8 +240,6 @@ EEXCESS.profile = (function() {
                 } else {
                     callback(profile);  
                 }
-                
-//            });
         }
     };
 }());
