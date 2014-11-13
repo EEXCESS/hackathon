@@ -25,4 +25,5 @@
 #eexcess_canvas .leaflet-draw-toolbar .leaflet-draw-draw-rectangle{
     background-image: url('../../../media/icons/select.png');
     background-position:6px 6px;
+    background-size: 16px 16px;
 }
