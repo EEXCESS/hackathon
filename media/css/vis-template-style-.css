@@ -404,6 +404,10 @@ input[type="button"]:hover{
 	float:right;
 	width:16px;
 }
+#bookmark_selected_star{
+    float:right;
+    margin:5px 0;
+}
 
 /*
     <input> field text on left upper corner of screen
