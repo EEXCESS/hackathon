@@ -185,6 +185,12 @@ function Visualization( EEXCESSobj ) {
 		$( searchField ).on('keypress', function(e){ if (e.keyCode == 13) EVTHANDLER.btnSearchClicked(); });
 		$( btnReset   ).click( function(){ EVTHANDLER.btnResetClicked(); });
         $( 'html' ).click(function(){ if(isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
+        $( '#demo-button-university' ).click(function(){ $('#eexcess_search_field').val('Universtiy Campus'); onDataReceived(getDemoResultsUniversity()); });
+        $( '#demo-button-historicalbuildings' ).click(function(){ $('#eexcess_search_field').val('Historic Buildings'); onDataReceived(getDemoResultsHistoricBuildings()); });
+        $( '#output-button' ).click(function(){
+                console.log(globals);
+            }
+        );
 	};
 	
 
