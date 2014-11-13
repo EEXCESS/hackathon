@@ -37,6 +37,7 @@ requestPlugin();
 function requestPlugin() {
 
     var requestVisualization = function(pluginResponse) {
+        return;
         if((typeof pluginResponse == "undefined") || pluginResponse.results == null) {
 
             /*  TO USE DUMMY DATA UNCOMMENT THE NEXT 2 LINES AND COMMENT THE NEXT ONE*/
