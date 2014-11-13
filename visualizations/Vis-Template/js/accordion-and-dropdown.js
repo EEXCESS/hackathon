@@ -50,15 +50,16 @@ $.fn.dropdown = function( options ){
     liElements.append("a")
         .attr("href", "#")
             .text(function(d){ return d.item; })
-            .append("div")
-                .attr("class", "dropdown-list-icon")
-                .style("background-color", function(d){ return d.color || "inherit"; });
+            //.append("div")
+            //    .attr("class", "dropdown-list-icon")
+            //    .style("background-color", function(d){ return d.color || "inherit"; })
+            ;
 
     // Events
     if(onChangeCallback != 'undefined'){
 
         liElements.on("click", function(d, i){
-            dropdownList.select(".dropdown-list-icon").style("background", d.color || "inherit");
+            //dropdownList.select(".dropdown-list-icon").style("background", d.color || "inherit");
             dropdownList.select("span").text( d.item );
 
             $(this).find('.dropdown').slideUp(slideOptions);

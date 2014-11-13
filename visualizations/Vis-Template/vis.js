@@ -1230,13 +1230,14 @@ function Visualization( EEXCESSobj ) {
         var newBookmarkOptions = bookmarkSettings.append("div")
             .attr("class", "eexcess-bookmark-dialog-optional");
 
-        newBookmarkOptions.append("div")
-            .attr("id", "eexcess-bookmak-dialog-color-picker")
-            .attr("title", "Select Color");
+        //newBookmarkOptions.append("div")
+        //    .attr("id", "eexcess-bookmak-dialog-color-picker")
+        //    .attr("title", "Select Color");
 
 
         newBookmarkOptions.append("div")
             .attr("class", "eexcess-bookmark-dialog-input-wrapper")
+            .attr("style", "margin-left:46px;")
             .append("input");
 
         newBookmarkOptions.append('p')
@@ -1348,9 +1349,9 @@ function Visualization( EEXCESSobj ) {
                 //.attr('id', function(d, i){ return 'eexcess-bookmark-bookmarked-in-' + i; })
                 .attr('class', 'eexcess-bookmark-bookmarked-in');
 
-        itemInBookmarks.append('div')
-            .attr('class', 'eexcess-bookmark-color-icon')
-            .style('background-color', function(d){ return d.color; });
+        //itemInBookmarks.append('div')
+        //    .attr('class', 'eexcess-bookmark-color-icon')
+        //    .style('background-color', function(d){ return d.color; });
 
         itemInBookmarks.append('span').text(function(d){ return d["bookmark-name"]; });
 

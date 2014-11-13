@@ -1028,9 +1028,10 @@ p.eexcess_ritem_short {
 
 .eexcess-bookmark-bookmarked-in {
     display: inline-block;
-    width: 100%;
+    width: 90%;
     height: 1.7em;
     margin-top: .1em;
+    padding-left: 6px;
     vertical-align: middle;
     font-size: 1em;
     line-height: 1.6em;
