@@ -1198,8 +1198,8 @@ function Visualization( EEXCESSobj ) {
         bookmarkDetails.append('span').text('Title:');
         //bookmarkDetails.append('p').text(d.title);
 		titleOutput(bookmarkDetails);
-        bookmarkDetails.append('span').text('Query:');
-        bookmarkDetails.append('p').text(query);
+        //bookmarkDetails.append('span').text('Query:');
+        //bookmarkDetails.append('p').text(query);
 
         // Append settings section (for bookmark selection or definition of new bookmark)
         var bookmarkSettings = dialogBookmark.append("div")
