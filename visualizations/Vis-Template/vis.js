@@ -66,7 +66,7 @@ function Visualization( EEXCESSobj ) {
     var STR_NO_DATA_RECEIVED = "No Data Received";
     var STR_NEW = "New...";
 	var STR_BOOKMARK_NAME_MISSING = "Indicate new bookmark name";
-	var STR_SHOWALLRESULTS = "Search results...";	
+	var STR_SHOWALLRESULTS = "Search results";
 
 	
 	// Main variables

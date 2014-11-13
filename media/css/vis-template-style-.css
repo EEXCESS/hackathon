@@ -408,6 +408,11 @@ input[type="button"]:hover{
     float:right;
     margin:5px 0;
 }
+#bookmarklist-label{
+    float:right;
+    margin:4px 3px 0 0;
+    line-height:normal;
+}
 
 /*
     <input> field text on left upper corner of screen
