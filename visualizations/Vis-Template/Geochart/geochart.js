@@ -117,7 +117,7 @@ function Geochart(root, visTemplate) {
 		*	Define input variables
 		******************************************************/
 		GEO.Input = GEO.Settings.getInitData(receivedData );
-        GEO.Internal.spatializeData(GEO.Input.data);
+        //GEO.Internal.spatializeData(GEO.Input.data);
         GEO.$root.append('<div id="mapInner" style="height:100%"></div>');
 
         GEO.map = L.map('mapInner');
