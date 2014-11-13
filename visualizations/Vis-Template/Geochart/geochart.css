@@ -20,3 +20,9 @@
         .marker-cluster-pie .slice-one{
             fill:#ff0000;
         }*/
+
+
+#eexcess_canvas .leaflet-draw-toolbar .leaflet-draw-draw-rectangle{
+    background-image: url('../../../media/icons/select.png');
+    background-position:6px 6px;
+}

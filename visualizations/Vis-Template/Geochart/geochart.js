@@ -138,7 +138,6 @@ function Geochart(root, visTemplate) {
                 featureGroup: drawnItems,
 				edit:false,
 				remove:false
-				
             },
 			draw: {
 				rectangle:{
@@ -156,7 +155,7 @@ function Geochart(root, visTemplate) {
 				marker: false,
 				polyline: false,
 				circle:false
-			},
+			}
         });
 		
         GEO.map.addControl(drawControl);
