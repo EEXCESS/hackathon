@@ -34,7 +34,7 @@ function Visualization( EEXCESSobj ) {
     var saveBookmarkDialogId = "#eexcess-save-bookmark-dialog";                                    // Id for dialog poping up upon clicking on a "star" icon
     var bookmarkDropdownList = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dropdown-list";    // Div wrapping drop down list in bookmark dialog
     var newBookmarkOptionsId = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-optional";  // Div wrapping color picker and input element in bookmark dialog
-    var colorPickerId = "#eexcess-bookmak-dialog-color-picker";                                    // Div tranformed into a colorpicekr in bookmark dialog
+    //var colorPickerId = "#eexcess-bookmak-dialog-color-picker";                                    // Div tranformed into a colorpicekr in bookmark dialog
     var bookmarkDialogInputWrapper = "#eexcess-save-bookmark-dialog .eexcess-bookmark-dialog-input-wrapper"; // Wrapper for input containing new bookmark name
     var detailsBookmarkDialogId = "#eexcess-see-and-edit-bookmark-dialog";                         // Dialog displaying bookmark detials (when click on 3-dotted icon)
     var bookmarkedInId = 'eexcess-bookmark-bookmarked-in-';                                        // Divs in bookamark details dialog showing bookmarks in which the current item is recorded
@@ -1090,7 +1090,7 @@ function Visualization( EEXCESSobj ) {
 
             if( bookmarkName == STR_NEW ){
                 bookmarkName = $(bookmarkDialogInputWrapper).find('input').val();
-                color = $(colorPickerId).css('backgroundColor');
+                //color = $(colorPickerId).css('backgroundColor');
                 type = 'new';
             }
             this.currentBookmark['bookmark-name'] = bookmarkName;
@@ -1304,11 +1304,11 @@ function Visualization( EEXCESSobj ) {
         $(saveBookmarkDialogId).slideDown('slow');
 
         // make div icon a color picker
-        $( colorPickerId ).colorpicker({
-            'img' : IMG_COLOR_WHEEL_LARGE,
-            'width' : 200,
-            'height' : 200
-        });
+        //$( colorPickerId ).colorpicker({
+        //    'img' : IMG_COLOR_WHEEL_LARGE,
+        //    'width' : 200,
+        //    'height' : 200
+        //});
 		
 		
     };
@@ -1317,7 +1317,7 @@ function Visualization( EEXCESSobj ) {
 
 
     BOOKMARKS.destroyBookmarkDialog = function(){
-        $( colorPickerId ).colorpicker('destroy');
+        //$( colorPickerId ).colorpicker('destroy');
         $( bookmarkDialogClass ).remove();
 
         isBookmarkDialogOpen = false;
