@@ -1421,7 +1421,15 @@ function Visualization( EEXCESSobj ) {
         if(typeof bookmarkedItems[itemId] == 'undefined' || bookmarkedItems[itemId] == 'undefined')
             LIST.turnFaviconOffAndHideDetailsIcon(itemIndex);
 			
-		FILTER.changeDropDownList();	
+		FILTER.changeDropDownList();
+		
+		
+		$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndexPerFilter+")").trigger("click");
+
+		$(filterBookmarkDialogId+">div>ul").css("display","none");
+		$(filterBookmarkDialogId+">div").removeClass("active");
+		
+		
     };
 	
 	
@@ -1549,6 +1557,7 @@ function Visualization( EEXCESSobj ) {
     var FILTER = {};
 
 	var currentSelectIndex = 0;
+	var currentSelectIndexPerFilter = 0;
 
 	//change new Bookmarks
 	FILTER.changeDropDownList = function(){
@@ -1587,7 +1596,7 @@ function Visualization( EEXCESSobj ) {
 		
         $(filterBookmarkDropdownList).dropdown({
 		   'change':function(evt,index){
-				//currentSelectIndex = index;
+				currentSelectIndexPerFilter = index;
 
 				
 				evt = evt.split(":")[0].trim();
