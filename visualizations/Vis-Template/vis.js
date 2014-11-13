@@ -457,7 +457,10 @@ function Visualization( EEXCESSobj ) {
 
     ////////	Value changed in bookmark dropdown list 	////////
     EVTHANDLER.bookmarkDropdownListChanged = function(value, index){
-
+		
+		currentSelectIndex = index;
+		//console.log("##### >> " +currentSelectIndex);
+	
         if(index == 0)
             $(newBookmarkOptionsId).slideDown("slow");
         else
@@ -1164,6 +1167,7 @@ function Visualization( EEXCESSobj ) {
     //BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
 	BOOKMARKS.buildSaveBookmarkDialog = function(firstFunc,titleOutput,savebutton, sender) {
 
+		
 		$(filterBookmarkDialogId+">div").removeClass("active").children("ul").slideUp('slow');
 
         BOOKMARKS.destroyBookmarkDialog();
@@ -1551,8 +1555,8 @@ function Visualization( EEXCESSobj ) {
 		
         $(filterBookmarkDropdownList).dropdown({
 		   'change':function(evt,index){
-				currentSelectIndex = index;
-				//console.log(currentSelectIndex);
+				//currentSelectIndex = index;
+
 				
 				evt = evt.split(":")[0].trim();
 				var input ={};
@@ -1678,14 +1682,21 @@ function Visualization( EEXCESSobj ) {
 
 				FILTER.addBookmarkItems();
 
-				//$(filterBookmarkDialogId+">div").trigger("click");
-				$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
-
+				//$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
+				var bookmark = BOOKMARKS.internal.getCurrentBookmark();
+				if(bookmark['type'] == 'new' || bookmark['type'] == ''){
+					$(filterBookmarkDialogId+">div>ul>li:eq("+
+						BookmarkingAPI.getAllBookmarkNamesAndColors().length
+					+")").trigger("click");
+				}else{
+					$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
+				}
+				
 				$(filterBookmarkDialogId+">div>ul").css("display","none");
 				$(filterBookmarkDialogId+">div").removeClass("active");
 
 				
-				console.log("X-------: ");
+				console.log("X-------: " + BOOKMARKS.internal.getCurrentItemIndex());
 				
 			
 				
@@ -1738,10 +1749,7 @@ function Visualization( EEXCESSobj ) {
 			FILTER.updateData();
 			FILTER.showStars();
 			FILTER.updateData();
-			
 
-			
-			
 		}
 	};
 
