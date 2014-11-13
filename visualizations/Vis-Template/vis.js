@@ -747,7 +747,7 @@ function Visualization( EEXCESSobj ) {
 
         bookmarkDiv.append("img")
             .attr("class", "eexcess_details_icon")
-            .attr('title', 'See item\'s bookmarks')
+            .attr('title', 'View and delete item\'s bookmarks')
             .attr("src", BOOKMARK_DETAILS_ICON)
             .style("display", function(d){ if(d.bookmarked) return 'inline-block'; return 'none'; })
             .on("click", EVTHANDLER.bookmarkDetailsIconClicked);
