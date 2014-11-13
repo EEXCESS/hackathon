@@ -66,7 +66,7 @@ function Visualization( EEXCESSobj ) {
     var STR_NO_DATA_RECEIVED = "No Data Received";
     var STR_NEW = "New...";
 	var STR_BOOKMARK_NAME_MISSING = "Indicate new bookmark name";
-	var STR_SHOWALLRESULTS = "Search results...";	
+	var STR_SHOWALLRESULTS = "Search results";
 
 	
 	// Main variables
@@ -440,6 +440,7 @@ function Visualization( EEXCESSobj ) {
         d3.event.stopPropagation();
         //BOOKMARKS.buildSaveBookmarkDialog(d, i, this);//ask cecillia ????????
 		BOOKMARKS.buildSaveBookmarkDialog(
+            d,
 			function(thisValue){
 				thisValue.internal.setCurrentItem(d, i);
 			},
@@ -463,7 +464,10 @@ function Visualization( EEXCESSobj ) {
 
     ////////	Value changed in bookmark dropdown list 	////////
     EVTHANDLER.bookmarkDropdownListChanged = function(value, index){
-
+		
+		currentSelectIndex = index;
+		//console.log("##### >> " +currentSelectIndex);
+	
         if(index == 0)
             $(newBookmarkOptionsId).slideDown("slow");
         else
@@ -751,12 +755,12 @@ function Visualization( EEXCESSobj ) {
             .on("click", EVTHANDLER.faviconClicked);
 
 
-        bookmarkDiv.append("img")
-            .attr("class", "eexcess_details_icon")
-            .attr('title', 'View and delete item\'s bookmarks')
-            .attr("src", BOOKMARK_DETAILS_ICON)
-            .style("display", function(d){ if(d.bookmarked) return 'inline-block'; return 'none'; })
-            .on("click", EVTHANDLER.bookmarkDetailsIconClicked);
+        //bookmarkDiv.append("img")
+        //    .attr("class", "eexcess_details_icon")
+        //    .attr('title', 'View and delete item\'s bookmarks')
+        //    .attr("src", BOOKMARK_DETAILS_ICON)
+        //    .style("display", function(d){ if(d.bookmarked) return 'inline-block'; return 'none'; })
+        //    .on("click", EVTHANDLER.bookmarkDetailsIconClicked);
 
 
 		$( contentPanel ).scrollTo( "top" );
@@ -1153,7 +1157,7 @@ function Visualization( EEXCESSobj ) {
 				bookmarkedItems[itemEntry].bookmarked.push({
 					'bookmark-name' : bookmarkKey,
 					'bookmark-id' : allBookmarks[bookmarkKey].id,
-					'color' : allBookmarks[bookmarkKey].color,
+					'color' : allBookmarks[bookmarkKey].color
 				});
 				
 			});
@@ -1168,8 +1172,9 @@ function Visualization( EEXCESSobj ) {
     };
 
     //BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
-	BOOKMARKS.buildSaveBookmarkDialog = function(firstFunc,titleOutput,savebutton, sender) {
+	BOOKMARKS.buildSaveBookmarkDialog = function(datum, firstFunc,titleOutput,savebutton, sender) {
 
+		
 		$(filterBookmarkDialogId+">div").removeClass("active").children("ul").slideUp('slow');
 
         BOOKMARKS.destroyBookmarkDialog();
@@ -1200,8 +1205,8 @@ function Visualization( EEXCESSobj ) {
         bookmarkDetails.append('span').text('Title:');
         //bookmarkDetails.append('p').text(d.title);
 		titleOutput(bookmarkDetails);
-        bookmarkDetails.append('span').text('Query:');
-        bookmarkDetails.append('p').text(query);
+        //bookmarkDetails.append('span').text('Query:');
+        //bookmarkDetails.append('p').text(query);
 
         // Append settings section (for bookmark selection or definition of new bookmark)
         var bookmarkSettings = dialogBookmark.append("div")
@@ -1215,15 +1220,15 @@ function Visualization( EEXCESSobj ) {
         var bookmarksListContainer = bookmarkSettings.append("div").attr("class", "eexcess-bookmark-dropdown-list")
             .append('ul');
 
-        bookmarksListData = bookmarksListContainer.selectAll('li').data(optionsData);
+        var bookmarksListData = bookmarksListContainer.selectAll('li').data(optionsData);
 
         bookmarksList = bookmarksListData.enter().append('li');
-        bookmarksList.append('a').text(function(b){ return b["bookmark-name"];})
+        bookmarksList.append('a').text(function(b){ return b["bookmark-name"];});
         bookmarksList.append('div').text(function(b){ return b.color; });
 
         // Create dropdown list to select bookmark
         $( bookmarkDropdownList ).dropdown({
-            'change' : EVTHANDLER.bookmarkDropdownListChanged,
+            'change' : EVTHANDLER.bookmarkDropdownListChanged
         });
 
         // Add wrapper div containing icon for color picking, text input and legendbookmarkDetails.append('p').text(d.title);
@@ -1245,6 +1250,37 @@ function Visualization( EEXCESSobj ) {
             .style('display', 'none');
 
 
+        // Also show delete - buttons in this dialog.
+		// Todo: remove the old bookmark-info popup
+        if (datum && bookmarkedItems[datum.id]){
+            var bookmarkListToDelete = dialogBookmark.append("div")
+                .attr("class", "eexcess-bookmark-bookmarkList");
+
+            var bookmarkedInSection = newBookmarkOptions.append('div').attr('class', 'eexcess-bookmark-bookmarked-in-section');
+            bookmarkedInSection.append('span').style('width', '100%').text('Bookmarked in:');
+
+            var itemBookmarksData = bookmarkedInSection.selectAll('div')
+                .data(bookmarkedItems[datum.id].bookmarked);
+
+            var itemInBookmarks = itemBookmarksData.enter().append('div')
+                    .attr('class', 'eexcess-bookmark-bookmarked-in');
+
+            itemInBookmarks.append('div')
+                .attr('class', 'eexcess-bookmark-color-icon')
+                .style('background-color', function(d){ return d.color; });
+
+            itemInBookmarks.append('span').text(function(d){ return d["bookmark-name"]; });
+
+            itemInBookmarks.append('img')
+                .attr('src', REMOVE_SMALL_ICON)
+                .attr('title', 'Remove item from this bookmark')
+                .on('click', EVTHANDLER.removeBookmarkIconClicked);
+        }
+
+
+
+
+
         // Append save and cancel buttons within container
         var bookmarkButtonsWrapper = dialogBookmark.append("div")
             .attr("class", "eexcess-bookmark-buttons-wrapper");
@@ -1260,7 +1296,7 @@ function Visualization( EEXCESSobj ) {
         bookmarkButtonsWrapper.append("input")
             .attr("type", "button")
             .attr("class", "eexcess-bookmark-button")
-            .attr("value", "Cancel")
+            .attr("value", "Close")
             .on('click', EVTHANDLER.bookmarkCancelButtonClicked);
 
 
@@ -1342,7 +1378,7 @@ function Visualization( EEXCESSobj ) {
         var bookmarkedInSection = detailsDialog.append('div').attr('class', 'eexcess-bookmark-bookmarked-in-section');
         bookmarkedInSection.append('span').style('width', '100%').text('Bookmarked in:');
 
-        itemBookmarksData = bookmarkedInSection.selectAll('div')
+        var itemBookmarksData = bookmarkedInSection.selectAll('div')
             .data(bookmarkedItems[datum.id].bookmarked);
 
         var itemInBookmarks = itemBookmarksData.enter().append('div')
@@ -1392,7 +1428,15 @@ function Visualization( EEXCESSobj ) {
         if(typeof bookmarkedItems[itemId] == 'undefined' || bookmarkedItems[itemId] == 'undefined')
             LIST.turnFaviconOffAndHideDetailsIcon(itemIndex);
 			
-		FILTER.changeDropDownList();	
+		FILTER.changeDropDownList();
+		
+		
+		$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndexPerFilter+")").trigger("click");
+
+		$(filterBookmarkDialogId+">div>ul").css("display","none");
+		$(filterBookmarkDialogId+">div").removeClass("active");
+		
+		
     };
 	
 	
@@ -1520,6 +1564,7 @@ function Visualization( EEXCESSobj ) {
     var FILTER = {};
 
 	var currentSelectIndex = 0;
+	var currentSelectIndexPerFilter = 0;
 
 	//change new Bookmarks
 	FILTER.changeDropDownList = function(){
@@ -1558,8 +1603,8 @@ function Visualization( EEXCESSobj ) {
 		
         $(filterBookmarkDropdownList).dropdown({
 		   'change':function(evt,index){
-				currentSelectIndex = index;
-				//console.log(currentSelectIndex);
+				currentSelectIndexPerFilter = index;
+
 				
 				evt = evt.split(":")[0].trim();
 				var input ={};
@@ -1678,6 +1723,7 @@ function Visualization( EEXCESSobj ) {
 //BookmarkingAPI.deleteBookmark("");
         d3.event.stopPropagation();
 		BOOKMARKS.buildSaveBookmarkDialog(
+            d,
 			function(thisValue){},
 			function(bookmarkDetails){
 				bookmarkDetails.append('p').text("selected bookmarks items");
@@ -1685,14 +1731,21 @@ function Visualization( EEXCESSobj ) {
 
 				FILTER.addBookmarkItems();
 
-				//$(filterBookmarkDialogId+">div").trigger("click");
-				$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
-
+				//$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
+				var bookmark = BOOKMARKS.internal.getCurrentBookmark();
+				if(bookmark['type'] == 'new' || bookmark['type'] == ''){
+					$(filterBookmarkDialogId+">div>ul>li:eq("+
+						BookmarkingAPI.getAllBookmarkNamesAndColors().length
+					+")").trigger("click");
+				}else{
+					$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
+				}
+				
 				$(filterBookmarkDialogId+">div>ul").css("display","none");
 				$(filterBookmarkDialogId+">div").removeClass("active");
 
 				
-				console.log("X-------: ");
+				console.log("X-------: " + BOOKMARKS.internal.getCurrentItemIndex());
 				
 			
 				
@@ -1745,10 +1798,7 @@ function Visualization( EEXCESSobj ) {
 			FILTER.updateData();
 			FILTER.showStars();
 			FILTER.updateData();
-			
 
-			
-			
 		}
 	};
 
