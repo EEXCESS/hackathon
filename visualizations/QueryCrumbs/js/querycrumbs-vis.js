@@ -29,7 +29,6 @@
 var evaluationUserID = -1;
 
 // Evaluation END
-
 function display_querycrumbs(domElem) {
     /**
      * Variable and event handler for the evaluation
@@ -200,6 +199,7 @@ function display_querycrumbs(domElem) {
             EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason:{reason:'queryCrumbs'},terms:weightedTerms}});
         },
         onMouseOverNode: function(d, i) {
+
             if(QueryCrumbsConfiguration.nodeForm == "SQUARE") {
                 var infoBox = svgContainer.select("g").append("g").attr("class", "infoBoxNode");
                 d3.select(this).select("rect.queryRectBg").classed("queryRectBg", true).classed("queryRectBgHovered", true).style("cursor","pointer");
@@ -231,7 +231,7 @@ function display_querycrumbs(domElem) {
                 $("rect.nodeBg").insertBefore(jqNode);
 
 
-                if(QueryCrumbsConfiguration.skillLevel == "EXPERT") {
+                if(QueryCrumbsConfiguration.skillLevel != "BEGINNER") {
                     simResults = [];
                     var rootGroup = d3.select(this.parentNode);
                     var iDocs = CORE.collectIdenticalDocs(i);
@@ -276,7 +276,7 @@ function display_querycrumbs(domElem) {
 
                     $("rect.nodeBg").insertBefore(jqNode);
 
-                if(QueryCrumbsConfiguration.skillLevel == "EXPERT") {
+                if(QueryCrumbsConfiguration.skillLevel != "BEGINNER") {
                     simResults = [];
                     var rootGroup = d3.select(this.parentNode);
                     var iDocs = CORE.collectIdenticalDocs(i);
@@ -288,7 +288,7 @@ function display_querycrumbs(domElem) {
                         simResults.push(queryNode);
                         queryNode.classed("docNode", true).classed("docNode-highlighted", true).style("opacity", 1);
                     }   
-                }
+                } 
             }
         },
         onMouseOutNode: function(d) {
@@ -456,8 +456,9 @@ function display_querycrumbs(domElem) {
         calcResultSetSimilarity: function(predecessor, current) {
             var sim = 0;
             var recurrence = [];
-            
+
             if(predecessor.length > 0) {
+
                 if(current.length > QueryCrumbsConfiguration.dimensions.SEGMENTS && predecessor.length > QueryCrumbsConfiguration.dimensions.SEGMENTS) {
                     current = current.slice(0, QueryCrumbsConfiguration.dimensions.SEGMENTS);
                     predecessor = predecessor.slice(0, QueryCrumbsConfiguration.dimensions.SEGMENTS);
@@ -466,6 +467,17 @@ function display_querycrumbs(domElem) {
                 } else if(predecessor.length > current.length) {
                     predecessor = predecessor.slice(0, current.length);
                 }
+
+                var a = [], b = [];  
+                predecessor.forEach(function(e) {
+                    a.push(e.uri)
+                })
+
+                current.forEach(function(e) {
+                    b.push(e.uri)
+                })
+
+                sim = jaccard.index(a, b); 
 
                 for(var i = 0; i < current.length; i++) {
                     var docAlreadyKnown = false;
@@ -477,20 +489,8 @@ function display_querycrumbs(domElem) {
                             break;
                         }
                     }
-
                     recurrence.push(docAlreadyKnownIdx);
-                }
-            
-                var a = [], b = [];  
-                predecessor.forEach(function(e) {
-                    a.push(e.uri)
-                })
-
-                current.forEach(function(e) {
-                    b.push(e.uri)
-                })
-
-                sim = jaccard.index(a, b); 
+                }   
             }
 
             return {sim: sim, recurrence: recurrence};
@@ -542,18 +542,27 @@ function display_querycrumbs(domElem) {
                 for(var docIdx = 0; docIdx < QueryCrumbsConfiguration.dimensions.SEGMENTS; docIdx++) {
                     var vDoc = {};
                     vDoc.index = docIdx;
-                    vDoc.x_pos = vNode.x_pos + (docIdx % QueryCrumbsConfiguration.dimensions.docRectHorizontal) * QueryCrumbsConfiguration.dimensions.docRectWidth;
-                    vDoc.y_pos = vNode.y_pos + Math.floor(docIdx / QueryCrumbsConfiguration.dimensions.docRectVertical) * QueryCrumbsConfiguration.dimensions.docRectHeight;
-                    vDoc.width = QueryCrumbsConfiguration.dimensions.docRectWidth;
-                    vDoc.height = QueryCrumbsConfiguration.dimensions.docRectHeight;
+                    // START Evaluation
+                    if(QueryCrumbsConfiguration.skillLevel == "INTERMEDIATE") {
+                        vDoc.x_pos = vNode.x_pos;
+                        vDoc.y_pos = vNode.y_pos + (docIdx * QueryCrumbsConfiguration.dimensions.docRectHeight / QueryCrumbsConfiguration.dimensions.docRectHorizontal)
+                        vDoc.width = QueryCrumbsConfiguration.dimensions.docRectWidth * QueryCrumbsConfiguration.dimensions.docRectHorizontal;
+                        vDoc.height = QueryCrumbsConfiguration.dimensions.docRectHeight / QueryCrumbsConfiguration.dimensions.docRectHorizontal;  
+                    } else {
+                        vDoc.x_pos = vNode.x_pos + (docIdx % QueryCrumbsConfiguration.dimensions.docRectHorizontal) * QueryCrumbsConfiguration.dimensions.docRectWidth;
+                        vDoc.y_pos = vNode.y_pos + Math.floor(docIdx / QueryCrumbsConfiguration.dimensions.docRectVertical) * QueryCrumbsConfiguration.dimensions.docRectHeight;
+                        vDoc.width = QueryCrumbsConfiguration.dimensions.docRectWidth;
+                        vDoc.height = QueryCrumbsConfiguration.dimensions.docRectHeight;   
+                    }
+                    // END Evaluation
                     // Beginners see only the base colors
                     if(QueryCrumbsConfiguration.skillLevel == "BEGINNER") {
                         vDoc.sim = 1;
                         vDoc.preIdx = -1;
-                    } else if(QueryCrumbsConfiguration.skillLevel == "EXPERT"){
+                    } else {
                         vDoc.sim = (similarities[nodeIdx].rsSimScore.recurrence[docIdx] == -1) ? 1 : 0;
                         vDoc.preIdx = (typeof similarities[nodeIdx].rsSimScore.recurrence[docIdx] != "undefined") ? similarities[nodeIdx].rsSimScore.recurrence[docIdx] : -1;
-                    }
+                    } 
                     
                     vDoc.uri = (history[nodeIdx].results[docIdx]) ? history[nodeIdx].results[docIdx].uri : "";
                     vNode.results.push(vDoc);
@@ -580,18 +589,36 @@ function display_querycrumbs(domElem) {
             reference node 'refNodeIdx'.
          */
         collectIdenticalDocs: function(refNodeIdx) {
-
             var sims = [];
-            for(var node = 0; node < historyData.length; node++) {
-                var nodeSims = [];
-                for(var r = 0; r < historyData[refNodeIdx].results.length; r++) {
-                    for(var rn = 0; rn < historyData[node].results.length; rn++) {
-                        if(historyData[refNodeIdx].results[r].uri == historyData[node].results[rn].uri) {
-                            nodeSims.push(rn);
+            if(QueryCrumbsConfiguration.skillLevel == "EXPERT") { 
+                for(var node = 0; node < historyData.length; node++) {
+                    var nodeSims = [];
+                        for(var r = 0; r < historyData[refNodeIdx].results.length; r++) {
+                            for(var rn = 0; rn < historyData[node].results.length; rn++) {
+                                if(historyData[refNodeIdx].results[r].uri == historyData[node].results[rn].uri) {
+                                    nodeSims.push(rn);
+                                }
+                            }
                         }
-                    }
+                    sims.push(nodeSims);
                 }
-                sims.push(nodeSims);
+            } else if(QueryCrumbsConfiguration.skillLevel == "INTERMEDIATE") {
+                for(var node = 0; node < historyData.length; node++) {
+                    var o = CORE.calcResultSetSimilarity(historyData[node].results, historyData[refNodeIdx].results);
+                    var n = QueryCrumbsConfiguration.dimensions.SEGMENTS - 1;
+                    var itemsToMark = Math.ceil(QueryCrumbsConfiguration.dimensions.SEGMENTS * o.sim);
+                    var nodeSims = [];
+
+                    for(var i = 0; i < itemsToMark; i++) {
+                        if(QueryCrumbsConfiguration.nodeForm == "SQUARE") {
+                            nodeSims[i] = n;
+                            n--;
+                        } else {
+                            nodeSims[i] = i;
+                        }
+                    }    
+                    sims.push(nodeSims);
+                }  
             }
             return sims;
         }
@@ -692,7 +719,7 @@ function display_querycrumbs(domElem) {
                     .attr("d", arc)
                     //.style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
                     .style("opacity", QueryCrumbsConfiguration.colorSettings.newDocOpacity);
-            } else {
+            } else  {
 
                 var crumbsUpd = crumbsSel.attr("transform", "translate(2, "+15+")");
                 crumbsSel.exit().remove();
@@ -742,7 +769,7 @@ function display_querycrumbs(domElem) {
                   .style("fill", function (d) { return d.base_color; })
                   .classed("queryRect", true);
                 nodeEnter.transition().attr("transform", "translate(0,0)");
-
+               
                 var queryDocRects = queryNodesSel.select("g").selectAll("rect.docNode").data(function(d) { return d.results; });
                 queryDocRects.enter().append("rect");
                 queryDocRects.attr("class", "docNode")
@@ -765,7 +792,8 @@ function display_querycrumbs(domElem) {
                 //   .attr("y",function (d) { return d.start_y; } )
                 //   .attr("width", QueryCrumbsConfiguration.dimensions.edgeWidth )
                 //   .attr("height", QueryCrumbsConfiguration.dimensions.edgeHeight)
-                //   .style("opacity", function(d) { return (QueryCrumbsConfiguration.skillLevel == "BEGINNER") ? 0 : d.simTerms;});  
+                //   .style("opacity", function(d) { return (QueryCrumbsConfiguration.skillLevel == "BEGINNER") ? 0 : d.simTerms;});     
+                                 
             } 
             
 

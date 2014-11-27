@@ -44,7 +44,7 @@ var QueryCrumbsConfiguration = {
 	    circle_r : 11,
 	    circle_bg_r : 12
     },
-    // The skill level of an user. (BEGINNER, EXPERT)
+    // The skill level of an user. (BEGINNER, EXPERT, INTERMEDIATE)
     skillLevel : "",
     // Changes the form of the nodes. (SQUARE, CIRCLE)
     nodeForm : ""
