@@ -882,6 +882,9 @@ function display_querycrumbs(domElem) {
     EEXCESS.messaging.listener(function(msg) {
         if(msg.fieldName) {
             QueryCrumbsConfiguration[msg.fieldName] = msg.value;
+            if(msg.fieldName == "skillLevel") {
+                visualData = CORE.generateVisualData(historyData, similarities);
+            }
             if(visualData != null) {
                 RENDERING.redraw(visualData);   
             }
