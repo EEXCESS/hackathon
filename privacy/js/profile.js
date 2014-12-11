@@ -1,3 +1,5 @@
+var EEXCESS = EEXCESS || {};
+
 function doProfileItemChange() {
     var fieldName = $(this).attr("data-eexcess-profile-field");
     var value = $(this).val();
@@ -95,12 +97,12 @@ $('#topicInput').tagit({// tagit plugin for topics
 });
 
 $(document).ready(function() {
-    var xhr = $.ajax({
+    var xhrData = {
         url: EEXCESS.config.FR_BASE_URI + 'getRegisteredPartners',
         type: 'GET',
         dataType: 'json'
-    });
-    xhr.done(function(data) {
+    };
+    var xhrSuccess = function(data) {
         // display available partners
         var source_div = $('#source_selection');
         for (var i = 0; i < data.partner.length; i++) {
@@ -147,8 +149,7 @@ $(document).ready(function() {
             }
             EEXCESS.storage.local('selected_sources',JSON.stringify(sources));
         });
-    });
-    xhr.fail(function(jqXHR, textStatus, errorThrown) {
-        $('#source_selection').append('<p>An error occured while retrieving the list of available sources, please try again later</p>');
-    });
+    };
+    
+    EEXCESS.messaging.callBG({method: {parent: 'api', func: 'xhr'},data:xhrData}, xhrSuccess);
 }); 

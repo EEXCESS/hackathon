@@ -101,12 +101,12 @@ EEXCESS.euCall = function(queryData, start, numResults, success, error) {
         success(data);
     });
     EEXCESS.qXHR.fail(function(jqxhr, textStatus, errorThrown) {
-        if(textStatus !== 'abort') {
+        if (textStatus !== 'abort') {
             console.log(jqxhr);
             console.log(textStatus);
             console.log(errorThrown);
             error(textStatus);
-        } 
+        }
     });
 };
 
@@ -158,11 +158,11 @@ EEXCESS.frCall_impl = function(queryData, start, numResults, success, error) {
             success(data);
         });
         EEXCESS.qXHR.fail(function(jqXHR, textStatus, errorThrown) {
-            if(textStatus !== 'abort') {
-            console.log(jqXHR);
-            console.log(textStatus);
-            console.log(errorThrown);
-            error(textStatus);
+            if (textStatus !== 'abort') {
+                console.log(jqXHR);
+                console.log(textStatus);
+                console.log(errorThrown);
+                error(textStatus);
             }
         });
     });
@@ -245,3 +245,19 @@ if (typeof EEXCESS.storage.local('backend') !== 'undefined') {
 EEXCESS.installListener(function(details) {
     EEXCESS.backend.setProvider(-1, 'eu2');
 });
+
+
+EEXCESS.api = (function() {
+    _xhr = function(tabID, data, callback) {
+
+        var xhr = $.ajax({
+            url: data.url,
+            type: data.type,
+            dataType: data.dataType
+        });
+        xhr.done(callback);
+    };
+    return {
+        xhr: _xhr
+    };
+})();
