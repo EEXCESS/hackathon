@@ -77,11 +77,7 @@ function Bookmarking() {
             return 'Item already exists in ' + bookmarkName;
 
 		item.bookmarked = true; //do to ask cicilia??
-<<<<<<< HEAD
-
-=======
 		
->>>>>>> origin/master
         BOOKMARKING.Dictionary[bookmarkName].items.push(item);
 
         INTERNAL.saveToLocalStorage( BOOKMARKING.Dictionary );

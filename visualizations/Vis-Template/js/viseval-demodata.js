@@ -1202,11 +1202,7 @@ var buildingFlorence =
 
 
 // universityCampus 80
-<<<<<<< HEAD
-var universityCampus=
-=======
 var universityCampus= 
->>>>>>> origin/master
 [
   {
     "id": "/2022301/882BF7486F3F7FEE408717176DDCEC3BAD4FD24C",

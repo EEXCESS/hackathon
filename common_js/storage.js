@@ -476,11 +476,7 @@ EEXCESS.storage = (function() {
                      queryString += d.text + ' ';
                     });
                     }
-<<<<<<< HEAD
-
-=======
                       
->>>>>>> origin/master
                     
                     queryString = queryString.trim();
                     queries[q].query = queryString.split(' ');

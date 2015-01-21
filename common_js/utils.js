@@ -7,8 +7,4 @@ EEXCESS.djb2Code = function(str){
         hash = ((hash << 5) + hash) + char; /* hash * 33 + c */
     }
     return hash;
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> origin/master

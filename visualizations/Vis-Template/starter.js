@@ -74,6 +74,7 @@ function requestPlugin() {
     // Set listener to receive new data when a new query is triggered
     EEXCESS.messaging.listener(
         function(request, sender, sendResponse) {
+
             console.log(request.method);
             if (request.method === 'newSearchTriggered') {
                 console.log('data received from plugin');
@@ -102,11 +103,6 @@ function requestPlugin() {
 function deletedRdf(pluginResponse) {
 
     pluginResponse.results.results.forEach(function(d){
-        /*
-        var rdf = d.rdf;
-        if(d.facets.provider == 'europeana' || d.facets.provider == 'Europeana')
-            console.log(rdf);
-        */
         delete d.rdf;
     });
 
@@ -205,4 +201,4 @@ function getDemoResultsHistoricBuildings(){
         query:"Historical Buildings"
     };
     return demoDataReceived;
-
+}

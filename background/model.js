@@ -5,7 +5,6 @@ var EEXCESS = EEXCESS || {};
  * @namespace EEXCESS.model
  */
 EEXCESS.model = (function() {
-<<<<<<< HEAD
     // init location
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -21,39 +20,15 @@ EEXCESS.model = (function() {
         EEXCESS.storage.local('privacy.profile.currentLocation', JSON.stringify([]));
     }
 
-=======
-    // init location
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var loc = [{
-                    longitude: position.coords.longitude,
-                    latitude: position.coords.latitude,
-                    accuracy: position.coords.accuracy,
-                    timestamp: position.timestamp
-                }];
-            EEXCESS.storage.local('privacy.profile.currentLocation', JSON.stringify(loc));
-        });
-    } else {
-        EEXCESS.storage.local('privacy.profile.currentLocation', JSON.stringify([]));
-    }
-
->>>>>>> origin/master
     // general widget parameters
     var params = {
         visible: false,
         tab: 'results'
     };
-<<<<<<< HEAD
 
     var currentQuery = {};
 
     var resultPage = false;
-=======
-
-    var currentQuery = {};
-
-    var resultPage = false;
->>>>>>> origin/master
     /**
      * Represents the current query and according results
      */
@@ -125,28 +100,16 @@ EEXCESS.model = (function() {
     var _handleResult = function(res) {
         var execute = function(items) {
             res.data.results = items;
-<<<<<<< HEAD
             if (!params.visible || resultPage) {
                 cachedResult = res;
                 EEXCESS.browserAction.setBadgeText({text: "" + res.data.totalResults});
             } else {
                 EEXCESS.browserAction.setBadgeText({text: ""});
-=======
-            if (!params.visible || resultPage) {
-                cachedResult = res;
-                EEXCESS.browserAction.setBadgeText({text: "" + res.data.totalResults});
-            } else {
-                EEXCESS.browserAction.setBadgeText({text: ""});
->>>>>>> origin/master
                 results = res;
                 EEXCESS.messaging.sendMsgAllTabs({
                     method: 'newSearchTriggered',
                     data: {query: results.query, results: results.data}
-<<<<<<< HEAD
                 });
-=======
-                });
->>>>>>> origin/master
             }
         };
 
@@ -179,36 +142,6 @@ EEXCESS.model = (function() {
         }
     };
     var _queryTimestamp;
-<<<<<<< HEAD
-
-    var _getDomain = function(hostname) {
-        var domain = hostname.substring(0,hostname.lastIndexOf('.'));
-        if(domain.indexOf('.') === -1) {
-            return domain;
-        } else {
-            return domain.substr(domain.indexOf('.')+1);
-        }
-    };
-
-
-    var _replayQuery = function(tabID, numResults, callback) {
-            var replayData = {
-                reason: 'replay',
-                terms: currentQuery['terms'],
-                numResults: numResults
-            };
-            console.log(replayData);
-            var success = function(results) {
-                _handleResult({query:currentQuery['query'],data: results});
-                callback({query:currentQuery['query'],results:results});
-            };
-            var error = function(error) { // error callback
-                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
-            };
-            EEXCESS.backend.getCall()(replayData, 1, numResults, success, error);
-        };
-
-=======
     
     var _getDomain = function(hostname) {
         var domain = hostname.substring(0,hostname.lastIndexOf('.'));
@@ -237,7 +170,6 @@ EEXCESS.model = (function() {
             EEXCESS.backend.getCall()(replayData, 1, numResults, success, error);
         };
     
->>>>>>> origin/master
     return {
         /**
          * Toggles the visibility of the widget
@@ -281,7 +213,6 @@ EEXCESS.model = (function() {
          * @param {Object} data The query data 
          */
         query: function(tabID, data) {
-<<<<<<< HEAD
             EEXCESS.browserAction.setBadgeText({text: ""});
             console.log(data);
             var tmp = {};
@@ -306,32 +237,6 @@ EEXCESS.model = (function() {
                         }
                     }
                 }
-=======
-            EEXCESS.browserAction.setBadgeText({text: ""});
-            console.log(data);
-            var tmp = {};
-            _queryTimestamp = new Date().getTime();
-            resultPage = false;
-            if (data.hasOwnProperty('reason')) {
-                tmp['weightedTerms'] = data['terms'];
-                tmp['reason'] = data['reason'];
-
-                // check if automatic query was triggered by viewing the detail page of a result
-                if (data['reason'].hasOwnProperty('url')) {
-                    var result_url = data.reason.url;
-                    delete tmp.reason.url;
-                    if (results.data !== null) {
-                        for (var i = 0; i < results.data.results.length; i++) {
-                            var parser = document.createElement('a');
-                            parser.href = results.data.results[i].eexcessURI;
-                            if (_getDomain(parser.hostname) === _getDomain(result_url)) {
-                                resultPage = true;
-                                break;
-                            }
-                        }
-                    }
-                }
->>>>>>> origin/master
             } else {
                 tmp['weightedTerms'] = data;
             }
@@ -346,7 +251,6 @@ EEXCESS.model = (function() {
                 EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: 'query is empty...'});
                 return;
             }
-<<<<<<< HEAD
 
             // set how many results to retrieve
             var numResults = EEXCESS.config.NUM_RESULTS;
@@ -357,38 +261,18 @@ EEXCESS.model = (function() {
             if (tmp.hasOwnProperty('reason') && tmp['reason']['reason'] !== 'manual' && !resultPage) {
                 EEXCESS.messaging.sendMsgAllTabs({method: 'loading', data: {query: tmp['query']}});
             }
-=======
-
-            // set how many results to retrieve
-            var numResults = EEXCESS.config.NUM_RESULTS;
-            if (data.hasOwnProperty('numResults')) {
-                numResults = data.numResults;
-            }
-
-            if (tmp.hasOwnProperty('reason') && tmp['reason']['reason'] !== 'manual' && !resultPage) {
-                EEXCESS.messaging.sendMsgAllTabs({method: 'loading', data: {query: tmp['query']}});
-            }
->>>>>>> origin/master
             params.tab = 'results';
             // log all queries in 'queries_full'
             EEXCESS.logging.logQuery(tabID, tmp['weightedTerms'], _queryTimestamp, '_full');
 
-<<<<<<< HEAD
             // cache current query
             currentQuery['terms'] = tmp['weightedTerms'];
             currentQuery['query'] = tmp['query'];
 
-=======
-            // cache current query
-            currentQuery['terms'] = tmp['weightedTerms'];
-            currentQuery['query'] = tmp['query'];
-
->>>>>>> origin/master
 
             var success = function(data) { // success callback
                 // TODO: search may return no results (although successful)
                 tmp['data'] = data;
-<<<<<<< HEAD
 //                if (data.totalResults !== 0) {
                 // create context
                 var context = {query: tmp['query']};
@@ -404,30 +288,12 @@ EEXCESS.model = (function() {
                     query: currentQuery['query']
                 };
                 EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: tmp_data});
-=======
-//                if (data.totalResults !== 0) {
-                // create context
-                var context = {query: tmp['query']};
-                // log results
-                EEXCESS.logging.logRecommendations(data.results, context, _queryTimestamp);
-                _handleResult(tmp);
-//                }
-
-            };
-            var error = function(error) { // error callback
-                var tmp_data = {
-                    msg: error,
-                    query: currentQuery['query']
-                };
-                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: tmp_data});
->>>>>>> origin/master
             };
 
             // log manual query and obtain selection
             if (tmp.hasOwnProperty('reason') && tmp['reason']['reason'] === 'manual') {
                 EEXCESS.logging.logQuery(tabID, tmp['weightedTerms'], _queryTimestamp, '', 'manual');
                 EEXCESS.messaging.sendMsgTab(tabID, {method: 'getTextualContext'}, function(ctxData) {
-<<<<<<< HEAD
                     tmp['reason']['value'] = ctxData['selectedText'];
                     // call provider (resultlist should start with first item)
                     EEXCESS.backend.getCall()(data, 1, numResults, success, error);
@@ -435,15 +301,6 @@ EEXCESS.model = (function() {
             } else {
                 // call provider (resultlist should start with first item)
                 EEXCESS.backend.getCall()(data, 1, numResults, success, error);
-=======
-                    tmp['reason']['value'] = ctxData['selectedText'];
-                    // call provider (resultlist should start with first item)
-                    EEXCESS.backend.getCall()(data, 1, numResults, success, error);
-                });
-            } else {
-                // call provider (resultlist should start with first item)
-                EEXCESS.backend.getCall()(data, 1, numResults, success, error);
->>>>>>> origin/master
             }
         },
         /**
@@ -511,7 +368,6 @@ EEXCESS.model = (function() {
          * @param {Function} callback
          */
         getResults: function(tabID, data, callback) {
-<<<<<<< HEAD
             if(typeof data !== 'undefined' && data !== null) {
                 if(data.numResults > results.data.totalResults) {
                     _replayQuery(tabID, data.numResults, callback);
@@ -521,17 +377,6 @@ EEXCESS.model = (function() {
             callback({query: results.query, results: results.data});
         },
         replayQuery: _replayQuery,
-=======
-            if(typeof data !== 'undefined' && data !== null) {
-                if(data.numResults > results.data.totalResults) {
-                    _replayQuery(tabID, data.numResults, callback);
-                    return;
-                }
-            }
-            callback({query: results.query, results: results.data});
-        },
-        replayQuery: _replayQuery,
->>>>>>> origin/master
         resultOpened: function(tabID, data, callback) {
             EEXCESS.windows.getCurrent({populate: true}, function(win) {
                 for (var i = 0; i < win.tabs.length; ++i) {

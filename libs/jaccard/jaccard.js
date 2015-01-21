@@ -42,8 +42,4 @@ jaccard.index = function (a, b) {
  */
 jaccard.distance = function (a, b) {
   return 1 - jaccard.index(a, b);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/master

@@ -52,11 +52,7 @@ var QueryCrumbsConfiguration = {
 
 QueryCrumbsConfiguration.dimensions.docRectHeight = QueryCrumbsConfiguration.dimensions.rectHeight / QueryCrumbsConfiguration.dimensions.docRectVertical;
 QueryCrumbsConfiguration.dimensions.docRectWidth = QueryCrumbsConfiguration.dimensions.rectWidth / QueryCrumbsConfiguration.dimensions.docRectHorizontal;
-<<<<<<< HEAD
-// Calculate and initialize the amount of segments for the nodes.
-=======
 // Calculate and initialize the amount of segments for the nodes. 
->>>>>>> origin/master
 QueryCrumbsConfiguration.dimensions.SEGMENTS = QueryCrumbsConfiguration.dimensions.docRectHorizontal * QueryCrumbsConfiguration.dimensions.docRectVertical;
 
 /*

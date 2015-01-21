@@ -151,8 +151,4 @@ $(document).ready(function() {
     xhr.fail(function(jqXHR, textStatus, errorThrown) {
         $('#source_selection').append('<p>An error occured while retrieving the list of available sources, please try again later</p>');
     });
-<<<<<<< HEAD
-});
-=======
 }); 
->>>>>>> origin/master

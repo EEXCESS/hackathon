@@ -586,13 +586,8 @@ var DrawNaviGraph = function(){
 				});
 				return nameDict;
 			}
-<<<<<<< HEAD
-
-
-=======
 			
 			
->>>>>>> origin/master
 			function setNodeNeigthborList(nodeArray,nodeNameDict,data){
 				nodeArray.forEach(function(element){
 					if(nodeNameDict.hasOwnProperty(element.name) && element.status == 0){
@@ -600,11 +595,7 @@ var DrawNaviGraph = function(){
 					}
 				});
 			}
-<<<<<<< HEAD
-
-=======
 			
->>>>>>> origin/master
 			function getNextOpenNode(nodeArray,value){
 				//nodeArray[value].status;
 				var returnValue = value;
@@ -616,17 +607,10 @@ var DrawNaviGraph = function(){
 						break;
 					}
 				}
-<<<<<<< HEAD
-
-				return {found:isFound,value:returnValue};
-			}
-
-=======
 				
 				return {found:isFound,value:returnValue};
 			}
 			
->>>>>>> origin/master
 
 
 			var initValue = 0;
@@ -635,15 +619,6 @@ var DrawNaviGraph = function(){
 			var resultOpenNode;
 			do{
 				currentNode = sortedLinknumbers[initValue];
-<<<<<<< HEAD
-
-				currentNode.status = forceClusterNumber;
-				forceClusterNumber++
-
-				setNodeNeigthborList(sortedLinknumbers,getNodeNameDict(currentNode),forceClusterNumber);
-				forceClusterNumber++
-
-=======
 				
 				currentNode.status = forceClusterNumber;
 				forceClusterNumber++
@@ -651,22 +626,12 @@ var DrawNaviGraph = function(){
 				setNodeNeigthborList(sortedLinknumbers,getNodeNameDict(currentNode),forceClusterNumber);
 				forceClusterNumber++
 				
->>>>>>> origin/master
 				resultOpenNode = getNextOpenNode(sortedLinknumbers,initValue);
 				if(resultOpenNode.found == true){
 					initValue = resultOpenNode.value;
 				}
 				console.log("ttt");
 			}while(resultOpenNode.found == true);
-<<<<<<< HEAD
-
-			console.log("---");
-
-			//set force nodes
-			function getNodeNameDictPerStatus(nodeArray,status){
-				var nameDict ={};
-
-=======
 			
 			console.log("---");
 			
@@ -674,72 +639,11 @@ var DrawNaviGraph = function(){
 			function getNodeNameDictPerStatus(nodeArray,status){
 				var nameDict ={};
 				
->>>>>>> origin/master
 				nodeArray.forEach(function(element){
 					if(element.status == status){
 						nameDict[element.node] = "";
 					}
 				});
-<<<<<<< HEAD
-
-				return nameDict;
-			}
-
-			var currentStatus = 0;
-
-
-			currentStatus++;//1,3,5,...
-			//......
-
-			currentStatus++;//2,4,6,...
-			var nodeNameDict = getNodeNameDictPerStatus(sortedLinknumbers,currentStatus);
-			//....
-
-			//while(Object.keys(nodeNameDict).length >0);
-
-
-
-
-
-			/*
-
-			forceNaviGraph.To.Object().To.Link()
-				.Add(uniqueNodeName,resultNodeName,resultLinkName)
-				.Change(resultLinkName,{strength:0.2,attr:{fill:"none",stroke:"none"}});
-
-
-			forceNaviGraph.To.Object().To.Node()
-				.Delete(uniqueNodeId);
-
-			
-			forceNaviGraph.To.Object().To.Node()
-				.Delete(uniqueNodeId)
-				.To.Cluster()
-					.Delete("clus_"+uniqueNodeId);
-
-
-
-			forceNaviGraph.To.Object().To.Node()
-				.Add(uniqueNodeName)
-				.Change(uniqueNodeName,{cluster:{name:"clus_"+uniqueNodeName,distance:15,active:true}})
-				.To.Cluster()
-					.Add("clus_"+uniqueNodeName,uniqueNodeName)
-
-
-			forceNaviGraph.To.Object().To.Node()
-				.Add(resultNodeName)
-				.Change(resultNodeName,{
-					cluster:{name:"clus_"+uniqueNodeName,distance:clusterDistance,active:true},
-					});
-			*/
-
-
-
-
-
-
-
-=======
 				
 				return nameDict;
 			}
@@ -798,7 +702,6 @@ var DrawNaviGraph = function(){
 			
 			
 			
->>>>>>> origin/master
 			//////////////////////////////////////////////////////////////////////////////
 			/*
 			//change the neightbor table

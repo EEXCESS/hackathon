@@ -15,13 +15,8 @@ if (typeof String.prototype.startsWith !== 'function') {
 
 var EEXCESS = EEXCESS || {};
 
-<<<<<<< HEAD
 EEXCESS.qXHR;
 
-=======
-EEXCESS.qXHR;
-
->>>>>>> origin/master
 /**
  * Sends a query with the specified parameters to europeana and hands the results
  * to the success callback or the error message to the error callback.
@@ -31,11 +26,7 @@ EEXCESS.qXHR;
  * @param {querySuccess} success callback on success, receives the retrieved results as parameter
  * @param {queryError} error callback on error, receives the error message as parameter
  */
-<<<<<<< HEAD
 EEXCESS.euCall = function(queryData, start, numResults, success, error) {
-=======
-EEXCESS.euCall = function(queryData, start, numResults, success, error) {
->>>>>>> origin/master
     var weightedTerms;
     if (queryData.hasOwnProperty('reason')) {
         weightedTerms = queryData['terms'];
@@ -79,7 +70,6 @@ EEXCESS.euCall = function(queryData, start, numResults, success, error) {
         return facet_list;
     };
     console.log('query: ' + query + ' start:' + start);
-<<<<<<< HEAD
     if (EEXCESS.qXHR && EEXCESS.qXHR.readystate !== 4) {
         EEXCESS.qXHR.abort();
     }
@@ -88,16 +78,6 @@ EEXCESS.euCall = function(queryData, start, numResults, success, error) {
             + '&start=' + start
             + '&rows=96&profile=standard');
     EEXCESS.qXHR.done(function(data) {
-=======
-    if (EEXCESS.qXHR && EEXCESS.qXHR.readystate !== 4) {
-        EEXCESS.qXHR.abort();
-    }
-    EEXCESS.qXHR = $.ajax(EEXCESS.backend.getURL()
-            + '&query=' + query
-            + '&start=' + start
-            + '&rows=96&profile=standard');
-    EEXCESS.qXHR.done(function(data) {
->>>>>>> origin/master
         console.log(data);
         if (data.totalResults !== 0) {
             $.map(data.items, function(n, i) {
@@ -114,26 +94,12 @@ EEXCESS.euCall = function(queryData, start, numResults, success, error) {
                     data.results[i].title = data.results[i].title[0];
                 }
             }
-<<<<<<< HEAD
         } else {
             data.results = [];
-=======
-        } else {
-            data.results = [];
->>>>>>> origin/master
         }
         console.log(data);
         success(data);
     });
-<<<<<<< HEAD
-    EEXCESS.qXHR.fail(function(jqxhr, textStatus, errorThrown) {
-        if(textStatus !== 'abort') {
-            console.log(jqxhr);
-            console.log(textStatus);
-            console.log(errorThrown);
-            error(textStatus);
-        }
-=======
     EEXCESS.qXHR.fail(function(jqxhr, textStatus, errorThrown) {
         if(textStatus !== 'abort') {
             console.log(jqxhr);
@@ -141,7 +107,6 @@ EEXCESS.euCall = function(queryData, start, numResults, success, error) {
             console.log(errorThrown);
             error(textStatus);
         } 
->>>>>>> origin/master
     });
 };
 
@@ -152,11 +117,7 @@ EEXCESS.euCall = function(queryData, start, numResults, success, error) {
  * @param {Function} success success callback, receives the retrieved results as parameter
  * @param {Function} error error callback, receives the error message as parameter
  */
-<<<<<<< HEAD
 EEXCESS.frCall_impl = function(queryData, start, numResults, success, error) {
-=======
-EEXCESS.frCall_impl = function(queryData, start, numResults, success, error) {
->>>>>>> origin/master
     var weightedTerms;
     if (queryData.hasOwnProperty('reason')) {
         weightedTerms = queryData['terms'];
@@ -164,7 +125,6 @@ EEXCESS.frCall_impl = function(queryData, start, numResults, success, error) {
         weightedTerms = queryData;
     }
     EEXCESS.profile.getProfile(function(profile) {
-<<<<<<< HEAD
         profile['contextKeywords'] = weightedTerms;
         var q = '';
         for (var i = 0; i < weightedTerms.length; i++) {
@@ -184,63 +144,26 @@ EEXCESS.frCall_impl = function(queryData, start, numResults, success, error) {
             EEXCESS.qXHR.abort();
         }
         EEXCESS.qXHR = $.ajax({
-=======
-        profile['contextKeywords'] = weightedTerms;
-        var q = '';
-        for (var i = 0; i < weightedTerms.length; i++) {
-            q += weightedTerms[i].text;
-        }
-        profile['queryID'] = '' + EEXCESS.djb2Code(q) + new Date().getTime();
-        profile['numResults'] = numResults;
-
-        if (queryData.hasOwnProperty('reason')) {
-            profile['context'] = queryData['reason'];
-            // apply query context policy
-            if (profile['context']['reason'] === 'page' && JSON.parse(EEXCESS.storage.local("privacy.policy.searchContextPage")) !== 1) {
-                profile['context']['value'] = 'disabled';
-            }
-        }
-        if (EEXCESS.qXHR && EEXCESS.qXHR.readystate !== 4) {
-            EEXCESS.qXHR.abort();
-        }
-        EEXCESS.qXHR = $.ajax({
->>>>>>> origin/master
             url: EEXCESS.backend.getURL(),
             data: JSON.stringify(profile),
             type: 'POST',
             contentType: 'application/json; charset=UTF-8',
-<<<<<<< HEAD
             dataType: 'json',
             timeout: EEXCESS.config.TIMEOUT()
         });
         EEXCESS.qXHR.done(function(data) {
-=======
-            dataType: 'json',
-            timeout: EEXCESS.config.TIMEOUT()
-        });
-        EEXCESS.qXHR.done(function(data) {
->>>>>>> origin/master
             console.log(data);
             data['results'] = data['result'];
             delete data['result'];
             success(data);
         });
-<<<<<<< HEAD
         EEXCESS.qXHR.fail(function(jqXHR, textStatus, errorThrown) {
             if(textStatus !== 'abort') {
-=======
-        EEXCESS.qXHR.fail(function(jqXHR, textStatus, errorThrown) {
-            if(textStatus !== 'abort') {
->>>>>>> origin/master
             console.log(jqXHR);
             console.log(textStatus);
             console.log(errorThrown);
             error(textStatus);
-<<<<<<< HEAD
             }
-=======
-            }
->>>>>>> origin/master
         });
     });
 };
@@ -257,11 +180,7 @@ EEXCESS.backend = (function() {
     return {
         setProvider: function(tabID, provider) {
             backend = provider;
-<<<<<<< HEAD
             EEXCESS.storage.local('backend', provider);
-=======
-            EEXCESS.storage.local('backend', provider);
->>>>>>> origin/master
             switch (provider) {
                 case 'eu':
                     console.log('eu');
@@ -283,7 +202,6 @@ EEXCESS.backend = (function() {
                     call = EEXCESS.frCall_impl;
                     url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
                     fr_url = url;
-<<<<<<< HEAD
                     var local_url = EEXCESS.storage.local('local_url');
                     if (typeof local_url !== 'undefined' && local_url !== null) {
                         url = local_url;
@@ -292,16 +210,6 @@ EEXCESS.backend = (function() {
                     if (typeof local_fr_url !== 'undefined' && local_fr_url !== null) {
                         fr_url = local_fr_url;
                     }
-=======
-                    var local_url = EEXCESS.storage.local('local_url');
-                    if (typeof local_url !== 'undefined' && local_url !== null) {
-                        url = local_url;
-                    }
-                    var local_fr_url = EEXCESS.storage.local('federated_url');
-                    if (typeof local_fr_url !== 'undefined' && local_fr_url !== null) {
-                        fr_url = local_fr_url;
-                    }
->>>>>>> origin/master
             }
         },
         setURL: function(tabID, urls) {

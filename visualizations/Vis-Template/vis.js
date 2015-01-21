@@ -5,8 +5,10 @@ function Visualization( EEXCESSobj ) {
 	
     var width;		// Screen width
     var height;	    // Screen height
+	
     var inputData;
 
+	
     // DOM Selectors
     var root = "div#eexcess_canvas";											                   // String to select the area where the visualization should be displayed
 	var searchField = "#eexcess_search_field";									                   // String to select search field in the header
@@ -24,9 +26,8 @@ function Visualization( EEXCESSobj ) {
 	var colorIcon = ".color_icon";												                   // Class selector for div icon colored according to legend categories
 	var favIconClass = ".eexcess_fav_icon";                                                        // img element fpr favicon (either on or off)
     var bookmarkDetailsIconClass = ".eexcess_details_icon";                                        // img element with 3-dot icon in each list item used to display bookmarked item's details on click
-    var loadingMsgId = "#eexcess_message_on_canvas";
+    var loadingMsgId = "#eexcess_message_on_canvas";											
 	var filterSelect = "#eexcess_header_filter";												   // String to select in the right of the header
-
 
 	
     var bookmarkDialogClass = ".eexcess-bookmark-dialog";                                          // Class selector for both types of dialog: save bookmark and see-and-edit-bookmark
@@ -67,13 +68,15 @@ function Visualization( EEXCESSobj ) {
 	var STR_BOOKMARK_NAME_MISSING = "Indicate new bookmark name";
 	var STR_SHOWALLRESULTS = "Search results";
 
+	
 	// Main variables
 	var data;							// contains the data to be visualized
 	var mappings;						// contains all the possible mapping combiantions for each type of visualization
 	var query;							// string representing the query that triggered the current recommendations
 	var charts;
 	var groupBy;
-
+	
+	
 	// Ancillary variables
 	var visChannelKeys;					// array containing the keys (names) of the visual atributes corresponding to the current chart
 	var mappingSelectors;			    // Selector array for visual channel <select>. Necessary for event handlers
@@ -145,15 +148,6 @@ function Visualization( EEXCESSobj ) {
         mappings = input.mappingcombination; //PREPROCESSING.getFormattedMappings( receivedMappings );		// contains all the possible mapping combiantions for each type of visualization
         query = input.query;													// string representing the query that triggered the current recommendations
 
-        var mendeleyData = [];
-
-        data.forEach(function(d){
-            if(d.facets.provider == 'mendeley')
-                mendeleyData.push(d);
-        });
-
-        console.log(JSON.stringify(mendeleyData));
-
         // Initialize template's elements
         PREPROCESSING.setAncillaryVariables();
         BOOKMARKS.updateBookmarkedItems();
@@ -165,7 +159,7 @@ function Visualization( EEXCESSobj ) {
 		FILTER.buildFilterBookmark();
 		BOOKMARKS.exportBookmarks();
 		BOOKMARKS.importBookmarks();
-
+		
         // Call method to create a new visualization (empty parameters indicate that a new chart has to be drawn)
         VISPANEL.drawChart();
 
@@ -417,15 +411,17 @@ function Visualization( EEXCESSobj ) {
 	
 	EVTHANDLER.btnResetClicked = function(){
 		indicesToHighlight = VISPANEL.getAllSelectListItems();
-
+	
 		LIST.highlightListItems(indicesToHighlight);
 		//$(filterBookmarkDialogId+">div>span").text(STR_SHOWALLRESULTS);
 		//$(filterBookmarkDialogId+">div>div").css("background","inherit");
 		//$(deleteBookmark).prop("disabled",true).css("background","silver");
-		//FILTER.showStars();
-		//FILTER.updateData();
+		
+		//FILTER.showStars();	
+		//FILTER.updateData();	
 		
 		VISPANEL.updateCurrentChart( "reset_chart" );
+		
 	};
 
 
@@ -462,9 +458,10 @@ function Visualization( EEXCESSobj ) {
 
     ////////	Value changed in bookmark dropdown list 	////////
     EVTHANDLER.bookmarkDropdownListChanged = function(value, index){
+		
 		currentSelectIndex = index;
 		//console.log("##### >> " +currentSelectIndex);
-
+	
         if(index == 0)
             $(newBookmarkOptionsId).slideDown("slow");
         else
@@ -863,7 +860,9 @@ function Visualization( EEXCESSobj ) {
         d3.select(listItem + '' +index).select(favIconClass).transition().attr("src", FAV_ICON_ON).duration(2000);
         // show bookmark details icon
         $(listItem + '' +index + ' ' + bookmarkDetailsIconClass).fadeIn('slow');
+		
 		data[index].bookmarked = true;
+		
     };
 
 
@@ -873,6 +872,7 @@ function Visualization( EEXCESSobj ) {
         // Hide bookmark details icon
         $(listItem + '' +index + ' ' + bookmarkDetailsIconClass).fadeOut('slow');
         // Update item's property 'bookmarked'
+		
 		data[index].bookmarked = false;
     }
 
@@ -897,7 +897,7 @@ function Visualization( EEXCESSobj ) {
             if(VISPANEL.chartName != $(chartSelect).val()){//??????????
                 //indicesToHighlight = [];
 			}
-
+				
             VISPANEL.chartName = $(chartSelect).val();
 
             var selectedMapping = [];
@@ -1133,15 +1133,16 @@ function Visualization( EEXCESSobj ) {
 
 
     BOOKMARKS.updateBookmarkedItems = function(){
+        
 		//bookmarkedItems = BookmarkingAPI.getBookmarkedItemsById(idsArray);
 		//console.log('bisher: ');
 		//console.log(bookmarkedItems);
-
+		 
 		bookmarkedItems = {};
 		var allBookmarks = BookmarkingAPI.getAllBookmarks();
 		Object.keys(allBookmarks).forEach(function(bookmarkKey){
-			allBookmarks[bookmarkKey].items.forEach(function(itemsElement){
-
+			allBookmarks[bookmarkKey].items.forEach(function(itemsElement){	
+				
 				var itemEntry = itemsElement['id'];
 				if(typeof bookmarkedItems[itemEntry] == 'undefined' || bookmarkedItems[itemEntry] == 'undefined'){
 					bookmarkedItems[itemEntry] = { 'bookmarked' : new Array() };
@@ -1152,21 +1153,20 @@ function Visualization( EEXCESSobj ) {
 					'bookmark-id' : allBookmarks[bookmarkKey].id,
 					'color' : allBookmarks[bookmarkKey].color
 				});
-
+				
 			});
 		});
-
+		
 		//experimental code end to do ask cecillia ??
 		//console.log('neu: ');
 		//console.log(bookmarkedItems);
-
+		
         console.log('----- BOOKMARKED ITEMS -----');
         console.log(bookmarkedItems);
     };
 
     //BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
 	BOOKMARKS.buildSaveBookmarkDialog = function(datum, firstFunc,titleOutput,savebutton, sender) {
-
 
 		$(filterBookmarkDialogId+">div").removeClass("active").children("ul").slideUp('slow');
 
@@ -1301,7 +1301,8 @@ function Visualization( EEXCESSobj ) {
             'width' : 200,
             'height' : 200
         });
-
+		
+		
     };
 
 
@@ -1412,29 +1413,31 @@ function Visualization( EEXCESSobj ) {
 
         // sender is img element with remove icon
         $(sender.parentNode).remove();
-
+		
+		
 		BOOKMARKS.updateBookmarkedItems();
 
         if(typeof bookmarkedItems[itemId] == 'undefined' || bookmarkedItems[itemId] == 'undefined')
             LIST.turnFaviconOffAndHideDetailsIcon(itemIndex);
+			
 		FILTER.changeDropDownList();
-
+		
 		//update list and drop down list
-
 		$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndexPerFilter+")").trigger("click");
 
 		$(filterBookmarkDialogId+">div>ul").css("display","none");
 		$(filterBookmarkDialogId+">div").removeClass("active");
-
+		//update list and drop down list
+		
     };
-
-
-
+	
+	
 	BOOKMARKS.exportBookmarks = function(){
 
 		window.URL = window.URL;// || window.webkitURL;
 
 		console.log(BookmarkingAPI.getAllBookmarks());
+
 
 		$(exportBookmark).on("click",function(evt){
 
@@ -1445,8 +1448,11 @@ function Visualization( EEXCESSobj ) {
 		});
 		//$(exportBookmark).attr("href", window.URL.createObjectURL(blob));
 		//$(exportBookmark).attr("download", "bookmarks.txt");
-	};
+		
+		
+		
 
+	};
 
 	BOOKMARKS.importBookmarks = function(){
 		function doOpen(evt,func) {
@@ -1457,28 +1463,28 @@ function Visualization( EEXCESSobj ) {
 			};
 			reader.readAsText(files[0]);
 		}
-
+		
 		$(importBookmarkStyle).on("click",function(evt){
 			$(importBookmark).trigger("click");
 		});
 
 		$(importBookmark).on("change",function(evt){
 			doOpen(evt,function(dataString){
-
+			
 				//update control
 				FILTER.changeDropDownList();
-
+				
 				FILTER.showStars();
 				FILTER.updateData();
 				FILTER.showStars();
 				FILTER.updateData();
-
-
+			
+			
 				var importBookmarks = JSON.parse(dataString);
 				console.log(importBookmarks);
 				var allBookmarks = BookmarkingAPI.getAllBookmarks();
 				console.log(allBookmarks);
-
+				
 				//compare items id's
 				function searchItemId(items,searchedId){
 					items.forEach(function(item){
@@ -1488,7 +1494,7 @@ function Visualization( EEXCESSobj ) {
 					});
 					return false;
 				}
-
+				
 				//compare and create bookmark items
 				function importItems(bookmark){
 					importBookmarks[bookmark].items.forEach(function(currentItem){
@@ -1497,7 +1503,7 @@ function Visualization( EEXCESSobj ) {
 						}
 					});
 				}
-
+				
 				//compare and create two bookmarks
 				Object.keys(importBookmarks).forEach(function(currentBookmark){
 					if(allBookmarks.hasOwnProperty(currentBookmark)){
@@ -1507,16 +1513,17 @@ function Visualization( EEXCESSobj ) {
 						importItems(currentBookmark);
 					}
 				});
-
+				
 
 			});
-
+			
 			FILTER.showStars();
 			FILTER.updateData();
 			FILTER.showStars();
 			FILTER.updateData();
+			
 		});
-
+	
 	};
 
 
@@ -1528,7 +1535,8 @@ function Visualization( EEXCESSobj ) {
 
 
     var EXT = {};
-
+	
+		
 	EXT.ListItemSelected = function(datum, index){
 		LIST.selectListItem( datum, index, true );
 	};
@@ -1552,22 +1560,22 @@ function Visualization( EEXCESSobj ) {
 
 	//change new Bookmarks
 	FILTER.changeDropDownList = function(){
-
+	
 		$( filterBookmarkDialogId ).remove();
-
+		
 		var topOffset = $(filterSelect).offset().top;
 		var dialogBookmark = d3.select(filterSelect+">span").append("span")//div
 			.attr("id", "eexcess-filter-bookmark-dialog")
 			.attr("class", "eexcess-filter-bookmark-dialog")
 			.style("top", topOffset + "px" )
 			.style("width","200px");
-
+		
 		var bookmarksListContainer = dialogBookmark.append("div")
 			.attr("class", "eexcess-bookmark-dropdown-list")
 			.append('ul');
 
 		var bookmarks = BookmarkingAPI.getAllBookmarkNamesAndColors();
-
+		
 		var bookmarkCount = 0;
 		bookmarks.forEach(function(elementData,indexData){
 			bookmarkCount = 0;
@@ -1575,29 +1583,30 @@ function Visualization( EEXCESSobj ) {
 			elementData["bookmark-name"] = elementData["bookmark-name"] + " : ("+bookmarkCount+")";
 		});
 
-	    var optionsData =  $.merge([{'bookmark-name': STR_SHOWALLRESULTS, 'color': ''}],
+	    var optionsData =  $.merge([{'bookmark-name': STR_SHOWALLRESULTS, 'color': ''}], 
 			bookmarks
 		);
-
+		
 		var bookmarksListData = bookmarksListContainer.selectAll('li').data(optionsData);
 
         var bookmarksList = bookmarksListData.enter().append('li');
         bookmarksList.append('a').text(function(b){ return b["bookmark-name"];})
         bookmarksList.append('div').text(function(b){ return b.color; });
-
+		
         $(filterBookmarkDropdownList).dropdown({
 		   'change':function(evt,index){
 				currentSelectIndexPerFilter = index;
 
+				
 				evt = evt.split(":")[0].trim();
 				var input ={};
 				indicesToHighlight =[];
 
 				if(evt == STR_SHOWALLRESULTS){
-
+				
 					FILTER.showStars();
 					FILTER.updateData();
-
+					
 					$(deleteBookmark).prop("disabled",true).css("background","silver");
 				}else{
 					//filtered bookmark from data
@@ -1606,7 +1615,7 @@ function Visualization( EEXCESSobj ) {
 					//FILTER.filterBookmark(inputData,currentBookmarkItems,function(inputData,indexData){
 					//	input.data.push(inputData[indexData]);
 					//});
-
+					
 					input.data = [];
 					var bookmarkCount = 0;
 					currentBookmarkItems.forEach(function(item){
@@ -1614,21 +1623,21 @@ function Visualization( EEXCESSobj ) {
 						indicesToHighlight.push(++bookmarkCount);
 					});
 					data = input.data;
-
+					
 					FILTER.updateData();
 					$(deleteBookmark).prop("disabled",false).css("background","");
 				}
 		   }
         });
-
+		
 		$(filterBookmarkDialogId).on("mousedown",function(evt){
 			BOOKMARKS.destroyBookmarkDialog();
-			isBookmarkDialogOpen = false;
+			isBookmarkDialogOpen = false;	
 		});
-
+		
 		$(filterBookmarkDialogId).slideDown('slow');
 	};
-
+	
 	/*
 	FILTER.filterBookmark = function(inputDataParam,currentBookmark,func){
 		inputDataParam.forEach(function(elementData,indexData){
@@ -1640,35 +1649,35 @@ function Visualization( EEXCESSobj ) {
 		});
 	}
 	*/
-
+	
 	// build filter bookmark and delete bookmark control.
 	FILTER.buildFilterBookmark = function(){
-
+	
 	    BOOKMARKS.destroyBookmarkDialog();
 		inputData=data;
 
 		FILTER.changeDropDownList();
-
+		
 		d3.select(addBookmarkItems).on("click", FILTER.buildAddBookmarkItems);
-
+		
 		d3.select(deleteBookmark).on("click",function(){
 
 			if (confirm("Delete current bookmark?") == true) {
 				var bookmarkName = $(filterBookmarkDialogId+">div>span").text().split(":")[0].trim();
 				BookmarkingAPI.deleteBookmark(bookmarkName);
-
+				
 				FILTER.changeDropDownList();
-
+				
 				FILTER.showStars();
 				FILTER.updateData();
 				FILTER.showStars();
 				FILTER.updateData();
-			}
+			} 
 
 		});
 		$(deleteBookmark).prop("disabled",true).css("background","silver");
 	};
-
+	
 	FILTER.showStars = function(){
 		var input ={};
 		input.data = [];
@@ -1680,13 +1689,13 @@ function Visualization( EEXCESSobj ) {
 				dataItem['bookmarked'] = true;
 			}else{
 				dataItem['bookmarked'] = false;
-			}
+			}	
 		});
-		data = input.data;
-
+		data = input.data;	
+		
 		//FILTER.updateData();
 	};
-
+	
 	FILTER.updateData = function(){
 		// Initialize template's elements
 		//PREPROCESSING.setAncillaryVariables();
@@ -1698,9 +1707,9 @@ function Visualization( EEXCESSobj ) {
 		LIST.buildContentList();
 		VISPANEL.drawChart();
 	};
-
-
-
+	
+	
+	
 
 	FILTER.buildAddBookmarkItems = function(d, i){
 //BookmarkingAPI.deleteBookmark("");
@@ -1723,28 +1732,28 @@ function Visualization( EEXCESSobj ) {
 				}else{
 					$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndex+")").trigger("click");
 				}
-
+				
 				$(filterBookmarkDialogId+">div>ul").css("display","none");
 				$(filterBookmarkDialogId+">div").removeClass("active");
 
-
+				
 			},
 			this
 		);
 	};
 
-
-
+	
+	
 	FILTER.addBookmarkItems = function(){
 		//console.log(indicesToHighlight);
 		var bookmark = BOOKMARKS.internal.getCurrentBookmark();
-
+		
 		if( BOOKMARKS.internal.validateBookmarkToSave() ){
-
+		
 			//var bookmark = BOOKMARKS.internal.getCurrentBookmark();
 			if(bookmark['type'] == 'new'){
 				BookmarkingAPI.createBookmark(bookmark['bookmark-name'], bookmark['color']);
-			}
+			}	
 
 			function addBookmarkFunc(currentData,index){
 				var bookmarkItem = {
@@ -1758,21 +1767,21 @@ function Visualization( EEXCESSobj ) {
 				BookmarkingAPI.addItemToBookmark(bookmark['bookmark-name'], bookmarkItem);
 				LIST.turnFaviconOnAndShowDetailsIcon(index);
 			}
-
+			
 			if(indicesToHighlight.length > 0){
 				var currentData;
 				indicesToHighlight.forEach(function(indexValue){
 					//console.log(indexValue);
 					//console.log(data[indexValue]);
-
+					
 					currentData = data[indexValue];
 					addBookmarkFunc(currentData,indexValue);
 				});
 			}
-
+			
 			BOOKMARKS.destroyBookmarkDialog();
 			FILTER.changeDropDownList();
-
+			
 			FILTER.showStars();
 			FILTER.updateData();
 			FILTER.showStars();
@@ -1784,4 +1793,7 @@ function Visualization( EEXCESSobj ) {
     return START;
 }
 
+
+	
+	
 
