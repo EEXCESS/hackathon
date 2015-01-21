@@ -1,278 +1,299 @@
 <html>
-	<head>
-		<link href="/libs/bootstrap/css/bootstrap.css" rel="stylesheet"></link>
-		<link href="/libs/bootstrap/css/bootstrap-theme.css" rel="stylesheet"></link>
-		<link href="/media/css/privacy.css" rel="stylesheet"></link>
-	</head>
-	<body style="background-color:rgba(0,135,70,1)">
-		<div>
-			<div class="panel panel-default" style="margin: 5px; margin-right: 30px">
-				<div class="panel-heading">
-					<h3 class="panel-title"><span class="glyphicon glyphicon-lock"></span> Privacy policy</h3>
-				</div>
-				<div class="panel-body">
-					<!-- CONTENT -->
-				
-				
-					<div class="panel panel-primary" data-eexcess-policy-field="firstname">
-						<div class="panel-heading">
-							<h3 class="panel-title">Firstname <span class="badge pull-right setting"></span></h3>
-						</div>
-						<div class="panel-body">
-							<div class="progress" style="width: 20%">
-								<div class="progress-bar progress-bar-success" style="width: 50%">
-								    <span>Off</span>
-								</div>
-								<div class="progress-bar progress-bar-danger disable" style="width: 50%">
-								    <span>On</span>
-								</div>
-							</div>
-							<ul class="nav nav-pills">
-								<li style="width: 30%">
-								 	<span class="label label-default">Available</span>
-									<span id="available"></span>
-								</li>
-								<li style="width: 30%">
-									<span class="label label-default">Disclosed</span>
-									<span id="disclosed"></span>
-								</li>
-							</ul>
-						</div>
-					</div>
-					
-					<div class="panel panel-primary" data-eexcess-policy-field="lastname">
-						<div class="panel-heading">
-							<h3 class="panel-title">Lastname <span class="badge pull-right setting"></span></h3>
-						</div>
-						<div class="panel-body">
-							<div class="progress" style="width: 20%">
-								<div class="progress-bar progress-bar-success" style="width: 50%">
-								    <span>Off</span>
-								</div>
-								<div class="progress-bar progress-bar-danger disable" style="width: 50%">
-								    <span>On</span>
-								</div>
-							</div>
-							<ul class="nav nav-pills">
-								<li style="width: 30%">
-								 	<span class="label label-default">Available</span>
-									<span id="available"></span>
-								</li>
-								<li style="width: 30%">
-									<span class="label label-default">Disclosed</span>
-									<span id="disclosed"></span>
-								</li>
-							</ul>
-						</div>
-					</div>
-				
-					<div class="panel panel-primary" data-eexcess-policy-field="gender">
-						<div class="panel-heading">
-							<h3 class="panel-title">Gender <span class="badge pull-right setting"></span></h3>
-						</div>
-						<div class="panel-body">
-							<div class="progress" style="width: 20%">
-								<div class="progress-bar progress-bar-success" style="width: 50%">
-								    <span>Off</span>
-								</div>
-								<div class="progress-bar progress-bar-danger disable" style="width: 50%">
-								    <span>On</span>
-								</div>
-							</div>
-							<ul class="nav nav-pills">
-								<li style="width: 30%">
-								 	<span class="label label-default">Available</span>
-									<span id="available"></span>
-								</li>
-								<li style="width: 30%">
-									<span class="label label-default">Disclosed</span>
-									<span id="disclosed"></span>
-								</li>
-							</ul>
-						</div>
-					</div>
+<head>
+<link href="/libs/bootstrap/css/bootstrap.css" rel="stylesheet"></link>
+<link href="/libs/bootstrap/css/bootstrap-theme.css" rel="stylesheet"></link>
+<link href="/libs/bootstrap-datepicker/css/datepicker.css" rel="stylesheet"></link>
+<link href="/libs/tagit/jquery.tagit.css" rel="stylesheet" />
+<link href="/libs/jquery-ui/jquery-ui.css" rel="stylesheet" />
+<link href="/media/css/privacy.css" rel="stylesheet"></link>
+</head>
+	<body>
+		<div class="panel panel-primary">
+			<div class="panel-heading" style="background-color: white;">
+				<h3 class="panel-title">
+					<span class="glyphicon glyphicon-lock"></span> Privacy Policy
+				</h3>
+			</div>
+			<div class="panel-body" style="margin: 5px; margin-right: 15px">
 
-					<div class="panel panel-primary" data-eexcess-policy-field="uuid">
-						<div class="panel-heading">
-							<h3 class="panel-title">User Identifier <span class="badge pull-right setting"></span></h3>
-						</div>
-						<div class="panel-body">
-							<div class="progress" style="width: 20%">
-								<div class="progress-bar progress-bar-success" style="width: 50%">
-								    <span>Off</span>
-								</div>
-								<div class="progress-bar progress-bar-danger disable" style="width: 50%">
-								    <span>On</span>
-								</div>
+				<div class="panel panel-primary" data-eexcess-policy-field="firstname">
+					<div class="panel-heading">
+						<h3 class="panel-title">Firstname <span class="badge pull-right setting"></span></h3>
+					</div>
+					<div class="panel-body">
+						<div class="progress" style="width: 10%">
+							<div class="progress-bar progress-bar-success" style="width: 50%">
+								<span>Off</span>
 							</div>
-							<ul class="nav nav-pills">
-								<li style="width: 30%">
-								 	<span class="label label-default">Available</span>
-									<span id="available"></span>
-								</li>
-								<li style="width: 30%">
-									<span class="label label-default">Disclosed</span>
-									<span id="disclosed"></span>
-								</li>
-							</ul>
+							<div class="progress-bar progress-bar-danger disable" style="width: 50%">
+								<span>On</span>
+							</div>
+						</div>
+						<ul class="nav nav-pills">
+							<li style="width: 30%">
+								<span class="label label-default">Available</span>
+								<span id="available"></span>
+							</li>
+							<li style="width: 30%">
+								<span class="label label-default">Disclosed</span>
+								<span id="disclosed"></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="panel panel-primary" data-eexcess-policy-field="lastname">
+					<div class="panel-heading">
+						<h3 class="panel-title">Lastname <span class="badge pull-right setting"></span></h3>
+					</div>
+					<div class="panel-body">
+						<div class="progress" style="width: 10%">
+							<div class="progress-bar progress-bar-success" style="width: 50%">
+								<span>Off</span>
+							</div>
+							<div class="progress-bar progress-bar-danger disable" style="width: 50%">
+								<span>On</span>
+							</div>
+						</div>
+						<ul class="nav nav-pills">
+							<li style="width: 30%">
+								<span class="label label-default">Available</span>
+								<span id="available"></span>
+							</li>
+							<li style="width: 30%">
+								<span class="label label-default">Disclosed</span>
+								<span id="disclosed"></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="panel panel-primary" data-eexcess-policy-field="gender">
+					<div class="panel-heading">
+						<h3 class="panel-title">Gender <span class="badge pull-right setting"></span></h3>
+					</div>
+					<div class="panel-body">
+						<div class="progress" style="width: 10%">
+							<div class="progress-bar progress-bar-success" style="width: 50%">
+								<span>Off</span>
+							</div>
+							<div class="progress-bar progress-bar-danger disable" style="width: 50%">
+								<span>On</span>
+							</div>
+						</div>
+						<ul class="nav nav-pills">
+							<li style="width: 30%">
+								<span class="label label-default">Available</span>
+								<span id="available"></span>
+							</li>
+							<li style="width: 30%">
+								<span class="label label-default">Disclosed</span>
+								<span id="disclosed"></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="panel panel-primary" data-eexcess-policy-field="uuid">
+					<div class="panel-heading">
+						<h3 class="panel-title">User Identifier <span class="badge pull-right setting"></span></h3>
+					</div>
+					<div class="panel-body">
+						<div class="progress" style="width: 10%">
+							<div class="progress-bar progress-bar-success" style="width: 50%">
+								<span>Off</span>
+							</div>
+							<div class="progress-bar progress-bar-danger disable" style="width: 50%">
+								<span>On</span>
+							</div>
+						</div>
+						<ul class="nav nav-pills">
+							<li style="width: 30%">
+								<span class="label label-default">Available</span>
+								<span id="available"></span>
+							</li>
+							<li style="width: 30%">
+								<span class="label label-default">Disclosed</span>
+								<span id="disclosed"></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="panel panel-primary" data-eexcess-policy-field="address">
+					<div class="panel-heading">
+						<h3 class="panel-title">Address <span class="badge pull-right setting"></span></h3>
+					</div>
+					<div class="panel-body">
+						<div class="progress">
+							<div class="progress-bar progress-bar-success" style="width: 20%">
+								<span>Nothing</span>
+							</div>
+							<div class="progress-bar progress-bar-warning" style="width: 20%">
+								<span>Country</span>
+							</div>
+							<div class="progress-bar progress-bar-warning" style="width: 20%">
+								<span>ZIP Code</span>
+							</div>
+							<div class="progress-bar progress-bar-warning" style="width: 20%">
+								<span>City</span>
+							</div>
+							<div class="progress-bar progress-bar-danger" style="width: 20%">
+								<span>Exact</span>
+							</div>
+						</div>
+						<ul class="nav nav-pills">
+							<li style="width: 30%">
+								<span class="label label-default">Available</span>
+								<br/>
+								<span id="available"></span>
+							</li>
+							<li style="width: 30%">
+								<span class="label label-default">Disclosed</span>
+								<br/>
+								<span id="disclosed"></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="panel panel-primary" data-eexcess-policy-field="birthdate">
+					<div class="panel-heading">
+						<h3 class="panel-title">Birth Date <span class="badge pull-right setting"></span></h3>
+					</div>
+					<div class="panel-body">
+						<div class="progress">
+							<div class="progress-bar progress-bar-success" style="width: 20%">
+								<span>Nothing</span>
+							</div>
+							<div class="progress-bar progress-bar-warning" style="width: 20%">
+								<span>Range</span>
+							</div>
+							<div class="progress-bar progress-bar-warning" style="width: 20%">
+								<span>Year</span>
+							</div>
+							<div class="progress-bar progress-bar-warning" style="width: 20%">
+								<span>Month</span>
+							</div>
+							<div class="progress-bar progress-bar-danger" style="width: 20%">
+								<span>Exact</span>
+							</div>
+						</div>
+						<ul class="nav nav-pills">
+							<li style="width: 30%">
+								<span class="label label-default">Available</span>
+								<span id="available"></span>
+							</li>
+							<li style="width: 30%">
+								<span class="label label-default">Disclosed</span>
+								<span id="disclosed"></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="panel panel-primary" data-eexcess-policy-field="topics">
+					<div class="panel-heading">
+						<h3 class="panel-title">Topics <span class="badge pull-right setting"></span></h3>
+					</div>
+					<div class="panel-body">
+						<div class="progress" style="width: 10%">
+							<div class="progress-bar progress-bar-success" style="width: 50%">
+								<span>Off</span>
+							</div>
+							<div class="progress-bar progress-bar-danger disable" style="width: 50%">
+								<span>On</span>
+							</div>
+						</div>
+						<ul class="nav nav-pills">
+							<li style="width: 30%">
+								<span class="label label-default">Available</span>
+								<span id="available"></span>
+							</li>
+							<li style="width: 30%">
+								<span class="label label-default">Disclosed</span>
+								<span id="disclosed"></span>
+							</li>
+						</ul>
+					</div>
+					<ul class="list-group" id="topicInput"></ul>
+				</div>
+
+<!--				<div class="panel panel-primary" data-eexcess-policy-field="history">
+					<div class="panel-heading">
+						<h3 class="panel-title">Browsing history<span class="badge pull-right setting"></span></h3>
+					</div>
+					<div class="panel-body">
+						<div class="progress">
+							<div class="progress-bar progress-bar-success" style="width: 14.29%">
+								<span>Nothing</span>
+							</div>
+							<div class="progress-bar progress-bar-warning" style="width: 14.29%">
+								<span>Hour</span>
+							</div>
+							<div class="progress-bar progress-bar-warning" style="width: 14.28%">
+								<span>Today</span>
+							</div>
+							<div class="progress-bar progress-bar-warning" style="width: 14.28%">
+								<span>Week</span>
+							</div>
+							<div class="progress-bar progress-bar-warning" style="width: 14.28%">
+								<span>Month</span>
+							</div>
+							<div class="progress-bar progress-bar-warning" style="width: 14.29%">
+								<span>Year</span>
+							</div>
+							<div class="progress-bar progress-bar-danger" style="width: 14.29%">
+								<span>All</span>
+							 start addition
+							</div>
 						</div>
 					</div>
-		
-					<div class="panel panel-primary" data-eexcess-policy-field="address">
-						<div class="panel-heading">
-							<h3 class="panel-title">Address <span class="badge pull-right setting"></span></h3>
-						</div>
-						<div class="panel-body">
-							<div class="progress">
-								<div class="progress-bar progress-bar-success" style="width: 20%">
-								    <span>Nothing</span>
-								</div>
-								<div class="progress-bar progress-bar-warning" style="width: 20%">
-								    <span>Country</span>
-								</div>
-								<div class="progress-bar progress-bar-warning" style="width: 20%">
-								    <span>Zipcode</span>
-								</div>
-								<div class="progress-bar progress-bar-warning" style="width: 20%">
-								    <span>City</span>
-								</div>
-								<div class="progress-bar progress-bar-danger" style="width: 20%">
-								    <span>Exact</span>
-								</div>
+				</div>-->
+				<!-- end addition -->
+
+				<div class="panel panel-primary" data-eexcess-policy-field="searchContextPage">
+					<div class="panel-heading">
+						<h3 class="panel-title">Search Context - transmit current URL <span class="badge pull-right setting"></span></h3>
+					</div>
+					<div class="panel-body">
+						<div class="progress" style="width: 20%">
+							<div class="progress-bar progress-bar-success" style="width: 50%">
+								<span>Off</span>
 							</div>
-							<ul class="nav nav-pills">
-								<li style="width: 30%">
-								 	<span class="label label-default">Available</span>
-									<span id="available"></span>
-								</li>
-								<li style="width: 30%">
-									<span class="label label-default">Disclosed</span>
-									<span id="disclosed"></span>
-								</li>
-							</ul>
+							<div class="progress-bar progress-bar-danger disable" style="width: 50%">
+								<span>On</span>
+							</div>
 						</div>
 					</div>
-					
-					<div class="panel panel-primary" data-eexcess-policy-field="birthdate">
-						<div class="panel-heading">
-							<h3 class="panel-title">Birthdate <span class="badge pull-right setting"></span></h3>
-						</div>
-						<div class="panel-body">
-							<div class="progress">
-								<div class="progress-bar progress-bar-success" style="width: 20%">
-								    <span>Nothing</span>
-								</div>
-								<div class="progress-bar progress-bar-warning" style="width: 20%">
-								    <span>Range</span>
-								</div>
-								<div class="progress-bar progress-bar-warning" style="width: 20%">
-								    <span>Year</span>
-								</div>
-								<div class="progress-bar progress-bar-warning" style="width: 20%">
-								    <span>Month</span>
-								</div>
-								<div class="progress-bar progress-bar-danger" style="width: 20%">
-								    <span>Exact</span>
-								</div>
+				</div>
+
+				<div class="panel panel-primary" data-eexcess-policy-field="currentLocation">
+					<div class="panel-heading">
+						<h3 class="panel-title">Current Location<span class="badge pull-right setting"></span></h3>
+					</div>
+					<div class="panel-body">
+						<div class="progress" style="width: 20%">
+							<div class="progress-bar progress-bar-success" style="width: 50%">
+								<span>Off</span>
 							</div>
-							<ul class="nav nav-pills">
-								<li style="width: 30%">
-								 	<span class="label label-default">Available</span>
-									<span id="available"></span>
-								</li>
-								<li style="width: 30%">
-									<span class="label label-default">Disclosed</span>
-									<span id="disclosed"></span>
-								</li>
-							</ul>
+							<div class="progress-bar progress-bar-danger disable" style="width: 50%">
+								<span>On</span>
+							</div>
 						</div>
 					</div>
+				</div>
 				
-					<div class="panel panel-primary" data-eexcess-policy-field="topics">
-						<div class="panel-heading">
-							<h3 class="panel-title">Topics <span class="badge pull-right setting"></span></h3>
-						</div>
-						<div class="panel-body">
-							<div class="progress" style="width: 20%">
-								<div class="progress-bar progress-bar-success" style="width: 50%">
-								    <span>Off</span>
-								</div>
-								<div class="progress-bar progress-bar-danger disable" style="width: 50%">
-								    <span>On</span>
-								</div>
-							</div>
-							<ul class="nav nav-pills">
-								<li style="width: 30%">
-								 	<span class="label label-default">Available</span>
-									<span id="available"></span>
-								</li>
-								<li style="width: 30%">
-									<span class="label label-default">Disclosed</span>
-									<span id="disclosed"></span>
-								</li>
-							</ul>
-						</div>
-						<ul class="list-group" id="topicInput"></ul>
-					</div>
-				
-				
-					<div class="panel panel-primary" data-eexcess-policy-field="history">
-						<div class="panel-heading">
-							<h3 class="panel-title">Browsing history (number of pages) <span class="badge pull-right setting"></span></h3>
-						</div>
-						<div class="panel-body">
-							<div class="progress">
-								<div class="progress-bar progress-bar-success" style="width: 14.29%">
-								    <span>Nothing</span>
-								</div>
-								<div class="progress-bar progress-bar-warning" style="width: 14.29%">
-								    <span>Hour</span>
-								</div>
-								<div class="progress-bar progress-bar-warning" style="width: 14.28%">
-								    <span>Today</span>
-								</div>
-								<div class="progress-bar progress-bar-warning" style="width: 14.28%">
-								    <span>Week</span>
-								</div>
-								<div class="progress-bar progress-bar-warning" style="width: 14.28%">
-								    <span>Month</span>
-								</div>
-								<div class="progress-bar progress-bar-warning" style="width: 14.29%">
-								    <span>Year</span>
-								</div>
-								<div class="progress-bar progress-bar-danger" style="width: 14.29%">
-								    <span>All</span>
-								</div>
-							</div>
-							<ul class="nav nav-pills">
-								<li style="width: 30%">
-								 	<span class="label label-default">Available</span>
-									<span id="available"></span>
-								</li>
-								<li style="width: 30%">
-									<span class="label label-default">Disclosed</span>
-									<span id="disclosed"></span>
-								</li>
-							</ul>
-						</div>
-					</div>
-				
-				
-					
-					<!-- CONTENT-->
-	    		</div>
-	    	</div>
+			</div>
 		</div>
-	    <div style="position: absolute; bottom: 6px; right:0;">
-    		<span class="glyphicon glyphicon-play" style="font-size: 30px"></span>
-    	</div>
+
 		<script src="/libs/flat_ui/js/jquery-1.8.3.min.js"></script>
 		<script src="/libs/flat_ui/js/bootstrap.min.js"></script>
 		<script src="/libs/flat_ui/js/bootstrap-switch.js"></script>
 		<script src="/libs/jquery-ui-1.10.3.custom.min.js"></script>
-                <script src="../common_js/browser_specific.js"></script>
-                <script src="../common_js/storage.js" type="text/javascript"></script>
+		<script src="../common_js/browser_specific.js"></script>
+		<script src="../common_js/storage.js" type="text/javascript"></script>
 		<script src="js/policy.js"></script>
 	</body>
 </html>
-							
+

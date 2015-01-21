@@ -296,7 +296,7 @@ var BuildControls = function(){
 
         EEXCESS.messaging.callBG({
 			method: {parent: 'model', func: 'query'}, 
-			data: {reason: {reason: 'manual', text: textinput}, terms: query}});
+			data: {reason: {reason: 'manual', value: textinput}, terms: query}});
       	/*EEXCESS.messaging.callBG({
 			method: {parent: 'model', func: 'query'}, 
 			data:query //data: [{weight:1,text:dataParameter.text}]

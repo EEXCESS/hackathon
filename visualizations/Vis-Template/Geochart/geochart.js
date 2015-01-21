@@ -18,6 +18,7 @@ function Geochart(root, visTemplate) {
     };
 
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/* Event handlers  */
@@ -46,7 +47,8 @@ function Geochart(root, visTemplate) {
         },
         spatializeData: function(data){
             for(var i=0; i<data.length; i++){
-                data[i].coordinate = GEO.Internal.getRandomLatLon(i);
+                if (!data[i].coordinate)
+                    data[i].coordinate = GEO.Internal.getRandomLatLon(i);
             }
         },
         getDataIndex: function(id){
@@ -55,7 +57,25 @@ function Geochart(root, visTemplate) {
                     return i;
             }
             return null;
-        }
+        },
+		getDataIndexArrayPerSelection: function(layer){
+			var indexArray = [];
+			var rectBounds = layer.getBounds();
+			var inputData = GEO.Input.data;
+		    for(var i=0; i < inputData.length; i++){
+				if(
+                    inputData[i].coordinate && inputData[i].coordinate.length == 2 &&
+					rectBounds.getWest() <= inputData[i].coordinate[1] &&
+					inputData[i].coordinate[1] <= rectBounds.getEast() &&
+					rectBounds.getSouth() <= inputData[i].coordinate[0] &&
+					inputData[i].coordinate[0] <= rectBounds.getNorth()
+					)
+				{
+					indexArray.push(i);
+				}
+            }
+            return indexArray;
+		}
     };
 
 
@@ -106,7 +126,67 @@ function Geochart(root, visTemplate) {
             attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(GEO.map);
         GEO.Render.drawMarkers();
+
+        // Leaflet Draw
+        var drawnItems = new L.FeatureGroup();
+        GEO.map.addLayer(drawnItems);
+
+		L.drawLocal.draw.toolbar.buttons.rectangle = "selection tool";
+
+        var drawControl = new L.Control.Draw({
+            edit: {
+                featureGroup: drawnItems,
+				edit:false,
+				remove:false
+            },
+			draw: {
+				rectangle:{
+			        shapeOptions: {
+						stroke: true,
+						color: '#1E28EC',
+						weight: 2,
+						opacity: 0.7,
+						fill: true,
+						fillColor: null, //same as color by default
+						fillOpacity: 0.1
+					}
+				},
+				polygon: false,
+				marker: false,
+				polyline: false,
+				circle:false
+			}
+        });
+
+        GEO.map.addControl(drawControl);
+
+		GEO.map.on('draw:created', function (e) {
+			var type = e.layerType,
+				layer = e.layer;
+
+			if (type === 'rectangle') {
+				// Do marker specific actions
+				GEO.Render.deleteCurrentSelect();
+				GEO.map.addLayer(layer);
+				currentOneLayer = layer;
+				//make selection list
+				Vis.selectItems(
+					GEO.Internal.getDataIndexArrayPerSelection(layer)
+				);
+			}
+
+			// Do whatever else you need to. (save to db, add to map etc)
+			//GEO.map.addLayer(layer);
+		});
 	};
+	GEO.Render.deleteCurrentSelect = function(){
+		if(currentOneLayer != null && GEO.map.hasLayer(currentOneLayer)){
+			GEO.map.removeLayer(currentOneLayer);
+			currentOneLayer = null;
+		}
+	};
+
+    var currentOneLayer = null;
 
     GEO.Render.centerMap = function(){
         GEO.map.setView([51.505, -0.09], 2);
@@ -151,6 +231,9 @@ function Geochart(root, visTemplate) {
         for(var i=0; i<GEO.Input.data.length; i++){
             //var marker = L.marker(GEO.Input.data[i].coordinate);
             //var marker = L.marker([51.505, -0.09]);
+            if (!GEO.Input.data[i].coordinate || GEO.Input.data[i].coordinate.length < 2)
+                continue;
+
             var currentDataObject = GEO.Input.data[i];
             currentDataObject.color = colorScale(currentDataObject.facets[colorChannel]);
             var marker = new GEO.Render.Marker(GEO.Input.data[i].coordinate, { icon: GEO.Render.icon(currentDataObject.color) });
@@ -158,6 +241,7 @@ function Geochart(root, visTemplate) {
             marker.bindPopup(GEO.Input.data[i].title);
             marker.on('click', function(e){
                 if (e && e.target && e.target.options && e.target.options.dataObject){
+					GEO.Render.deleteCurrentSelect();
                     Vis.selectItems([GEO.Internal.getDataIndex(e.target.options.dataObject.id)]);
                 }
             }).on('popupclose', function(){
@@ -245,6 +329,8 @@ function Geochart(root, visTemplate) {
         GEO.map.removeLayer(GEO.markersGroup);
         GEO.Render.drawMarkers();
         GEO.Render.centerMap();
+		GEO.Render.deleteCurrentSelect();
+
 	};
 
 
@@ -263,6 +349,7 @@ function Geochart(root, visTemplate) {
             });
             //GEO.Input.data[i].geoMarker.openPopup();
         });
+		GEO.Render.deleteCurrentSelect();
     };
 
 

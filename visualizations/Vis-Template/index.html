@@ -16,9 +16,11 @@ and open the template in the editor.
         <link rel="stylesheet" type="text/css" href="../../libs/leaflet/leaflet.css" />
         <link rel="stylesheet" type="text/css" href="../../libs/leaflet/markercluster/MarkerCluster.Default.css" />
         <link rel="stylesheet" type="text/css" href="../../libs/leaflet/markercluster/MarkerCluster.css" />
+        <link rel="stylesheet" type="text/css" href="../../libs/leaflet/leaflet.draw/leaflet.draw.css" />
         <script type="text/javascript" src="../../libs/d3.v3.js"></script>
         <script type="text/javascript" src="../../libs/leaflet/leaflet-src.js"></script>
         <script type="text/javascript" src="../../libs/leaflet/markercluster/leaflet.markercluster-src.js"></script>
+        <script type="text/javascript" src="../../libs/leaflet/leaflet.draw/leaflet.draw-src.js"></script>
 
         <script type="text/javascript" src="../../common_js/browser_specific.js" charset="utf-8"></script>
         <script type="text/javascript" src="../bookmarkingAPI.js" charset="utf-8"></script>
@@ -29,6 +31,7 @@ and open the template in the editor.
         <script type="text/javascript" src="js/accordion-and-dropdown.js"></script>
         <script type="text/javascript" src="js/colorpicker.js"></script>
 		<script type="text/javascript" src="js/dummy.js"></script>
+		<script type="text/javascript" src="js/viseval-demodata.js"></script>
 
 		<script type="text/javascript" src="Timeline/timeline.js"></script>
 		<script type="text/javascript" src="Timeline/js/geometry.js"></script>
@@ -55,17 +58,31 @@ and open the template in the editor.
 		
 		<header id="eexcess_header">
 			<div id="eexcess_inner_header">
-		  		<div id="eexcess_header_search">
+		  		<div id="eexcess_header_search" style="white-space: nowrap;">
 	    			<input id="eexcess_search_field" class="eexcess_query_field" type="text" name="query" value="" />
                     <input id="eexcess_search_button" class=".eexcess_submit_btn" type="button" value="Search" />
+                    <!--<button id="demo-button-university">University Campus</button>
+                    <button id="demo-button-historicalbuildings">Historic Buildings</button>-->
 	  			</div>
 	  			<div id="eexcess_header_text">
 	  				<span></span>
+                    <!--<button id="output-button">Out</button>-->
 	  			</div>
 	  			<div id="eexcess_header_filter">
-                    <a target="_blank" href="help-visdashboard.html" >
+					<a target="_blank" href="help-visdashboard.html" >
                         <img src="../../media/icons/help.png" />
                     </a>
+					<a id="eexcess_export_bookmark" href="#" title="export bookmark"><div>↓</div></a>
+					<input id="eexcess_import_bookmark_style" type="button" value="↑" title="import bookmark">
+					</input>
+					<input id="eexcess_import_bookmark" type="file">
+					</input>
+					<input id="eexcess_deleteBookmark_button" type="button" value="x" title="delete selected bookmarks">
+					</input>
+					<span></span>
+					<div id="bookmarklist-label">Showing:</div>
+					<input id="eexcess_addBookmarkItems_button" type="button" value="bookmark selected" />
+                    <img class="eexcess_fav_icon" id="bookmark_selected_star" title="bookmark selected" src="../../media/icons/favicon_on.png">
 	  			</div>
 			</div>
       	</header>
@@ -88,7 +105,7 @@ and open the template in the editor.
 				<div id="eexcess_vis_panel">
 				
 					<div id="eexcess_vis_controls_wrapper">
-				        <input id="eexcess_btnreset" class=".eexcess_submit_btn" type="button" value="Reset" /> <!--class="eexcess_vis_controls_button"-->
+				        <input id="eexcess_btnreset" class=".eexcess_submit_btn" type="button" value="Reset Visualisation" /> <!--class="eexcess_vis_controls_button"-->
 					</div>
 								
 					<div id="eexcess_canvas"></div>

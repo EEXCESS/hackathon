@@ -26,7 +26,14 @@ EEXCESS.config = (function() {
     if(typeof EEXCESS.storage.local('privacy.policy.uuid') === 'undefined') {
         EEXCESS.storage.local('privacy.policy.uuid', 1);
     }
+    if(typeof EEXCESS.storage.local('privacy.policy.searchContextPage') === 'undefined') {
+        EEXCESS.storage.local('privacy.policy.searchContextPage', 1);
+    }
+    if(typeof EEXCESS.storage.local('privacy.policy.currentLocation') === 'undefined') {
+        EEXCESS.storage.local('privacy.policy.currentLocation', 0);
+    }
 
+    var _FR_BASE_URI = 'http://eexcess-dev.joanneum.at/eexcess-federated-recommender-web-service-1.0-SNAPSHOT/recommender/';
     var _PP_BASE_URI = 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/';
     var _LOG_RATING_URI = _PP_BASE_URI + 'log/rating';
     var _LOG_RVIEW_URI = _PP_BASE_URI + 'log/rview';
@@ -35,6 +42,15 @@ EEXCESS.config = (function() {
     var _LOG_FACETSCAPE_URI = _PP_BASE_URI + 'log/facetScape';
     var _DISAMBIGUATE_URI = _PP_BASE_URI + 'disambiguate';
     var _LOG_QUERY_ACTIVATED_URI = _PP_BASE_URI + 'log/query_activated';
+    var _NUM_RESULTS = 40;
+    var _NUM_RESULTS_FACET_SCAPE = 100;
+    var _TIMEOUT = function(param) {
+        if(typeof param !== 'undefined') {
+            // TODO add specific timeouts
+            return 10000;
+        }
+        return 10000;
+    };
 
     return {
         PP_BASE_URI: _PP_BASE_URI,
@@ -44,6 +60,10 @@ EEXCESS.config = (function() {
         LOG_SHOW_HIDE_URI: _LOG_SHOW_HIDE_URI,
         DISAMBIGUATE_URI:_DISAMBIGUATE_URI,
         LOG_FACETSCAPE_URI:_LOG_FACETSCAPE_URI,
-        LOG_QUERY_ACTIVATED_URI: _LOG_QUERY_ACTIVATED_URI
+        LOG_QUERY_ACTIVATED_URI: _LOG_QUERY_ACTIVATED_URI,
+        FR_BASE_URI: _FR_BASE_URI,
+        NUM_RESULTS: _NUM_RESULTS,
+        NUM_RESULTS_FACET_SCAPE:_NUM_RESULTS_FACET_SCAPE,
+        TIMEOUT: _TIMEOUT
     };
 })();

@@ -21,6 +21,7 @@ var onDataReceived = function(dataReceived, status) {
     globals["query"] = dataReceived.query;
     globals["charts"] = getCharts(globals.mappingcombination);
 
+    console.log('Globals:');
     console.log(globals);
     visTemplate.refresh(globals);
 };
@@ -191,4 +192,29 @@ function getMappings(){
 
     return mappings;
 
+}
+
+
+
+function getDemoResultsUniversity(){
+
+    var demoDataReceived = {
+        results:{
+            results: demoDataUniversity
+        },
+        query:"University Campus"
+    };
+    return demoDataReceived;
+}
+
+
+function getDemoResultsHistoricBuildings(){
+
+    var demoDataReceived = {
+        results:{
+            results: demoDataHistoricalBuildings
+        },
+        query:"Historical Buildings"
+    };
+    return demoDataReceived;
 }

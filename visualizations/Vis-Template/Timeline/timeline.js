@@ -16,7 +16,7 @@ function Timeline( root, visTemplate ){
 	var x, x2, y, y2, color;										// scales
 	var xAxis, yAxis, xAxis2, yAxis2;								// axis functions
 	var chart, focus, context;										// main graphic components
-	var circles, flagLines;											// circles selector and flag
+	var circles, flagLines,textInCircles;											// circles selector and flag
 	var zoom, brush;												// behaviors
 	var leftHandle, rightHandle;									// brush handles
 	var leftHandleImg  = "../../media/left-handle.png";
@@ -65,8 +65,24 @@ function Timeline( root, visTemplate ){
 		
 		x.domain(brush.empty() ? x2.domain() : brushExtent);
 		TIMEVIS.Render.redraw();
+
 	};
 	
+	//experimental function
+	TIMEVIS.Evt.filterListPerTime = function(minDateInYears,maxDateInYears){
+		var indicesToHighlight = [];
+		var currentYear = 0;
+		data.forEach(function(d, i){
+			if(d.hasOwnProperty("year")){
+				currentYear = d.year.getFullYear();
+				if(minDateInYears <= currentYear && currentYear <= maxDateInYears){
+					indicesToHighlight.push(i);
+				}
+			}
+		});
+		Vis.selectItems( indicesToHighlight );
+
+	}
 	
 	TIMEVIS.Evt.brushended = function(){
 	
@@ -78,6 +94,8 @@ function Timeline( root, visTemplate ){
 		
 		zoom.scale(scale);
 		zoom.translate([tx, ty]);	
+
+		TIMEVIS.Evt.filterListPerTime(x.invert(0).getFullYear(),x.invert(width).getFullYear());
 	};
 	
 	
@@ -104,6 +122,9 @@ function Timeline( root, visTemplate ){
 		rightHandle.attr("x", x2(brushExtent[1]) - 8);
 	
 		TIMEVIS.Render.redraw();
+
+		TIMEVIS.Evt.filterListPerTime(brushExtent[0].getFullYear(),brushExtent[1].getFullYear());
+
 	};
 	
 	
@@ -290,6 +311,8 @@ function Timeline( root, visTemplate ){
 		
 		if(legendDatum.selected === true){
 			$(this).find('text').css('font-weight', 'bold');
+		}else{
+			Vis.selectItems(Vis.getAllSelectListItems());
 		}
 		
 		d3.selectAll('.legend').select("div")
@@ -569,6 +592,40 @@ function Timeline( root, visTemplate ){
 		/**
 		 *	Main nodes 
 		 * */
+		//steff experimental code begin
+		//console.log(data);
+		//console.log(mapping[1].facet);
+
+		//get information(number) about nodes with same x- and y-axis;
+		var keyForData = mapping[1].facet;
+
+		var dataDictWithTime ={}; //double dict
+
+		var workInXAxis = function(dataVal,dateString,key){
+			if(dataVal[key].hasOwnProperty(dateString)){ //work in x axis
+				dataVal[key][dateString] += 1;
+			}
+			else{
+				dataVal[key][dateString] = 1;
+			}
+		}
+
+		var yearInString;
+		var currentKeyValue;
+		data.forEach(function(currentData){
+			yearInString = currentData.year.getFullYear().toString();
+			currentKeyValue = currentData[keyForData];
+
+			if(dataDictWithTime.hasOwnProperty(currentKeyValue)){//work in y axis
+				workInXAxis(dataDictWithTime,yearInString,currentKeyValue);
+			}
+			else{
+				dataDictWithTime[currentKeyValue] ={};
+				workInXAxis(dataDictWithTime,yearInString,currentKeyValue);
+			}
+		});
+		//steff experimental code end
+
 		currentExtent = Math.abs(new Date(x.invert(width)) - new Date(x.invert(0)));
 		
 		var nodesData = chart.selectAll(".node").data(data);
@@ -587,6 +644,25 @@ function Timeline( root, visTemplate ){
 			.transition()	
 				.style("opacity", 1)
 				.duration(1500);
+
+		//steff experimental code begin
+		nodes.append("text")
+			.attr("class", "number")
+			.attr("x", function(d) { return x(d[xAxisChannel])-5; })
+			.attr("y", function(d) { return y(d[yAxisChannel])+3; })
+			//.style("opacity", 0.3)
+			.text(function(d){
+				var numberWithSameTime = dataDictWithTime[d[keyForData]][d.year.getFullYear().toString()];
+				if(numberWithSameTime>1){
+					return numberWithSameTime;
+				}
+				//count same node with same y-axis and time
+			});
+		textInCircles = chart.selectAll(".number");
+
+		textInCircles
+			.on( "click", TIMEVIS.Evt.nodeClicked );
+		//steff experimental code end
 		
 		circles = chart.selectAll(".dot");
 		
@@ -788,7 +864,12 @@ function Timeline( root, visTemplate ){
 				return radius;
 			})
 			.attr("fill", function(d) { return color(d[colorChannel]); });
-					
+
+		// redraw text
+		textInCircles
+			.attr("x", function(d) { return x(d[xAxisChannel])-5; })
+			.attr("y", function(d) { return y(d[yAxisChannel])+3; });
+
 		// if lines are already drawn, redraw them
 		if(flagLines){
   		
@@ -870,6 +951,9 @@ function Timeline( root, visTemplate ){
 			.style("stroke", "darkgrey")
 			.style("opacity", "1");
 	
+		textInCircles
+			.style("opacity", "1");
+
 		data.forEach(function(d){ d.isHighlighted = false; });
 			
 		$('.legend').find('text').css('font-weight', 'normal');
@@ -913,6 +997,14 @@ function Timeline( root, visTemplate ){
 						return 1;
 					return 0.1;
 				});
+
+			textInCircles
+				.style("opacity", function(d, i){
+					if(nodesToHighlight.indexOf(i) != -1)
+						return 1;
+					return 0.1;
+				});
+
 		}
         else{
 
@@ -920,6 +1012,9 @@ function Timeline( root, visTemplate ){
                 .attr("r", radius)
                 .style("stroke", "darkgrey")
                 .style("opacity", 1);
+
+			textInCircles
+				.style("opacity", 1);
         }
 
 		if(sender !== 'legend')

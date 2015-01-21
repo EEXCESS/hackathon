@@ -20,12 +20,29 @@ var EEXCESS = EEXCESS || {};
  * @param {Object} options
  */
 EEXCESS.searchResultList = function(divContainer, options) {
+
+    /**
+     * Event handler on the pagination buttons
+     *
+     */
+
+    $(document).on('click', '.page', function() {
+        $('.page.active').removeClass('active');
+        $(this).addClass('active');
+        var page = parseInt($(this).html()) - 1;
+        var min = page * settings.itemsShown;
+        var max = min + settings.itemsShown;
+
+        $("#recommendationList li").hide().slice(min, max).show();
+    })
+
     var settings = $.extend({
         pathToMedia: '../media/',
         pathToLibs: '../libs/',
+        itemsShown: null,
         previewHandler: function(url) {
             window.open(url, '_blank');
-            EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:url});
+            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'resultOpened'}, data: url});
         },
         ratingHandler: function(uri, score, pos) {
             EEXCESS.messaging.callBG({
@@ -39,11 +56,12 @@ EEXCESS.searchResultList = function(divContainer, options) {
         }
     }, options);
     var _loader = $('<div class="eexcess_loading" style="display:none"><img src="' + settings.pathToMedia + 'loading.gif" /></div>');
-    var _list = $('<ul class="block_list" data-total="0"></ul>').append($('<li>no results</li>'));
+    var _list = $('<ul id="recommendationList" class="block_list" data-total="0"></ul>').append($('<li>no results</li>'));
     var _dialog = $('<div style="display:none"><div>').append('<p></p>');
-    var _error = $('<p style="display:none">sorry, something went wrong...<p>');
+    var _error = $('<p style="display:none">sorry, something went wrong...</p>');
+
     var _link = function(url, img, title) {
-        var link = $('<a href="'+url+'">' + title + '</a>');
+        var link = $('<a href="' + url + '">' + title + '</a>');
         link.click(function(evt) {
             evt.preventDefault();
             settings.previewHandler(url);
@@ -57,17 +75,16 @@ EEXCESS.searchResultList = function(divContainer, options) {
         var yOffset = 30;
         link.hover(
                 function(e) {
-                    $('body').append('<p id="eexcess_thumb"><img src="' + img
-                            + '" alt="img preview" /></p>');
+                    $('#eexcess_thumb_img').attr('src', img);
                     $('#eexcess_thumb')
                             .css('position', 'absolute')
                             .css('top', (e.pageY - xOffset) + 'px')
                             .css('left', (e.pageX + yOffset) + 'px')
                             .css('z-index', 9999)
-                            .fadeIn('fast');
+                            .show();
                 },
                 function() {
-                    $('#eexcess_thumb').remove();
+                    $('#eexcess_thumb').hide();
                 });
         link.mousemove(function(e) {
             $('#eexcess_thumb')
@@ -94,6 +111,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
     };
 
     // init
+    $('body').append('<p id="eexcess_thumb" style="display:none;"><img id="eexcess_thumb_img" alt="img preview" /></p>');
     divContainer.append(_loader);
     divContainer.append(_dialog);
     divContainer.append(_list);
@@ -110,15 +128,14 @@ EEXCESS.searchResultList = function(divContainer, options) {
                 if (request.method.parent === 'results') {
                     if (request.method.func === 'rating') {
                         _rating($('.eexcess_raty[data-uri="' + request.data.uri + '"]'), request.data.uri, request.data.score);
+                    } else if (request.method.func === 'error') {
+                        _showError(request.data);
                     }
                 }
                 if (request.method === 'newSearchTriggered') {
                     showResults(request.data);
-                }
-                if (request.method.parent === 'results' && request.method.func === 'error') {
-                    _list.empty();
-                    _loader.hide();
-                    _error.show();
+                } else if (request.method === 'loading') {
+                    _loading();
                 }
             }
     );
@@ -126,19 +143,43 @@ EEXCESS.searchResultList = function(divContainer, options) {
     var showResults = function(data) {
         _error.hide();
         _loader.hide();
-        data = data.results;
+        data = data.results || null;
         _list.empty();
+
         if (data === null || data.totalResults === 0 || data.totalResults === '0') {
             _list.append($('<li>no results</li>'));
             return;
         }
         _list.attr('data-total', data.totalResults);
         moreResults(data.results);
+
+        var height = (window.innerHeight || document.body.clientHeight) - 250;
+        settings.itemsShown = Math.floor(height / 50);
+
+
+        var _pagination = $('<div class="pagination"></div>');
+        var pages = (Math.ceil(data.results.length / settings.itemsShown) > 10) ? 10 : Math.ceil(data.results.length / settings.itemsShown);
+        if(pages > 1) {
+            for (var i = 1; i <= pages; i++) {
+            var _btn = $('<a href="#" class="page gradient">' + i + '</a>');
+            if (i == 1) {
+                _btn.addClass('active');
+            }
+            _pagination.append(_btn);
+            }
+
+            if (divContainer.find('.pagination').length != 0) {
+                divContainer.find('.pagination').remove();
+            }
+
+            divContainer.append(_pagination)
+        }
     };
     var moreResults = function(items) {
 //            $('#eexcess_content').unbind('scroll'); TODO: check scrolling...
         var offset = _list.children('li').length;
         for (var i = 0, len = items.length; i < len; i++) {
+
             var item = items[i];
             var img = item.previewImage;
             if (typeof img === 'undefined' || img === '') {
@@ -154,6 +195,10 @@ EEXCESS.searchResultList = function(divContainer, options) {
 
             _list.append(li);
 
+            if (i >= settings.itemsShown) {
+                li.hide();
+            }
+
             // rating
             var raty = $('<div class="eexcess_raty"  data-uri="' + item.uri + '" data-pos="' + pos + '"></div');
             _rating(raty, item.uri, item.rating);
@@ -168,9 +213,10 @@ EEXCESS.searchResultList = function(divContainer, options) {
             resCt.append(_link(item.uri, img, title));
             li.append(resCt);
 
-            // partner icon
+            // partner icon and name
             if (typeof item.facets.provider !== 'undefined') {
-                containerL.append($('<img src="' + settings.pathToMedia + 'icons/' + item.facets.provider + '-favicon.ico" class="partner_icon" />'));
+                var providerName = item.facets.provider.charAt(0).toUpperCase() + item.facets.provider.slice(1);
+                containerL.append($('<img alt="provided by ' + providerName + '" title="provided by ' + providerName + '" src="' + settings.pathToMedia + 'icons/' + item.facets.provider + '-favicon.ico" class="partner_icon" />'));
             }
 
             // show link
@@ -224,15 +270,32 @@ EEXCESS.searchResultList = function(divContainer, options) {
             firstPart += "...";
         }
         return firstPart;
-    }
-//    };
+    };
+
+    var _showError = function(errorData) {
+        divContainer.find('.pagination').remove();
+        _list.empty();
+        _loader.hide();
+        if(errorData.msg === 'timeout') {
+            _error.text('Sorry, the server takes too long to respond. Please try again later');
+        } else {
+            _error.text('Sorry, something went wrong');
+        }
+        _error.show();
+        $('#eexcess_thumb').hide();
+    };
+
+    var _loading = function() {
+        $('#eexcess_thumb').hide();
+        divContainer.find('.pagination').remove();
+        _error.hide();
+        _list.empty();
+        _loader.show();
+    };
+
     return {
         showResults: showResults,
-        loading: function() {
-            _error.hide();
-            _list.empty();
-            _loader.show();
-        }
+        loading: _loading
     };
 };
 

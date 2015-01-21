@@ -46,7 +46,7 @@ EEXCESS.topKcorpus = function(corpus, k) {
     }
 
     // extract title keywords
-    var title_keywords_raw = document.title.match(/([äöüÄÖÜß\w-_]{3,})/g);
+    var title_keywords_raw = document.title.match(/([äöüÄÖÜß\w-_]{3,})/g) || [];
     var title_keywords = [];
     for (var i = 0; i < title_keywords_raw.length; i++) {
         var tmp = title_keywords_raw[i].toLowerCase();
@@ -115,7 +115,7 @@ EEXCESS.initiateQuery = function() {
             elements.push({text: node.nodeValue, parent: parent});
         }
     }
-    EEXCESS.triggerQuery(elements, {reason: 'page', context: window.location.protocol + '//' + window.location.host + window.location.pathname});
+    EEXCESS.triggerQuery(elements, {reason: 'page', value: window.location.protocol + '//' + window.location.host + window.location.pathname, url:window.location.hostname});
 }();
 
 EEXCESS.selectedText = '';
@@ -127,7 +127,7 @@ $(document).mouseup(function() {
             EEXCESS.selectedText = text;
             var elements = [];
             elements.push({text: text});
-            EEXCESS.triggerQuery(elements, {reason: 'selection', context: document.getSelection().toString()});
+            EEXCESS.triggerQuery(elements, {reason: 'selection', value: document.getSelection().toString()});
         }
     }
 });

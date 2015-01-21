@@ -17,6 +17,7 @@ EEXCESS.update = function(widget) {
 
 EEXCESS.newSearchTriggered = function(data) {
     $('#eexcess_query').val(data.query);
+    $('#search_hover').text(data.query);
 };
 
 
@@ -26,23 +27,40 @@ EEXCESS.newSearchTriggered = function(data) {
  * @param {Object} widget The current state of the widget's model in the background script
  */
 EEXCESS.init = function(widget) {
+    $('#eexcess_query').mouseenter(function() {
+        $('#search_hover').show();
+    });
+
+    $('#eexcess_query').mouseleave(function() {
+        $('#search_hover').hide();
+    });
+
+    $('#eexcess_query').focus(function() {
+        $('#search_hover').hide();
+    });
+
+    $('#eexcess_query').keypress(function() {
+        $('#search_hover').hide();
+        $('#search_hover').text($('#eexcess_query').val());
+    });
+
+
     $('#eexcess_query').val(widget.results.query);
+    $('#search_hover').text(widget.results.query);
 
     $('a.fancybox_link').click(function(evt) {
         evt.preventDefault();
         EEXCESS.messaging.callBG({method: 'fancybox', data: 'chrome-extension://' + EEXCESS.utils.extID + '/' + $(evt.target).parent('a').attr('href')});
     });
 
-    $('#eexcess_hide_btn').click(function(evt){
+    $('#eexcess_hide_btn').click(function(evt) {
         evt.preventDefault();
-        EEXCESS.messaging.callBG({method: {parent:'model',func:'toggleVisibility'}, data:-1});
+        EEXCESS.messaging.callBG({method: {parent: 'model', func: 'toggleVisibility'}, data: -1});
     });
 
 
     $('#eexcess_privacy').click(function(evt) {
-        console.log("Click sent");
         evt.preventDefault();
-        //console.log();
         EEXCESS.messaging.callBG({method: 'privacySandbox', data: 'chrome-extension://' + EEXCESS.utils.extID + '/' + $(evt.target).parent('a').attr('href')});
     });
     var form = $('#eexcess_searchForm');
@@ -57,9 +75,11 @@ EEXCESS.init = function(widget) {
                     weight: 1,
                     text: query_terms[i]
                 };
-                query.push(tmp);
+                if (query_terms[i].length > 0) {
+                    query.push(tmp);
+                }
             }
-            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason: {reason: 'manual', text: $('#eexcess_query').val()}, terms: query}});
+            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason: {reason: 'manual', value: $('#eexcess_query').val()}, terms: query}});
         }
         return false;
     });
@@ -77,8 +97,13 @@ EEXCESS.messaging.listener(function(request, sender, sendResponse) {
     if (request.method !== 'privacySandbox' && request.method !== 'visibility' && request.method !== 'fancybox' && request.method !== 'getTextualContext' && request.method.parent !== 'results') {
         if (typeof request.method.parent !== 'undefined') {
             EEXCESS[request.method.parent][request.method.func](request.data);
+        } else if (request.method === 'loading') {
+            EEXCESS.newSearchTriggered(request.data);
         } else {
             EEXCESS[request.method](request.data);
         }
+    } else if (request.method.parent === 'results' && request.method.func === 'error' && typeof request.data['query'] !== 'undefined') {
+        $('#eexcess_query').val(request.data.query);
+        $('#search_hover').text(request.data.query);
     }
 });

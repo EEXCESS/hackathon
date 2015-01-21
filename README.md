@@ -219,6 +219,7 @@ External libraries used (for copyright & licensing information please see the re
 * [fancybox](http://fancyapps.com/fancybox/)
 * [bootstrap](http://getbootstrap.com)
 * [boostrap-datepicker](http://www.eyecon.ro/bootstrap-datepicker)
+* [leaflet](http://leafletjs.com/)
 
 The research leading to these results has received funding from the European Union’s Seventh Framework Programme (FP7/2007-2013) under grant agreement nr 600601.
 
