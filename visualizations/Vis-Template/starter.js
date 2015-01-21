@@ -74,31 +74,19 @@ function requestPlugin() {
     // Set listener to receive new data when a new query is triggered
     EEXCESS.messaging.listener(
         function(request, sender, sendResponse) {
-
             console.log(request.method);
             if (request.method === 'newSearchTriggered') {
-<<<<<<< HEAD
-    			//console.log('data received from plugin');
-   				requestVisualization(request.data);
-   			}
-   		}
-=======
                 console.log('data received from plugin');
                 requestVisualization(request.data);
             }
         }
->>>>>>> origin/master
     );
 
 
     // Retrieve current recommendations data
     EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'},data: null}, function(reqResult) {
-<<<<<<< HEAD
-        //console.log("first call for results");
-=======
         console.log("first call for results");
         console.log(reqResult);
->>>>>>> origin/master
         requestVisualization(reqResult);
     });
 
@@ -217,8 +205,4 @@ function getDemoResultsHistoricBuildings(){
         query:"Historical Buildings"
     };
     return demoDataReceived;
-<<<<<<< HEAD
-}
-=======
-}
->>>>>>> origin/master
+
