@@ -20,6 +20,7 @@ var EEXCESS = EEXCESS || {};
  * @param {Object} options
  */
 EEXCESS.searchResultList = function(divContainer, options) {
+<<<<<<< HEAD
 
     /**
      * Event handler on the pagination buttons
@@ -43,6 +44,31 @@ EEXCESS.searchResultList = function(divContainer, options) {
         previewHandler: function(url) {
             window.open(url, '_blank');
             EEXCESS.messaging.callBG({method: {parent: 'model', func: 'resultOpened'}, data: url});
+=======
+
+    /**
+     * Event handler on the pagination buttons
+     * 
+     */
+
+    $(document).on('click', '.page', function() {
+        $('.page.active').removeClass('active');
+        $(this).addClass('active');
+        var page = parseInt($(this).html()) - 1;
+        var min = page * settings.itemsShown;
+        var max = min + settings.itemsShown;
+
+        $("#recommendationList li").hide().slice(min, max).show();
+    })
+
+    var settings = $.extend({
+        pathToMedia: '../media/',
+        pathToLibs: '../libs/',
+        itemsShown: null,
+        previewHandler: function(url) {
+            window.open(url, '_blank');
+            EEXCESS.messaging.callBG({method: {parent: 'model', func: 'resultOpened'}, data: url});
+>>>>>>> origin/master
         },
         ratingHandler: function(uri, score, pos) {
             EEXCESS.messaging.callBG({
@@ -56,12 +82,21 @@ EEXCESS.searchResultList = function(divContainer, options) {
         }
     }, options);
     var _loader = $('<div class="eexcess_loading" style="display:none"><img src="' + settings.pathToMedia + 'loading.gif" /></div>');
+<<<<<<< HEAD
     var _list = $('<ul id="recommendationList" class="block_list" data-total="0"></ul>').append($('<li>no results</li>'));
     var _dialog = $('<div style="display:none"><div>').append('<p></p>');
     var _error = $('<p style="display:none">sorry, something went wrong...</p>');
 
     var _link = function(url, img, title) {
         var link = $('<a href="' + url + '">' + title + '</a>');
+=======
+    var _list = $('<ul id="recommendationList" class="block_list" data-total="0"></ul>').append($('<li>no results</li>'));
+    var _dialog = $('<div style="display:none"><div>').append('<p></p>');
+    var _error = $('<p style="display:none">sorry, something went wrong...</p>');
+
+    var _link = function(url, img, title) {
+        var link = $('<a href="' + url + '">' + title + '</a>');
+>>>>>>> origin/master
         link.click(function(evt) {
             evt.preventDefault();
             settings.previewHandler(url);
@@ -75,16 +110,27 @@ EEXCESS.searchResultList = function(divContainer, options) {
         var yOffset = 30;
         link.hover(
                 function(e) {
+<<<<<<< HEAD
                     $('#eexcess_thumb_img').attr('src', img);
+=======
+                    $('#eexcess_thumb_img').attr('src', img);
+>>>>>>> origin/master
                     $('#eexcess_thumb')
                             .css('position', 'absolute')
                             .css('top', (e.pageY - xOffset) + 'px')
                             .css('left', (e.pageX + yOffset) + 'px')
                             .css('z-index', 9999)
+<<<<<<< HEAD
                             .show();
                 },
                 function() {
                     $('#eexcess_thumb').hide();
+=======
+                            .show();
+                },
+                function() {
+                    $('#eexcess_thumb').hide();
+>>>>>>> origin/master
                 });
         link.mousemove(function(e) {
             $('#eexcess_thumb')
@@ -111,7 +157,11 @@ EEXCESS.searchResultList = function(divContainer, options) {
     };
 
     // init
+<<<<<<< HEAD
     $('body').append('<p id="eexcess_thumb" style="display:none;"><img id="eexcess_thumb_img" alt="img preview" /></p>');
+=======
+    $('body').append('<p id="eexcess_thumb" style="display:none;"><img id="eexcess_thumb_img" alt="img preview" /></p>');
+>>>>>>> origin/master
     divContainer.append(_loader);
     divContainer.append(_dialog);
     divContainer.append(_list);
@@ -128,14 +178,24 @@ EEXCESS.searchResultList = function(divContainer, options) {
                 if (request.method.parent === 'results') {
                     if (request.method.func === 'rating') {
                         _rating($('.eexcess_raty[data-uri="' + request.data.uri + '"]'), request.data.uri, request.data.score);
+<<<<<<< HEAD
                     } else if (request.method.func === 'error') {
                         _showError(request.data);
+=======
+                    } else if (request.method.func === 'error') {
+                        _showError(request.data);
+>>>>>>> origin/master
                     }
                 }
                 if (request.method === 'newSearchTriggered') {
                     showResults(request.data);
+<<<<<<< HEAD
                 } else if (request.method === 'loading') {
                     _loading();
+=======
+                } else if (request.method === 'loading') {
+                    _loading();
+>>>>>>> origin/master
                 }
             }
     );
@@ -143,15 +203,22 @@ EEXCESS.searchResultList = function(divContainer, options) {
     var showResults = function(data) {
         _error.hide();
         _loader.hide();
+<<<<<<< HEAD
         data = data.results || null;
         _list.empty();
 
+=======
+        data = data.results || null;
+        _list.empty();
+
+>>>>>>> origin/master
         if (data === null || data.totalResults === 0 || data.totalResults === '0') {
             _list.append($('<li>no results</li>'));
             return;
         }
         _list.attr('data-total', data.totalResults);
         moreResults(data.results);
+<<<<<<< HEAD
 
         var height = (window.innerHeight || document.body.clientHeight) - 250;
         settings.itemsShown = Math.floor(height / 50);
@@ -174,12 +241,40 @@ EEXCESS.searchResultList = function(divContainer, options) {
 
             divContainer.append(_pagination)
         }
+=======
+        
+        var height = (window.innerHeight || document.body.clientHeight) - 250;
+        settings.itemsShown = Math.floor(height / 50);
+
+
+        var _pagination = $('<div class="pagination"></div>');
+        var pages = (Math.ceil(data.results.length / settings.itemsShown) > 10) ? 10 : Math.ceil(data.results.length / settings.itemsShown);
+        if(pages > 1) {
+            for (var i = 1; i <= pages; i++) {
+            var _btn = $('<a href="#" class="page gradient">' + i + '</a>');
+            if (i == 1) {
+                _btn.addClass('active');
+            }
+            _pagination.append(_btn);
+            }
+
+            if (divContainer.find('.pagination').length != 0) {
+                divContainer.find('.pagination').remove();
+            }
+
+            divContainer.append(_pagination)  
+        }
+>>>>>>> origin/master
     };
     var moreResults = function(items) {
 //            $('#eexcess_content').unbind('scroll'); TODO: check scrolling...
         var offset = _list.children('li').length;
         for (var i = 0, len = items.length; i < len; i++) {
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> origin/master
             var item = items[i];
             var img = item.previewImage;
             if (typeof img === 'undefined' || img === '') {
@@ -195,10 +290,17 @@ EEXCESS.searchResultList = function(divContainer, options) {
 
             _list.append(li);
 
+<<<<<<< HEAD
             if (i >= settings.itemsShown) {
                 li.hide();
             }
 
+=======
+            if (i >= settings.itemsShown) {
+                li.hide();
+            }
+
+>>>>>>> origin/master
             // rating
             var raty = $('<div class="eexcess_raty"  data-uri="' + item.uri + '" data-pos="' + pos + '"></div');
             _rating(raty, item.uri, item.rating);
@@ -213,10 +315,17 @@ EEXCESS.searchResultList = function(divContainer, options) {
             resCt.append(_link(item.uri, img, title));
             li.append(resCt);
 
+<<<<<<< HEAD
             // partner icon and name
             if (typeof item.facets.provider !== 'undefined') {
                 var providerName = item.facets.provider.charAt(0).toUpperCase() + item.facets.provider.slice(1);
                 containerL.append($('<img alt="provided by ' + providerName + '" title="provided by ' + providerName + '" src="' + settings.pathToMedia + 'icons/' + item.facets.provider + '-favicon.ico" class="partner_icon" />'));
+=======
+            // partner icon and name
+            if (typeof item.facets.provider !== 'undefined') {
+                var providerName = item.facets.provider.charAt(0).toUpperCase() + item.facets.provider.slice(1);
+                containerL.append($('<img alt="provided by ' + providerName + '" title="provided by ' + providerName + '" src="' + settings.pathToMedia + 'icons/' + item.facets.provider + '-favicon.ico" class="partner_icon" />'));
+>>>>>>> origin/master
             }
 
             // show link
@@ -270,6 +379,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
             firstPart += "...";
         }
         return firstPart;
+<<<<<<< HEAD
     };
 
     var _showError = function(errorData) {
@@ -296,6 +406,34 @@ EEXCESS.searchResultList = function(divContainer, options) {
     return {
         showResults: showResults,
         loading: _loading
+=======
+    };
+
+    var _showError = function(errorData) {
+        divContainer.find('.pagination').remove();
+        _list.empty();
+        _loader.hide();
+        if(errorData.msg === 'timeout') {
+            _error.text('Sorry, the server takes too long to respond. Please try again later');
+        } else {
+            _error.text('Sorry, something went wrong');
+        }
+        _error.show();
+        $('#eexcess_thumb').hide();
+    };
+
+    var _loading = function() {
+        $('#eexcess_thumb').hide();
+        divContainer.find('.pagination').remove();
+        _error.hide();
+        _list.empty();
+        _loader.show();
+    };
+
+    return {
+        showResults: showResults,
+        loading: _loading
+>>>>>>> origin/master
     };
 };
 

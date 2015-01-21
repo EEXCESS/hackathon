@@ -139,7 +139,11 @@ function display_querycrumbs(domElem) {
                             .filter(function(d,i) { return (iDocs[n].indexOf(i) != -1);});
                         simResults.push(queryNode);
                         queryNode.classed("docNode", true).classed("docNode-highlighted", true).style("opacity", 1);
+<<<<<<< HEAD
                     }
+=======
+                    }   
+>>>>>>> origin/master
                 }
             }
         },
@@ -151,16 +155,26 @@ function display_querycrumbs(domElem) {
                     simResults[n].classed("docNode", true).classed("docNode-highlighted", false)
                         //.style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
                         .style("opacity", QueryCrumbsConfiguration.colorSettings.newDocOpacity);
+<<<<<<< HEAD
                 }
+=======
+                } 
+>>>>>>> origin/master
             } else {
                 d3.select(this).select("circle.queryCircleBg").classed("queryCircleBg", true).classed("queryCircleBgHovered", false).style("cursor",null);
                 for(var n in simResults) {
                     simResults[n].classed("docNode", true).classed("docNode-highlighted", false)
                         //.style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
                         .style("opacity", QueryCrumbsConfiguration.colorSettings.newDocOpacity);
+<<<<<<< HEAD
                 }
           }
 
+=======
+                } 
+          }
+          
+>>>>>>> origin/master
           simResults = [];
         }
         // ,
@@ -300,7 +314,11 @@ function display_querycrumbs(domElem) {
         calcResultSetSimilarity: function(predecessor, current) {
             var sim = 0;
             var recurrence = [];
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/master
             if(predecessor.length > 0) {
 
                 if(current.length > QueryCrumbsConfiguration.dimensions.SEGMENTS && predecessor.length > QueryCrumbsConfiguration.dimensions.SEGMENTS) {
@@ -311,7 +329,11 @@ function display_querycrumbs(domElem) {
                 } else if(predecessor.length > current.length) {
                     predecessor = predecessor.slice(0, acurrent.length);
                 }
+<<<<<<< HEAD
 
+=======
+                
+>>>>>>> origin/master
                 for(var i = 0; i < current.length; i++) {
                     var docAlreadyKnown = false;
                     var docAlreadyKnownIdx = -1;
@@ -325,7 +347,17 @@ function display_querycrumbs(domElem) {
 
                     recurrence.push(docAlreadyKnownIdx);
                 }
+            
+                var a = [], b = [];  
+                predecessor.forEach(function(e) {
+                    a.push(e.uri)
+                })
 
+                current.forEach(function(e) {
+                    b.push(e.uri)
+                })
+
+<<<<<<< HEAD
                 var a = [], b = [];
                 predecessor.forEach(function(e) {
                     a.push(e.uri)
@@ -336,6 +368,9 @@ function display_querycrumbs(domElem) {
                 })
 
                 sim = jaccard.index(a, b);
+=======
+                sim = jaccard.index(a, b); 
+>>>>>>> origin/master
             }
 
             return {sim: sim, recurrence: recurrence};
@@ -472,6 +507,7 @@ function display_querycrumbs(domElem) {
 
             var crumbsSel = svgContainer.selectAll("g.crumbs").data([visualData]);
             crumbsSel.enter().append("g").attr("class", "crumbs");
+<<<<<<< HEAD
 
             if(QueryCrumbsConfiguration.nodeForm == "CIRCLE") {
 
@@ -608,7 +644,145 @@ function display_querycrumbs(domElem) {
                 //   .attr("height", QueryCrumbsConfiguration.dimensions.edgeHeight)
                 //   .style("opacity", function(d) { return (QueryCrumbsConfiguration.skillLevel == "BEGINNER") ? 0 : d.simTerms;});
             }
+=======
+>>>>>>> origin/master
 
+            if(QueryCrumbsConfiguration.nodeForm == "CIRCLE") {
+
+                var crumbsUpd = crumbsSel.attr("transform", "translate(-15, 10)");
+                crumbsSel.exit().remove();
+
+                var queryNodesSel = crumbsUpd.selectAll("g.queryNode").data(function(d) { return d.visualDataNodes; }, function(d) { return d.timestamp;});
+                var nodeEnter = queryNodesSel.enter().append("g");
+
+                queryNodesSel.classed("queryNode", true)
+                    .on("mouseenter", INTERACTION.onMouseOverNode)
+                    .on("mouseleave", INTERACTION.onMouseOutNode)
+                    .on("click", INTERACTION.onClick);
+
+                nodeEnter.append("circle").attr("class", "queryCircleBg").attr({
+                    cx: QueryCrumbsConfiguration.dimensions.circle_cxy,
+                    cy: QueryCrumbsConfiguration.dimensions.circle_cxy,
+                    r:  function(d,i) { return (i == currentIdx) ? QueryCrumbsConfiguration.dimensions.circle_bg_r + 1 : QueryCrumbsConfiguration.dimensions.circle_bg_r }
+                }).classed("queryRectBg-selected", function(d,i) { return (i == currentIdx);});
+
+
+                nodeEnter.append("circle").attr("class", "queryCircle").attr({
+                    cx: QueryCrumbsConfiguration.dimensions.circle_cxy,
+                    cy: QueryCrumbsConfiguration.dimensions.circle_cxy,
+                    r:  QueryCrumbsConfiguration.dimensions.circle_r
+                });      
+
+                nodeEnter.append("g");
+
+                queryNodesSel.select("circle.queryCircle")
+                    .attr("x", function (d) { return d.x_pos; })
+                    .attr("y", function (d) { return d.y_pos; } )
+                    .style("fill", function (d) { return d.base_color; })
+                    .classed("queryCircle", true);
+
+                nodeEnter.transition().attr("transform", function(d,i) { return ("translate("+ (d.x_pos + 2 ) +", 0)"); }); 
+
+
+                var arc = d3.svg.arc().outerRadius(QueryCrumbsConfiguration.dimensions.circle_r);
+
+                queryNodesSel.select("g").attr("transform", function(d,i) { return ("translate(25, 25)"); });
+
+                var queryDocRects = queryNodesSel.select("g").selectAll("path.docNode").data(function(d) { return d.results; });
+
+                var p = Math.PI * 2;
+
+                var arc = d3.svg.arc()
+                    .innerRadius(0)
+                    .outerRadius(QueryCrumbsConfiguration.dimensions.circle_r)
+                    .startAngle(function(d) { 
+                        return ((360 / QueryCrumbsConfiguration.dimensions.SEGMENTS) * (Math.PI / 180)) * d.index;     
+                    })
+                    .endAngle(function(d) {
+                       return ((360 / QueryCrumbsConfiguration.dimensions.SEGMENTS) * (Math.PI / 180)) * (d.index + 1);
+                    }) 
+
+                queryDocRects.enter().append("path").attr("d", arc);
+                queryDocRects.attr("class", "docNode")
+                    .attr("d", arc)
+                    //.style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
+                    .style("opacity", QueryCrumbsConfiguration.colorSettings.newDocOpacity);
+            } else {
+
+                var crumbsUpd = crumbsSel.attr("transform", "translate(2, "+15+")");
+                crumbsSel.exit().remove();
+
+                var queryNodesSel = crumbsUpd.selectAll("g.queryNode").data(function(d) { return d.visualDataNodes; }, function(d) { return d.timestamp;});
+                var nodeEnter = queryNodesSel.enter().append("g");
+                queryNodesSel.classed("queryNode", true)
+                    .on("mouseenter", INTERACTION.onMouseOverNode)
+                    .on("mouseleave", INTERACTION.onMouseOutNode)
+                    .on("click", INTERACTION.onClick);
+
+                nodeEnter.append("rect").attr("class", "queryRectBg");
+                nodeEnter.append("rect").attr("class", "queryRect");
+                nodeEnter.append("g");
+                queryNodesSel.exit().transition().style("opacity", 0).attr("transform", function(d,i) { if(fWait_BackNaviResults) { return "translate(0,0)"; } else { return ("translate(0, 100)");}}).remove();
+                nodeEnter.attr("transform", function(d,i) {
+                  if(fWait_BackNaviResults) {
+                      return "translate(0,0)";
+                  } else {
+                      var lOffset = QueryCrumbsConfiguration.dimensions.edgeWidth + QueryCrumbsConfiguration.dimensions.rectWidth;
+                      return ("translate("+parseInt(-lOffset)+", 0)");
+                  }
+                });
+
+                queryNodesSel.select("rect.queryRectBg")
+                  .attr("x", function (d, i) { 
+                      return (i == currentIdx) ? (d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.x_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth + 1;
+                  })
+                  .attr("y", function (d, i) { 
+                      return (i == currentIdx) ? (d.y_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.y_pos - QueryCrumbsConfiguration.dimensions.rectBorderWidth + 1; 
+                  })
+                  .attr("width", function (d, i) { 
+                      return (i == currentIdx) ? (d.width + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.width + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth - 2; 
+                  })
+                  .attr("height", function (d, i) { 
+                      return (i == currentIdx) ? (d.height + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth) : d.height + 2 * QueryCrumbsConfiguration.dimensions.rectBorderWidth - 2; 
+                  })
+                  .attr("ry", 0)
+                  .classed("queryRectBg", true)
+                  .classed("queryRectBg-selected", function(d,i) { return (i == currentIdx);});
+
+                queryNodesSel.select("rect.queryRect").attr("x", function (d) { return d.x_pos; })
+                  .attr("y", function (d) { return d.y_pos; } )
+                  .attr("width", function (d) { return d.width; })
+                  .attr("height", function (d) { return d.height; })
+                  .attr("ry", 0)
+                  .style("fill", function (d) { return d.base_color; })
+                  .classed("queryRect", true);
+                nodeEnter.transition().attr("transform", "translate(0,0)");
+
+                var queryDocRects = queryNodesSel.select("g").selectAll("rect.docNode").data(function(d) { return d.results; });
+                queryDocRects.enter().append("rect");
+                queryDocRects.attr("class", "docNode")
+                  .attr("x", function(d) { return d.x_pos; })
+                  .attr("y", function(d) { return d.y_pos; })
+                  .attr("width", function(d) { return d.width; })
+                  .attr("height", function(d) { return d.height; })
+                 // .style("opacity", function(d) { return ((d.preIdx == -1) ? QueryCrumbsConfiguration.colorSettings.newDocOpacity : QueryCrumbsConfiguration.colorSettings.oldDocOpacity);});
+                  .style("opacity", QueryCrumbsConfiguration.colorSettings.newDocOpacity);
+                // var queryEdgesSel = crumbsUpd.selectAll("rect.queryEdge").data(function(d) { return d.visualDataEdges;});
+                // var queryEdgesEnter = queryEdgesSel.enter()
+                //   .append("rect")
+                //   .attr("class", "queryEdge")
+                //   .on("mouseover", INTERACTION.onMouseOverEdge)
+                //   .on("mouseout", INTERACTION.onMouseOutEdge);
+
+                // queryEdgesSel.exit().transition().style("opacity", 0).attr("transform", function(d,i) { if(fWait_BackNaviResults) { return "translate(0,0)"; } else { return ("translate(0, 100)");}}).remove();
+
+                // queryEdgesSel.attr("x",function (d) { return d.start_x; } )
+                //   .attr("y",function (d) { return d.start_y; } )
+                //   .attr("width", QueryCrumbsConfiguration.dimensions.edgeWidth )
+                //   .attr("height", QueryCrumbsConfiguration.dimensions.edgeHeight)
+                //   .style("opacity", function(d) { return (QueryCrumbsConfiguration.skillLevel == "BEGINNER") ? 0 : d.simTerms;});  
+            } 
+            
 
 //            svgContainer.selectAll("g").remove();
 //            var group = svgContainer.append("g").attr("transform", "translate(2, "+15+")");
@@ -700,5 +874,9 @@ function display_querycrumbs(domElem) {
         visualData = CORE.generateVisualData(historyData, similarities);
         RENDERING.redraw(visualData);
     };
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/master
 }

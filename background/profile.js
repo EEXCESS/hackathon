@@ -113,6 +113,29 @@ EEXCESS.profile = (function() {
         }
         return address;
     };
+    
+    // obtain list of selected sources
+    var getPartnerList = function() {
+        var partners = EEXCESS.storage.local('selected_sources');
+        if(typeof partners === 'undefined') {
+            return [{"systemId":"Europeana"},{"systemId":"Mendeley"},{"systemId":"ZBW"},{"systemId":"KIMCollect"}];
+        } else {
+            partners = JSON.parse(partners);
+            var partnerList = [];
+            $.each(partners, function(index,value) {
+                partnerList.push({"systemId":value});
+            });
+            return partnerList;
+        }
+    };
+    
+    var applyLocationPolicy = function() {
+        if(JSON.parse(EEXCESS.storage.local('privacy.policy.currentLocation')) === 1) {
+            return JSON.parse(EEXCESS.storage.local('privacy.profile.currentLocation'));
+        } else {
+            return [];
+        }
+    };
 
     // obtain list of selected sources
     var getPartnerList = function() {

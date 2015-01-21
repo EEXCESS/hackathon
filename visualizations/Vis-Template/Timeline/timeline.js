@@ -73,7 +73,11 @@ function Timeline( root, visTemplate ){
 		var indicesToHighlight = [];
 		var currentYear = 0;
 		data.forEach(function(d, i){
+<<<<<<< HEAD
 			if(d.hasOwnProperty("year")){
+=======
+			if(d.hasOwnProperty("year")){	
+>>>>>>> origin/master
 				currentYear = d.year.getFullYear();
 				if(minDateInYears <= currentYear && currentYear <= maxDateInYears){
 					indicesToHighlight.push(i);
@@ -94,7 +98,11 @@ function Timeline( root, visTemplate ){
 		
 		zoom.scale(scale);
 		zoom.translate([tx, ty]);	
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> origin/master
 		TIMEVIS.Evt.filterListPerTime(x.invert(0).getFullYear(),x.invert(width).getFullYear());
 	};
 	
@@ -122,9 +130,15 @@ function Timeline( root, visTemplate ){
 		rightHandle.attr("x", x2(brushExtent[1]) - 8);
 	
 		TIMEVIS.Render.redraw();
+<<<<<<< HEAD
 
 		TIMEVIS.Evt.filterListPerTime(brushExtent[0].getFullYear(),brushExtent[1].getFullYear());
 
+=======
+		
+		TIMEVIS.Evt.filterListPerTime(brushExtent[0].getFullYear(),brushExtent[1].getFullYear());
+		
+>>>>>>> origin/master
 	};
 	
 	
@@ -595,12 +609,21 @@ function Timeline( root, visTemplate ){
 		//steff experimental code begin
 		//console.log(data);
 		//console.log(mapping[1].facet);
+<<<<<<< HEAD
 
 		//get information(number) about nodes with same x- and y-axis;
 		var keyForData = mapping[1].facet;
 
 		var dataDictWithTime ={}; //double dict
 
+=======
+		 
+		//get information(number) about nodes with same x- and y-axis;
+		var keyForData = mapping[1].facet;
+		 
+		var dataDictWithTime ={}; //double dict
+		 
+>>>>>>> origin/master
 		var workInXAxis = function(dataVal,dateString,key){
 			if(dataVal[key].hasOwnProperty(dateString)){ //work in x axis
 				dataVal[key][dateString] += 1;
@@ -609,13 +632,21 @@ function Timeline( root, visTemplate ){
 				dataVal[key][dateString] = 1;
 			}
 		}
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> origin/master
 		var yearInString;
 		var currentKeyValue;
 		data.forEach(function(currentData){
 			yearInString = currentData.year.getFullYear().toString();
 			currentKeyValue = currentData[keyForData];
+<<<<<<< HEAD
 
+=======
+			
+>>>>>>> origin/master
 			if(dataDictWithTime.hasOwnProperty(currentKeyValue)){//work in y axis
 				workInXAxis(dataDictWithTime,yearInString,currentKeyValue);
 			}
@@ -625,7 +656,11 @@ function Timeline( root, visTemplate ){
 			}
 		});
 		//steff experimental code end
+<<<<<<< HEAD
 
+=======
+		 
+>>>>>>> origin/master
 		currentExtent = Math.abs(new Date(x.invert(width)) - new Date(x.invert(0)));
 		
 		var nodesData = chart.selectAll(".node").data(data);
@@ -655,11 +690,19 @@ function Timeline( root, visTemplate ){
 				var numberWithSameTime = dataDictWithTime[d[keyForData]][d.year.getFullYear().toString()];
 				if(numberWithSameTime>1){
 					return numberWithSameTime;
+<<<<<<< HEAD
 				}
 				//count same node with same y-axis and time
 			});
 		textInCircles = chart.selectAll(".number");
 
+=======
+				} 
+				//count same node with same y-axis and time
+			});
+		textInCircles = chart.selectAll(".number");
+		
+>>>>>>> origin/master
 		textInCircles
 			.on( "click", TIMEVIS.Evt.nodeClicked );
 		//steff experimental code end
@@ -864,12 +907,20 @@ function Timeline( root, visTemplate ){
 				return radius;
 			})
 			.attr("fill", function(d) { return color(d[colorChannel]); });
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> origin/master
 		// redraw text
 		textInCircles
 			.attr("x", function(d) { return x(d[xAxisChannel])-5; })
 			.attr("y", function(d) { return y(d[yAxisChannel])+3; });
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> origin/master
 		// if lines are already drawn, redraw them
 		if(flagLines){
   		
@@ -953,7 +1004,11 @@ function Timeline( root, visTemplate ){
 	
 		textInCircles
 			.style("opacity", "1");
+<<<<<<< HEAD
 
+=======
+			
+>>>>>>> origin/master
 		data.forEach(function(d){ d.isHighlighted = false; });
 			
 		$('.legend').find('text').css('font-weight', 'normal');
@@ -997,14 +1052,22 @@ function Timeline( root, visTemplate ){
 						return 1;
 					return 0.1;
 				});
+<<<<<<< HEAD
 
+=======
+				
+>>>>>>> origin/master
 			textInCircles
 				.style("opacity", function(d, i){
 					if(nodesToHighlight.indexOf(i) != -1)
 						return 1;
 					return 0.1;
 				});
+<<<<<<< HEAD
 
+=======
+				
+>>>>>>> origin/master
 		}
         else{
 
@@ -1012,8 +1075,13 @@ function Timeline( root, visTemplate ){
                 .attr("r", radius)
                 .style("stroke", "darkgrey")
                 .style("opacity", 1);
+<<<<<<< HEAD
 
 			textInCircles
+=======
+				
+			textInCircles	
+>>>>>>> origin/master
 				.style("opacity", 1);
         }
 

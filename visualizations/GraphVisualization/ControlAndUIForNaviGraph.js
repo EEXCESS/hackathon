@@ -393,7 +393,11 @@ function LoadBookmarks(bookmarkDictParam){
 		bookmarkDictParam[bookmarkName].items.forEach(function(item){
 			if(item.hasOwnProperty("query")){
 				//console.log("#:-- " + item.query + " : " +item.uri);
+<<<<<<< HEAD
 
+=======
+				
+>>>>>>> origin/master
 				if(getDataFromIndexedDB.wordsWithResults[item.query] != undefined){//hack bugfix
 					getDataFromIndexedDB.wordsWithResults[item.query].resultList.every(function(element,index){
 						if(item.uri == element){
@@ -401,9 +405,15 @@ function LoadBookmarks(bookmarkDictParam){
 							//add items
 							var nodeName = "ResultNodeID_UniqueNodeID_" + MD5(item.query) + "_" + index;
 							//console.log(nodeName + " : " + item.query);
+<<<<<<< HEAD
 
 							AddBookmarkItem(nodeName,bookmarkName,item.query);
 
+=======
+							
+							AddBookmarkItem(nodeName,bookmarkName,item.query);
+							
+>>>>>>> origin/master
 							return false;
 						}
 						return true;

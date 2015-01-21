@@ -217,4 +217,8 @@ function getDemoResultsHistoricBuildings(){
         query:"Historical Buildings"
     };
     return demoDataReceived;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/master

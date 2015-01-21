@@ -2910,4 +2910,8 @@ L.EditToolbar.Delete = L.Handler.extend({
 });
 
 
+<<<<<<< HEAD
 }(window, document));
+=======
+}(window, document));
+>>>>>>> origin/master
