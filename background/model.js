@@ -25,6 +25,11 @@ EEXCESS.model = (function() {
         visible: false,
         tab: 'results'
     };
+    
+    var _visibleStored = EEXCESS.storage.local('EEXCESS_visible');
+    if(typeof _visibleStored !== 'undefined') {
+        params.visible = JSON.parse(_visibleStored);
+    } 
 
     var currentQuery = {};
 
@@ -179,6 +184,7 @@ EEXCESS.model = (function() {
         toggleVisibility: function(tabID, url) {
             var _finally = function(url) {
                 params.visible = !params.visible;
+                EEXCESS.storage.local('EEXCESS_visible',JSON.stringify(params.visible));
                 var xhr = $.ajax({
                     url: EEXCESS.config.LOG_SHOW_HIDE_URI,
                     data: JSON.stringify({visible: params.visible, uuid: EEXCESS.profile.getUUID(), currentPage: url}),
