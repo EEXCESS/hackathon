@@ -400,8 +400,12 @@ function Visualization( EEXCESSobj ) {
 	
 	////////	content list item click	////////
 	
-	EVTHANDLER.listItemClicked = function(d, i, isSelectedFromOutside){
-        LIST.selectListItem( d, i);
+	EVTHANDLER.listItemClicked = function(d, i, isSelectedFromOutside, x, y, z){
+		if (d3.event.ctrlKey){
+        	LIST.selectListItem( d, i, false, true);
+		} else {
+        	LIST.selectListItem( d, i);
+    	}
 	};
 	
 
@@ -643,6 +647,8 @@ function Visualization( EEXCESSobj ) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	var LIST = {};
+
+	LIST.indicesSelected = [];
 	
 	LIST.internal = {
 			
@@ -661,16 +667,7 @@ function Visualization( EEXCESSobj ) {
 					return indices[0];
 			}
 	};
-	
-	
-	
-	/**
-	 * 	Keeps track of selected recommendation in content list
-	 * 
-	 * */
-	LIST.selectededListIndex = 'undefined';
-	
-	
+			
 	
 	/**
 	 *	Function that populates the list on the right side of the screen.
@@ -792,26 +789,32 @@ function Visualization( EEXCESSobj ) {
 	/**
 	 * Draws legend color icons in each content list item
 	 * */
-	LIST.selectListItem = function( d, i, flagSelectedOutside ){
+	LIST.selectListItem = function( d, i, flagSelectedOutside, addItemToCurrentSelection ){
 		
+		var addItemToCurrentSelection = addItemToCurrentSelection || false;
 		var isSelectedFromOutside = flagSelectedOutside || false;
 		var index = i;
+		var indicesToHighlight = [];
 
-		LIST.selectededListIndex = (index !== LIST.selectededListIndex) ? index : 'undefined';
+		var indexWasAlreadySelected = LIST.indicesSelected.indexOf(index) > -1;
+
+		if (addItemToCurrentSelection)
+			indicesToHighlight = LIST.indicesSelected;
+
+		if (indexWasAlreadySelected)
+			indicesToHighlight.splice(indicesToHighlight.indexOf(index), 1);
+		else
+			indicesToHighlight.push(index);
+
+		LIST.indicesSelected = indicesToHighlight;
+		if (indicesToHighlight.length == 0)
+			indicesToHighlight = VISPANEL.getAllSelectListItems();
+				
+		LIST.highlightListItems( indicesToHighlight );
 		
-		// if clickedListIndex is not undefined then the item was selected, otherwise it was deselected
-		if(LIST.selectededListIndex !== 'undefined'){
-			LIST.highlightListItems( [index] );
-			
-			if( !flagSelectedOutside )
-				VISPANEL.updateCurrentChart( 'highlight_item_selected', [index] );
-		}
-		else{
-			LIST.highlightListItems(VISPANEL.getAllSelectListItems());
-			VISPANEL.updateCurrentChart( 'highlight_item_selected', [] );
-		}
+		if( !flagSelectedOutside )
+			VISPANEL.updateCurrentChart( 'highlight_item_selected', indicesToHighlight );
 	};
-
 	
 
 
