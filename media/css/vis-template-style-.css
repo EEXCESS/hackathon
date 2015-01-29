@@ -127,7 +127,8 @@ input[type="button"]:hover{
     height: 0;
     position: relative;
     float: right;
-    margin-right: 15px;
+    /*margin-right: 15px;*/
+    margin-right: 4px;
     margin-top: 7px;
     border-width: 6px 6px 0px 6px;
     border-style: solid;
@@ -136,13 +137,14 @@ input[type="button"]:hover{
 
 
 .dropdown-list-icon {
-    display: inline-block;
+    /*display: inline-block;
     float: left;
     width: 14px;
     height: 14px;
     margin-top: 0.2em !important;
     margin-right: 0.4em;
-    background-color: inherit;
+    background-color: inherit;*/
+    display:none;
 }
 
 
@@ -937,7 +939,7 @@ p.eexcess_ritem_short {
 	width:65%;
 	
     height: 1.8em;
-    border: 0.1em #ddd solid;
+    border: 1px #ddd solid;
 
 }
 #eexcess-filter-bookmark-dialog>.eexcess-bookmark-dropdown-list{

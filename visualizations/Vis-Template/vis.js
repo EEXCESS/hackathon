@@ -64,7 +64,7 @@ function Visualization( EEXCESSobj ) {
     // String Constants
     var STR_LOADING = "Loading...";
     var STR_NO_DATA_RECEIVED = "No Data Received";
-    var STR_NEW = "New...";
+    var STR_NEW = "New Collecction...";
 	var STR_BOOKMARK_NAME_MISSING = "Indicate new bookmark name";
 	var STR_SHOWALLRESULTS = "Search results";
 
@@ -1241,14 +1241,25 @@ function Visualization( EEXCESSobj ) {
             .text(STR_BOOKMARK_NAME_MISSING)
             .style('display', 'none');
 
+        var bookmarkButtonsWrapper1 = dialogBookmark.append("div")
+            .attr("class", "eexcess-bookmark-buttons-wrapper");
+
+        bookmarkButtonsWrapper1.append("input")
+            .attr("type", "button")
+            .attr("class", "eexcess-bookmark-button")
+            .attr("style", "width:55px;")
+            .attr("value", "Save new")
+			.on("click",savebutton);
+            //.on("click", EVTHANDLER.bookmarkSaveButtonClicked);
+
 
         // Also show delete - buttons in this dialog.
 		// Todo: remove the old bookmark-info popup
         if (datum && bookmarkedItems[datum.id]){
-            var bookmarkListToDelete = dialogBookmark.append("div")
-                .attr("class", "eexcess-bookmark-bookmarkList");
+            //var bookmarkListToDelete = dialogBookmark.append("div")
+            //    .attr("class", "eexcess-bookmark-bookmarkList");
 
-            var bookmarkedInSection = newBookmarkOptions.append('div').attr('class', 'eexcess-bookmark-bookmarked-in-section');
+            var bookmarkedInSection = dialogBookmark.append('div').attr('class', 'eexcess-bookmark-bookmarked-in-section');
             bookmarkedInSection.append('span').style('width', '100%').text('Bookmarked in:');
 
             var itemBookmarksData = bookmarkedInSection.selectAll('div')
@@ -1277,14 +1288,6 @@ function Visualization( EEXCESSobj ) {
         var bookmarkButtonsWrapper = dialogBookmark.append("div")
             .attr("class", "eexcess-bookmark-buttons-wrapper");
 
-
-        bookmarkButtonsWrapper.append("input")
-            .attr("type", "button")
-            .attr("class", "eexcess-bookmark-button")
-            .attr("style", "width:55px;")
-            .attr("value", "Save new")
-			.on("click",savebutton);
-            //.on("click", EVTHANDLER.bookmarkSaveButtonClicked);
 
         bookmarkButtonsWrapper.append("input")
             .attr("type", "button")
