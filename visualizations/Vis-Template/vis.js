@@ -1195,7 +1195,7 @@ function Visualization( EEXCESSobj ) {
         var bookmarkDetails = dialogBookmark.append('div')
             .attr('class', 'eexcess-boookmark-dialog-details');
 
-        bookmarkDetails.append('span').text('Title:');
+        bookmarkDetails.append('span').attr('class', 'label').text('Title:');
         //bookmarkDetails.append('p').text(d.title);
 		titleOutput(bookmarkDetails);
         //bookmarkDetails.append('span').text('Query:');
@@ -1205,7 +1205,7 @@ function Visualization( EEXCESSobj ) {
         var bookmarkSettings = dialogBookmark.append("div")
             .attr("class", "eexcess-bookmark-dialog-settings");
 
-        bookmarkSettings.append("span").text("Add to:");
+        bookmarkSettings.append("span").attr('class', 'label').text("Add to:");
 
         // array to be sent to plugin building the dropdown list with the list items and the corresponding colors
         var optionsData = $.merge([{'bookmark-name': STR_NEW, 'color': ''}], BookmarkingAPI.getAllBookmarkNamesAndColors());
@@ -1260,7 +1260,7 @@ function Visualization( EEXCESSobj ) {
             //    .attr("class", "eexcess-bookmark-bookmarkList");
 
             var bookmarkedInSection = dialogBookmark.append('div').attr('class', 'eexcess-bookmark-bookmarked-in-section');
-            bookmarkedInSection.append('span').style('width', '100%').text('Bookmarked in:');
+            bookmarkedInSection.append('span').attr('class', 'label').style('width', '100%').text('Already bookmarked in:');
 
             var itemBookmarksData = bookmarkedInSection.selectAll('div')
                 .data(bookmarkedItems[datum.id].bookmarked);

@@ -868,7 +868,7 @@ p.eexcess_ritem_short {
     position: absolute;
     right: 4.6em;
     width: 18em;
-    max-height: 30em;
+    /*max-height: 30em;*/
     padding: 0.5em;
     z-index: 999;
     font-size: 0.9em;
@@ -876,6 +876,9 @@ p.eexcess_ritem_short {
     box-shadow: -.3em .3em 1.5em #222;
 }
 
+.eexcess-bookmark-dialog span.label{
+    font-weight: bold;
+}
 
 .eexcess-bookmark-dialog span {
     display: inline-block;
@@ -916,7 +919,7 @@ p.eexcess_ritem_short {
 .eexcess-boookmark-dialog-details {
     width: 100%;
     margin-top: 0.6em;
-    margin-bottom: 0.6em;
+    margin-bottom: 17px;
     vertical-align: top;
 }
 
@@ -1034,7 +1037,7 @@ p.eexcess_ritem_short {
 
 .eexcess-bookmark-bookmarked-in-section {
     width: 100%;
-    margin: 1em 0em;
+    margin: 15px 0;
 }
 
 .eexcess-bookmark-bookmarked-in {
