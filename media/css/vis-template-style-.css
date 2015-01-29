@@ -826,6 +826,10 @@ h1 {
 p.eexcess_ritem_short {
     margin-top: 0em;
     margin-bottom: 0.5em;
+    overflow: hidden;
+    display: inline-block;
+    width: 100%;
+    text-overflow: ellipsis;
 }
 
 
@@ -844,9 +848,10 @@ p.eexcess_ritem_short {
 
 .eexcess_bookmark_section img{
     display: inline-block;
-    margin-top: .2em;
-    margin-right: .1em;
     cursor: pointer;
+    position: absolute;
+    padding:4px;
+    right:0;
 }
 
 
