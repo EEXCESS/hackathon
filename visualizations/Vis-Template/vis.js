@@ -415,7 +415,7 @@ function Visualization( EEXCESSobj ) {
 		LIST.highlightListItems(indicesToHighlight);
 		//$(filterBookmarkDialogId+">div>span").text(STR_SHOWALLRESULTS);
 		//$(filterBookmarkDialogId+">div>div").css("background","inherit");
-		//$(deleteBookmark).prop("disabled",true).css("background","silver");
+		//$(deleteBookmark).prop("disabled",true);
 		
 		//FILTER.showStars();	
 		//FILTER.updateData();	
@@ -1611,7 +1611,7 @@ function Visualization( EEXCESSobj ) {
 					FILTER.showStars();
 					FILTER.updateData();
 					
-					$(deleteBookmark).prop("disabled",true).css("background","silver");
+					$(deleteBookmark).prop("disabled",true);
 				}else{
 					//filtered bookmark from data
 					var currentBookmarkItems = BookmarkingAPI.getAllBookmarks()[evt].items;
@@ -1679,7 +1679,7 @@ function Visualization( EEXCESSobj ) {
 			} 
 
 		});
-		$(deleteBookmark).prop("disabled",true).css("background","silver");
+		$(deleteBookmark).prop("disabled",true);
 	};
 	
 	FILTER.showStars = function(){

@@ -72,12 +72,12 @@ input[type="button"] {
     font-weight: normal;
     height: 16px;
     font-size: 1em;
-    background-color: white;
     color: #008746;
+    /*background-color: white;    
     border: solid #cdcfd2 1px;
     -moz-box-shadow:    inset 4px 4px 6px -6px #666666;
     -webkit-box-shadow: inset 4px 4px 6px -6px #666666;
-    box-shadow:         inset 4px 4px 6px -6px #666666;
+    box-shadow:         inset 4px 4px 6px -6px #666666;*/
 }
 
 
@@ -332,7 +332,7 @@ input[type="button"]:hover{
 #eexcess_header_text {
 	float: left;
 	/*width: 40%;*/
-	width:30%;
+	width:20%;
     color: #008746;
     font-family:Arial;
     font-size: 1.1em;
@@ -356,7 +356,7 @@ input[type="button"]:hover{
 	/*width: 29%;*/
 	/*width: 19%;*/
 	/*width:400px;*/
-	width:40%;
+	width:50%;
 	
 	float: right;
 	height:28px;
@@ -1048,7 +1048,7 @@ p.eexcess_ritem_short {
     vertical-align: middle;
     font-size: 1em;
     line-height: 1.6em;
-    border: 0.1em #ddd solid;
+    border: 1px #ddd solid;
 }
 
 
