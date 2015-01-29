@@ -1168,7 +1168,6 @@ function Visualization( EEXCESSobj ) {
     //BOOKMARKS.buildSaveBookmarkDialog = function(d, i, sender) {
 	BOOKMARKS.buildSaveBookmarkDialog = function(datum, firstFunc,titleOutput,savebutton, sender) {
 
-		
 		$(filterBookmarkDialogId+">div").removeClass("active").children("ul").slideUp('slow');
 
         BOOKMARKS.destroyBookmarkDialog();
@@ -1424,12 +1423,12 @@ function Visualization( EEXCESSobj ) {
 			
 		FILTER.changeDropDownList();
 		
-		
+		//update list and drop down list
 		$(filterBookmarkDialogId+">div>ul>li:eq("+currentSelectIndexPerFilter+")").trigger("click");
 
 		$(filterBookmarkDialogId+">div>ul").css("display","none");
 		$(filterBookmarkDialogId+">div").removeClass("active");
-		
+		//update list and drop down list
 		
     };
 	
@@ -1738,10 +1737,6 @@ function Visualization( EEXCESSobj ) {
 				$(filterBookmarkDialogId+">div>ul").css("display","none");
 				$(filterBookmarkDialogId+">div").removeClass("active");
 
-				
-				console.log("X-------: " + BOOKMARKS.internal.getCurrentItemIndex());
-				
-			
 				
 			},
 			this
