@@ -1250,7 +1250,7 @@ function Visualization( EEXCESSobj ) {
         bookmarkButtonsWrapper1.append("input")
             .attr("type", "button")
             .attr("class", "eexcess-bookmark-button")
-            .attr("style", "width:55px;")
+            .attr("style", "width:65px;")
             .attr("value", "Save new")
 			.on("click",savebutton);
             //.on("click", EVTHANDLER.bookmarkSaveButtonClicked);
