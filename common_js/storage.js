@@ -469,6 +469,8 @@ EEXCESS.storage = (function() {
         };
 
         req.onerror = function() {
+            console.log('init ERROR');
+            console.log(this);
             if (typeof error === 'function') {
                 error(this);
             }
@@ -540,6 +542,27 @@ EEXCESS.storage = (function() {
             };
         }, _empty_callback(error));
     };
+    
+    var _getQHist = function(timestamp, success, error) {
+        _getDB(function(db) {
+            var queries = [];
+            var keyrange = IDBKeyRange.lowerBound(timestamp);
+            var tx1 = db.transaction("queries");
+            var index = tx1.objectStore("queries").index("timestamp");
+
+            index.openCursor(keyrange).onsuccess = function(event) {
+                var cursor = event.target.result;
+                if(cursor) {
+                    queries.push(cursor.value);
+                    cursor.continue();
+                }
+            };
+            tx1.oncomplete = function(event) {
+                db.close();
+                success(queries);
+            };
+        }, error);
+    };
 
     return {
         local: _local,
@@ -552,6 +575,7 @@ EEXCESS.storage = (function() {
         getRatings: _getRatings,
         setRating: _setRating,
         closedRecommendation: _closedRecommendation,
-        loadQueryCrumbsData: _loadQueryCrumbsData
+        loadQueryCrumbsData: _loadQueryCrumbsData,
+        getQHist:_getQHist
     };
 })();
