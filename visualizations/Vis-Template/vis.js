@@ -117,6 +117,7 @@ function Visualization( EEXCESSobj ) {
         BookmarkingAPI.init();
 
         VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
+        $(window).on('resize', function(){ VISPANEL.drawChart(); });
 
         // for Debugging Purposes
         //$(searchField).val('Graz');
