@@ -294,12 +294,10 @@ input[type="button"]:hover{
 */
 #eexcess_header {
     border-collapse:separate;
-    float: left;
     height: 25px;
-    margin-left: 0%;
-    padding-bottom: 0px;
     vertical-align: middle;
 	line-height: 28px;
+    padding:0;
 }
 
 
@@ -461,9 +459,11 @@ input[type="button"]:hover{
     <div> containing everything below the header ("#eexcess_header")
 */
 #eexcess_main_panel{
+    margin-top:10px;
 	text-align: center;
 	vertical-align: top;
 	height: 90%;
+    height: calc(100% - 35px); /* height of header + padding*/
 }
 
 
@@ -498,11 +498,8 @@ input[type="button"]:hover{
 #eexcess_controls {
 	float: left;
 	vertical-align: middle;
-	width: 18%;
-	height:99.25%;
-	margin-left: 2px;
-	margin-top: 0.25%;
-	margin-bottom: 0.25%;
+	width: 170px;
+	height:100%;	
 	background-color: white;
 	z-index: 2;
 }
@@ -516,8 +513,8 @@ input[type="button"]:hover{
 #eexcess_fixed_controls{
 	height: 50%;
 	margin-bottom: 100%;
- border:1px solid #e4e4e4;
-padding-top: 0.8em;
+    border:1px solid #e4e4e4;
+    padding-top: 0.8em;
 }
 
 
@@ -607,9 +604,10 @@ Visualization Panel (center of screen)
     Wraps 2 <div> elements: "#eexcess_vis_controls_wrapper" (lower green bar on upper side) and "#eexcess_canvas" (center)
 */
 #eexcess_vis_panel {
-	margin-left: 18%;
-	width: 82%;
+	width:60%;
+    width:calc(100% - 400px);
 	height: 100%;
+    float:left;
 }
 
 
@@ -691,13 +689,10 @@ Visualization Panel (center of screen)
 */
 #eexcess_content{
 	overflow: auto;
-	float: right;
+	float: left;
 	display:inline-block;
 	vertical-align: top;
-  	margin-top: 5px;
-    margin-bottom: 5px;
-  	margin-right:0%;
-  	width:19%;
+  	width:230px;
   	height: 100%;
 }
 

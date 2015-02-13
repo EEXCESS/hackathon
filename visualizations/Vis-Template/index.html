@@ -59,13 +59,14 @@ and open the template in the editor.
 		<header id="eexcess_header">
 			<div id="eexcess_inner_header">
 		  		<div id="eexcess_header_search" style="white-space: nowrap;">
-	    			<input id="eexcess_search_field" class="eexcess_query_field" type="text" name="query" value="" />
+	    			<!--<input id="eexcess_search_field" class="eexcess_query_field" type="text" name="query" value="" />
                     <input id="eexcess_search_button" class=".eexcess_submit_btn" type="button" value="Search" />
+
                     <!--<button id="demo-button-university">University Campus</button>
                     <button id="demo-button-historicalbuildings">Historic Buildings</button>-->
 	  			</div>
 	  			<div id="eexcess_header_text">
-	  				<span></span>
+	  				<span style="display:none;"></span>
                     <!--<button id="output-button">Out</button>-->
 	  			</div>
 	  			<div id="eexcess_header_filter">
@@ -89,32 +90,28 @@ and open the template in the editor.
 
 		<div id="eexcess_main_panel">
 		
-			<div id="eexcess_vis">
-			
-				<div id="eexcess_controls"> 
-					<div id="eexcess_fixed_controls">
-						<div id="eexcess_controls_chart" class="eexcess_controls_select" >
-							<span class="eexcess_controls_title">Chart</span>
-							<select id="eexcess_select_chart" ></select>
-						</div>
-					
-						<div id="eexcess_controls_mappings" class="eexcess_controls_select"></div>
-					</div>
-				</div>
-				
-				<div id="eexcess_vis_panel">
-				
-					<div id="eexcess_vis_controls_wrapper">
-				        <input id="eexcess_btnreset" class=".eexcess_submit_btn" type="button" value="Reset Visualisation" /> <!--class="eexcess_vis_controls_button"-->
-					</div>
-								
-					<div id="eexcess_canvas"></div>
-				</div>
-				
-      		</div>
-
       		<div id="eexcess_content" >
 				<ul class="eexcess_result_list"></ul>
+			</div>
+			
+			<div id="eexcess_vis_panel">
+			
+				<!--<div id="eexcess_vis_controls_wrapper">
+			        <input id="eexcess_btnreset" class=".eexcess_submit_btn" type="button" value="Reset Visualisation" /> <!--class="eexcess_vis_controls_button"- ->
+				</div>-->
+							
+				<div id="eexcess_canvas"></div>
+			</div>
+			
+			<div id="eexcess_controls"> 
+				<div id="eexcess_fixed_controls">
+					<div id="eexcess_controls_chart" class="eexcess_controls_select" >
+						<span class="eexcess_controls_title">Chart</span>
+						<select id="eexcess_select_chart" ></select>
+					</div>
+				
+					<div id="eexcess_controls_mappings" class="eexcess_controls_select"></div>
+				</div>
 			</div>
 		
 		</div>
