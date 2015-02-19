@@ -62,9 +62,6 @@ body a{
     color: #529CBF;
 }
 
-div{
-	display:block;
-}
 
 input[type="button"] {
     width: 49px;
@@ -178,7 +175,9 @@ input[type="button"]:hover{
     text-decoration: none;
     vertical-align: top;
     line-height: 1.9em;
-    color: #666;
+    color: #666;    
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 
@@ -351,40 +350,30 @@ input[type="button"]:hover{
     Currently Unused
 */
 #eexcess_header_filter {
-	/*width: 29%;*/
-	/*width: 19%;*/
-	/*width:400px;*/
-	width:50%;
-	
-	float: right;
+	width:50%;	
 	height:28px;
-    /*text-align:right;*/
-    /*padding-right: 5%;*/
 }
-
-#eexcess_header_filter > a > img {
-	float:right;
-    width: 20px;
-    height: 20px;
+#eexcess_collections > span,
+#eexcess_collections > #eexcess_deleteBookmark_button{
+    vertical-align: middle;
 }
-
-#eexcess_header_filter > span{
-	float:right;
-	height: 20px;
+#eexcess_bookmarkingcollections-placeholder{
+    display: inline-block;
+    width:135px;
+}
+#eexcess_bookmarkselected_container{
+    text-align: center;
 }
 
 #eexcess_addBookmarkItems_button{
-	float:right;
 	width:110px;
-	margin:5px 18px 5px 5px;
 }
-#eexcess_deleteBookmark_button{
-	float:right;
-	width:16px;
-	margin:0px 10px;
+#eexcess_deleteBookmark_button{	
+	width:16px;   
+    margin:0;
+    padding:0;
 }
-#eexcess_export_bookmark{
-	float:right;
+#eexcess_export_bookmark{	
 	width:16px;
 }
 #eexcess_import_bookmark{
@@ -392,7 +381,6 @@ input[type="button"]:hover{
 }
 #eexcess_export_bookmark{
 	border: silver solid 1px;
-	float:right;
 	width:14px;
 	height:14px;
 }
@@ -400,16 +388,12 @@ input[type="button"]:hover{
 	margin: -8px 0px 0px 5px;
 	height:14px;
 }
-#eexcess_import_bookmark_style{
-	float:right;
+#eexcess_import_bookmark_style{	
 	width:16px;
 }
-#bookmark_selected_star{
-    float:right;
-    margin:5px 0;
+#bookmark_selected_star{    
 }
 #bookmarklist-label{
-    float:right;
     margin:4px 3px 0 0;
     line-height:normal;
 }
@@ -679,7 +663,7 @@ Visualization Panel (center of screen)
 
 /********************************************************************************************************************************************
 
-    Content List Panel (right side of screen)
+    Content List Panel (left side of screen)
 
 ********************************************************************************************************************************************/
 
@@ -688,7 +672,6 @@ Visualization Panel (center of screen)
     <div> container for the list of recommendations
 */
 #eexcess_content{
-	overflow: auto;
 	float: left;
 	display:inline-block;
 	vertical-align: top;
@@ -696,12 +679,21 @@ Visualization Panel (center of screen)
   	height: 100%;
 }
 
+#eexcess_collections{
+    height:50px;
+    text-align: left;
+    border-bottom: 1px solid #e4e4e4;
+    margin-bottom:4px;
+}
 
 
 /*
     List body in "#eexcess_content"
 */
-#eexcess_content ul{
+#eexcess_content ul.eexcess_result_list{
+    overflow: auto;
+    height:80%;
+    height: calc(100% - 55px); /* size of collections div*/
 	clear:both;
     margin: 0;
     padding: 0;
@@ -866,10 +858,10 @@ p.eexcess_ritem_short {
 
 .eexcess-bookmark-dialog, .eexcess-bookmark-filter-dialog{
     position: absolute;
-    right: 4.6em;
-    width: 18em;
+    left: 120px;
+    width: 200px;
     /*max-height: 30em;*/
-    padding: 0.5em;
+    padding: 5px;
     z-index: 999;
     font-size: 0.9em;
     background-color: white;
@@ -946,7 +938,8 @@ p.eexcess_ritem_short {
 
 }
 #eexcess-filter-bookmark-dialog>.eexcess-bookmark-dropdown-list{
-	width: 90%;
+	white-space: nowrap;
+    width: 125px;
 }
 
 

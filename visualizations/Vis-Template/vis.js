@@ -27,7 +27,6 @@ function Visualization( EEXCESSobj ) {
 	var favIconClass = ".eexcess_fav_icon";                                                        // img element fpr favicon (either on or off)
     var bookmarkDetailsIconClass = ".eexcess_details_icon";                                        // img element with 3-dot icon in each list item used to display bookmarked item's details on click
     var loadingMsgId = "#eexcess_message_on_canvas";											
-	var filterSelect = "#eexcess_header_filter";												   // String to select in the right of the header
 
 	
     var bookmarkDialogClass = ".eexcess-bookmark-dialog";                                          // Class selector for both types of dialog: save bookmark and see-and-edit-bookmark
@@ -1571,12 +1570,13 @@ function Visualization( EEXCESSobj ) {
 	
 		$( filterBookmarkDialogId ).remove();
 		
-		var topOffset = $(filterSelect).offset().top;
-		var dialogBookmark = d3.select(filterSelect+">span").append("span")//div
+		var topOffset = $('#eexcess_bookmarkingcollections-placeholder').offset().top;
+		var dialogBookmark = d3.select("#eexcess_bookmarkingcollections-placeholder").append("span")//div
 			.attr("id", "eexcess-filter-bookmark-dialog")
 			.attr("class", "eexcess-filter-bookmark-dialog")
 			.style("top", topOffset + "px" )
-			.style("width","200px");
+			//.style("width","200px")
+			;
 		
 		var bookmarksListContainer = dialogBookmark.append("div")
 			.attr("class", "eexcess-bookmark-dropdown-list")
@@ -1598,7 +1598,14 @@ function Visualization( EEXCESSobj ) {
 		var bookmarksListData = bookmarksListContainer.selectAll('li').data(optionsData);
 
         var bookmarksList = bookmarksListData.enter().append('li');
-        bookmarksList.append('a').text(function(b){ return b["bookmark-name"];})
+        bookmarksList.append('a')
+        	//.attr("title", function(b){ return b["bookmark-name"];})
+        	.text(function(b){ return b["bookmark-name"];})
+	        //.each(function(b) {
+	        //    var link = d3.select(this);
+	        //    link.attr("title", b["bookmark-name"]);
+	        //})
+	        ;
         bookmarksList.append('div').text(function(b){ return b.color; });
 		
         $(filterBookmarkDropdownList).dropdown({
@@ -1727,7 +1734,8 @@ function Visualization( EEXCESSobj ) {
 			function(thisValue){},
 			function(bookmarkDetails){
 				bookmarkDetails.append('p').text("selected bookmarks items");
-			},function(){
+			},
+			function(){
 
 				FILTER.addBookmarkItems();
 

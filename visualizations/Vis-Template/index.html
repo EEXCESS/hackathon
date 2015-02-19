@@ -73,17 +73,6 @@ and open the template in the editor.
 					<a target="_blank" href="help-visdashboard.html" >
                         <img src="../../media/icons/help.png" />
                     </a>
-					<a id="eexcess_export_bookmark" href="#" title="export bookmark"><div>↓</div></a>
-					<input id="eexcess_import_bookmark_style" type="button" value="↑" title="import bookmark">
-					</input>
-					<input id="eexcess_import_bookmark" type="file">
-					</input>
-					<input id="eexcess_deleteBookmark_button" type="button" value="x" title="delete selected bookmarks">
-					</input>
-					<span></span>
-					<div id="bookmarklist-label">Showing:</div>
-					<input id="eexcess_addBookmarkItems_button" type="button" value="bookmark selected" />
-                    <img class="eexcess_fav_icon" id="bookmark_selected_star" title="bookmark selected" src="../../media/icons/favicon_on.png">
 	  			</div>
 			</div>
       	</header>
@@ -91,7 +80,25 @@ and open the template in the editor.
 		<div id="eexcess_main_panel">
 		
       		<div id="eexcess_content" >
-				<ul class="eexcess_result_list"></ul>
+				<div id="eexcess_collections">
+					<span id="bookmarklist-label">Showing:</span>
+					<span id="eexcess_bookmarkingcollections-placeholder"></span>
+					<input id="eexcess_deleteBookmark_button" type="button" value="x" title="delete selected bookmark collections" />
+					<br />
+					<div id="eexcess_bookmarkselected_container">
+                    	<img class="eexcess_fav_icon" id="bookmark_selected_star" title="bookmark selected" src="../../media/icons/favicon_on.png">
+						<input id="eexcess_addBookmarkItems_button" type="button" value="bookmark selected" />
+					</div>
+
+
+					<!--<a id="eexcess_export_bookmark" href="#" title="export bookmark"><div>↓</div></a>
+					<input id="eexcess_import_bookmark_style" type="button" value="↑" title="import bookmark">
+					</input>
+					<input id="eexcess_import_bookmark" type="file">
+					</input>-->
+				</div>
+				<ul class="eexcess_result_list">					
+				</ul>
 			</div>
 			
 			<div id="eexcess_vis_panel">
