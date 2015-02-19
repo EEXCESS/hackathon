@@ -85,7 +85,26 @@ function Visualization( EEXCESSobj ) {
     var bookmarkedItems;
 
 	// Chart objects
-	var timeVis, barVis, geoVis;
+	var timeVis, barVis, geoVis, urankVis;
+
+
+	requirejs.config({
+	    baseUrl: '/visualizations/Vis-Template/uRank/',
+	    paths: {
+	        natural: 'libs/natural',
+	        colorbrewer: 'libs/colorbrewer',
+	        'dim-background': 'libs/dim-background',
+	        lexer: 'libs/pos/lexer',
+	        lexicon: 'libs/pos/lexicon',
+	        POSTagger: 'libs/pos/POSTagger',
+	        pos: 'libs/pos/pos',
+	        rankingvis: 'scripts/rankingvis',
+	        settings: 'scripts/settings',
+	        utils: 'scripts/utils',
+	        taskStorage: 'scripts/taskStorage',
+	        'vis-controller': 'scripts/vis-controller',
+	    }             
+	});
 
 
 
@@ -111,6 +130,7 @@ function Visualization( EEXCESSobj ) {
 		timeVis = new Timeline(root, EXT);
 		barVis = new Barchart(root, EXT);
         geoVis = new Geochart(root, EXT);
+        urankVis = new Urank(root, EXT);
 
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();
@@ -995,13 +1015,19 @@ function Visualization( EEXCESSobj ) {
 	 * */
 	VISPANEL.drawChart = function( item ){
 		
-		$(root).empty();
+		$(root).empty();		
+        // cleanup added controls:
+        //$('#eexcess_fixed_controls').show();
+        //$('#eexcess_controls').children().not('#eexcess_fixed_controls').remove()
+        $('#eexcess_vis_panel').children().not('#eexcess_canvas').remove()
+        $('#eexcess_vis_panel').attr('class', '');
 		var selectedMapping = this.internal.getSelectedMapping( item );
 
 		switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
 			case "timeline" : timeVis.draw(data, selectedMapping, width, height); break;
 			case "barchart":  barVis.draw(data, selectedMapping, width, height); break;
             case "geochart":  geoVis.draw(data, selectedMapping, width, height); break;
+            case "urank":  urankVis.draw(data, selectedMapping, width, height); break;
 			default : d3.select(root).text("No Visualization");	
 		}
 
@@ -1028,6 +1054,7 @@ function Visualization( EEXCESSobj ) {
 					case "timeline": timeVis.reset(); break;
 					case "barchart": barVis.reset(); break;
                     case "geochart": geoVis.reset(); break;
+                    case "urank": urankVis.reset(); break;
 				}
 				break;
 			case "highlight_item_selected":
@@ -1037,6 +1064,7 @@ function Visualization( EEXCESSobj ) {
 					case "timeline": timeVis.selectNodes(arrayIndices, self); break;
                     case "barchart": barVis.clearSelection(); break;
                     case "geochart": geoVis.highlightItems(arrayIndices); break;
+                    case "urank": urankVis.highlightItems(arrayIndices); break;
 				}
 				break;
 
@@ -1443,7 +1471,7 @@ function Visualization( EEXCESSobj ) {
 
 		window.URL = window.URL;// || window.webkitURL;
 
-		console.log(BookmarkingAPI.getAllBookmarks());
+		//console.log(BookmarkingAPI.getAllBookmarks());
 
 
 		$(exportBookmark).on("click",function(evt){

@@ -171,6 +171,17 @@ function getMappings(){
                     {"facet": "provider", "visualattribute": "color"}
                 ]
             ]
+        },
+        {
+            "chart" : "urank",
+            "combinations": [
+                [
+                    {"facet": "language", "visualattribute": "color"}
+                ],
+                [
+                    {"facet": "provider", "visualattribute": "color"}
+                ]
+            ]
         }
     ];
 

@@ -18,6 +18,7 @@ Settings.prototype.getDimensions = function( root, iWidth, iHeight ){
 			case "timeline": return getTimelineDimensions( root, iWidth, rootWidth, rootHeight); break;
 			case "barchart": return getBarchartDimensions( root, iWidth, rootWidth, rootHeight); break;
             case "geochart": return getGeochartDimensions(root, rootWidth, rootHeight); break;   /*  TO DO   */
+            case "urank": return getUrankDimensions(root, rootWidth, rootHeight); break;   /*  TO DO   */
 		}
 		
 	};
@@ -64,8 +65,10 @@ function getBarchartDimensions( root, iWidth, rootWidth, rootHeight ){
 
 
 function getGeochartDimensions(root, rootWidth, rootHeight){
+    return {'width': rootWidth, 'height': rootHeight };
+}
 
-
+function getUrankDimensions(root, rootWidth, rootHeight){
     return {'width': rootWidth, 'height': rootHeight };
 }
 
@@ -87,6 +90,7 @@ Settings.prototype.getInitData = function( data, mappings, arg ){
         case "timeline" : return getTimelineInitData(preprocessedData, mappings); break;
 		case "barchart" : return getBarchartInitData(preprocessedData, mappings, arg); break;
         case "geochart" : return getGeochartInitData(preprocessedData, mappings); break;   /*TO DO*/
+        case "urank" : return getUrankInitData(preprocessedData, mappings); break;   /*TO DO*/
 	}
 };
 
@@ -206,7 +210,9 @@ function getBarchartInitData( processedData, mappings, yearRange ){
 
 
 function getGeochartInitData(processedData, mappings){
-    /*  TO DO   */
+    return { 'data': processedData };
+}
 
+function getUrankInitData(processedData, mappings){
     return { 'data': processedData };
 }

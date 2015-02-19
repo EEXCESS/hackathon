@@ -1,0 +1,88 @@
+.urank #eexcess_vis_panel_controls{
+	
+}
+
+
+.urank #eexcess_ranking_controls {
+	display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 45%;
+    margin: 2px 0;
+    padding: 0;
+    background: -webkit-linear-gradient(top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1));
+    box-shadow: inset .1em .1em .5em #ccc, inset -.1em -.1em .5em #ccc;
+}
+	.urank #eexcess_ranking_controls button {		
+		height: 26px;
+		width: 34px;
+		margin: 8px 4px;
+		padding: 4px 8px;
+		border-radius: 12px;
+	}
+
+		.urank #eexcess_ranking_controls button img {
+		    width: 100%;
+		    height: 100%;
+		}
+
+
+
+.urank #eexcess_keywords_box {
+	overflow-x: hidden;
+    overflow-y: auto;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    float: right;
+    width: 55%;
+    margin: 2px 0;
+    padding: 0;
+    background: -webkit-linear-gradient(top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1));
+    list-style-type: none;
+    text-align: left;
+    box-shadow: inset .1em .1em .5em #ccc, inset -.1em -.1em .5em #ccc;
+}
+
+	.urank #eexcess_keywords_box p {
+		width: 100%;
+	    margin-top: 0.2em;
+		margin-bottom: 0.2em;
+		font-size: 1em;
+	    text-align: center;
+	    color: #777;
+	}
+
+.urank #eexcess_canvas{
+	width:calc(100% - 250px);
+	float:left;
+}
+
+
+#eexcess_keywords_container {
+    overflow-y: auto;
+    width:240px;
+    padding:5px;
+    background: white;
+    box-shadow: inset .2em .2em .5em #ccc, inset -.2em -.2em .5em #ccc;
+}
+	.eexcess_keyword_tag{
+		display: inline-block;
+		pointer-events: all;
+		margin: 0.2em;
+		padding: 0.3em;
+		border: 0.1em #222 solid;
+		-webkit-border-radius: 0.3em;
+	    border-radius: 0.3em;
+		-webkit-box-shadow: 0em 0.1em 0.3em -0.1em #888;
+	    box-shadow: 0em 0.1em 0.3em -0.1em #888;
+	    color: #111;
+	    text-shadow: -0.1em 0.1em 0.5em #eee;
+		opacity: 1.0;
+		cursor: move;
+	}
+
+	.eexcess_keyword_tag:hover {
+		color: #eee;
+	    text-shadow: none;
+	}

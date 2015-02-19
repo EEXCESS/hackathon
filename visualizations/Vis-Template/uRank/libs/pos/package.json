@@ -1,0 +1,57 @@
+{
+  "name": "pos",
+  "description": "fasttag part of speech tagger implementation",
+  "keywords": [
+    "nlp",
+    "pos",
+    "part of speech",
+    "jspos",
+    "fasttag"
+  ],
+  "homepage": "https://github.com/dariusk/pos-js",
+  "author": {
+    "name": "Percy Wegmann"
+  },
+  "version": "0.1.7",
+  "licenses": [
+    {
+      "type": "LGPL",
+      "url": "http://www.gnu.org/licenses/lgpl.html"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dariusk/pos-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/dariusk/pos-js/issues"
+  },
+  "engines": {
+    "node": ">=0"
+  },
+  "main": "./main.js",
+  "_id": "pos@0.1.7",
+  "_shasum": "66223a2168751e9d7102f921698e3c19206ecfbc",
+  "_from": "pos@*",
+  "_npmVersion": "1.4.10",
+  "_npmUser": {
+    "name": "dariusk",
+    "email": "darius.kazemi@gmail.com"
+  },
+  "maintainers": [
+    {
+      "name": "gerad",
+      "email": "gerads@gmail.com"
+    },
+    {
+      "name": "dariusk",
+      "email": "darius.kazemi@gmail.com"
+    }
+  ],
+  "dist": {
+    "shasum": "66223a2168751e9d7102f921698e3c19206ecfbc",
+    "tarball": "http://registry.npmjs.org/pos/-/pos-0.1.7.tgz"
+  },
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/pos/-/pos-0.1.7.tgz"
+}
