@@ -159,7 +159,7 @@ EEXCESS.queryFromTitle = function() {
                 var doc = document.implementation.createHTMLDocument("tmp");
                 doc.documentElement.innerHTML = data;
                 otherTitles.push(doc.title.replace(/[^\w\säöüÄÖÜß]/g, ' ').match(/[^ ]+/g));
-            } 
+            }
             if (urlIDX === k) {
                 setQueryString();
             }
@@ -174,44 +174,175 @@ EEXCESS.queryFromTitle = function() {
 
     var setQueryString = function() {
         var title = document.title.replace(/[^\w\säöüÄÖÜß]/g, ' ').match(/[^ ]+/g);
-        for(var i=0; i< title.length; i++) {
+        for (var i = 0; i < title.length; i++) {
             var occForward = 0;
             var occBackward = 0;
-            for(var j=0; j < otherTitles.length; j++) {
-                if(otherTitles[j].length > i) {
-                    if(otherTitles[j][i] === title[i]) {
+            for (var j = 0; j < otherTitles.length; j++) {
+                if (otherTitles[j].length > i) {
+                    if (otherTitles[j][i] === title[i]) {
                         occForward++;
                     }
-                    if(otherTitles[j][otherTitles[j].length-i-1] === title[title.length-i-1]) {
+                    if (otherTitles[j][otherTitles[j].length - i - 1] === title[title.length - i - 1]) {
                         occBackward++;
                     }
                 }
             }
-            if(occForward > threshold) {
+            if (occForward > threshold) {
                 queryStringArr[i] = '';
             }
-            if(occBackward > threshold) {
-                queryStringArr[queryStringArr.length-i-1] = '';
+            if (occBackward > threshold) {
+                queryStringArr[queryStringArr.length - i - 1] = '';
             }
         }
         var query = [];
-        for(var i=0;i<queryStringArr.length;i++) {
-            if(queryStringArr[i].length > 0) {
+        for (var i = 0; i < queryStringArr.length; i++) {
+            if (queryStringArr[i].length > 0) {
                 query.push(queryStringArr[i]);
             }
         }
-        if(query.length === 0) {
+        if (query.length === 0) {
             query = document.title.replace(/[^\w\säöüÄÖÜß]/g, ' ').match(/[^ ]+/g);
-        };
+        }
+        ;
         var weightedQuery = [];
-        for(var i=0;i<query.length;i++) {
+        for (var i = 0; i < query.length; i++) {
             weightedQuery.push({
-                text:query[i],
-                weight:1.0
+                text: query[i],
+                weight: 1.0
             });
         }
         EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason: {reason: 'page', value: window.location.protocol + '//' + window.location.host + window.location.pathname, url: window.location.hostname}, terms: weightedQuery}});
     };
+}();
+
+EEXCESS.queryParagraphs = function() {
+    var corresponding = [];
+    var single = [];
+
+    var _getParagraphs = function() {
+        var pars = [];
+        var walker = document.createTreeWalker(
+                document.body,
+                NodeFilter.SHOW_TEXT
+                );
+
+        var node;
+        while (node = walker.nextNode()) {
+            var containsText = node.nodeValue.search(/\S+/);
+            var parent = node.parentNode.nodeName;
+            var cond1 = parent !== 'SCRIPT'; // exclude script areas
+            var cond2 = parent !== 'STYLE';  // exclude style areas
+            var cond3 = parent !== 'NOSCRIPT'; // exclude noscript areas
+            var cond4 = parent !== 'A';
+            var minLength = node.nodeValue.length > 40;
+            if (containsText !== -1 && cond1 && cond2 && cond3 && minLength) {
+                if (pars.indexOf(node.parentNode) === -1) {
+                    pars.push(node.parentNode);
+                }
+            }
+        }
+        return pars;
+    };
+
+    var _getHeadline = function(parNode) {
+        var walker = document.createTreeWalker(
+                document.body,
+                NodeFilter.SHOW_ELEMENT
+                );
+
+        var node = parNode;
+        walker.currentNode = node;
+        while (node = walker.previousNode()) {
+            if (node.nodeName.indexOf('H') === 0) {
+                return node;
+            }
+        }
+        return null;
+    };
+
+    var paragraphs = _getParagraphs();
+
+    for (var i = 0; i < paragraphs.length; i++) {
+        var next = paragraphs[i].nextSibling;
+        var sole = true;
+        var j = i;
+        var neighbours = [];
+        while (next !== null) {
+            if (next.nodeName !== '#text') {
+                var idx = $.inArray(next, paragraphs, j);
+                if (idx > -1) {
+                    j = idx;
+                    neighbours.push(paragraphs[j]);
+                    sole = false;
+                    next = next.nextSibling;
+                } else {
+                    next = null;
+                }
+            } else {
+                next = next.nextSibling;
+            }
+        }
+        if (sole) {
+            var text = $(paragraphs[i]).text();
+            if (text.length > 100 && text.indexOf('.') > -1) {
+                single.push(paragraphs[i]);
+            }
+        } else {
+            neighbours.unshift(paragraphs[i]);
+            corresponding.push(neighbours);
+            i = j;
+        }
+    }
+
+    var finalParagraphs = [];
+
+    for (var i in single) {
+        var h = _getHeadline(single[i]);
+        $(single[i]).wrap('<div id="eexcess_s' + i + '" style="border:1px dotted gray;"></div>');
+        finalParagraphs.push({
+            headline: $(h).text(),
+            content: $(single[i]).text()
+        });
+    }
+    for (var i in corresponding) {
+        var h = _getHeadline(corresponding[i][0]);
+        var text = '';
+        var tmpCorr = $(corresponding[i]);
+        for (var k = 0; k < corresponding[i].length; k++) {
+            text += $(corresponding[i][k]).text();
+        }
+        console.log(tmpCorr);
+        tmpCorr.wrapAll('<div id="eexcess_c' + i + '" style="border:1px dotted gray;"></div>');
+        finalParagraphs.push({
+            headline: $(h).text(),
+            content: text
+        });
+    }
+    console.log(finalParagraphs);
+    EEXCESS.messaging.callBG({method: {parent: 'NER', func: 'getParagraphEntities'}, data: finalParagraphs}, function(result) {
+        var addEntities = function(prefix, i, id) {
+            var img = $('<img src="chrome-extension://' + EEXCESS.utils.extID + '/media/icons/16.png" style="margin:0;padding:0;" />');
+            $('#' + prefix + id).prepend(img);
+            var entities = '';
+            for (var j = 0; j < result.paragraphs[i].statistic.length; j++) {
+                if (j < result.paragraphs[i].statistic.length - 1) {
+                    entities += ' ' + result.paragraphs[i].statistic[j].key.text + ' |';
+                } else {
+                    entities += ' ' + result.paragraphs[i].statistic[j].key.text;
+                }
+            }
+            img.after('<span style="color:#1D904E;font-weight:bold;">' + entities + '</span>');
+        };
+
+        for (var i = 0; i < result.paragraphs.length; i++) {
+            if (i < single.length) {
+                addEntities('eexcess_s', i, i);
+            } else {
+                addEntities('eexcess_c', i, i-single.length);
+            }
+        }
+        console.log(result);
+    });
 }();
 
 

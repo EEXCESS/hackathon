@@ -391,3 +391,19 @@ EEXCESS.model = (function() {
     };
 }());
 
+EEXCESS.NER = (function(){
+    var _getParagraphEntities = function(tabID, paragraphs, callback) {
+        var xhr = $.ajax({
+            url: 'http://theseus.dimis.fim.uni-passau.de:8080/doser-disambiguationserver/webclassify/entityStatistic',
+            data: JSON.stringify({paragraphs:paragraphs}),
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json'
+        });
+        xhr.done(callback);
+    };
+    return {
+        getParagraphEntities:_getParagraphEntities
+    };
+}());
+
