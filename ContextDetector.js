@@ -134,7 +134,6 @@ $(document).mouseup(function() {
 
 
 EEXCESS.queryFromTitle = function() {
-    var start = new Date().getTime();
     var otherURLs = [];
     var otherTitles = [];
     var urlIDX = 0;
@@ -148,7 +147,6 @@ EEXCESS.queryFromTitle = function() {
     }
 
     for (var i = 0; i < k && i < otherURLs.length; i++) {
-        console.log(otherURLs[i]);
         var xhr = $.ajax({
             url: otherURLs[i],
             dataType: 'html',
@@ -175,8 +173,6 @@ EEXCESS.queryFromTitle = function() {
     }
 
     var setQueryString = function() {
-        console.log(queryStringArr);
-        console.log(otherTitles);
         var title = document.title.replace(/[^\w\säöüÄÖÜß]/g, ' ').match(/[^ ]+/g);
         for(var i=0; i< title.length; i++) {
             var occForward = 0;
@@ -216,8 +212,6 @@ EEXCESS.queryFromTitle = function() {
         }
         EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason: {reason: 'page', value: window.location.protocol + '//' + window.location.host + window.location.pathname, url: window.location.hostname}, terms: weightedQuery}});
     };
-    var start = new Date().getTime() - start;
-    console.log(start + 'ms');
 }();
 
 
