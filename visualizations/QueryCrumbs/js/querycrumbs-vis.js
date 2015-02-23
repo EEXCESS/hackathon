@@ -309,7 +309,7 @@ function display_querycrumbs(domElem) {
                 } else if(current.length > predecessor.length) {
                     current = current.slice(0, predecessor.length);
                 } else if(predecessor.length > current.length) {
-                    predecessor = predecessor.slice(0, acurrent.length);
+                    predecessor = predecessor.slice(0, current.length);
                 }
                 
                 for(var i = 0; i < current.length; i++) {
