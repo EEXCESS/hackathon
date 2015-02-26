@@ -1,8 +1,9 @@
 //Vis.Register('uRank', Urank);
 
-function Urank(root, visTemplate) {
+function Urank(root, visTemplate, EEXCESSobj) {
 
 	var URANK = {};
+	var EEXCESS = EEXCESSobj || {};
 	URANK.Settings = new Settings('urank');
 
 	var Vis = visTemplate;
@@ -61,7 +62,7 @@ function Urank(root, visTemplate) {
 	URANK.Render.draw = function( receivedData, mappingCombination, iWidth, iHeight ){
 
         if (!librariesLoaded){
-            require(['natural', 'colorbrewer', 'dim-background', 'lexer', 'lexicon', 'POSTagger', 'pos', 'rankingvis', 'settings', 'utils', 'taskStorage', 'vis-controller'], function(){
+            require(['natural', 'colorbrewer', 'dim-background', 'lexer', 'lexicon', 'POSTagger', 'pos', 'rankingvis', 'settings', 'utils', 'taskStorage', 'vis-controller', 'vis-controller-customized'], function(){
                 librariesLoaded=true;
                 URANK.Render.draw();
             });
@@ -69,8 +70,10 @@ function Urank(root, visTemplate) {
         }
 
         //$('#eexcess_fixed_controls').hide();        
-        $('#eexcess_vis_panel').addClass('urank').prepend(
-               '<div id="eexcess_vis_panel_controls">'+
+        $('#eexcess_main_panel').addClass('urank');
+        $('.eexcess_result_list').empty();
+        $('#eexcess_vis_panel').prepend(
+               '<div id="eexcess_vis_panel_controls" class="clearfix">'+
                '    <div id="eexcess_ranking_controls">'+
                '        <button id="eexcess_btnreset">'+
                '            <img src="uRank/media/batchmaster/refresh.png" title="Reset">'+
@@ -83,11 +86,13 @@ function Urank(root, visTemplate) {
                '        </button>'+
                '    </div>'+
                '    <div id="eexcess_keywords_box" class="ui-droppable"></div>'+
-               '</div>'
+               '</div>',
+               ''
             );
+        $('#eexcess_canvas').append('<ul class="eexcess_result_list_inner"></ul><div id="urank_canvas_inner"></div>');
         $('#eexcess_vis_panel').append('<div id="eexcess_keywords_container"></div>');
 
-        VisController();
+        VisController(Vis);
 
 		// See settings.js
 

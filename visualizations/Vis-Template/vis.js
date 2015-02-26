@@ -103,6 +103,7 @@ function Visualization( EEXCESSobj ) {
 	        utils: 'scripts/utils',
 	        taskStorage: 'scripts/taskStorage',
 	        'vis-controller': 'scripts/vis-controller',
+	        'vis-controller-customized': 'scripts/vis-controller-customized',
 	    }             
 	});
 
@@ -130,7 +131,7 @@ function Visualization( EEXCESSobj ) {
 		timeVis = new Timeline(root, EXT);
 		barVis = new Barchart(root, EXT);
         geoVis = new Geochart(root, EXT);
-        urankVis = new Urank(root, EXT);
+        urankVis = new Urank(root, EXT, EEXCESS);
 
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();
@@ -467,6 +468,7 @@ function Visualization( EEXCESSobj ) {
 			},EVTHANDLER.bookmarkSaveButtonClicked,
 			this);
     };
+
 
 
 
@@ -1017,10 +1019,10 @@ function Visualization( EEXCESSobj ) {
 		
 		$(root).empty();		
         // cleanup added controls:
-        //$('#eexcess_fixed_controls').show();
-        //$('#eexcess_controls').children().not('#eexcess_fixed_controls').remove()
         $('#eexcess_vis_panel').children().not('#eexcess_canvas').remove()
-        $('#eexcess_vis_panel').attr('class', '');
+        $('#eexcess_main_panel').attr('class', ''); // removing urank class
+		LIST.buildContentList();
+
 		var selectedMapping = this.internal.getSelectedMapping( item );
 
 		switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
@@ -1584,6 +1586,10 @@ function Visualization( EEXCESSobj ) {
 	EXT.getAllSelectListItems = function(){
 		return VISPANEL.getAllSelectListItems();
 	};
+	
+    EXT.faviconClicked = function(d, i){
+    	EVTHANDLER.faviconClicked(d, i);
+    }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

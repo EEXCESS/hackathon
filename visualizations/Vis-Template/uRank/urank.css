@@ -1,13 +1,12 @@
 .urank #eexcess_vis_panel_controls{
-	
 }
 
 
 .urank #eexcess_ranking_controls {
-	display: inline-flex;
-    justify-content: center;
-    align-items: center;
+	display: inline-block;
+	float:left;
     width: 45%;
+    height:50px;
     margin: 2px 0;
     padding: 0;
     background: -webkit-linear-gradient(top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1));
@@ -31,11 +30,10 @@
 .urank #eexcess_keywords_box {
 	overflow-x: hidden;
     overflow-y: auto;
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: center;
-    float: right;
+    display: inline-block;  
+    float:left;
     width: 55%;
+    height:50px;
     margin: 2px 0;
     padding: 0;
     background: -webkit-linear-gradient(top, rgba(245, 245, 245, 1), rgba(230, 230, 230, 1));
@@ -53,20 +51,32 @@
 	    color: #777;
 	}
 
-.urank #eexcess_canvas{
-	width:calc(100% - 250px);
+.urank #eexcess_canvas{	
+	margin-left:-230px;
+	width: 100%;
+	height: calc(100% - 55px);
+	overflow-y: auto;
+	overflow-x: hidden;
+	display: inline-block;
 	float:left;
 }
+	.urank #urank_canvas_inner{	
+		width:calc(100% - 430px);
+		height: 100%;		
+    	float:left;
+	}
 
 
-#eexcess_keywords_container {
+.urank #eexcess_keywords_container {
     overflow-y: auto;
-    width:240px;
+    width:220px;
     padding:5px;
     background: white;
     box-shadow: inset .2em .2em .5em #ccc, inset -.2em -.2em .5em #ccc;
+    display:inline-block;
+    float:left;
 }
-	.eexcess_keyword_tag{
+	.urank .eexcess_keyword_tag{
 		display: inline-block;
 		pointer-events: all;
 		margin: 0.2em;
@@ -82,7 +92,140 @@
 		cursor: move;
 	}
 
-	.eexcess_keyword_tag:hover {
+	.urank .eexcess_keyword_tag:hover {
 		color: #eee;
 	    text-shadow: none;
 	}
+
+
+
+
+.eexcess_keyword_tag_in_box{
+	cursor: default;
+	display: inline-block;
+	text-align: left;
+	min-width: 14%;
+    height: 2em;
+	margin: 0.8em .3em 0.2em 0.3em;
+    padding: .2em;
+	border-radius: 0.3em;
+	-webkit-border-radius: 0.3em;
+	-webkit-box-shadow: 0em 7px 6px -6px #333;
+    box-shadow: 0em 7px 6px -6px #333;
+    -webkit-text-shadow: -0.1em 0.1em 0.5em #eee;
+    text-shadow: -0.1em 0.1em 0.5em #eee;
+
+}
+
+.urank .eexcess_keyword_tag_in_box:hover {
+    box-shadow: 2px 2px 5px #555, -2px -2px 5px #555;
+}
+
+
+.urank .eexcess_keyword_tag_in_box > text {
+	opacity: 0.5;
+}
+
+
+.urank .eexcess_result_list_inner {
+	clear: both;
+	width: 430px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: block;
+	padding-bottom: 1px;
+	float:left;
+}
+
+.urank .eexcess_list {
+    position: relative;
+    padding: .1em;
+    height: 27.5px;/*2em;*/
+    vertical-align: top;
+    -webkit-transition: box-shadow 4s linear;
+}
+	.urank li.eexcess_list  {
+		min-height:0px;
+		padding: 0;
+		margin: 0;
+	}
+	.urank .eexcess_list h3 {
+	    margin:0;
+	    line-height: 12px;
+	    font-weight: normal;
+	}
+	.urank .eexcess_list a {
+	    color: #333;
+	    font-size:12px;
+	}
+	.urank .eexcess_list_hover {
+	    background: -webkit-linear-gradient(top, rgb(230, 230, 230) 75%, #ccc);
+	}
+	.urank .eexcess_list_moving_up {
+	    box-shadow: inset 0.1em 0.1em 0.2em rgba(0, 250, 0, 0.6), inset -0.1em -0.1em 0.2em rgba(0, 250, 0, 0.6);
+	    -webkit-transition: box-shadow 0s linear;
+	}
+	.urank .eexcess_list_moving_down {
+	    box-shadow: inset 0.1em 0.1em 0.2em rgba(250, 10, 10, 0.6), inset -0.1em -0.1em 0.2em rgba(250, 10, 10, 0.6);
+	    -webkit-transition: box-shadow 0s linear;
+	}
+	.urank .eexcess_list_not_moving {
+	    box-shadow: inset 0.1em 0.1em 0.2em rgba(128, 128, 128, 0.6), inset -0.1em -0.1em 0.2em rgba(128, 128, 128, 0.6);
+	    -webkit-transition: box-shadow 0s linear;
+	}
+
+
+.urank .eexcess_favicon_section {
+	display: inline-flex;
+	float: right;
+	width: 16px;
+	margin-right: 2px;
+	vertical-align: top;
+	}
+
+.urank .eexcess_ranking_container {
+    display: inline-block;
+    float: left;
+    height: 100%;
+    max-width: 55px;
+    padding-left: 1px;
+}
+.urank .eexcess_ritem_container {
+    display: inline-flex;
+    align-items: center;
+    width: calc(100% - 78px);
+    height: 100%;
+    margin-left: 2px;
+    vertical-align: top;
+    text-align: left;
+}
+
+
+.urank .eexcess_tag_img {
+	position: relative;
+	float: right;
+	right: -1.3em;
+	top: -1.1em;
+	z-index: 8040;
+	width: 1.7em;
+	height: 1.4em;
+	cursor: pointer;
+}
+
+.urank .ui-slider-horizontal {
+height: .5em;
+margin: .1em;
+}
+.urank .ui-widget {
+font-size: 1em;
+}
+
+
+.light_background {
+    background: #eee;
+}
+
+.dark_background {
+    background: #ddd;
+}

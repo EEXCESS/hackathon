@@ -8,7 +8,7 @@ function Settings(){
         //var margin = {top: 20, bottom: 30, left: Math.floor(rootWidth * 0.3), right: Math.floor(rootWidth * 0.02) };
         var margin = {top: 0, bottom: 20, left: 2, right: 0 };
         var width = rootWidth - margin.left - margin.right;
-        var height = $('#eexcess_content').height();
+        var height = $('.eexcess_result_list_inner').height();
         var centerOffset = (iWidth/2) - ((width + margin.left + margin.right)/2);
         var verticalOffset = ((rootHeight - 500) / 2) < 30 ? 30 : ((rootHeight - 500) / 2);
 

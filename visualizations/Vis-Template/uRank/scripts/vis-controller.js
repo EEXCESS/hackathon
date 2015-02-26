@@ -1,6 +1,6 @@
+function VisController(visTemplate) {
 
-(function VisController() {
-
+    var Vis = visTemplate;
     var self = this;
 
     var width  = $(window).width();     // Screen width
@@ -8,7 +8,7 @@
 
 
     // DOM Selectors
-    var root = "#eexcess_canvas";                                               // String to select the area where the visualization should be displayed
+    var root = "#urank_canvas_inner";                                               // String to select the area where the visualization should be displayed
 
     var headerPanel = "#eexcess_header";                                        // header dom element
     var headerInfoSection = "#eexcess_header_info_section span";
@@ -38,8 +38,8 @@
 
     var visPanelCanvas = "#eexcess_vis_panel_canvas";
     var contentPanel = "#eexcess_content";                                      // Selector for content div on the right side
-    var contentList = "#eexcess_content .eexcess_result_list";                  // ul element within div content
-    var allListItems = "#eexcess_content .eexcess_result_list .eexcess_list";   // String to select all li items by class
+    var contentList = ".urank .eexcess_result_list_inner";                            // ul element within div content
+    var allListItems = ".urank .eexcess_result_list_inner .eexcess_list";             // String to select all li items by class
     var listItem = "#data-pos-";                                                // String to select individual li items by id
     var rankingContainerClass = ".eexcess_ranking_container";                   // class selector for div wrapping ranking indicators in content list
     var allListItemTitles = ".eexcess_ritem_title";
@@ -57,20 +57,20 @@
     var TAG_CATEGORIES = 5;
     var SELECTED_ITEMS_REQUIRED = 5;
 
-    var LOADING_IMG = "media/loading.gif";
-    var DELETE_ICON_IMG = "media/fancybox_sprite_close.png";
-    var NO_IMG = "media/no-img.png";
-    var FAV_ICON_OFF = "media/favicon_off.png";
-    var FAV_ICON_ON = "media/favicon_on.png";
-    var REMOVE_SMALL_ICON = "media/batchmaster/remove.png"
-    var ICON_EUROPEANA =  "media/Europeana-favicon.ico";
-    var ICON_MENDELEY = "media/mendeley-favicon.ico";
-    var ICON_ZBW = "media/ZBW-favicon.ico";
-    var ICON_WISSENMEDIA = "media/wissenmedia-favicon.ico";
-    var ICON_KIM_COLLECT = "media/KIM.Collect-favicon.ico";
-    var ICON_UNKNOWN = "media/help.png";
-    var ARROW_DOWN_ICON = "media/batchmaster/arrow-down.png";
-    var ARROW_UP_ICON = "media/batchmaster/arrow-up.png";
+    var LOADING_IMG = "uRank/media/loading.gif";
+    var DELETE_ICON_IMG = "uRank/media/fancybox_sprite_close.png";
+    var NO_IMG = "uRank/media/no-img.png";
+    var FAV_ICON_OFF = "uRank/media/favicon_off.png";
+    var FAV_ICON_ON = "uRank/media/favicon_on.png";
+    var REMOVE_SMALL_ICON = "uRank/media/batchmaster/remove.png"
+    var ICON_EUROPEANA =  "uRank/media/Europeana-favicon.ico";
+    var ICON_MENDELEY = "uRank/media/mendeley-favicon.ico";
+    var ICON_ZBW = "uRank/media/ZBW-favicon.ico";
+    var ICON_WISSENMEDIA = "uRank/media/wissenmedia-favicon.ico";
+    var ICON_KIM_COLLECT = "uRank/media/KIM.Collect-favicon.ico";
+    var ICON_UNKNOWN = "uRank/media/help.png";
+    var ARROW_DOWN_ICON = "uRank/media/batchmaster/arrow-down.png";
+    var ARROW_UP_ICON = "uRank/media/batchmaster/arrow-up.png";
 
     var STR_DROPPED = "Dropped!";
     var STR_DROP_TAGS_HERE = "Drop tags here!";
@@ -251,7 +251,9 @@
     EVTHANDLER.faviconClicked = function(d, i){
         d3.event.stopPropagation();
         var index = (typeof dataRanking !== 'undefined' && dataRanking.length > 0) ? dataRanking[i].originalIndex :  i;
-        HEADER.addItemToListOfSelected(index);
+        // todo: add to bookmark
+        //Vis.faviconClicked(d, i)
+        //HEADER.addItemToListOfSelected(index);
         LIST.switchFaviconOnOrOff(index);
     };
 
@@ -396,12 +398,12 @@
 
 
     HEADER.removeItemFromListOfSelected = function(index) {
-        $(selectedItemsSection).find("div[original-index='" + index + "']").remove();
+        //$(selectedItemsSection).find("div[original-index='" + index + "']").remove();
     };
 
 
     HEADER.clearListOfSelected = function(index) {
-        $(selectedItemsSection).empty();
+        //$(selectedItemsSection).empty();
     };
 
 
@@ -972,7 +974,10 @@
             .attr('class', 'eexcess_favicon_section')
             .append("img")
                 .attr('title', 'Mark as relevant')
-                .attr("src", FAV_ICON_OFF);
+                .attr("src", FAV_ICON_OFF)
+                // todo:
+                //.on("click", EVTHANDLER.faviconClicked)
+                ;
 
         LIST.updateItemsBackground();
         LIST.bindEventHandlersToItems();
@@ -987,7 +992,8 @@
             .on("click", function(d, i){ EVTHANDLER.listItemClicked(d, i); })
             .on("mouseover", EVTHANDLER.listItemHovered)
             .on("mouseout", EVTHANDLER.listItemUnhovered)
-            .select(favIconClass).select('img').on("click", function(d, i){ EVTHANDLER.faviconClicked(d, i);});
+            .select(favIconClass).select('img').on("click", function(d, i){ EVTHANDLER.faviconClicked(d, i);})
+            ;
     };
 
 
@@ -1447,25 +1453,25 @@
 
 
     function getStaticElementsReady(){
-        var offsetTop = $(btnShowList).offset().top + $(btnShowList).height() + 10;
-        var offsetLeft = $(selectedItemsSection).parent().offset().left + 10;
-        $(selectedItemsSection).width($(headerControlsSection).width() - 20).css("top", offsetTop).css("left", offsetLeft);
-        $(sampleTextSection).width($(headerControlsSection).width() - 20).css("top", offsetTop).css("left", offsetLeft);
-        $('html').click(function(){
-            $(selectedItemsSection).slideUp();
-            $(sampleTextSection).slideUp();
-        });
-        $(selectedItemsSection).click(function(event){ event.stopPropagation(); });
-        $(sampleTextSection).click(function(event){ event.stopPropagation(); });
+        //var offsetTop = $(btnShowList).offset().top + $(btnShowList).height() + 10;
+        //var offsetLeft = $(selectedItemsSection).parent().offset().left + 10;
+        //$(selectedItemsSection).width($(headerControlsSection).width() - 20).css("top", offsetTop).css("left", offsetLeft);
+        //$(sampleTextSection).width($(headerControlsSection).width() - 20).css("top", offsetTop).css("left", offsetLeft);
+        //$('html').click(function(){
+        //    $(selectedItemsSection).slideUp();
+        //    $(sampleTextSection).slideUp();
+        //});
+        //$(selectedItemsSection).click(function(event){ event.stopPropagation(); });
+        //$(sampleTextSection).click(function(event){ event.stopPropagation(); });
 
         $(btnReset).click( function(){ EVTHANDLER.btnResetClicked(); });
         $(btnRankByOverall).click(function(){ EVTHANDLER.rankButtonClicked(this); });
         $(btnRankByMax).click(function(){ EVTHANDLER.rankButtonClicked(this); });
-        $(btnShowList).click(EVTHANDLER.btnListClicked);
-        $(btnShowText).click(EVTHANDLER.btnTextClicked);
-        $(btnFinished).click(EVTHANDLER.btnFinishedClicked);
-        $(window).resize(function(){ EVTHANDLER.canvasResized(); });
-        $(mainPanel).resize(function(){ EVTHANDLER.canvasResized(); });
+        //$(btnShowList).click(EVTHANDLER.btnListClicked);
+        //$(btnShowText).click(EVTHANDLER.btnTextClicked);
+        //$(btnFinished).click(EVTHANDLER.btnFinishedClicked);
+        //$(window).resize(function(){ EVTHANDLER.canvasResized(); });
+        //$(mainPanel).resize(function(){ EVTHANDLER.canvasResized(); });
     }
 
 
@@ -1483,31 +1489,32 @@
         }
         LIST.buildContentList();
         HEADER.clearListOfSelected();
-        HEADER.showInfoInHeader();
+        //HEADER.showInfoInHeader();
         DOCPANEL.clear();
 
-        var minToGo = (currentTask == 0) ? 'X' : (currentQuestion == questions.length - 1) ? 6 : 3;
-        $('#task_question_message')
-            .fadeIn(1)
-            .html('<span>Task: #' + currentTask + '</span><span>Question: #' + (currentQuestion + 1) + '</span><span>You have ' +
-                  minToGo + ' minutes to complete it</span>')
-            .dimBackground();
+        //var minToGo = (currentTask == 0) ? 'X' : (currentQuestion == questions.length - 1) ? 6 : 3;
+        //$('#task_question_message')
+        //    .fadeIn(1)
+        //    .html('<span>Task: #' + currentTask + '</span><span>Question: #' + (currentQuestion + 1) + '</span><span>You have ' +
+        //          minToGo + ' minutes to complete it</span>')
+        //    .dimBackground();
 
-        setTimeout(function(){
-            $('#task_question_message').fadeOut('slow');
-            $('#task_question_message').undim();
-            startTime = $.now();
-        }, 2500);
+        //setTimeout(function(){
+        //    $('#task_question_message').fadeOut('slow');
+        //    $('#task_question_message').undim();
+        //    startTime = $.now();
+        //}, 2500);
     }
 
 
     /**
-     *  Initizialization function self-invoked
+     *  Initizialization function
      *
      * */
     (function(){
-        dataset = JSON.parse($("#dataset").text());
-        console.log(dataset);
+        //dataset = JSON.parse($("#dataset").text());
+        dataset = urankDemoData;
+        //console.log(dataset);
 
         data = dataset['data'];                                                 // contains the data to be visualized
        // data.shuffle();
@@ -1527,6 +1534,7 @@
       //  LIST.buildContentList();
         getStaticElementsReady();
         initializeNextQuestion();
+        LIST.resetContentList();
 
         if(dataset['tool-aided'] == 'yes'){
             rankingVis = new RankingVis(root, width, height, self);
@@ -1541,7 +1549,7 @@
             $('#eexcess_controls_left_panel').css('display', 'none');
             $('#eexcess_vis_panel').css('width', '30%');
             $('#eexcess_vis_panel_controls').css('display', 'none');
-            $('#eexcess_canvas').css('display', 'none');
+            $(root).css('display', 'none');
             $('#eexcess_vis_panel_canvas').css('height', '100%');
             $(contentPanel).css('float', 'right').css('width', '100%');
             $('#eexcess_document_panel').css('float', '').css('width', '23%').css('marginLeft', '.5em');
@@ -1574,4 +1582,4 @@
         LIST.unhoverListItem(index, true);
     };
 
-})();
+}
