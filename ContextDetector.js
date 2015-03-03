@@ -393,16 +393,15 @@ EEXCESS.queryParagraphs = function() {
 
 
         var addEntities = function(el, i) {
-            console.log('add entities: ' + i);
             var entities = '';
+            result.paragraphs[i].statistic.sort(function(a,b){return b.value - a.value});
             for (var j = 0; j < result.paragraphs[i].statistic.length; j++) {
                 if (j < result.paragraphs[i].statistic.length - 1) {
-                    entities += ' ' + result.paragraphs[i].statistic[j].key.text + ' |';
+                    entities += ' ' + result.paragraphs[i].statistic[j].key.text + valueStr(result.paragraphs[i].statistic[j].value) +' |';
                 } else {
-                    entities += ' ' + result.paragraphs[i].statistic[j].key.text + '<hr/>';
+                    entities += ' ' + result.paragraphs[i].statistic[j].key.text + valueStr(result.paragraphs[i].statistic[j].value) + '<hr/>';
                 }
             }
-            console.log(entities);
             el.prepend('<span style="color:#1D904E;font-weight:bold;">' + entities + '</span>');
         };
 
