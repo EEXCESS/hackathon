@@ -384,10 +384,11 @@ EEXCESS.queryParagraphs = function() {
                     if (j < categories.length - 1) {
                         categories_html += ' ' + categories[j].name + valueStr(categories[j].count) + '@' + valueStr(categories[j].occurrences) + ' |';
                     } else {
-                        categories_html += ' ' + categories[j].name + valueStr(categories[j].count) + '@' + valueStr(categories[j].occurrences) + '<br/>';
+                        categories_html += ' ' + categories[j].name + valueStr(categories[j].count) + '@' + valueStr(categories[j].occurrences);
                     }
                 }
             }
+            categories_html += '<hr/>';
             el.prepend('<span style="color:red;font-weight:bold;">' + categories_html + '</span>');
         };
 
@@ -399,7 +400,7 @@ EEXCESS.queryParagraphs = function() {
                 if (j < result.paragraphs[i].statistic.length - 1) {
                     entities += ' ' + result.paragraphs[i].statistic[j].key.text + valueStr(result.paragraphs[i].statistic[j].value) +' |';
                 } else {
-                    entities += ' ' + result.paragraphs[i].statistic[j].key.text + valueStr(result.paragraphs[i].statistic[j].value) + '<hr/>';
+                    entities += ' ' + result.paragraphs[i].statistic[j].key.text + valueStr(result.paragraphs[i].statistic[j].value);
                 }
             }
             el.prepend('<span style="color:#1D904E;font-weight:bold;">' + entities + '</span>');
