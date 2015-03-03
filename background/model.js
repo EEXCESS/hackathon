@@ -142,34 +142,34 @@ EEXCESS.model = (function() {
         }
     };
     var _queryTimestamp;
-    
+
     var _getDomain = function(hostname) {
-        var domain = hostname.substring(0,hostname.lastIndexOf('.'));
-        if(domain.indexOf('.') === -1) {
+        var domain = hostname.substring(0, hostname.lastIndexOf('.'));
+        if (domain.indexOf('.') === -1) {
             return domain;
         } else {
-            return domain.substr(domain.indexOf('.')+1);
+            return domain.substr(domain.indexOf('.') + 1);
         }
     };
-    
-    
+
+
     var _replayQuery = function(tabID, numResults, callback) {
-            var replayData = {
-                reason: 'replay',
-                terms: currentQuery['terms'],
-                numResults: numResults
-            };
-            console.log(replayData);
-            var success = function(results) {
-                _handleResult({query:currentQuery['query'],data: results});
-                callback({query:currentQuery['query'],results:results});
-            };
-            var error = function(error) { // error callback
-                EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
-            };
-            EEXCESS.backend.getCall()(replayData, 1, numResults, success, error);
+        var replayData = {
+            reason: 'replay',
+            terms: currentQuery['terms'],
+            numResults: numResults
         };
-    
+        console.log(replayData);
+        var success = function(results) {
+            _handleResult({query: currentQuery['query'], data: results});
+            callback({query: currentQuery['query'], results: results});
+        };
+        var error = function(error) { // error callback
+            EEXCESS.messaging.sendMsgTab(tabID, {method: {parent: 'results', func: 'error'}, data: error});
+        };
+        EEXCESS.backend.getCall()(replayData, 1, numResults, success, error);
+    };
+
     return {
         /**
          * Toggles the visibility of the widget
@@ -368,8 +368,8 @@ EEXCESS.model = (function() {
          * @param {Function} callback
          */
         getResults: function(tabID, data, callback) {
-            if(typeof data !== 'undefined' && data !== null) {
-                if(data.numResults > results.data.totalResults) {
+            if (typeof data !== 'undefined' && data !== null) {
+                if (data.numResults > results.data.totalResults) {
                     _replayQuery(tabID, data.numResults, callback);
                     return;
                 }
@@ -391,11 +391,21 @@ EEXCESS.model = (function() {
     };
 }());
 
-EEXCESS.NER = (function(){
+EEXCESS.NER = (function() {
     var _getParagraphEntities = function(tabID, paragraphs, callback) {
         var xhr = $.ajax({
             url: 'http://mics.fim.uni-passau.de/serverREL/RELEVANTICO/api/entities',
-            data: JSON.stringify({paragraphs:paragraphs}),
+            data: JSON.stringify({paragraphs: paragraphs}),
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json'
+        });
+        xhr.done(callback);
+    };
+    var _getParagraphEntityTypes = function(tabID, paragraphs, callback) {
+        var xhr = $.ajax({
+            url: 'http://theseus.dimis.fim.uni-passau.de:8080/doser-disambiguationserver/webclassify/entityAndCategoryStatistic',
+            data: JSON.stringify({paragraphs: paragraphs}),
             type: 'POST',
             contentType: 'application/json',
             dataType: 'json'
@@ -403,7 +413,8 @@ EEXCESS.NER = (function(){
         xhr.done(callback);
     };
     return {
-        getParagraphEntities:_getParagraphEntities
+        getParagraphEntities: _getParagraphEntities,
+        getParagraphEntityTypes: _getParagraphEntityTypes
     };
 }());
 

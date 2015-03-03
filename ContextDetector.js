@@ -311,92 +311,111 @@ EEXCESS.queryParagraphs = function() {
         for (var k = 0; k < corresponding[i].length; k++) {
             text += $(corresponding[i][k]).text();
         }
-        console.log(tmpCorr);
         tmpCorr.wrapAll('<div id="eexcess_c' + i + '" style="border:1px dotted gray;"></div>');
         finalParagraphs.push({
             headline: $(h).text(),
             content: text
         });
     }
-    console.log(finalParagraphs);
-    EEXCESS.messaging.callBG({method: {parent: 'NER', func: 'getParagraphEntities'}, data: finalParagraphs}, function(result) {
-        var addEntities = function(prefix, i, id) {
-            var img = $('<img src="chrome-extension://' + EEXCESS.utils.extID + '/media/icons/16.png" style="margin:0;padding:0;" />');
-            $('#' + prefix + id).prepend(img);
-            var entities = '';
-            for (var j = 0; j < result.paragraphs[i].statistic.length; j++) {
-                if (j < result.paragraphs[i].statistic.length - 1) {
-                    entities += ' ' + result.paragraphs[i].statistic[j].key.text + ' |';
+
+    var showEntities = function() {
+        EEXCESS.messaging.callBG({method: {parent: 'NER', func: 'getParagraphEntities'}, data: finalParagraphs}, function(result) {
+            var addEntities = function(prefix, i, id) {
+                var img = $('<img src="chrome-extension://' + EEXCESS.utils.extID + '/media/icons/16.png" style="margin:0;padding:0;" />');
+                $('#' + prefix + id).prepend(img);
+                var entities = '';
+                for (var j = 0; j < result.paragraphs[i].statistic.length; j++) {
+                    if (j < result.paragraphs[i].statistic.length - 1) {
+                        entities += ' ' + result.paragraphs[i].statistic[j].key.text + ' |';
+                    } else {
+                        entities += ' ' + result.paragraphs[i].statistic[j].key.text;
+                    }
+                }
+                img.after('<span style="color:#1D904E;font-weight:bold;">' + entities + '</span>');
+            };
+
+            for (var i = 0; i < result.paragraphs.length; i++) {
+                if (i < single.length) {
+                    addEntities('eexcess_s', i, i);
                 } else {
-                    entities += ' ' + result.paragraphs[i].statistic[j].key.text;
+                    addEntities('eexcess_c', i, i - single.length);
                 }
             }
-            img.after('<span style="color:#1D904E;font-weight:bold;">' + entities + '</span>');
-        };
+            console.log(result);
+        });
+    };
 
-        for (var i = 0; i < result.paragraphs.length; i++) {
-            if (i < single.length) {
-                addEntities('eexcess_s', i, i);
-            } else {
-                addEntities('eexcess_c', i, i-single.length);
-            }
-        }
-        console.log(result);
-    });
-    
-    EEXCESS.messaging.callBG({method: {parent: 'NER_TYPES', func: 'getParagraphEntityTypes'}, data: finalParagraphs}, function(result) {
+    EEXCESS.messaging.callBG({method: {parent: 'NER', func: 'getParagraphEntityTypes'}, data: finalParagraphs}, function(result) {
         var valueStr = function(val) {
-            if(val === 1) {
+            if (val === 1) {
                 return '';
             }
             return '<span style="color:gray;font-weight:normal"> ' + val + '</span>';
         };
         var increment = function(dict, key, val, weight) {
-            if (key in dict){
+            if (key in dict) {
                 dict[key].count += weight;
                 dict[key].occurrences += 1;
-            }else {
+            } else {
                 dict[key] = val;
                 val.count = weight;
                 val.occurrences = 1;
-            }            
+            }
         };
 
-        var addCategories = function(prefix, i, id, threshold) {
-            var img = $('<hr><img src="chrome-extension://' + EEXCESS.utils.extID + '/media/icons/16.png" style="margin:0;padding:0;" />');
-            $('#' + prefix + id).prepend(img);
+        var addCategories = function(el, i, threshold) {
 
-            var categories = {};        
+            var categories = {};
             for (var j = 0; j < result.paragraphs[i].statistic.length; j++) {
-                var current = result.paragraphs[i].statistic[j];                
+                var current = result.paragraphs[i].statistic[j];
                 for (var k = 0; k < current.key.categories.length; k++) {
-                    increment(categories,current.key.categories[k].uri,current.key.categories[k],current.value);
-                }   
-            }    
-            categories = Object.keys(categories).map(function(key){
-                            return categories[key];
-                        }); 
-            categories.sort(function(a,b){return b.count - a.count});
-            var categories_html = '';       
+                    increment(categories, current.key.categories[k].uri, current.key.categories[k], current.value);
+                }
+            }
+            categories = Object.keys(categories).map(function(key) {
+                return categories[key];
+            });
+            categories.sort(function(a, b) {
+                return b.count - a.count;
+            });
+            var categories_html = '';
             for (var j = 0; j < categories.length; j++) {
-                if (categories[j].occurrences > threshold){
+                if (categories[j].occurrences > threshold) {
                     if (j < categories.length - 1) {
-                        categories_html += ' ' + categories[j].name + valueStr(categories[j].count) + '@' + valueStr(categories[j].occurrences) +' |';
+                        categories_html += ' ' + categories[j].name + valueStr(categories[j].count) + '@' + valueStr(categories[j].occurrences) + ' |';
                     } else {
-                        categories_html += ' ' + categories[j].name + valueStr(categories[j].count)+ '@' + valueStr(categories[j].occurrences) ;
+                        categories_html += ' ' + categories[j].name + valueStr(categories[j].count) + '@' + valueStr(categories[j].occurrences) + '<br/>';
                     }
                 }
             }
-           
-            img.after('<span style="color:red;font-weight:bold;">' + categories_html + '</span>');
+            el.prepend('<span style="color:red;font-weight:bold;">' + categories_html + '</span>');
+        };
+
+
+        var addEntities = function(el, i) {
+            console.log('add entities: ' + i);
+            var entities = '';
+            for (var j = 0; j < result.paragraphs[i].statistic.length; j++) {
+                if (j < result.paragraphs[i].statistic.length - 1) {
+                    entities += ' ' + result.paragraphs[i].statistic[j].key.text + ' |';
+                } else {
+                    entities += ' ' + result.paragraphs[i].statistic[j].key.text + '<hr/>';
+                }
+            }
+            console.log(entities);
+            el.prepend('<span style="color:#1D904E;font-weight:bold;">' + entities + '</span>');
         };
 
         var threshold = 1;
         for (var i = 0; i < result.paragraphs.length; i++) {
             if (i < single.length) {
-                addCategories('eexcess_s', i, i, threshold);
+                var el = $('#' + 'eexcess_s' + i);
+                addEntities(el, i);
+                addCategories(el, i, threshold);
             } else {
-                addCategories('eexcess_c', i, i-single.length, threshold);
+                var el = $('#' + 'eexcess_c' + (i - single.length));
+                addEntities(el, i);
+                addCategories(el, i, threshold);
             }
         }
         console.log(result);
