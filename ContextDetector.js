@@ -343,6 +343,64 @@ EEXCESS.queryParagraphs = function() {
         }
         console.log(result);
     });
+    
+    EEXCESS.messaging.callBG({method: {parent: 'NER_TYPES', func: 'getParagraphEntityTypes'}, data: finalParagraphs}, function(result) {
+        var valueStr = function(val) {
+            if(val === 1) {
+                return '';
+            }
+            return '<span style="color:gray;font-weight:normal"> ' + val + '</span>';
+        };
+        var increment = function(dict, key, val, weight) {
+            if (key in dict){
+                dict[key].count += weight;
+                dict[key].occurrences += 1;
+            }else {
+                dict[key] = val;
+                val.count = weight;
+                val.occurrences = 1;
+            }            
+        };
+
+        var addCategories = function(prefix, i, id, threshold) {
+            var img = $('<hr><img src="chrome-extension://' + EEXCESS.utils.extID + '/media/icons/16.png" style="margin:0;padding:0;" />');
+            $('#' + prefix + id).prepend(img);
+
+            var categories = {};        
+            for (var j = 0; j < result.paragraphs[i].statistic.length; j++) {
+                var current = result.paragraphs[i].statistic[j];                
+                for (var k = 0; k < current.key.categories.length; k++) {
+                    increment(categories,current.key.categories[k].uri,current.key.categories[k],current.value);
+                }   
+            }    
+            categories = Object.keys(categories).map(function(key){
+                            return categories[key];
+                        }); 
+            categories.sort(function(a,b){return b.count - a.count});
+            var categories_html = '';       
+            for (var j = 0; j < categories.length; j++) {
+                if (categories[j].occurrences > threshold){
+                    if (j < categories.length - 1) {
+                        categories_html += ' ' + categories[j].name + valueStr(categories[j].count) + '@' + valueStr(categories[j].occurrences) +' |';
+                    } else {
+                        categories_html += ' ' + categories[j].name + valueStr(categories[j].count)+ '@' + valueStr(categories[j].occurrences) ;
+                    }
+                }
+            }
+           
+            img.after('<span style="color:red;font-weight:bold;">' + categories_html + '</span>');
+        };
+
+        var threshold = 1;
+        for (var i = 0; i < result.paragraphs.length; i++) {
+            if (i < single.length) {
+                addCategories('eexcess_s', i, i, threshold);
+            } else {
+                addCategories('eexcess_c', i, i-single.length, threshold);
+            }
+        }
+        console.log(result);
+    });
 }();
 
 
