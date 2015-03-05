@@ -57,20 +57,21 @@ function VisController(visTemplate) {
     var TAG_CATEGORIES = 5;
     var SELECTED_ITEMS_REQUIRED = 5;
 
-    var LOADING_IMG = "uRank/media/loading.gif";
+    var LOADING_IMG = "../../../media/loading.gif";
+    var LOADING_IMG = "../../../media/loading.gif";
     var DELETE_ICON_IMG = "uRank/media/fancybox_sprite_close.png";
-    var NO_IMG = "uRank/media/no-img.png";
-    var FAV_ICON_OFF = "uRank/media/favicon_off.png";
-    var FAV_ICON_ON = "uRank/media/favicon_on.png";
-    var REMOVE_SMALL_ICON = "uRank/media/batchmaster/remove.png"
-    var ICON_EUROPEANA =  "uRank/media/Europeana-favicon.ico";
-    var ICON_MENDELEY = "uRank/media/mendeley-favicon.ico";
-    var ICON_ZBW = "uRank/media/ZBW-favicon.ico";
-    var ICON_WISSENMEDIA = "uRank/media/wissenmedia-favicon.ico";
-    var ICON_KIM_COLLECT = "uRank/media/KIM.Collect-favicon.ico";
-    var ICON_UNKNOWN = "uRank/media/help.png";
-    var ARROW_DOWN_ICON = "uRank/media/batchmaster/arrow-down.png";
-    var ARROW_UP_ICON = "uRank/media/batchmaster/arrow-up.png";
+    var NO_IMG = "../../../media/no-img.png";
+    var FAV_ICON_OFF = "../../../media/icons/favicon_off.png";
+    var FAV_ICON_ON = "../../../media/icons/favicon_on.png";
+    var REMOVE_SMALL_ICON = "../../../media/batchmaster/remove.png"
+    var ICON_EUROPEANA =  "../../../media/icons/Europeana-favicon.ico";
+    var ICON_MENDELEY = "../../../media/icons/mendeley-favicon.ico";
+    var ICON_ZBW = "../../../media/icons/ZBW-favicon.ico";
+    var ICON_WISSENMEDIA = "../../../media/icons/wissenmedia-favicon.ico";
+    var ICON_KIM_COLLECT = "../../../media/icons/KIM.Collect-favicon.ico";
+    var ICON_UNKNOWN = "../../../media/icons/help.png";
+    var ARROW_DOWN_ICON = "../../../media/batchmaster/batchmaster/arrow-down.png";
+    var ARROW_UP_ICON = "../../../media/batchmaster/batchmaster/arrow-up.png";
 
     var STR_DROPPED = "Dropped!";
     var STR_DROP_TAGS_HERE = "Drop tags here!";

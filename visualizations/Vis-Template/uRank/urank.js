@@ -76,7 +76,7 @@ function Urank(root, visTemplate, EEXCESSobj) {
                '<div id="eexcess_vis_panel_controls" class="clearfix">'+
                '    <div id="eexcess_ranking_controls">'+
                '        <button id="eexcess_btnreset">'+
-               '            <img src="uRank/media/batchmaster/refresh.png" title="Reset">'+
+               '            <img src="../../../media/batchmaster/refresh.png" title="Reset">'+
                '        </button>'+
                '        <button id="eexcess_btn_sort_by_overall_score" title="Sort by overall score" sort-by="overall_score">'+
                '            <img src="uRank/media/sort-down.png">'+
