@@ -1,6 +1,6 @@
 (function(){
 
-	var TestPlugin = {};
+	var TestMiniViz = {};
 	var $root = null;
 
 	TestPlugin.initialize = function(EEXCESSObj, rootSelector){
@@ -21,7 +21,7 @@
 	TestPlugin.finalize = function(){
 	};
 	
-	PluginHandler.registerVisualisation(TestPlugin, {
-		'displayName' : 'TestPlugin', 
+	PluginHandler.registerFilterVisualisation(TestPlugin, {
+		'displayName' : 'TestMini', 
 	});
 })();

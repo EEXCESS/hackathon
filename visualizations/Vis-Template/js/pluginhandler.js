@@ -1,7 +1,8 @@
 var PluginHandler = {
 	vis : null,
-	plugins:[],
-	rootSelector: null,
+	visPlugins:[],
+	filterPlugins:[],
+	visRootSelector: null,
 	defaultCombinations : [
                 [
                     {"facet": "language", "visualattribute": "x-axis"},
@@ -15,26 +16,35 @@ var PluginHandler = {
                 ]
             ],
 
-	initialize:function(vis, rootSelector){
+	initialize:function(vis, visRootSelector){
 		PluginHandler.vis = vis;
-		PluginHandler.rootSelector = rootSelector;
+		PluginHandler.visRootSelector = visRootSelector;
 	},
 
 	getPlugins:function(){
-		return PluginHandler.plugins;
+		return PluginHandler.visPlugins;
 	},
 
-	registerVisualisationPlugin: function(pluginObject, pluginConfiguration){
+	registerVisualisation: function(pluginObject, configuration){
 
-		if (!pluginConfiguration.mappingCombinations){
-			pluginConfiguration.mappingCombinations = PluginHandler.defaultCombinations;
+		if (!configuration.mappingCombinations){
+			configuration.mappingCombinations = PluginHandler.defaultCombinations;
 		}
 
-		pluginConfiguration.Object = pluginObject;
-		if (pluginConfiguration.Object.initialize != undefined)
-			pluginConfiguration.Object.initialize(PluginHandler.vis, PluginHandler.rootSelector);
-		PluginHandler.plugins.push(pluginConfiguration);
+		configuration.Object = pluginObject;
+		if (configuration.Object.initialize != undefined)
+			configuration.Object.initialize(PluginHandler.vis, PluginHandler.visRootSelector);
+		PluginHandler.visPlugins.push(configuration);
 		PluginHandler.vis.refreshChartSelect(); // todo: call not before all plugins are loaded
+	},
+
+	registerFilterVisualisation: function(pluginObject, configuration){
+
+		configuration.Object = pluginObject;
+		if (configuration.Object.initialize != undefined)
+			configuration.Object.initialize(PluginHandler.vis, PluginHandler.visRootSelector);
+
+		PluginHandler.filterPlugins.push(pluginConfiguration);
 	},
 
 	registerPluginScripts:function(pluginScripts){
@@ -50,8 +60,8 @@ var PluginHandler = {
 	},
 
 	getByDisplayName:function(displayName){
-		for(var i=0; i<PluginHandler.plugins.length; i++){
-			var plugin = PluginHandler.plugins[i];
+		for(var i=0; i<PluginHandler.visPlugins.length; i++){
+			var plugin = PluginHandler.visPlugins[i];
 			if (plugin.displayName == displayName){				
 				return plugin;			
 			}
