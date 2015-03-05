@@ -82,7 +82,7 @@ EEXCESS.triggerQuery = function(textElements, reason) {
     });
 };
 
-EEXCESS.initiateQuery = function() {
+EEXCESS.queryFromTf = function() {
     // get all text elements
     var elements = [];
     var walker = document.createTreeWalker(
@@ -115,8 +115,8 @@ EEXCESS.initiateQuery = function() {
             elements.push({text: node.nodeValue, parent: parent});
         }
     }
-    EEXCESS.triggerQuery(elements, {reason: 'page', value: window.location.protocol + '//' + window.location.host + window.location.pathname, url:window.location.hostname});
-}();
+    EEXCESS.triggerQuery(elements, {reason: 'page', value: window.location.protocol + '//' + window.location.host + window.location.pathname, url: window.location.hostname});
+};
 
 EEXCESS.selectedText = '';
 
@@ -131,3 +131,87 @@ $(document).mouseup(function() {
         }
     }
 });
+
+
+EEXCESS.queryFromTitle = function() {
+    var otherURLs = [];
+    var otherTitles = [];
+    var urlIDX = 0;
+    var k = 7;
+    var threshold = 2;
+    var queryStringArr = document.title.replace(/[^\w\säöüÄÖÜß]/g, ' ').match(/[^ ]+/g);
+    for (var i = 0; i < document.links.length; i++) {
+        if (document.links[i].hostname === window.location.hostname && document.links[i].attributes[0].value.charAt(0) !== '#') {
+            otherURLs.push(document.links[i].href);
+        }
+    }
+
+    for (var i = 0; i < k && i < otherURLs.length; i++) {
+        var xhr = $.ajax({
+            url: otherURLs[i],
+            dataType: 'html',
+            timeout: 5000
+        });
+        xhr.done(function(data, textStatus, jqXHR) {
+            urlIDX++;
+            var ct = xhr.getResponseHeader("content-type") || "";
+            if (ct === '' || ct.indexOf('html') !== -1) {
+                var doc = document.implementation.createHTMLDocument("tmp");
+                doc.documentElement.innerHTML = data;
+                otherTitles.push(doc.title.replace(/[^\w\säöüÄÖÜß]/g, ' ').match(/[^ ]+/g));
+            } 
+            if (urlIDX === k) {
+                setQueryString();
+            }
+        });
+        xhr.fail(function(jqxhr, textStatus, errorThrown) {
+            urlIDX++;
+            if (urlIDX === k) {
+                setQueryString();
+            }
+        });
+    }
+
+    var setQueryString = function() {
+        var title = document.title.replace(/[^\w\säöüÄÖÜß]/g, ' ').match(/[^ ]+/g);
+        for(var i=0; i< title.length; i++) {
+            var occForward = 0;
+            var occBackward = 0;
+            for(var j=0; j < otherTitles.length; j++) {
+                if(otherTitles[j].length > i) {
+                    if(otherTitles[j][i] === title[i]) {
+                        occForward++;
+                    }
+                    if(otherTitles[j][otherTitles[j].length-i-1] === title[title.length-i-1]) {
+                        occBackward++;
+                    }
+                }
+            }
+            if(occForward > threshold) {
+                queryStringArr[i] = '';
+            }
+            if(occBackward > threshold) {
+                queryStringArr[queryStringArr.length-i-1] = '';
+            }
+        }
+        var query = [];
+        for(var i=0;i<queryStringArr.length;i++) {
+            if(queryStringArr[i].length > 0) {
+                query.push(queryStringArr[i]);
+            }
+        }
+        if(query.length === 0) {
+            query = document.title.replace(/[^\w\säöüÄÖÜß]/g, ' ').match(/[^ ]+/g);
+        };
+        var weightedQuery = [];
+        for(var i=0;i<query.length;i++) {
+            weightedQuery.push({
+                text:query[i],
+                weight:1.0
+            });
+        }
+        EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason: {reason: 'page', value: window.location.protocol + '//' + window.location.host + window.location.pathname, url: window.location.hostname}, terms: weightedQuery}});
+    };
+}();
+
+

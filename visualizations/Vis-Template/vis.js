@@ -119,6 +119,7 @@ function Visualization( EEXCESSobj ) {
      */
 
     var START = {};
+    START.plugins = [];
 
 	/**
 	 * 	Initizialization function called from starter.js
@@ -135,6 +136,8 @@ function Visualization( EEXCESSobj ) {
 
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();
+        PluginHandler.initialize(START, root);
+        START.plugins = PluginHandler.getPlugins();
 
         VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
         $(window).on('resize', function(){ VISPANEL.drawChart(); });
@@ -188,6 +191,14 @@ function Visualization( EEXCESSobj ) {
         //BookmarkingAPI.testBookmarking();
     };
 
+    START.refreshChartSelect = function(){       
+    	START.plugins = PluginHandler.getPlugins();
+    	globals.mappingcombination = getMappings();
+    	globals.charts = getCharts(globals.mappingcombination); 	
+    	mappings = globals.mappingcombination;
+    	charts = globals.charts;
+        CONTROLS.buildChartSelect();
+    }
 
 
 
@@ -1023,14 +1034,26 @@ function Visualization( EEXCESSobj ) {
         $('#eexcess_main_panel').attr('class', ''); // removing urank class
 		LIST.buildContentList();
 
+		var oldChartName = VISPANEL.chartName;
 		var selectedMapping = this.internal.getSelectedMapping( item );
+		if (oldChartName != VISPANEL.chartName){
+			var plugin = PluginHandler.getByDisplayName(oldChartName);
+			if (plugin != null && plugin.Object.finalize != undefined)
+				plugin.Object.finalize();
+		}
 
-		switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
-			case "timeline" : timeVis.draw(data, selectedMapping, width, height); break;
-			case "barchart":  barVis.draw(data, selectedMapping, width, height); break;
-            case "geochart":  geoVis.draw(data, selectedMapping, width, height); break;
-            case "urank":  urankVis.draw(data, selectedMapping, width, height); break;
-			default : d3.select(root).text("No Visualization");	
+		var plugin = PluginHandler.getByDisplayName(VISPANEL.chartName);
+		if (plugin != null){
+			if (plugin.Object.draw != undefined)
+				plugin.Object.draw(data, selectedMapping, width, height);			
+		} else {
+			switch(VISPANEL.chartName){		// chartName is assigned in internal.getSelectedMapping() 
+				case "timeline" : timeVis.draw(data, selectedMapping, width, height); break;
+				case "barchart":  barVis.draw(data, selectedMapping, width, height); break;
+	            case "geochart":  geoVis.draw(data, selectedMapping, width, height); break;
+                case "urank":  urankVis.draw(data, selectedMapping, width, height); break;
+				default : d3.select(root).text("No Visualization");	
+			}
 		}
 
 		LIST.setColorIcon();
@@ -1048,28 +1071,37 @@ function Visualization( EEXCESSobj ) {
 	
 	VISPANEL.updateCurrentChart = function( action, arg ){
 		
+		var plugin = PluginHandler.getByDisplayName(VISPANEL.chartName);
 		switch( action ){
 			
-			case "reset_chart":
-			
-				switch(VISPANEL.chartName){
-					case "timeline": timeVis.reset(); break;
-					case "barchart": barVis.reset(); break;
-                    case "geochart": geoVis.reset(); break;
-                    case "urank": urankVis.reset(); break;
-				}
-				break;
-			case "highlight_item_selected":
-				
-				var arrayIndices = arg;
-				switch(VISPANEL.chartName){
-					case "timeline": timeVis.selectNodes(arrayIndices, self); break;
-                    case "barchart": barVis.clearSelection(); break;
-                    case "geochart": geoVis.highlightItems(arrayIndices); break;
-                    case "urank": urankVis.highlightItems(arrayIndices); break;
+			case "reset_chart":		
+				if (plugin != null){
+					if (plugin.Object.reset != undefined)
+						plugin.Object.reset();
+				} else {
+					switch(VISPANEL.chartName){
+						case "timeline": timeVis.reset(); break;
+						case "barchart": barVis.reset(); break;
+	                    case "geochart": geoVis.reset(); break;
+                    	case "urank": urankVis.reset(); break;
+					}
 				}
 				break;
 
+			case "highlight_item_selected":
+				var arrayIndices = arg;
+				if (plugin != null){
+					if (plugin.Object.highlightItems != undefined)
+						plugin.Object.highlightItems(arrayIndices);
+				} else {
+					switch(VISPANEL.chartName){
+						case "timeline": timeVis.selectNodes(arrayIndices, self); break;
+	                    case "barchart": barVis.clearSelection(); break;
+	                    case "geochart": geoVis.highlightItems(arrayIndices); break;
+                    	case "urank": urankVis.highlightItems(arrayIndices); break;
+					}
+				}
+				break;
 		}
 	
 	};

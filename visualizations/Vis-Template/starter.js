@@ -185,6 +185,14 @@ function getMappings(){
         }
     ];
 
+    for(var i=0; i<visTemplate.plugins.length; i++){
+        var plugin = visTemplate.plugins[i];
+        mappings.push({
+            "chart": plugin.displayName,
+            "combinations": plugin.mappingCombinations
+        });
+    }
+
     return mappings;
 
 }
