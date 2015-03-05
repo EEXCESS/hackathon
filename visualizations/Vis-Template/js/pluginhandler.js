@@ -44,7 +44,7 @@ var PluginHandler = {
 		if (configuration.Object.initialize != undefined)
 			configuration.Object.initialize(PluginHandler.vis, PluginHandler.visRootSelector);
 
-		PluginHandler.filterPlugins.push(pluginConfiguration);
+		PluginHandler.filterPlugins.push(configuration);
 	},
 
 	registerPluginScripts:function(pluginScripts){
