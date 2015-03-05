@@ -178,6 +178,7 @@ function Visualization( EEXCESSobj ) {
         PREPROCESSING.extendDataWithAncillaryDetails();
         QUERY.updateHeaderText( "Query Results : " + data.length );
         QUERY.updateSearchField( query );
+        $(chartSelect).unbind('change');
         CONTROLS.buildChartSelect();
         LIST.buildContentList();
 		FILTER.buildFilterBookmark();
@@ -197,7 +198,7 @@ function Visualization( EEXCESSobj ) {
     	globals.charts = getCharts(globals.mappingcombination); 	
     	mappings = globals.mappingcombination;
     	charts = globals.charts;
-        CONTROLS.buildChartSelect();
+        CONTROLS.reloadChartSelect();
     }
 
 
@@ -544,19 +545,17 @@ function Visualization( EEXCESSobj ) {
 	 * 
 	 * */
 	CONTROLS.buildChartSelect = function(){
-		
-		//Create chart <select>
-		var chartOptions = "";
-		
-		// "mappings" is an array where each item contains the name of the chart and all the possible combinatios for it 
+		CONTROLS.reloadChartSelect();
+		$(chartSelect).change( EVTHANDLER.chartSelectChanged );
+	};
+
+	CONTROLS.reloadChartSelect = function(){
+		var chartOptions = "";		
 		charts.forEach(function(chart){ 
 			chartOptions += "<option class=\"ui-selected\" value=\"" + chart + "\">" + chart + "</option>"; 
 		});
-		
-		d3.select(chartSelect).html(chartOptions);
+		$(chartSelect).empty().html(chartOptions);
 		$(chartSelect+":eq("+ 0 +")").prop("selected", true);
-		
-		$(chartSelect).change( EVTHANDLER.chartSelectChanged );
 	};
 		
 	
@@ -1784,7 +1783,7 @@ function Visualization( EEXCESSobj ) {
 		//PREPROCESSING.extendDataWithAncillaryDetails();
 		QUERY.updateHeaderText( "Query Results : " + data.length );
 		QUERY.updateSearchField( query );
-		//CONTROLS.buildChartSelect();
+		//CONTROLS.reloadChartSelect();
 		LIST.buildContentList();
 		VISPANEL.drawChart();
 	};
