@@ -1,0 +1,5 @@
+PluginHandler.registerPluginScripts([
+		'TestPlugin.js' 
+	]);
+
+
