@@ -619,8 +619,6 @@ Visualization Panel (center of screen)
 
 
 
-
-
 /*
     <div> where the charts (timeline, bar chart) are actually rendered
 */
@@ -786,6 +784,7 @@ Visualization Panel (center of screen)
     min-height: 3em;
     vertical-align: top;
     width: 70%;
+    overflow: hidden;
 }
 
 
@@ -1079,7 +1078,20 @@ p.eexcess_ritem_short {
 
 
 
-
+@media screen and (max-width: 825px){ /* is related to the iframe, that is 155px smaller */
+    #eexcess_controls{
+        width:130px;
+    }
+    #eexcess_content{
+        width:170px;
+    }
+    #bookmarklist-label{
+        display:none;
+    }
+    #eexcess_vis_panel{
+        width:calc(100% - 170px - 130px - 1px);
+    }
+}
 
 
 
