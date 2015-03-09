@@ -97,6 +97,25 @@ $('#topicInput').tagit({// tagit plugin for topics
 });
 
 $(document).ready(function() {
+    var _NUM_RESULTS = EEXCESS.storage.local('NUM_RESULTS');
+    if (typeof _NUM_RESULTS === 'undefined') {
+        _NUM_RESULTS = 20;
+        EEXCESS.storage.local('NUM_RESULTS', JSON.stringify(_NUM_RESULTS));
+    } else {
+        _NUM_RESULTS = JSON.parse(_NUM_RESULTS);
+    }
+    $('#eexcess_num_results').val(_NUM_RESULTS).on('change', function(evt) {
+        var tmp = $(this).val();
+        tmp = parseInt(tmp);
+        if (isNaN(tmp)) {
+            $(this).val(_NUM_RESULTS);
+        } else {
+            $(this).val(tmp);
+            EEXCESS.storage.local('NUM_RESULTS', JSON.stringify(tmp));
+        }
+    });
+
+
     var xhrData = {
         url: EEXCESS.config.FR_BASE_URI + 'getRegisteredPartners',
         type: 'GET',
@@ -127,7 +146,7 @@ $(document).ready(function() {
         var sources = EEXCESS.storage.local('selected_sources');
         if (typeof sources === 'undefined') {
             sources = ['Europeana', 'Mendeley', 'ZBW', 'KIMCollect'];
-        }  else {
+        } else {
             sources = JSON.parse(sources);
         }
         for (var i = 0; i < sources.length; i++) {
@@ -138,18 +157,18 @@ $(document).ready(function() {
         // update seleceted partners
         $('input[name="selected_source"]').change(function() {
             if ($(this).is(':checked')) {
-                if($.inArray($(this)[0].value, sources) === -1) {
+                if ($.inArray($(this)[0].value, sources) === -1) {
                     sources.push($(this)[0].value);
                 }
             } else {
                 var idx = $.inArray($(this)[0].value, sources);
-                if(idx > -1) {
-                    sources.splice(idx,1);
+                if (idx > -1) {
+                    sources.splice(idx, 1);
                 }
             }
-            EEXCESS.storage.local('selected_sources',JSON.stringify(sources));
+            EEXCESS.storage.local('selected_sources', JSON.stringify(sources));
         });
     };
-    
-    EEXCESS.messaging.callBG({method: {parent: 'api', func: 'xhr'},data:xhrData}, xhrSuccess);
+
+    EEXCESS.messaging.callBG({method: {parent: 'api', func: 'xhr'}, data: xhrData}, xhrSuccess);
 }); 
