@@ -272,7 +272,7 @@ EEXCESS.model = (function() {
             }
 
             // set how many results to retrieve
-            var numResults = EEXCESS.config.NUM_RESULTS();
+            var numResults = EEXCESS.config.NUM_RESULTS;
             if (data.hasOwnProperty('numResults')) {
                 numResults = data.numResults;
             }

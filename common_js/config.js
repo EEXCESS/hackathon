@@ -46,15 +46,7 @@ EEXCESS.config = (function() {
     var _LOG_FACETSCAPE_URI = _PP_BASE_URI + 'log/facetScape';
     var _DISAMBIGUATE_URI = _PP_BASE_URI + 'disambiguate';
     var _LOG_QUERY_ACTIVATED_URI = _PP_BASE_URI + 'log/query_activated';
-//    var _NUM_RESULTS = 20;
-    var _NUM_RESULTS = function() {
-        if(typeof EEXCESS.storage.local('NUM_RESULTS') === 'undefined') {
-            EEXCESS.storage.local('NUM_RESULTS', JSON.stringify(20));
-            return 20;
-        } else {
-            return JSON.parse(EEXCESS.storage.local('NUM_RESULTS'));
-        }
-    };
+    var _NUM_RESULTS = 20;
     var _NUM_RESULTS_FACET_SCAPE = 100;
     var _TIMEOUT = function(param) {
         if(typeof param !== 'undefined') {
