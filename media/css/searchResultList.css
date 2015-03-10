@@ -138,3 +138,9 @@
     overflow-y: auto;
     height:calc(100% - 26px);
 }
+
+#result_gallery {
+    overflow: hidden;
+    background: rgba(255,255,255,0.7);
+    border-left: 1px solid #ddd;
+}
