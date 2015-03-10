@@ -92,12 +92,12 @@
 }
 
 .eexcess_tabs li a:hover {
-    color: black;
+    color: #666;
     background-color:white;
     border-radius: 4px 4px 0 0;
     border:1px solid #ddd;
     border-bottom: none;
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.7);
 }
 
 .eexcess_tabs li.active a {
