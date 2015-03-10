@@ -20,78 +20,13 @@ var EEXCESS = EEXCESS || {};
  * @param {Object} options
  */
 EEXCESS.searchResultList = function(divContainer, options) {
-    divContainer.prepend($('<ul class="eexcess_tabs"><li class="active"><a href="#">All</a></li><li><a href="#">Media</a></li><li><a href="#">Cultural</a></li></ul>'));
-    $('.eexcess_tabs li').on('click', function() {
-        $('#result_gallery').remove();
-        $('.empty_result').hide();
-        $('.eexcess_tabs li.active').removeClass('active');
-        $(this).addClass('active');
-        switch ($(this).children('a').text()) {
-            case 'Media':
-                $('.pagination').hide();
-                $("#recommendationList li").hide();
-                var li_items = $("#recommendationList li");
-                var no_images = true;
-                var counter = 0;
-                var gallery = $('<div id="result_gallery"></div>');
-                gallery.append($('<div id="result_gallery0" class="g_tile"></div>')).append($('<div id="result_gallery1" class="g_tile"></div>'));
-                divContainer.append(gallery);
-                for (var i = 0; i < li_items.length; i++) {
-                    var img_src = $(li_items[i]).children('.resCtL').children('a').children('img').attr('src');
-                    if (img_src.indexOf('/media/no-img.png') === -1) {
-                        no_images = false;
-                        var original_link = $(li_items[i]).children('.eexcess_resContainer').children('a');
-                        var url = original_link.attr('href');
-                        var title = original_link.text();
-                        var link = $('<a href="' + url + '" title="'+title+'"><img src="' + img_src + '" class="gallery_img" /></a>');
-                        link.click(function(evt) {
-                            evt.preventDefault();
-                            settings.previewHandler(this.href);
-                        });
-                        $('#result_gallery' + (counter % 2)).append(link);
-                        counter++;
-//                        gallery.append($('<img src="'+img_src+'" class="gallery_img" />'));
-
-                    }
-                }
-                if (no_images) {
-                    $('.empty_result').show();
-                }
-                break;
-            case 'Cultural':
-                $('.pagination').hide();
-                $("#recommendationList li").hide();
-                var li_items = $("#recommendationList li");
-                var no_culture = true;
-                for (var i = 0; i < li_items.length; i++) {
-                    var prov = $(li_items[i]).children('.resCtL').children('img').attr('alt');
-                    if (prov.indexOf('Europeana') !== -1 || prov.indexOf('KIM.Collect') !== -1) {
-                        $(li_items[i]).show();
-                        no_culture = false;
-                    }
-                }
-                if (no_culture) {
-                    $('.empty_result').show();
-                }
-                break;
-            default:
-                $('.pagination').show();
-                $("#recommendationList li").hide().slice(0, settings.itemsShown).show();
-                $('.page.active').removeClass('active');
-                $('.page').first().addClass('active');
-        }
-    });
-    var _innerContainer = $('<div class="scrollable-y"></div>').height(divContainer.height() - $('.eexcess_tabs').height());
-    divContainer.append(_innerContainer);
-    divContainer = _innerContainer;
-
 
     /**
      * Event handler on the pagination buttons
      * 
      */
 
-    $(document).on('click', '.page', function() {
+     $(document).on('click', '.page', function() {
         $('.page.active').removeClass('active');
         $(this).addClass('active');
         var page = parseInt($(this).html()) - 1;
@@ -99,7 +34,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
         var max = min + settings.itemsShown;
 
         $("#recommendationList li").hide().slice(min, max).show();
-    })
+     })
 
     var settings = $.extend({
         pathToMedia: '../media/',
@@ -120,8 +55,6 @@ EEXCESS.searchResultList = function(divContainer, options) {
                 }});
         }
     }, options);
-
-
     var _loader = $('<div class="eexcess_loading" style="display:none"><img src="' + settings.pathToMedia + 'loading.gif" /></div>');
     var _list = $('<ul id="recommendationList" class="block_list" data-total="0"></ul>').append($('<li>no results</li>'));
     var _dialog = $('<div style="display:none"><div>').append('<p></p>');
@@ -182,7 +115,6 @@ EEXCESS.searchResultList = function(divContainer, options) {
     divContainer.append(_dialog);
     divContainer.append(_list);
     divContainer.append(_error);
-    divContainer.append($('<p class="empty_result">no results :(</p>').hide());
 
     // obtain current results
     EEXCESS.messaging.callBG({method: {parent: 'model', func: 'getResults'}, data: null}, function(reqResult) {
@@ -208,9 +140,6 @@ EEXCESS.searchResultList = function(divContainer, options) {
     );
 
     var showResults = function(data) {
-        $('.eexcess_tabs li.active').removeClass('active');
-        $('.eexcess_tabs li').first().addClass('active');
-        $('#result_gallery').remove();
         _error.hide();
         _loader.hide();
         data = data.results;
@@ -224,8 +153,8 @@ EEXCESS.searchResultList = function(divContainer, options) {
 
 
         var _pagination = $('<div class="pagination"></div>');
-        var pages = (Math.ceil(data.results.length / settings.itemsShown) > 10) ? 10 : Math.ceil(data.results.length / settings.itemsShown);
-        for (var i = 1; i <= pages; i++) {
+        var pages = (Math.ceil(data.results.length / settings.itemsShown) > 10) ? 10 : Math.ceil(data.results.length / settings.itemsShown) ;
+        for(var i = 1; i <= pages; i++) {
             var _btn = $('<a href="#" class="page gradient">' + i + '</a>');
             if (i == 1) {
                 _btn.addClass('active');
@@ -259,7 +188,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
             _list.append(li);
 
 
-            if (i >= settings.itemsShown) {
+            if(i >= settings.itemsShown) {
                 li.hide();
             }
 
@@ -340,7 +269,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
         divContainer.find('.pagination').remove();
         _list.empty();
         _loader.hide();
-        if (errorData.msg === 'timeout') {
+        if(errorData.msg === 'timeout') {
             _error.text('Sorry, the server takes too long to respond. Please try again later');
         } else {
             _error.text('Sorry, something went wrong');
@@ -350,7 +279,6 @@ EEXCESS.searchResultList = function(divContainer, options) {
     };
 
     var _loading = function() {
-        $('#result_gallery').remove();
         $('#eexcess_thumb').hide();
         divContainer.find('.pagination').remove();
         _error.hide();
