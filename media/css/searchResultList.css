@@ -136,4 +136,5 @@
 
 .scrollable-y {
     overflow-y: auto;
+    height:calc(100% - 26px);
 }

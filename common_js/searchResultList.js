@@ -91,7 +91,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
                 $('.page').first().addClass('active');
         }
     });
-    var _innerContainer = $('<div class="scrollable-y"></div>').height(divContainer.height() - $('.eexcess_tabs').height());
+    var _innerContainer = $('<div class="scrollable-y"></div>');//.height(divContainer.height() - $('.eexcess_tabs').height());
     divContainer.append(_innerContainer);
     divContainer = _innerContainer;
 
