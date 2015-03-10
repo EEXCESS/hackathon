@@ -32,25 +32,35 @@ EEXCESS.searchResultList = function(divContainer, options) {
                 $("#recommendationList li").hide();
                 var li_items = $("#recommendationList li");
                 var no_images = true;
-                var counter = 0;
+                var l_h = 0;
+                var r_h = 0;
                 var gallery = $('<div id="result_gallery"></div>');
                 gallery.append($('<div id="result_gallery0" class="g_tile"></div>')).append($('<div id="result_gallery1" class="g_tile"></div>'));
                 divContainer.append(gallery);
                 for (var i = 0; i < li_items.length; i++) {
                     var img_src = $(li_items[i]).children('.resCtL').children('a').children('img').attr('src');
                     if (img_src.indexOf('/media/no-img.png') === -1) {
+                        var img = $('<img src="' + img_src + '" class="gallery_img" />');
+                        if(img.get(0).naturalWidth === 200 && img.get(0).naturalHeight === 275) {
+                            continue;
+                        }
                         no_images = false;
                         var original_link = $(li_items[i]).children('.eexcess_resContainer').children('a');
                         var url = original_link.attr('href');
                         var title = original_link.text();
-                        var link = $('<a href="' + url + '" title="'+title+'"><img src="' + img_src + '" class="gallery_img" /></a>');
+                        var link = $('<a href="' + url + '" title="' + title + '"></a>');
+                        link.append(img);
                         link.click(function(evt) {
                             evt.preventDefault();
                             settings.previewHandler(this.href);
                         });
-                        $('#result_gallery' + (counter % 2)).append(link);
-                        counter++;
-//                        gallery.append($('<img src="'+img_src+'" class="gallery_img" />'));
+                        if(l_h > r_h) {
+                            $('#result_gallery1').append(link);
+                            r_h += img.height();
+                        } else {
+                            $('#result_gallery0').append(link);
+                            l_h += img.height();
+                        }
 
                     }
                 }
@@ -312,6 +322,9 @@ EEXCESS.searchResultList = function(divContainer, options) {
             resCt.append($('<p style="clear:both;"></p>'));
 
         }
+        divContainer.find('.eexcess_previewIMG').error(function() {
+            $(this).unbind("error").attr("src", settings.pathToMedia + 'no-img.png');
+        });
 //            $('#eexcess_loading').remove(); TODO: loading functionality
 //            TODO: scrolling stuff...
 //            if ($('#eexcess_resultList').data('total') > $('#eexcess_resultList li').length) {
