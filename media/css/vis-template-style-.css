@@ -338,7 +338,7 @@ input[type="button"]:hover{
 
 #eexcess_btnreset {
     margin:0 3px 5px 0;
-    font-size: 1em;    
+    font-size: 0.9em;    
 }
 #eexcess_btnreset:after {
     content: ".";
