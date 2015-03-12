@@ -20,7 +20,7 @@ var EEXCESS = EEXCESS || {};
  * @param {Object} options
  */
 EEXCESS.searchResultList = function(divContainer, options) {
-    divContainer.prepend($('<ul class="eexcess_tabs"><li class="active"><a href="#">All</a></li><li><a href="#">Media</a></li><li><a href="#">Cultural</a></li></ul>'));
+    divContainer.prepend($('<ul class="eexcess_tabs"><li class="active"><a href="#">All</a></li><li><a href="#">Media</a></li><li><a href="#">Cultural</a></li><li><a href="#">Scholarly</li></ul>'));
     $('.eexcess_tabs li').on('click', function() {
         $('#result_gallery').remove();
         $('.empty_result').hide();
@@ -41,7 +41,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
                     var img_src = $(li_items[i]).children('.resCtL').children('a').children('img').attr('src');
                     if (img_src.indexOf('/media/no-img.png') === -1) {
                         var img = $('<img src="' + img_src + '" class="gallery_img" />');
-                        if(img.get(0).naturalWidth === 200 && img.get(0).naturalHeight === 275) {
+                        if (img.get(0).naturalWidth === 200 && img.get(0).naturalHeight === 275) {
                             continue;
                         }
                         no_images = false;
@@ -54,7 +54,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
                             evt.preventDefault();
                             settings.previewHandler(this.href);
                         });
-                        if(l_h > r_h) {
+                        if (l_h > r_h) {
                             $('#result_gallery1').append(link);
                             r_h += img.height();
                         } else {
@@ -65,7 +65,10 @@ EEXCESS.searchResultList = function(divContainer, options) {
                     }
                 }
                 if (no_images) {
-                    $('.empty_result').show();
+                    $('#result_gallery').hide();
+                    $('.empty_result').show(); 
+                } else {
+                    $('#result_gallery').show();
                 }
                 break;
             case 'Cultural':
@@ -81,6 +84,22 @@ EEXCESS.searchResultList = function(divContainer, options) {
                     }
                 }
                 if (no_culture) {
+                    $('.empty_result').show();
+                }
+                break;
+            case 'Scholarly':
+                $('.pagination').hide();
+                $("#recommendationList li").hide();
+                var li_items = $("#recommendationList li");
+                var no_scholarly = true;
+                for (var i = 0; i < li_items.length; i++) {
+                    var prov = $(li_items[i]).children('.resCtL').children('img').attr('alt');
+                    if (prov.indexOf('ZBW') !== -1 || prov.indexOf('Mendeley') !== -1) {
+                        $(li_items[i]).show();
+                        no_scholarly = false;
+                    }
+                }
+                if (no_scholarly) {
                     $('.empty_result').show();
                 }
                 break;
@@ -152,7 +171,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
         link.hover(
                 function(e) {
                     $('#eexcess_thumb_img').attr('src', img)
-                            .css('max-width','280px');
+                            .css('max-width', '280px');
                     $('#eexcess_thumb')
                             .css('position', 'absolute')
                             .css('top', (e.pageY - xOffset) + 'px')
@@ -369,6 +388,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
         divContainer.find('.pagination').remove();
         _error.hide();
         _list.empty();
+        $('.empty_result').hide();
         _loader.show();
     };
 
