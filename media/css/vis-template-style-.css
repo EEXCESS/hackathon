@@ -550,7 +550,7 @@ input[type="button"]:hover{
     #eexcess_controls_dataloading button{
         font-size: 0.9em;
         margin-top: 3px;
-        width: 65%;
+        width: 75%;
     }
         #eexcess_controls_dataloading button.checked{
             font-weight: bold;
