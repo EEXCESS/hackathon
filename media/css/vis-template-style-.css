@@ -337,12 +337,16 @@ input[type="button"]:hover{
 }
 
 #eexcess_btnreset {
-	width:150px;
-	height:32px;
-	font-size:15px;
-	font-weight:bold;
+    margin:0 3px 5px 0;
+    font-size: 1em;    
 }
-
+#eexcess_btnreset:after {
+    content: ".";
+    clear: both;
+    display: block;
+    visibility: hidden;
+    height: 0px;
+}
 
 
 /*
