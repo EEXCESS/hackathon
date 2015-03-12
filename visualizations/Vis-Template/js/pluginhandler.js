@@ -41,12 +41,16 @@ var PluginHandler = {
 	},
 
 	registerFilterVisualisation: function(pluginObject, configuration){
-
 		configuration.Object = pluginObject;
 		PluginHandler.filterPlugins.push(configuration);
+	},
 
-		if (configuration.Object.initialize != undefined)
-			configuration.Object.initialize(PluginHandler.vis);
+	getFilterPluginForType: function(type){
+		for(var i=0; i<PluginHandler.filterPlugins.length; i++){
+			var filterPlugin = PluginHandler.filterPlugins[i];
+			if (filterPlugin.type == type)
+				return filterPlugin;
+		}
 	},
 
 	registerPluginScripts:function(pluginScripts){

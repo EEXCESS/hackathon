@@ -11,7 +11,7 @@ function Visualization( EEXCESSobj ) {
 	
     // DOM Selectors
     var root = "div#eexcess_canvas";											                   // String to select the area where the visualization should be displayed
-    var filterContainer = "eexcess-filtercontainer"; 
+    var filterContainer = "#eexcess-filtercontainer"; 
 	var searchField = "#eexcess_search_field";									                   // String to select search field in the header
 	var btnSearch = "#eexcess_search_button";									                   // Selector for search button on left side of the header
 	var headerText = "#eexcess_header_text";									                   // String to select the text container in the middle of the header
@@ -138,6 +138,7 @@ function Visualization( EEXCESSobj ) {
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();
         PluginHandler.initialize(START, root, filterContainer);
+        FilterHandler.initialize(filterContainer);
         START.plugins = PluginHandler.getPlugins();
 
         VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
@@ -417,6 +418,7 @@ function Visualization( EEXCESSobj ) {
 	 * 
 	 * */
 	EVTHANDLER.chartSelectChanged = function(){
+		FilterHandler.clearCurrent();
 		VISPANEL.drawChart();
 	};
 	

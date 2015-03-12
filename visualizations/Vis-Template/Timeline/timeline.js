@@ -81,7 +81,7 @@ function Timeline( root, visTemplate ){
 			}
 		});
 		Vis.selectItems( indicesToHighlight, true );
-
+		FilterHandler.setCurrentFilter('time', minDateInYears, maxDateInYears);
 	}
 	
 	TIMEVIS.Evt.brushended = function(){
@@ -95,7 +95,7 @@ function Timeline( root, visTemplate ){
 		zoom.scale(scale);
 		zoom.translate([tx, ty]);	
 		
-		TIMEVIS.Evt.filterListPerTime(x.invert(0).getFullYear(),x.invert(width).getFullYear());
+		TIMEVIS.Evt.filterListPerTime(x.invert(0).getFullYear(), x.invert(width).getFullYear());
 	};
 	
 	
