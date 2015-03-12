@@ -379,21 +379,20 @@ input[type="button"]:hover{
 }
 #eexcess_export_bookmark{	
 	width:16px;
+    font-size:0.9em;
+    border: silver solid 1px;
+    margin: -8px 0px 0px 5px;
+    height:14px;
+    display: inline-block;
+    background-color: rgb(221, 221, 221);
+    cursor: default;
 }
 #eexcess_import_bookmark{
 	display: none;
 }
-#eexcess_export_bookmark{
-	border: silver solid 1px;
-	width:14px;
-	height:14px;
-}
-#eexcess_export_bookmark div{
-	margin: -8px 0px 0px 5px;
-	height:14px;
-}
 #eexcess_import_bookmark_style{	
 	width:16px;
+    font-size:0.9em;
 }
 #bookmark_selected_star{    
 }
