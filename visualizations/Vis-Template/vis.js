@@ -458,7 +458,7 @@ function Visualization( EEXCESSobj ) {
 	EVTHANDLER.btnResetClicked = function(){
 		indicesToHighlight = VISPANEL.getAllSelectListItems();
 	
-		LIST.highlightListItems(indicesToHighlight, false);
+		LIST.highlightListItems(indicesToHighlight, true);
 		//$(filterBookmarkDialogId+">div>span").text(STR_SHOWALLRESULTS);
 		//$(filterBookmarkDialogId+">div>div").css("background","inherit");
 		//$(deleteBookmark).prop("disabled",true);
