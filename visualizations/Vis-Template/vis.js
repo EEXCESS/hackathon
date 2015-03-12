@@ -467,7 +467,7 @@ function Visualization( EEXCESSobj ) {
 		//FILTER.updateData();	
 		
 		VISPANEL.updateCurrentChart( "reset_chart" );
-		
+        FilterHandler.clearCurrent();
 	};
 
 
