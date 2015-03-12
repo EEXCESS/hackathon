@@ -465,7 +465,7 @@ input[type="button"]:hover{
     margin-bottom: 5px;
     width:80%;
     height:100%;
- border:1px solid #e4e4e4;
+    border:1px solid #e4e4e4;
 }
 
 
@@ -538,6 +538,16 @@ input[type="button"]:hover{
 	margin-left: 2%;
 	width: 35%;
 	z-index: 3;
+}
+
+#eexcess_controls_dataloading {
+    margin-top:10px;
+}
+
+#eexcess_controls_dataloading button{
+    font-size: 0.9em;
+    margin-top: 3px;
+    width: 65%;
 }
 
 /*
