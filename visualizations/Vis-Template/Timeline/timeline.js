@@ -80,7 +80,7 @@ function Timeline( root, visTemplate ){
 				}
 			}
 		});
-		Vis.selectItems( indicesToHighlight );
+		Vis.selectItems( indicesToHighlight, true );
 
 	}
 	
@@ -148,7 +148,7 @@ function Timeline( root, visTemplate ){
 			flagLines = false;
 			
 			if( sender != Vis )
-				Vis.ListItemSelected(d, index);	// if the method is invoked by Vis template
+				Vis.ListItemSelected(d, index, true);	// if the method is invoked by Vis template
 			
 			return;
 		}
@@ -159,7 +159,7 @@ function Timeline( root, visTemplate ){
 
 		// highlight current datum on content list
 		if( sender != Vis )
-			Vis.ListItemSelected(d, index);
+			Vis.ListItemSelected(d, index, true);
 		
 		/**
 		 *  Draw lines linking nodes in focus area
@@ -307,12 +307,12 @@ function Timeline( root, visTemplate ){
 		}
 		
 		TIMEVIS.Render.highlightNodes( indicesToHighlight, $(this).attr('class') );
-		Vis.selectItems( indicesToHighlight );
+		Vis.selectItems( indicesToHighlight, true );
 		
 		if(legendDatum.selected === true){
 			$(this).find('text').css('font-weight', 'bold');
 		}else{
-			Vis.selectItems(Vis.getAllSelectListItems());
+			Vis.selectItems(Vis.getAllSelectListItems(), false);
 		}
 		
 		d3.selectAll('.legend').select("div")

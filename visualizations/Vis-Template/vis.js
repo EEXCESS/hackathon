@@ -141,7 +141,11 @@ function Visualization( EEXCESSobj ) {
         START.plugins = PluginHandler.getPlugins();
 
         VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
-        $(window).on('resize', function(){ VISPANEL.drawChart(); });
+        $(document).ready(function(){
+	        $(window).on('resize', function(e){ 
+	        	VISPANEL.drawChart(); 
+	        });
+	    });
 
         // for Debugging Purposes
         //$(searchField).val('Graz');
@@ -438,9 +442,9 @@ function Visualization( EEXCESSobj ) {
 	
 	EVTHANDLER.listItemClicked = function(d, i, isSelectedFromOutside, x, y, z){
 		if (d3.event.ctrlKey){
-        	LIST.selectListItem( d, i, false, true);
+        	LIST.selectListItem( d, i, false, true, false);
 		} else {
-        	LIST.selectListItem( d, i);
+        	LIST.selectListItem( d, i, false, false, false);
     	}
 	};
 	
@@ -452,7 +456,7 @@ function Visualization( EEXCESSobj ) {
 	EVTHANDLER.btnResetClicked = function(){
 		indicesToHighlight = VISPANEL.getAllSelectListItems();
 	
-		LIST.highlightListItems(indicesToHighlight);
+		LIST.highlightListItems(indicesToHighlight, false);
 		//$(filterBookmarkDialogId+">div>span").text(STR_SHOWALLRESULTS);
 		//$(filterBookmarkDialogId+">div>div").css("background","inherit");
 		//$(deleteBookmark).prop("disabled",true);
@@ -789,7 +793,7 @@ function Visualization( EEXCESSobj ) {
         //    .on("click", EVTHANDLER.bookmarkDetailsIconClicked);
 
 
-		$( contentPanel ).scrollTo( "top" );
+		$( contentList ).scrollTo( "top" );
 	};
 	
 	
@@ -824,8 +828,8 @@ function Visualization( EEXCESSobj ) {
 	/**
 	 * Draws legend color icons in each content list item
 	 * */
-	LIST.selectListItem = function( d, i, flagSelectedOutside, addItemToCurrentSelection ){
-		
+	LIST.selectListItem = function( d, i, flagSelectedOutside, addItemToCurrentSelection, scrollToFirst ){
+
 		var addItemToCurrentSelection = addItemToCurrentSelection || false;
 		var isSelectedFromOutside = flagSelectedOutside || false;
 		var index = i;
@@ -845,7 +849,7 @@ function Visualization( EEXCESSobj ) {
 		if (indicesToHighlight.length == 0)
 			indicesToHighlight = VISPANEL.getAllSelectListItems();
 				
-		LIST.highlightListItems( indicesToHighlight );
+		LIST.highlightListItems( indicesToHighlight, scrollToFirst );
 		
 		if( !flagSelectedOutside )
 			VISPANEL.updateCurrentChart( 'highlight_item_selected', indicesToHighlight );
@@ -860,9 +864,10 @@ function Visualization( EEXCESSobj ) {
 	 *	If no parameters are received, all the list items are restored to the default opacity 
 	 *
 	 * */
-	LIST.highlightListItems = function( indices ){
+	LIST.highlightListItems = function( indices, scrollToFirst){
 
 		// "indices" is an array indicating the indices of the list items that should be highlighted 
+		scrollToFirst = scrollToFirst == undefined ? true : scrollToFirst;
 		indicesToHighlight =[];
 		var highlightIndices = indices || [];
 		
@@ -879,15 +884,17 @@ function Visualization( EEXCESSobj ) {
 				}
 			}
 
-			var indexToScroll = highlightIndices[0];			
-			$( contentPanel ).scrollTo( listItem +""+ indexToScroll );
+			var indexToScroll = highlightIndices[0];
+			if (scrollToFirst)
+				$( contentList ).scrollTo( listItem +""+ indexToScroll);
 		}
 		else{
 			indicesToHighlight = [];
 			//change code !!!!!!!!!!!!!
 			d3.selectAll( allListItems ).style("opacity", "0.2");
 			//d3.selectAll( allListItems ).style("opacity", "1");
-			$( contentPanel ).scrollTo( "top" );
+			if (scrollToFirst)
+				$( contentList ).scrollTo( "top" );
 		}
 	};
 	
@@ -1029,6 +1036,9 @@ function Visualization( EEXCESSobj ) {
 	 * 
 	 * */
 	VISPANEL.drawChart = function( item ){
+
+		if ($(root).width() == 0) // workaround: problem, at the beginning, all visualisations get initialized too soon and too often.
+			return; 
 		
 		$(root).empty();		
         // cleanup added controls:
@@ -1059,7 +1069,7 @@ function Visualization( EEXCESSobj ) {
 		}
 
 		LIST.setColorIcon();
-		LIST.highlightListItems(VISPANEL.getAllSelectListItems());//(indicesToHighlight); //changecode
+		LIST.highlightListItems(VISPANEL.getAllSelectListItems(), false);//(indicesToHighlight); //changecode
 	};
 	
 	
@@ -1610,13 +1620,13 @@ function Visualization( EEXCESSobj ) {
     var EXT = {};
 	
 		
-	EXT.ListItemSelected = function(datum, index){
-		LIST.selectListItem( datum, index, true );
+	EXT.ListItemSelected = function(datum, index, scrollToFirst){
+		LIST.selectListItem( datum, index, true, false, scrollToFirst );
 	};
 	
 	
-	EXT.selectItems = function( itemIndicesArray ){
-		LIST.highlightListItems( itemIndicesArray, true );
+	EXT.selectItems = function( itemIndicesArray, scrollToFirst ){
+		LIST.highlightListItems( itemIndicesArray, scrollToFirst );
 	};
 
 	EXT.getAllSelectListItems = function(){

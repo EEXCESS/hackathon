@@ -171,7 +171,8 @@ function Geochart(root, visTemplate) {
 				currentOneLayer = layer;
 				//make selection list
 				Vis.selectItems(
-					GEO.Internal.getDataIndexArrayPerSelection(layer)
+					GEO.Internal.getDataIndexArrayPerSelection(layer),
+                    true
 				);
 			}
 
@@ -242,7 +243,7 @@ function Geochart(root, visTemplate) {
             marker.on('click', function(e){
                 if (e && e.target && e.target.options && e.target.options.dataObject){
 					GEO.Render.deleteCurrentSelect();
-                    Vis.selectItems([GEO.Internal.getDataIndex(e.target.options.dataObject.id)]);
+                    Vis.selectItems([GEO.Internal.getDataIndex(e.target.options.dataObject.id)], true);
                 }
             }).on('popupclose', function(){
                     Vis.selectItems([]);
