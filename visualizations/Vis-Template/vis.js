@@ -219,6 +219,8 @@ function Visualization( EEXCESSobj ) {
 		$( searchField ).on('keypress', function(e){ if (e.keyCode == 13) EVTHANDLER.btnSearchClicked(); });
 		$( btnReset   ).click( function(){ EVTHANDLER.btnResetClicked(); });
         $( 'html' ).click(function(){ if(isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
+        $( '#demo-button-university' ).click(function(e){ $(this).addClass('checked'); $('#demo-button-historicalbuildings').removeClass('checked'); onDataReceived(getDemoResultsUniversity()); });
+        $( '#demo-button-historicalbuildings' ).click(function(e){ $(this).addClass('checked'); $('#demo-button-university').removeClass('checked'); onDataReceived(getDemoResultsHistoricBuildings()); });
 	};
 	
 

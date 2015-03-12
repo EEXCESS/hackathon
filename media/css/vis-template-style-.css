@@ -543,12 +543,20 @@ input[type="button"]:hover{
 #eexcess_controls_dataloading {
     margin-top:10px;
 }
-
-#eexcess_controls_dataloading button{
-    font-size: 0.9em;
-    margin-top: 3px;
-    width: 65%;
-}
+    #eexcess_controls_dataloading button{
+        font-size: 0.9em;
+        margin-top: 3px;
+        width: 65%;
+    }
+        #eexcess_controls_dataloading button.checked{
+            font-weight: bold;
+        }
+    #eexcess_controls_dataloading h3{
+        margin: 0 5px;
+        text-align: left;
+        font-size: 1em;
+        border-bottom: 1px solid #e4e4e4;
+    }
 
 /*
     All <select> elements
