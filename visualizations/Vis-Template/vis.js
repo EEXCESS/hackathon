@@ -1207,6 +1207,8 @@ function Visualization( EEXCESSobj ) {
 		 
 		bookmarkedItems = {};
 		var allBookmarks = BookmarkingAPI.getAllBookmarks();
+		if (!allBookmarks)
+			return;
 		Object.keys(allBookmarks).forEach(function(bookmarkKey){
 			allBookmarks[bookmarkKey].items.forEach(function(itemsElement){	
 				
