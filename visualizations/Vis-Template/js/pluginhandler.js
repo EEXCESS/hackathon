@@ -3,6 +3,7 @@ var PluginHandler = {
 	visPlugins:[],
 	filterPlugins:[],
 	visRootSelector: null,
+	filterRootSelector: null,
 	defaultCombinations : [
                 [
                     {"facet": "language", "visualattribute": "x-axis"},
@@ -16,9 +17,10 @@ var PluginHandler = {
                 ]
             ],
 
-	initialize:function(vis, visRootSelector){
+	initialize:function(vis, visRootSelector, filterRootSelector){
 		PluginHandler.vis = vis;
 		PluginHandler.visRootSelector = visRootSelector;
+		PluginHandler.filterRootSelector = filterRootSelector;
 	},
 
 	getPlugins:function(){
@@ -41,10 +43,10 @@ var PluginHandler = {
 	registerFilterVisualisation: function(pluginObject, configuration){
 
 		configuration.Object = pluginObject;
-		if (configuration.Object.initialize != undefined)
-			configuration.Object.initialize(PluginHandler.vis, PluginHandler.visRootSelector);
-
 		PluginHandler.filterPlugins.push(configuration);
+
+		if (configuration.Object.initialize != undefined)
+			configuration.Object.initialize(PluginHandler.vis);
 	},
 
 	registerPluginScripts:function(pluginScripts){
