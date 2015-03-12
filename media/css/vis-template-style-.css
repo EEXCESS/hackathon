@@ -486,6 +486,7 @@ input[type="button"]:hover{
 	height:100%;	
 	background-color: white;
 	z-index: 2;
+    overflow-y: auto;
 }
 
 
@@ -494,11 +495,12 @@ input[type="button"]:hover{
     Wraps #eexcess_controls_chart and #eexcess_controls_chart, which enclose pairs  of span-select DOM elements
 
 */
-#eexcess_fixed_controls{
-	height: 50%;
-	margin-bottom: 100%;
+#eexcess_fixed_controls{    
     border:1px solid #e4e4e4;
-    padding-top: 0.8em;
+    padding: 7px 0;
+}
+#eexcess-filtercontainer{
+	height: 50%;
 }
 
 
@@ -506,7 +508,7 @@ input[type="button"]:hover{
     Wraps the first pair span-select, e.g. "Chart  timeline")
 */
 #eexcess_controls_chart {
-	margin-left: 5px;
+	margin: 0 0 0 5px;
 }
 
 /*
