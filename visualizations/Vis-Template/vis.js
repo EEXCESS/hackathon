@@ -886,7 +886,7 @@ function Visualization( EEXCESSobj ) {
 
 			var indexToScroll = highlightIndices[0];
 			if (scrollToFirst)
-				$( contentList ).scrollTo( listItem +""+ indexToScroll);
+				$( contentList ).scrollTo( listItem +""+ indexToScroll, {offsetTop: 90});
 		}
 		else{
 			indicesToHighlight = [];
