@@ -881,7 +881,7 @@ p.eexcess_ritem_short {
     width: 200px;
     /*max-height: 30em;*/
     padding: 5px;
-    z-index: 999;
+    z-index: 1050; /*to be higher than the map*/
     font-size: 0.9em;
     background-color: white;
     box-shadow: -.3em .3em 1.5em #222;
