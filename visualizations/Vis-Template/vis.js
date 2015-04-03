@@ -134,7 +134,7 @@ function Visualization( EEXCESSobj ) {
 		timeVis = new Timeline(root, EXT);
 		barVis = new Barchart(root, EXT);
         geoVis = new Geochart(root, EXT);
-        urankVis = new Urank(root, EXT, EEXCESS);
+        urankVis = new UrankVis(root, EXT, EEXCESS);
 
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();
@@ -594,7 +594,7 @@ function Visualization( EEXCESSobj ) {
 		
 		visChannelKeys = [];
 
-        if(mappings[chartIndex].combinations.length > 0){
+        if(chartIndex > -1 && mappings[chartIndex].combinations.length > 0){
 
             initialMapping = mappings[chartIndex].combinations[0];
 		

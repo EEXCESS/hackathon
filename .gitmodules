@@ -1,0 +1,3 @@
+[submodule "visualizations/Vis-Template/uRank"]
+	path = visualizations/Vis-Template/uRank
+	url = https://github.com/cecidisi/uRank
