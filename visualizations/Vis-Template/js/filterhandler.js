@@ -3,9 +3,11 @@ var FilterHandler = {
 	currentFilter : { type: null, from: null, to: null, Object: null},	
 	registeredFilterVisualisations : [],
 	$filterRoot: null,
-	$currentFilterContainer: null,
+	$currentFilterContainer: null,	
+	vis: null,
 
-	initialize: function(filterRootSelector){
+	initialize: function(vis, filterRootSelector){
+		FilterHandler.vis = vis;
 		FilterHandler.$filterRoot = $(filterRootSelector);
 		FilterHandler.$currentFilterContainer = $('<div></div>').css('height', '100%');
 		FilterHandler.$filterRoot.append(FilterHandler.$currentFilterContainer);
@@ -27,10 +29,11 @@ var FilterHandler = {
 		}
 
 		FilterHandler.currentFilter.Object.draw(
-			null, 
+			FilterHandler.vis.getData(), 
+			FilterHandler.vis.getHighlightedData(), 
+			FilterHandler.$currentFilterContainer,
 			FilterHandler.currentFilter.from, 
-			FilterHandler.currentFilter.to, 
-			FilterHandler.$currentFilterContainer);
+			FilterHandler.currentFilter.to);
 	},
 
 	clearCurrent: function(){

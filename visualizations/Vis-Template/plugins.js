@@ -1,5 +1,7 @@
 PluginHandler.registerPluginScripts([
-		'TestPlugin.js', 'TestMiniViz.js' 
+		'TestPlugin.js', 
+		'TestMiniViz.js' , 
+		'TestMiniVizGeo.js' 
 	]);
 
 

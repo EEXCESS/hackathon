@@ -81,6 +81,7 @@ function Visualization( EEXCESSobj ) {
 	var visChannelKeys;					// array containing the keys (names) of the visual atributes corresponding to the current chart
 	var mappingSelectors;			    // Selector array for visual channel <select>. Necessary for event handlers
 	var indicesToHighlight = [];	    // array containing the indices of <li> elements to be highlighted in content list
+	var highlightedData = [];	    	// array containing the data elements to be highlighted in content list
 	var isBookmarkDialogOpen;
     //var idsArray;
     var bookmarkedItems;
@@ -138,7 +139,7 @@ function Visualization( EEXCESSobj ) {
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();
         PluginHandler.initialize(START, root, filterContainer);
-        FilterHandler.initialize(filterContainer);
+        FilterHandler.initialize(START, filterContainer);
         START.plugins = PluginHandler.getPlugins();
 
         VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
@@ -206,6 +207,14 @@ function Visualization( EEXCESSobj ) {
     	charts = globals.charts;
         CONTROLS.reloadChartSelect();
     }
+
+    START.getData = function(){
+    	return data;
+    };
+
+    START.getHighlightedData = function(){
+    	return highlightedData;
+    };
 
 
 
@@ -870,7 +879,8 @@ function Visualization( EEXCESSobj ) {
 
 		// "indices" is an array indicating the indices of the list items that should be highlighted 
 		scrollToFirst = scrollToFirst == undefined ? true : scrollToFirst;
-		indicesToHighlight =[];
+		indicesToHighlight = [];
+		highlightedData = [];
 		var highlightIndices = indices || [];
 		
 		if(highlightIndices.length > 0){
@@ -881,6 +891,7 @@ function Visualization( EEXCESSobj ) {
 				if(highlightIndices.indexOf(i) != -1){
 					item.style("opacity", "1");
 					indicesToHighlight.push(i);
+					highlightedData.push(data[i]);
 				}else{
 					item.style("opacity", "0.2");
 				}
@@ -891,7 +902,6 @@ function Visualization( EEXCESSobj ) {
 				$( contentList ).scrollTo( listItem +""+ indexToScroll, {offsetTop: 90});
 		}
 		else{
-			indicesToHighlight = [];
 			//change code !!!!!!!!!!!!!
 			d3.selectAll( allListItems ).style("opacity", "0.2");
 			//d3.selectAll( allListItems ).style("opacity", "1");

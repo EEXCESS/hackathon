@@ -175,6 +175,8 @@ function Geochart(root, visTemplate) {
                     true
 				);
 
+                var bounds = layer.getBounds();
+                FilterHandler.setCurrentFilter('geo', bounds._northEast, bounds._southWest);
 			}
 
 			// Do whatever else you need to. (save to db, add to map etc)
