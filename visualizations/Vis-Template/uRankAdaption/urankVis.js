@@ -13,7 +13,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
   var options = {
     tagCloudRoot: '#eexcess_keywords_container',
     tagBoxRoot: '#eexcess_keywords_box',
-    contentListRoot: '.urank .eexcess_result_list_inner',
+    contentListRoot: '.urank .eexcess_result_list_outer',
     visCanvasRoot: '#urank_canvas_inner',
     docViewerRoot: ''
   };
@@ -87,7 +87,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
            '</div>',
            ''
         );
-    $('#eexcess_canvas').append('<ul class="eexcess_result_list_inner"></ul><div id="urank_canvas_inner"></div>');
+    $('#eexcess_canvas').append('<div class="eexcess_result_list_outer"></div><div id="urank_canvas_inner"></div>');
     $('#eexcess_vis_panel').append('<div id="eexcess_keywords_container"></div>');
 
     urankCtrl.loadData(JSON.stringify(urankDemoData.data));
