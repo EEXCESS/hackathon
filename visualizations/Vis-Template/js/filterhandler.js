@@ -1,15 +1,25 @@
 var FilterHandler = {
 
-	currentFilter : { type: null, from: null, to: null, Object: null},	
+	currentFilter: null,
 	registeredFilterVisualisations : [],
+	filters : [],
 	$filterRoot: null,
 	$currentFilterContainer: null,	
 	vis: null,
 
+	createEmptyFilter: function(){
+		return { type: null, from: null, to: null, Object: null};
+	},
+
 	initialize: function(vis, filterRootSelector){
+		FilterHandler.currentFilter = FilterHandler.createEmptyFilter()
 		FilterHandler.vis = vis;
 		FilterHandler.$filterRoot = $(filterRootSelector);
-		FilterHandler.$currentFilterContainer = $('<div></div>').css('height', '100%');
+		FilterHandler.addEmptyContainer();
+	},
+
+	addEmptyContainer: function(){
+		FilterHandler.$currentFilterContainer = $('<div></div>');
 		FilterHandler.$filterRoot.append(FilterHandler.$currentFilterContainer);
 	},
 
@@ -42,5 +52,18 @@ var FilterHandler = {
 			FilterHandler.currentFilter.Object = null;
 		}
 		FilterHandler.$currentFilterContainer.empty();
+	},
+
+	keepCurrentFilter: function(){
+		if (FilterHandler.currentFilter.type == null)
+			return;
+
+		FilterHandler.filters.push(FilterHandler.currentFilter);
+		FilterHandler.currentFilter = FilterHandler.createEmptyFilter();
+		FilterHandler.addEmptyContainer();
+	},
+
+	removeFilter: function(filterIndex){
+		FilterHandler.filters.split(filterIndex);
 	}
 }

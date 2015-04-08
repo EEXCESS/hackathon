@@ -426,8 +426,7 @@ function Visualization( EEXCESSobj ) {
 	 * 	Chart <select> changed
 	 * 
 	 * */
-	EVTHANDLER.chartSelectChanged = function(){
-		FilterHandler.clearCurrent();
+	EVTHANDLER.chartSelectChanged = function(){		
 		VISPANEL.drawChart();
 	};
 	
@@ -1061,9 +1060,7 @@ function Visualization( EEXCESSobj ) {
 		var oldChartName = VISPANEL.chartName;
 		var selectedMapping = this.internal.getSelectedMapping( item );
 		if (oldChartName != VISPANEL.chartName){
-			var plugin = PluginHandler.getByDisplayName(oldChartName);
-			if (plugin != null && plugin.Object.finalize != undefined)
-				plugin.Object.finalize();
+			VISPANEL.chartChanged(oldChartName, VISPANEL.chartName);
 		}
 
 		var plugin = PluginHandler.getByDisplayName(VISPANEL.chartName);
@@ -1084,6 +1081,14 @@ function Visualization( EEXCESSobj ) {
 		LIST.highlightListItems(VISPANEL.getAllSelectListItems(), false);//(indicesToHighlight); //changecode
 	};
 	
+	
+	VISPANEL.chartChanged = function(oldChartName, newChartName){
+		FilterHandler.keepCurrentFilter();
+		FilterHandler.clearCurrent();
+		var plugin = PluginHandler.getByDisplayName(oldChartName);
+		if (plugin != null && plugin.Object.finalize != undefined)
+			plugin.Object.finalize();
+	};
 	
 	VISPANEL.getAllSelectListItems = function(){
 		var array =[];
