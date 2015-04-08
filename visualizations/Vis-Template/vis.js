@@ -1083,8 +1083,10 @@ function Visualization( EEXCESSobj ) {
 	
 	
 	VISPANEL.chartChanged = function(oldChartName, newChartName){
-		FilterHandler.keepCurrentFilter();
-		FilterHandler.clearCurrent();
+		if (oldChartName === "")
+			return
+
+		FilterHandler.makeCurrentPermanent();
 		var plugin = PluginHandler.getByDisplayName(oldChartName);
 		if (plugin != null && plugin.Object.finalize != undefined)
 			plugin.Object.finalize();

@@ -4,27 +4,30 @@ var FilterHandler = {
 	registeredFilterVisualisations : [],
 	filters : [],
 	$filterRoot: null,
-	$currentFilterContainer: null,	
 	vis: null,
 
-	createEmptyFilter: function(){
-		return { type: null, from: null, to: null, Object: null};
-	},
-
 	initialize: function(vis, filterRootSelector){
-		FilterHandler.currentFilter = FilterHandler.createEmptyFilter()
 		FilterHandler.vis = vis;
-		FilterHandler.$filterRoot = $(filterRootSelector);
-		FilterHandler.addEmptyContainer();
+		FilterHandler.$filterRoot = $(filterRootSelector);		
+		FilterHandler.$filterRoot.on('click', '.filter-remove', function(){
+			FilterHandler.removeFilter($(this).parents('.filter-container-outer'));
+		});	
+		FilterHandler.$filterRoot.on('click', '.filter-keep', function(){
+			FilterHandler.makeCurrentPermanent();			
+		});
 	},
 
-	addEmptyContainer: function(){
-		FilterHandler.$currentFilterContainer = $('<div></div>');
-		FilterHandler.$filterRoot.append(FilterHandler.$currentFilterContainer);
+	addEmptyFilter: function(){		
+		FilterHandler.currentFilter = { type: null, from: null, to: null, Object: null, $container: $('<div class="filter-container"></div>')};
+		var $filter = $('<div class="filter-container-outer current"><div class="filter-controls"><span><a href="#" class="filter-keep">keep</a> <a href="#" class="filter-remove">x</a></span></div></div>').append(FilterHandler.currentFilter.$container);
+		FilterHandler.$filterRoot.prepend($filter);
 	},
 
 	// type : "time"
 	setCurrentFilter: function(type, from, to){
+		if (FilterHandler.currentFilter == null)
+			FilterHandler.addEmptyFilter();
+
 		FilterHandler.currentFilter.type = type;
 		FilterHandler.currentFilter.from = from;
 		FilterHandler.currentFilter.to = to;
@@ -41,7 +44,7 @@ var FilterHandler = {
 		FilterHandler.currentFilter.Object.draw(
 			FilterHandler.vis.getData(), 
 			FilterHandler.vis.getHighlightedData(), 
-			FilterHandler.$currentFilterContainer,
+			FilterHandler.currentFilter.$container,
 			FilterHandler.currentFilter.from, 
 			FilterHandler.currentFilter.to);
 	},
@@ -51,19 +54,34 @@ var FilterHandler = {
 			FilterHandler.currentFilter.Object.finalize();
 			FilterHandler.currentFilter.Object = null;
 		}
-		FilterHandler.$currentFilterContainer.empty();
+		FilterHandler.currentFilter.$container.empty();
 	},
 
-	keepCurrentFilter: function(){
-		if (FilterHandler.currentFilter.type == null)
+	makeCurrentPermanent: function(){
+		if (FilterHandler.currentFilter == null)
+			return;
+		
+		var index = FilterHandler.filters.length - 1;
+		FilterHandler.currentFilter.$container.data('filter-index', index);
+		FilterHandler.currentFilter.$container.parents('.filter-container-outer').removeClass('current').addClass('permanent');
+		FilterHandler.filters.push(FilterHandler.currentFilter);
+		FilterHandler.currentFilter = null;
+	},
+
+	removeFilter: function($filterOuter){			
+		var filterIndex = $filterOuter.find('.filter-container').data('filter-index');
+		if (filterIndex === undefined)
 			return;
 
-		FilterHandler.filters.push(FilterHandler.currentFilter);
-		FilterHandler.currentFilter = FilterHandler.createEmptyFilter();
-		FilterHandler.addEmptyContainer();
+		FilterHandler.filters.splice(filterIndex);
+		$filterOuter.remove();
+		FilterHandler.resetFilterIndex();
 	},
 
-	removeFilter: function(filterIndex){
-		FilterHandler.filters.split(filterIndex);
+	resetFilterIndex: function(filterIndex, $filter){
+		for (var i=0; i<FilterHandler.filters.length; i++){
+			var filter = FilterHandler.filters[i];
+			filter.$container.data('filter-index', i);
+		}
 	}
 }

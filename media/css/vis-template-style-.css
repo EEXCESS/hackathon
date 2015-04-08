@@ -1095,6 +1095,35 @@ p.eexcess_ritem_short {
     background-color: inherit;
 }
 
+/***** Filter Visualisations ****/
+.filter-container-outer {
+    margin-top:10px;
+}
+    .filter-container-outer .filter-controls {
+        position: absolute;
+        right: 0;
+        padding-right: 4px;
+        display: none;
+    }
+        .filter-container-outer:hover .filter-controls {
+            display: block;
+        }
+        .filter-container-outer:hover .filter-controls:hover {
+            font-weight: bold;
+        }
+        .filter-container-outer .filter-controls a {
+            display: none;
+        }
+            .filter-container-outer.permanent .filter-controls a.filter-remove {
+                display: inline;
+            }
+            .filter-container-outer.current .filter-controls a.filter-keep {
+                display: inline;
+            }
+    .filter-container-outer.current .filter-container {
+        border: 1px solid black;
+    }
+
 
 
 
