@@ -5,7 +5,7 @@
 .urank #eexcess_ranking_controls {
 	display: inline-block;
 	float:left;
-    width: 45%;
+    width: 200px;
     height:50px;
     margin: 0;
     padding: 0;
@@ -32,7 +32,7 @@
     overflow-y: auto;
     display: inline-block;  
     float:left;
-    width: 55%;
+    width: calc(100% - 200px);
     height:50px;
     margin: 0;
     padding: 0;
@@ -184,11 +184,11 @@
 }
 
 .urank .ui-slider-horizontal {
-height: .5em;
-margin: .1em;
+	height: .5em;
+	margin: .1em;
 }
 .urank .ui-widget {
-font-size: 1em;
+	font-size: 1em;
 }
 
 
