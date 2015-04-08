@@ -81,7 +81,7 @@ function Timeline( root, visTemplate ){
 			}
 		});
 		Vis.selectItems( indicesToHighlight, true );
-		FilterHandler.setCurrentFilter('time', minDateInYears, maxDateInYears);
+		FilterHandler.setCurrentFilterRange('time', minDateInYears, maxDateInYears);
 	}
 	
 	TIMEVIS.Evt.brushended = function(){

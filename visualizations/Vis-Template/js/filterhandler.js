@@ -1,6 +1,7 @@
 var FilterHandler = {
 
 	currentFilter: null,
+	listFilter: null,
 	registeredFilterVisualisations : [],
 	filters : [],
 	$filterRoot: null,
@@ -23,8 +24,18 @@ var FilterHandler = {
 		FilterHandler.$filterRoot.prepend($filter);
 	},
 
-	// type : "time"
-	setCurrentFilter: function(type, from, to){
+	addEmptyListFilter: function(){
+		var currentFilterTemp = FilterHandler.currentFilter;
+		FilterHandler.addEmptyFilter();
+		FilterHandler.listFilter = FilterHandler.currentFilter;
+		FilterHandler.makeCurrentPermanent ();
+		FilterHandler.currentFilter = currentFilterTemp;
+		// move sort order
+		if (FilterHandler.currentFilter != null)
+			FilterHandler.listFilter.$container.parents('.filter-container-outer').insertAfter(FilterHandler.currentFilter.$container.parents('.filter-container-outer'));
+	},
+
+	setCurrentFilterRange: function(type, from, to){
 		if (FilterHandler.currentFilter == null)
 			FilterHandler.addEmptyFilter();
 
@@ -33,6 +44,20 @@ var FilterHandler = {
 		FilterHandler.currentFilter.to = to;
 
 		FilterHandler.refreshCurrent();
+	},
+
+	setCurrentFilterListItems: function(selectedData){
+		if (FilterHandler.listFilter == null)
+			FilterHandler.addEmptyListFilter();
+
+		if (selectedData.length == 0){
+			FilterHandler.removeFilter(FilterHandler.listFilter.$container.parents('.filter-container-outer'));
+			FilterHandler.listFilter = null;
+			return;
+		}
+
+		FilterHandler.listFilter.selectedData = selectedData;
+		FilterHandler.refreshListFilter();
 	},
 
 	refreshCurrent: function(){
@@ -49,7 +74,21 @@ var FilterHandler = {
 			FilterHandler.currentFilter.to);
 	},
 
+	refreshListFilter: function(){
+		if (FilterHandler.listFilter.Object == null){
+			FilterHandler.listFilter.Object = PluginHandler.getFilterPluginForType('list').Object;
+			FilterHandler.listFilter.Object.initialize();
+		}
+
+		FilterHandler.listFilter.Object.draw(
+			FilterHandler.listFilter.$container,
+			FilterHandler.listFilter.selectedData);
+	},
+
 	clearCurrent: function(){
+		if (FilterHandler.currentFilter == null)
+			return;
+
 		if (FilterHandler.currentFilter.Object != null){
 			FilterHandler.currentFilter.Object.finalize();
 			FilterHandler.currentFilter.Object = null;

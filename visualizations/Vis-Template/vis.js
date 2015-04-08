@@ -701,20 +701,28 @@ function Visualization( EEXCESSobj ) {
 	
 	LIST.internal = {
 			
-			/**
-			 *	Calculates the index to scroll to, which depends on the existence or abscence of a ranking
-			 *	There exists a ranking if dataRanking.length > 0
-			 * */
-			getIndexToScroll: function( indices ) {	
-				if( typeof dataRanking === 'undefined' || dataRanking === 'undefined' || dataRanking.length > 0){
-					for(var i = 0; i < dataRanking.length; i++){
-						if( indices.indexOf( dataRanking[i].originalIndex ) !== -1 )
-							return dataRanking[i].originalIndex;
-					}
+		/**
+		 *	Calculates the index to scroll to, which depends on the existence or abscence of a ranking
+		 *	There exists a ranking if dataRanking.length > 0
+		 * */
+		getIndexToScroll: function( indices ) {	
+			if( typeof dataRanking === 'undefined' || dataRanking === 'undefined' || dataRanking.length > 0){
+				for(var i = 0; i < dataRanking.length; i++){
+					if( indices.indexOf( dataRanking[i].originalIndex ) !== -1 )
+						return dataRanking[i].originalIndex;
 				}
-				else
-					return indices[0];
 			}
+			else
+				return indices[0];
+		},
+
+		getDataItemsFromIndices: function(data, indices){
+			var dataItems = [];
+			for (var i = 0; i < indices.length; i++) {
+				dataItems.push(data[indices[i]]);
+			};
+			return dataItems;
+		}
 	};
 			
 	
@@ -863,6 +871,9 @@ function Visualization( EEXCESSobj ) {
 		
 		if( !flagSelectedOutside )
 			VISPANEL.updateCurrentChart( 'highlight_item_selected', indicesToHighlight );
+
+		var dataSelected = LIST.internal.getDataItemsFromIndices(data, LIST.indicesSelected);
+		FilterHandler.setCurrentFilterListItems(dataSelected);
 	};
 	
 

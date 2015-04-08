@@ -8,9 +8,9 @@
 	};
 
 	TestMiniViz.draw = function(data, hightlightedData, $container, northEast, southWest){
-		var $vis = $container.find('.TestMiniViz');
+		var $vis = $container.find('.TestMiniVizGeo');
 		if ($vis.length == 0){
-			$vis = $('<div class="TestMiniViz">Hallo</div>').css('background-color', 'lightgrey').css('padding-top', '10px').css('padding-bottom', '10px');		
+			$vis = $('<div class="TestMiniVizGeo">Hallo</div>').css('background-color', 'lightgrey').css('padding-top', '10px').css('padding-bottom', '10px');		
 			$container.append($vis);
 		}
 
