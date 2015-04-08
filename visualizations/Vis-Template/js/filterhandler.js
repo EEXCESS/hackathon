@@ -19,7 +19,7 @@ var FilterHandler = {
 
 	addEmptyFilter: function(){		
 		FilterHandler.currentFilter = { type: null, from: null, to: null, Object: null, $container: $('<div class="filter-container"></div>')};
-		var $filter = $('<div class="filter-container-outer current"><div class="filter-controls"><span><a href="#" class="filter-keep">keep</a> <a href="#" class="filter-remove">x</a></span></div></div>').append(FilterHandler.currentFilter.$container);
+		var $filter = $('<div class="filter-container-outer current"><div class="filter-controls"><a href="#" class="filter-keep"><span class="batch-sm-add"></span></a> <a href="#" class="filter-remove"><span class="batch-sm-delete"></span></a></div></div>').append(FilterHandler.currentFilter.$container);
 		FilterHandler.$filterRoot.prepend($filter);
 	},
 

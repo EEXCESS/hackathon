@@ -1102,7 +1102,7 @@ p.eexcess_ritem_short {
     .filter-container-outer .filter-controls {
         position: absolute;
         right: 0;
-        padding-right: 4px;
+        padding: 3px 3px 0 0;
         display: none;
     }
         .filter-container-outer:hover .filter-controls {
@@ -1124,6 +1124,28 @@ p.eexcess_ritem_short {
         border: 1px solid black;
     }
 
+.batch-sm-add,
+.batch-sm-delete {
+    display: block;
+    background-size: 11px 11px;
+    width:11px;
+    height:11px;
+    margin:1px;
+}
+.batch-sm-add:hover,
+.batch-sm-delete:hover {
+    display: block;
+    background-size: 13px 13px;
+    width:13px;
+    height:13px;
+    margin:0;
+}
+    .batch-sm-delete {
+        background-image: url('../batchmaster/delete.png');
+    }
+    .batch-sm-add {
+        background-image: url('../batchmaster/add.png');
+    }
 
 
 
