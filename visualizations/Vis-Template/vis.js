@@ -852,11 +852,15 @@ function Visualization( EEXCESSobj ) {
 		var isSelectedFromOutside = flagSelectedOutside || false;
 		var index = i;
 		var indicesToHighlight = [];
+		var wasFirstItemSelectedWithAddingKey = false;
 
 		var indexWasAlreadySelected = LIST.indicesSelected.indexOf(index) > -1;
 
 		if (addItemToCurrentSelection)
 			indicesToHighlight = LIST.indicesSelected;
+
+		if (addItemToCurrentSelection && LIST.indicesSelected.length == 0)
+			wasFirstItemSelectedWithAddingKey = true;
 
 		if (indexWasAlreadySelected)
 			indicesToHighlight.splice(indicesToHighlight.indexOf(index), 1);
@@ -873,7 +877,7 @@ function Visualization( EEXCESSobj ) {
 			VISPANEL.updateCurrentChart( 'highlight_item_selected', indicesToHighlight );
 
 		var dataSelected = LIST.internal.getDataItemsFromIndices(data, LIST.indicesSelected);
-		FilterHandler.setCurrentFilterListItems(dataSelected);
+		FilterHandler.setCurrentFilterListItems(dataSelected, wasFirstItemSelectedWithAddingKey);
 	};
 	
 

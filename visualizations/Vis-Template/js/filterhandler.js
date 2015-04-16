@@ -28,6 +28,7 @@ var FilterHandler = {
 		var currentFilterTemp = FilterHandler.currentFilter;
 		FilterHandler.addEmptyFilter();
 		FilterHandler.listFilter = FilterHandler.currentFilter;
+		FilterHandler.listFilter.mergeMode = 'union';
 		FilterHandler.makeCurrentPermanent ();
 		FilterHandler.currentFilter = currentFilterTemp;
 		// move sort order
@@ -46,7 +47,7 @@ var FilterHandler = {
 		FilterHandler.refreshCurrent();
 	},
 
-	setCurrentFilterListItems: function(selectedData){
+	setCurrentFilterListItems: function(selectedData, wasFirstItemSelectedWithAddingKey){		
 		if (FilterHandler.listFilter == null)
 			FilterHandler.addEmptyListFilter();
 
@@ -55,6 +56,9 @@ var FilterHandler = {
 			FilterHandler.listFilter = null;
 			return;
 		}
+
+		if (wasFirstItemSelectedWithAddingKey)
+			FilterHandler.listFilter.mergeMode = 'symetricDifference';
 
 		FilterHandler.listFilter.selectedData = selectedData;
 		FilterHandler.refreshListFilter();
@@ -66,9 +70,10 @@ var FilterHandler = {
 			FilterHandler.currentFilter.Object.initialize();
 		}
 
+		FilterHandler.currentFilter.dataWithinFilter = FilterHandler.vis.getHighlightedData(); // todo: replace somehow...
 		FilterHandler.currentFilter.Object.draw(
 			FilterHandler.vis.getData(), 
-			FilterHandler.vis.getHighlightedData(), 
+			FilterHandler.currentFilter.dataWithinFilter,
 			FilterHandler.currentFilter.$container,
 			FilterHandler.currentFilter.from, 
 			FilterHandler.currentFilter.to);
@@ -82,7 +87,8 @@ var FilterHandler = {
 
 		FilterHandler.listFilter.Object.draw(
 			FilterHandler.listFilter.$container,
-			FilterHandler.listFilter.selectedData);
+			FilterHandler.listFilter.selectedData,
+			FilterHandler.listFilter.mergeMode);
 	},
 
 	clearCurrent: function(){
@@ -122,5 +128,12 @@ var FilterHandler = {
 			var filter = FilterHandler.filters[i];
 			filter.$container.data('filter-index', i);
 		}
+	},
+
+	calculateHighlightedData: function(){
+		//for (var i=0; i<FilterHandler.filters.length; i++){
+		//	var filter = FilterHandler.filters[i];
+		//	filter.$container.data('filter-index', i);
+		//}
 	}
 }
