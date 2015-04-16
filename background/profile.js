@@ -188,7 +188,7 @@ EEXCESS.profile = (function() {
 //                }
                 var profile = {
                     //"history": results,
-                    "partnerList": getPartnerList(),
+//                    "partnerList": getPartnerList(),
                     "firstName": applyFirstnamePolicy(),
                     "lastName": applyLastnamePolicy(),
                     "gender": applyGenderPolicy(),

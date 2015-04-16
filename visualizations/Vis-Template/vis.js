@@ -426,8 +426,7 @@ function Visualization( EEXCESSobj ) {
 	 * 	Chart <select> changed
 	 * 
 	 * */
-	EVTHANDLER.chartSelectChanged = function(){
-		FilterHandler.clearCurrent();
+	EVTHANDLER.chartSelectChanged = function(){		
 		VISPANEL.drawChart();
 	};
 	
@@ -702,20 +701,28 @@ function Visualization( EEXCESSobj ) {
 	
 	LIST.internal = {
 			
-			/**
-			 *	Calculates the index to scroll to, which depends on the existence or abscence of a ranking
-			 *	There exists a ranking if dataRanking.length > 0
-			 * */
-			getIndexToScroll: function( indices ) {	
-				if( typeof dataRanking === 'undefined' || dataRanking === 'undefined' || dataRanking.length > 0){
-					for(var i = 0; i < dataRanking.length; i++){
-						if( indices.indexOf( dataRanking[i].originalIndex ) !== -1 )
-							return dataRanking[i].originalIndex;
-					}
+		/**
+		 *	Calculates the index to scroll to, which depends on the existence or abscence of a ranking
+		 *	There exists a ranking if dataRanking.length > 0
+		 * */
+		getIndexToScroll: function( indices ) {	
+			if( typeof dataRanking === 'undefined' || dataRanking === 'undefined' || dataRanking.length > 0){
+				for(var i = 0; i < dataRanking.length; i++){
+					if( indices.indexOf( dataRanking[i].originalIndex ) !== -1 )
+						return dataRanking[i].originalIndex;
 				}
-				else
-					return indices[0];
 			}
+			else
+				return indices[0];
+		},
+
+		getDataItemsFromIndices: function(data, indices){
+			var dataItems = [];
+			for (var i = 0; i < indices.length; i++) {
+				dataItems.push(data[indices[i]]);
+			};
+			return dataItems;
+		}
 	};
 			
 	
@@ -845,11 +852,15 @@ function Visualization( EEXCESSobj ) {
 		var isSelectedFromOutside = flagSelectedOutside || false;
 		var index = i;
 		var indicesToHighlight = [];
+		var wasFirstItemSelectedWithAddingKey = false;
 
 		var indexWasAlreadySelected = LIST.indicesSelected.indexOf(index) > -1;
 
 		if (addItemToCurrentSelection)
 			indicesToHighlight = LIST.indicesSelected;
+
+		if (addItemToCurrentSelection && LIST.indicesSelected.length == 0)
+			wasFirstItemSelectedWithAddingKey = true;
 
 		if (indexWasAlreadySelected)
 			indicesToHighlight.splice(indicesToHighlight.indexOf(index), 1);
@@ -864,6 +875,9 @@ function Visualization( EEXCESSobj ) {
 		
 		if( !flagSelectedOutside )
 			VISPANEL.updateCurrentChart( 'highlight_item_selected', indicesToHighlight );
+
+		var dataSelected = LIST.internal.getDataItemsFromIndices(data, LIST.indicesSelected);
+		FilterHandler.setCurrentFilterListItems(dataSelected, wasFirstItemSelectedWithAddingKey);
 	};
 	
 
@@ -1061,9 +1075,7 @@ function Visualization( EEXCESSobj ) {
 		var oldChartName = VISPANEL.chartName;
 		var selectedMapping = this.internal.getSelectedMapping( item );
 		if (oldChartName != VISPANEL.chartName){
-			var plugin = PluginHandler.getByDisplayName(oldChartName);
-			if (plugin != null && plugin.Object.finalize != undefined)
-				plugin.Object.finalize();
+			VISPANEL.chartChanged(oldChartName, VISPANEL.chartName);
 		}
 
 		var plugin = PluginHandler.getByDisplayName(VISPANEL.chartName);
@@ -1084,6 +1096,16 @@ function Visualization( EEXCESSobj ) {
 		LIST.highlightListItems(VISPANEL.getAllSelectListItems(), false);//(indicesToHighlight); //changecode
 	};
 	
+	
+	VISPANEL.chartChanged = function(oldChartName, newChartName){
+		if (oldChartName === "")
+			return
+
+		FilterHandler.makeCurrentPermanent();
+		var plugin = PluginHandler.getByDisplayName(oldChartName);
+		if (plugin != null && plugin.Object.finalize != undefined)
+			plugin.Object.finalize();
+	};
 	
 	VISPANEL.getAllSelectListItems = function(){
 		var array =[];

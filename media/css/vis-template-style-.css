@@ -502,9 +502,6 @@ input[type="button"]:hover{
     border:1px solid #e4e4e4;
     padding: 7px 0;
 }
-#eexcess-filtercontainer{
-	height: 50%;
-}
 
 
 /*
@@ -1098,6 +1095,57 @@ p.eexcess_ritem_short {
     background-color: inherit;
 }
 
+/***** Filter Visualisations ****/
+.filter-container-outer {
+    margin-top:10px;
+}
+    .filter-container-outer .filter-controls {
+        position: absolute;
+        right: 0;
+        padding: 3px 3px 0 0;
+        display: none;
+    }
+        .filter-container-outer:hover .filter-controls {
+            display: block;
+        }
+        .filter-container-outer:hover .filter-controls:hover {
+            font-weight: bold;
+        }
+        .filter-container-outer .filter-controls a {
+            display: none;
+        }
+            .filter-container-outer.permanent .filter-controls a.filter-remove {
+                display: inline;
+            }
+            .filter-container-outer.current .filter-controls a.filter-keep {
+                display: inline;
+            }
+    .filter-container-outer.current .filter-container {
+        border: 1px solid black;
+    }
+
+.batch-sm-add,
+.batch-sm-delete {
+    display: block;
+    background-size: 11px 11px;
+    width:11px;
+    height:11px;
+    margin:1px;
+}
+.batch-sm-add:hover,
+.batch-sm-delete:hover {
+    display: block;
+    background-size: 13px 13px;
+    width:13px;
+    height:13px;
+    margin:0;
+}
+    .batch-sm-delete {
+        background-image: url('../batchmaster/delete.png');
+    }
+    .batch-sm-add {
+        background-image: url('../batchmaster/add.png');
+    }
 
 
 
