@@ -29,7 +29,7 @@ function Barchart( domRoot, visTemplate ) {
 	
 	BARCHART.Evt.onBarMouseClicked = function(d, i){
 		
-		BARCHART.Render.HighlightFilteredFacet( d[colorChannel], i, d.selected );
+		BARCHART.Render.HighlightFilteredFacet(d[colorChannel], i, d.selected);
 	};
 	
 	
@@ -340,12 +340,15 @@ function Barchart( domRoot, visTemplate ) {
         
 		// retrieve indices to highlight in list panel (vis-template)
 		var indicesToHighlight = [];
+		var dataToHighlight = [];
 		
 		if( !isSelected ){		// it wasn't selected and now will be marked as selected				
 			
 			recomList.forEach(function(d, i){
-				if(d.facets[colorChannel] == facetValue)
+				if(d.facets[colorChannel] == facetValue){
 					indicesToHighlight.push(i);
+					dataToHighlight.push(d);
+				}
 			});
 		}
         
@@ -382,6 +385,7 @@ function Barchart( domRoot, visTemplate ) {
 		legends.select("div")
 			.style("border", function(l, i){ if(l.selected) return "0.1em lime solid"; return "none"; });
 		
+		FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, [facetValue])
 	};
 	
 

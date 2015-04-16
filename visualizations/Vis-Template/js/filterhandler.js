@@ -37,10 +37,20 @@ var FilterHandler = {
 	},
 
 	setCurrentFilterRange: function(type, selectedData, from, to){
+		FilterHandler.setCurrentFilter(type, selectedData, null, from, to);
+	},
+
+	setCurrentFilterCategories: function(type, selectedData, category, categoryValues){
+		FilterHandler.setCurrentFilter(type, selectedData, category, categoryValues, null, null);
+	},
+
+	setCurrentFilter: function(type, selectedData, category, categoryValues, from, to){
 		if (FilterHandler.currentFilter == null)
 			FilterHandler.addEmptyFilter();
 
 		FilterHandler.currentFilter.type = type;
+		FilterHandler.currentFilter.categoryValues = categoryValues;
+		FilterHandler.currentFilter.category = category;
 		FilterHandler.currentFilter.from = from;
 		FilterHandler.currentFilter.to = to;
 		FilterHandler.currentFilter.dataWithinFilter = selectedData;
@@ -75,6 +85,8 @@ var FilterHandler = {
 			FilterHandler.vis.getData(), 
 			FilterHandler.currentFilter.dataWithinFilter,
 			FilterHandler.currentFilter.$container,
+			FilterHandler.currentFilter.category, 
+			FilterHandler.currentFilter.categoryValues, 
 			FilterHandler.currentFilter.from, 
 			FilterHandler.currentFilter.to);
 	},
