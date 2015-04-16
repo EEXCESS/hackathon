@@ -71,17 +71,19 @@ function Timeline( root, visTemplate ){
 	//experimental function
 	TIMEVIS.Evt.filterListPerTime = function(minDateInYears,maxDateInYears){
 		var indicesToHighlight = [];
+		var dataToHighlight = [];
 		var currentYear = 0;
 		data.forEach(function(d, i){
 			if(d.hasOwnProperty("year")){	
 				currentYear = d.year.getFullYear();
 				if(minDateInYears <= currentYear && currentYear <= maxDateInYears){
 					indicesToHighlight.push(i);
+					dataToHighlight.push(d);
 				}
 			}
 		});
 		Vis.selectItems( indicesToHighlight, true );
-		FilterHandler.setCurrentFilterRange('time', minDateInYears, maxDateInYears);
+		FilterHandler.setCurrentFilterRange('time', dataToHighlight, minDateInYears, maxDateInYears);
 	}
 	
 	TIMEVIS.Evt.brushended = function(){

@@ -58,8 +58,9 @@ function Geochart(root, visTemplate) {
             }
             return null;
         },
-		getDataIndexArrayPerSelection: function(layer){
-			var indexArray = [];
+		getSelectedData: function(layer){
+			var selectedIndices = [];
+            var selectedData = [];
 			var rectBounds = layer.getBounds();
 			var inputData = GEO.Input.data;
 		    for(var i=0; i < inputData.length; i++){
@@ -71,10 +72,11 @@ function Geochart(root, visTemplate) {
 					inputData[i].coordinate[0] <= rectBounds.getNorth()
 					)
 				{
-					indexArray.push(i);
+					selectedIndices.push(i);
+                    selectedData.push(inputData[i]);
 				}
             }
-            return indexArray;
+            return { dataSelected: selectedData, selectedIndices: selectedIndices };
 		}
     };
 
@@ -170,13 +172,14 @@ function Geochart(root, visTemplate) {
 				GEO.map.addLayer(layer);
 				currentOneLayer = layer;
 				//make selection list
+                var selectionResult = GEO.Internal.getSelectedData(layer);
 				Vis.selectItems(
-					GEO.Internal.getDataIndexArrayPerSelection(layer),
+					selectionResult.selectedIndices,
                     true
 				);
 
                 var bounds = layer.getBounds();
-                FilterHandler.setCurrentFilterRange('geo', bounds._northEast, bounds._southWest);
+                FilterHandler.setCurrentFilterRange('geo', selectionResult.selectedData, bounds._northEast, bounds._southWest);
 			}
 
 			// Do whatever else you need to. (save to db, add to map etc)

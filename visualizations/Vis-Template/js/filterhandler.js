@@ -36,13 +36,14 @@ var FilterHandler = {
 			FilterHandler.listFilter.$container.parents('.filter-container-outer').insertAfter(FilterHandler.currentFilter.$container.parents('.filter-container-outer'));
 	},
 
-	setCurrentFilterRange: function(type, from, to){
+	setCurrentFilterRange: function(type, selectedData, from, to){
 		if (FilterHandler.currentFilter == null)
 			FilterHandler.addEmptyFilter();
 
 		FilterHandler.currentFilter.type = type;
 		FilterHandler.currentFilter.from = from;
 		FilterHandler.currentFilter.to = to;
+		FilterHandler.currentFilter.dataWithinFilter = selectedData;
 
 		FilterHandler.refreshCurrent();
 	},
@@ -58,9 +59,9 @@ var FilterHandler = {
 		}
 
 		if (wasFirstItemSelectedWithAddingKey)
-			FilterHandler.listFilter.mergeMode = 'symetricDifference';
+			FilterHandler.listFilter.mergeMode = 'symetricDifference'; // rename to xor?
 
-		FilterHandler.listFilter.selectedData = selectedData;
+		FilterHandler.listFilter.dataWithinFilter = selectedData;
 		FilterHandler.refreshListFilter();
 	},
 
@@ -69,8 +70,7 @@ var FilterHandler = {
 			FilterHandler.currentFilter.Object = PluginHandler.getFilterPluginForType(FilterHandler.currentFilter.type).Object;
 			FilterHandler.currentFilter.Object.initialize();
 		}
-
-		FilterHandler.currentFilter.dataWithinFilter = FilterHandler.vis.getHighlightedData(); // todo: replace somehow...
+		
 		FilterHandler.currentFilter.Object.draw(
 			FilterHandler.vis.getData(), 
 			FilterHandler.currentFilter.dataWithinFilter,
@@ -87,7 +87,7 @@ var FilterHandler = {
 
 		FilterHandler.listFilter.Object.draw(
 			FilterHandler.listFilter.$container,
-			FilterHandler.listFilter.selectedData,
+			FilterHandler.listFilter.dataWithinFilter,
 			FilterHandler.listFilter.mergeMode);
 	},
 
@@ -111,6 +111,7 @@ var FilterHandler = {
 		FilterHandler.currentFilter.$container.parents('.filter-container-outer').removeClass('current').addClass('permanent');
 		FilterHandler.filters.push(FilterHandler.currentFilter);
 		FilterHandler.currentFilter = null;
+		//  todo: remove filter in current chart, but highlight
 	},
 
 	removeFilter: function($filterOuter){			
@@ -130,10 +131,21 @@ var FilterHandler = {
 		}
 	},
 
-	calculateHighlightedData: function(){
-		//for (var i=0; i<FilterHandler.filters.length; i++){
-		//	var filter = FilterHandler.filters[i];
-		//	filter.$container.data('filter-index', i);
-		//}
+	mergeFilteredData: function(){
+		var dataToHighlight = []
+		for (var i=0; i<FilterHandler.filters.length; i++){
+			dataToHighlight = _.union(dataToHighlight, FilterHandler.filters[i].dataWithinFilter);
+		}
+
+		if (FilterHandler.listFilter == null)
+			return dataToHighlight;
+
+		if (FilterHandler.listFilter.mergeMode == 'union'){
+			dataToHighlight = _.union(dataToHighlight, FilterHandler.listFilter.dataWithinFilter);
+		} else if (FilterHandler.listFilter.mergeMode == 'symetricDifference') {
+			dataToHighlight = _.xor(dataToHighlight, FilterHandler.listFilter.dataWithinFilter);
+		}
+
+		return dataToHighlight;
 	}
 }
