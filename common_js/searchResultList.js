@@ -74,7 +74,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
         var yOffset = 30;
         link.hover(
                 function(e) {
-                    $('#eexcess_thumb_img').attr('src', img);
+                    $('#eexcess_thumb_img').attr('src', img).css('max-width','280px');
                     $('#eexcess_thumb')
                             .css('position', 'absolute')
                             .css('top', (e.pageY - xOffset) + 'px')
