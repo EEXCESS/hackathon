@@ -116,7 +116,7 @@ EEXCESS.queryFromTf = function() {
         }
     }
     EEXCESS.triggerQuery(elements, {reason: 'page', value: window.location.protocol + '//' + window.location.host + window.location.pathname, url: window.location.hostname});
-};
+}();
 
 EEXCESS.selectedText = '';
 
@@ -212,6 +212,6 @@ EEXCESS.queryFromTitle = function() {
         }
         EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason: {reason: 'page', value: window.location.protocol + '//' + window.location.host + window.location.pathname, url: window.location.hostname}, terms: weightedQuery}});
     };
-}();
+};
 
 
