@@ -1,148 +1,194 @@
 <html>
 	<head>
-		<link href="/libs/bootstrap/css/bootstrap.css" rel="stylesheet"></link>
-		<link href="/libs/bootstrap/css/bootstrap-theme.css" rel="stylesheet"></link>
-		<link href="/libs/bootstrap-datepicker/css/datepicker.css" rel="stylesheet"></link>
+		<link href="/libs/bootstrap/css/bootstrap.css" rel="stylesheet" />
+		<link href="/libs/bootstrap/css/bootstrap-theme.css" rel="stylesheet" />
+		<link href="/libs/bootstrap-datepicker/css/datepicker.css" rel="stylesheet" />
 		<link href="/libs/tagit/jquery.tagit.css" rel="stylesheet" />
 		<link href="/libs/jquery-ui/jquery-ui.css" rel="stylesheet" />
-		<link href="/media/css/privacy.css" rel="stylesheet"></link>
+		<link href="/media/css/privacy.css" rel="stylesheet" />
 	</head>
 	<body>
 		<div class="panel panel-primary">
 			<div class="panel-heading" style="background-color: white;">
 				<h3 class="panel-title">
-					<span class="glyphicon glyphicon-user"></span> User Profile
+					<span class="glyphicon glyphicon-user" ></span>
+					User Profile
 				</h3>
 			</div>
 			<div class="panel-body">
-	                    <!-- SOURCE SELECTION -->
-				<div class="row">
-	                            <div class="col-lg-12">
-	                                <div id="source_selection" class="panel panel-info">
-	                                    <div class="panel-heading">
-	                                        <h3 class="panel-title">Source selection</h3>
-	                                    </div>
-	                                 </div>
-	                            </div> 
-					<div class="col-lg-8">
-						<!-- IDENTITY -->
-						<div class="panel panel-info">
-							<div class="panel-heading">
-								<h3 class="panel-title">
-									Identity<span class="badge pull-right setting"></span>
-								</h3>
-							</div>
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">
+							General Information <span class="badge pull-right setting"></span>
+						</h3>
+					</div>
+					<form class="form-horizontal">
+						<!-- User name -->
+						<div class="row">
 							<div class="panel-body">
-								<div class="content">
-									<form class="form-income">
-										<div class="form-group">
-											<label for="" class="control-label">Name</label>
-											<div class="row">
-												<div class="col-lg-2">
-													<select  data-eexcess-profile-field="title" class="form-control">
-														<option value=""></option>
-														<option value="mr">Mr</option>
-														<option value="miss">Miss</option>
-														<option value="mrs">Mrs</option>
-														<option value="ms">Ms</option>
-													</select>
-												</div>
-												<div class="col-lg-5">
-													<input data-eexcess-profile-field="firstname" type="text" class="form-control"
-														placeholder="First name">
-												</div>
-												<div class="col-lg-5">
-													<input data-eexcess-profile-field="lastname" type="text" class="form-control"
-														placeholder="Last name">
-												</div>
-											</div>
-										</div>
-										<div class="form-group">
-											<label for="" class="control-label">Address</label>
-											<div class="row">
-												<div class="col-lg-12">
-													<input data-eexcess-profile-field="address.line1" type="text" class="form-control" placeholder="Line 1">
-												</div>
-												<div class="col-lg-12">
-													<input data-eexcess-profile-field="address.line2" type="text" class="form-control" placeholder="Line 2">
-												</div>
-												<div class="col-lg-4">
-													<input data-eexcess-profile-field="address.zipcode" type="text" class="form-control" placeholder="Zip code">
-												</div>
-												<div class="col-lg-8">
-													<input data-eexcess-profile-field="address.city" type="text" class="form-control" placeholder="City">
-												</div>
-												<div class="col-lg-12">
-													<input data-eexcess-profile-field="address.country" type="text" class="form-control" placeholder="Country">
-												</div>
-											</div>
-										</div>
-									</form>
+								<div class="col-md-3">
+									<div class="input-group">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+										<input id="nameInput" type="text" class="form-control eexcess-text" placeholder="Enter your user name">
+									</div>
+								</div>
+								<div class="col-md-3"></div>
+									<div class="btn-group col-md-2" role="group">
+									<button type="button" class="btn btn-success disabled eexcess-button">Hidden</button>
+								</div>
+								<div class="col-md-4">
+									Your name is not disclosed to the system.
 								</div>
 							</div>
 						</div>
-						<!-- /IDENTITY-->
-					</div>
-					<div class="col-lg-4">
-						<!-- DEMOGRAPHICS -->
-						<div class="panel panel-info">
-							<div class="panel-heading">
-								<h3 class="panel-title">
-									Demographics <span class="badge pull-right setting"></span>
-								</h3>
-							</div>
+						<!-- Location -->
+						<div class="row">
 							<div class="panel-body">
-								<div class="form-group">
-									<label for="" class="control-label">Gender</label>
-									<select data-eexcess-profile-field="gender" class="form-control">
-										<option value=""></option>
-										<option value="male">Male</option>
-										<option value="female">Female</option>
-									</select>
-								</div>
-								<div class="form-group">
-									<label for="" class="control-label">Birthdate</label>
+								<div class="col-md-3">
 									<div class="input-group">
-										<span class="input-group-addon"><span class="glyphicon glyphicon-calendar icon-calendar"></span></span>
-										<input data-eexcess-profile-field="birthdate" class="form-control datepicker" type="text" value="" data-date-format="yyyy-mm-dd" placeholder="Birthdate"></input>
+										<span class="input-group-addon"><span class="glyphicon glyphicon-globe" id="name"></span></span>
+										<input id="countryInput" type="text" class="form-control eexcess-text" placeholder="Enter the country you live in" />
+									</div>
+								</div>
+								<div class="col-md-3">
+									<div class="input-group">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-map-marker"></span></span>
+										<input id="cityInput" type="text" class="form-control eexcess-text" placeholder="Enter the city you live in" />
+									</div>
+								</div>
+								<div id="locationPolicy" class="btn-group col-md-2" role="group">
+									<button type="button" class="btn btn-default eexcess-button">Hidden</button>
+									<button type="button" class="btn btn-default eexcess-button">Country</button>
+									<button type="button" class="btn btn-default eexcess-button">City</button>
+								</div>
+								<div class="col-md-4">
+									Values shared with the system: <span id="cityDisplay"></span> <span id="countryDisplay"></span> 
+								</div>
+							</div>
+						</div>
+						<!-- Birth date -->
+						<div class="row">
+							<div class="panel-body">
+								<div class="col-md-3">
+									<div class="input-group">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+										<input id="birthdateInput" type="text" class="form-control datepicker eexcess-text eexcess-date" data-date-format="yyyy-mm-dd" placeholder="Enter your birth date" />
+									</div>
+								</div>
+								<div class="col-md-3"></div>
+								<div id="birthdatePolicy" class="btn-group col-md-2" role="group">
+									<button type="button" class="btn btn-default eexcess-button">Hidden</button>
+									<button type="button" class="btn btn-default eexcess-button">Range</button>
+									<button type="button" class="btn btn-default eexcess-button">Year</button>
+								</div>
+								<div class="col-md-4">
+									Value shared with the system: <span id="birthdateDisplay"></span>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			
+			<div class="panel-body">
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">
+							Languages <span class="badge pull-right setting"></span>
+						</h3>
+					</div>
+					<form class="form-horizontal">
+						<!-- Languages -->
+						<div id="languages" class="row"></div>
+						<div class="row">
+							<div class="panel-body">
+								<div class="col-md-12">
+									<a id="addLanguage" href="#x"><span class="glyphicon glyphicon-plus"></span> Add a language</a>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			
+			<div class="panel-body">
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">
+							Interests <span class="badge pull-right setting"></span>
+						</h3>
+					</div>
+					<form class="form-horizontal">
+						<!-- Interests -->
+						<div id="interests" class="row"></div>
+						<div class="row">
+							<div class="panel-body">
+								<div class="col-md-12">
+									<a id="addInterest" href="#x"><span class="glyphicon glyphicon-plus"></span> Add interests</a>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			
+			<!--<div class="panel-body">
+				<div class="panel panel-info">
+					<div class="panel-heading">
+						<h3 class="panel-title">
+							Interests <span class="badge pull-right setting"></span>
+						</h3>
+					</div>
+					<form class="form-horizontal">
+						<div id="interests" class="row">
+							<div id="interest0" class="row">
+								<div class="panel-body">
+									<div class="col-md-6">
+										<div class="row">
+											<div class="col-md-1">
+												<div class="panel-body">
+													<a id="removeInterest0" class="removeInterest" style="color: red;" href="#x"><span class="glyphicon glyphicon-remove"></span></a>
+												</div>
+											</div>
+											<div class="col-md-11 row">
+												<div class="input-group">
+													<ul id="myTags"></ul>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div id="interestsPolicy0" class="btn-group col-md-2" role="group">
+										<button type="button"  class="btn btn-default eexcess-button" ParentId="interestsPolicy0">Hidden</button>
+										<button type="button"  class="btn btn-default eexcess-button" ParentId="interestsPolicy0">Disclosed</button>
+									</div>
+									<div class="col-md-4">Value shared with the system: 
+										<span id="interestsDisplay0"></span>
 									</div>
 								</div>
 							</div>
+						
 						</div>
-						<!-- /DEMOGRAPHICS-->
-					</div>
-					
-					<div class="col-lg-12">
-						<!-- TOPICS -->
-						<div id="topics" class="panel panel-info">
-							<div class="panel-heading">
-								<h3 class="panel-title">
-									Topics of interest <span class="badge pull-right setting"></span>
-								</h3>
+						<div class="row">
+							<div class="panel-body">
+								<div class="col-md-12">
+									<a id="addInterest" href="#x"><span class="glyphicon glyphicon-plus"></span> Add interests</a>
+								</div>
 							</div>
-	<!--						<div class="panel-body">
-								<div class="form-group">
-									<input class="form-control" type="text" placeholder="New topic"></input>
-								</div>
-								<div class="label-container well well-lg">
-								</div>
-							</div>-->
-						<ul id="topicInput"></ul>
 						</div>
-						<!-- /TOPICS-->
-					</div>
+					</form>
 				</div>
-			</div>
+			</div> -->
+			
 		</div>
+		
 		<script src="/libs/flat_ui/js/jquery-1.8.3.min.js"></script>
 		<script src="/libs/flat_ui/js/bootstrap.min.js"></script>
 		<script src="/libs/flat_ui/js/bootstrap-switch.js"></script>
 		<script src="/libs/jquery-ui-1.10.3.custom.min.js"></script>
 		<script src="/libs/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 		<script src="/libs/tagit/tag-it.js"></script>
-	    <script type="text/javascript" src="../common_js/storage.js"></script>
-	    <script src="../common_js/config.js" type="text/javascript"></script>
-		<script src="js/profile.js"></script>
+		<script src="../common_js/storage.js" type="text/javascript"></script>
+		<script src="../common_js/config.js" type="text/javascript"></script>
+		<script src="js/profile.js" type="text/javascript"></script>
 	</body>
 </html>
-
