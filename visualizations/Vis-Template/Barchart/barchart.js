@@ -385,7 +385,7 @@ function Barchart( domRoot, visTemplate ) {
 		legends.select("div")
 			.style("border", function(l, i){ if(l.selected) return "0.1em lime solid"; return "none"; });
 		
-		FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, [facetValue])
+		FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, [facetValue]);
 	};
 	
 

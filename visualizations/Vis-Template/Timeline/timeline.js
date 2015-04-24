@@ -82,7 +82,6 @@ function Timeline( root, visTemplate ){
 				}
 			}
 		});
-		Vis.selectItems( indicesToHighlight, true );
 		FilterHandler.setCurrentFilterRange('time', dataToHighlight, minDateInYears, maxDateInYears);
 	}
 	
@@ -293,11 +292,14 @@ function Timeline( root, visTemplate ){
 	TIMEVIS.Evt.legendClicked = function( legendDatum, legendIndex ){
 		
 		var indicesToHighlight = [];
+		var dataToHighlight = [];
 		
 		if( legendDatum.selected === false ){				
 			data.forEach(function(d, i){
-				if(d[colorChannel] === legendDatum.item)
+				if(d[colorChannel] === legendDatum.item){
 					indicesToHighlight.push(i);
+					dataToHighlight.push(d);
+				}
 			});
 			
 			legendDomain.forEach(function(l, i){
@@ -309,12 +311,12 @@ function Timeline( root, visTemplate ){
 		}
 		
 		TIMEVIS.Render.highlightNodes( indicesToHighlight, $(this).attr('class') );
-		Vis.selectItems( indicesToHighlight, true );
+		FilterHandler.setCurrentFilterCategories('category', dataToHighlight, colorChannel, [legendDatum.item]);
 		
 		if(legendDatum.selected === true){
 			$(this).find('text').css('font-weight', 'bold');
 		}else{
-			Vis.selectItems(Vis.getAllSelectListItems(), false);
+			FilterHandler.setCurrentFilterCategories('category', null, colorChannel, null);
 		}
 		
 		d3.selectAll('.legend').select("div")
