@@ -14,7 +14,10 @@
 			$container.append($vis);
 		}
 
-		$vis.html('NE: ' + northEast.lat.toFixed(4) + ", " + northEast.lng.toFixed(4) + " <br />SW: " + southWest.lat.toFixed(4) + ", " + southWest.lng.toFixed(4) + '<br />Highlighted: ' + selectedData.length);
+		if (northEast != null && southWest != null)
+			$vis.html('NE: ' + northEast.lat.toFixed(4) + ", " + northEast.lng.toFixed(4) + " <br />SW: " + southWest.lat.toFixed(4) + ", " + southWest.lng.toFixed(4) + '<br />Highlighted: ' + selectedData.length);
+		else 
+			$vis.html('');
 	};
 
 	TestMiniViz.finalize = function(){

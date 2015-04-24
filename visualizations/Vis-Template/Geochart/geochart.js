@@ -76,7 +76,7 @@ function Geochart(root, visTemplate) {
                     selectedData.push(inputData[i]);
 				}
             }
-            return { dataSelected: selectedData, selectedIndices: selectedIndices };
+            return { selectedData: selectedData, selectedIndices: selectedIndices };
 		}
     };
 

@@ -37,7 +37,7 @@ var FilterHandler = {
 	},
 
 	setCurrentFilterRange: function(type, selectedData, from, to){
-		FilterHandler.setCurrentFilter(type, selectedData, null, from, to);
+		FilterHandler.setCurrentFilter(type, selectedData, null, null, from, to);
 	},
 
 	setCurrentFilterCategories: function(type, selectedData, category, categoryValues){
