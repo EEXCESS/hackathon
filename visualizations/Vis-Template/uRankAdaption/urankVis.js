@@ -15,7 +15,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
     tagBoxRoot: '#eexcess_keywords_box',
     contentListRoot: '.urank .eexcess_result_list_outer',
     visCanvasRoot: '#urank_canvas_inner',
-    docViewerRoot: ''
+    docViewerRoot: '',
+    style: 'custom'
   };
   var init = function(urankController){
     $('#btn_reset').click(urankController.reset);

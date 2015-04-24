@@ -54,16 +54,16 @@
 	.urank #urank_canvas_inner{	
 		width:calc(100% - 430px);
 		height: 100%;		
-    	float:left;
+    	/*float:left;*/
 	}
 
 
 .urank #eexcess_keywords_container {
     overflow-y: auto;
-    width:220px;
+    width:218px;    
     padding:5px;
     background: white;
-    box-shadow: inset .2em .2em .5em #ccc, inset -.2em -.2em .5em #ccc;
+    border:1px solid #e4e4e4;
     display:inline-block;
     float:left;
 }
