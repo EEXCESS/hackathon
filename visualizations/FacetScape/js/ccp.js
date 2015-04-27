@@ -126,6 +126,7 @@ var PROVIDER = (function() {
                                 if (request.method === 'newSearchTriggered') {
                                     updateFacetScape(request.data);
                                 }
+                                console.log("gela");
                                 if (request.method.parent === 'results' && request.method.func === 'error') {
                                     $('#loader img').hide();
                                     if(request.data.msg === 'timeout') {

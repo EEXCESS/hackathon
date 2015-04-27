@@ -176,8 +176,7 @@ EEXCESS.backend = (function() {
     var url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
     var fr_url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
     var backend = 'fr-stable';
-
-    return {
+	return {
         setProvider: function(tabID, provider) {
             backend = provider;
             EEXCESS.storage.local('backend', provider);
@@ -225,6 +224,7 @@ EEXCESS.backend = (function() {
             return url;
         },
         getCall: function() {
+        	console.log("HHHH");
             return call;
         }
     };
