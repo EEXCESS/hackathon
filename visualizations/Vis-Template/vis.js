@@ -139,7 +139,7 @@ function Visualization( EEXCESSobj ) {
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();
         PluginHandler.initialize(START, root, filterContainer);
-        FilterHandler.initialize(START, filterContainer);
+        FilterHandler.initialize(START, EXT, filterContainer);
         START.plugins = PluginHandler.getPlugins();
 
         VISPANEL.clearCanvasAndShowMessage( STR_LOADING );
@@ -870,9 +870,7 @@ function Visualization( EEXCESSobj ) {
 		LIST.indicesSelected = indicesToHighlight;
 		if (indicesToHighlight.length == 0)
 			indicesToHighlight = VISPANEL.getAllSelectListItems();
-				
-		LIST.highlightListItems( indicesToHighlight, scrollToFirst );
-		
+
 		if( !flagSelectedOutside )
 			VISPANEL.updateCurrentChart( 'highlight_item_selected', indicesToHighlight );
 
@@ -889,36 +887,34 @@ function Visualization( EEXCESSobj ) {
 	 *	If no parameters are received, all the list items are restored to the default opacity 
 	 *
 	 * */
-	LIST.highlightListItems = function( indices, scrollToFirst){
+	LIST.highlightListItems = function(dummy, scrollToFirst){ // todo: scrollToFirst handling needs to be triggered differently
 
-		// "indices" is an array indicating the indices of the list items that should be highlighted 
 		scrollToFirst = scrollToFirst == undefined ? true : scrollToFirst;
-		indicesToHighlight = [];
-		highlightedData = [];
-		var highlightIndices = indices || [];
+		var dataToHighlightIds = FilterHandler.mergeFilteredDataIds();
+		if (dataToHighlightIds == null){
+			d3.selectAll( allListItems ).style("opacity", "1");
+			return;
+		}
+
+		indicesHighlighted = []; // todo: really needed?
 		
-		if(highlightIndices.length > 0){
+		if(dataToHighlightIds.length > 0){
 			
 			for(var i = 0; i < data.length; i++){			
 				var item = d3.select(listItem +""+ i);
 				
-				if(highlightIndices.indexOf(i) != -1){
+				if(_.contains(dataToHighlightIds, data[i].id)){
 					item.style("opacity", "1");
-					indicesToHighlight.push(i);
-					highlightedData.push(data[i]);
-				}else{
+					indicesHighlighted.push(i);
+				} else {
 					item.style("opacity", "0.2");
 				}
 			}
 
-			var indexToScroll = highlightIndices[0];
 			if (scrollToFirst)
-				$( contentList ).scrollTo( listItem +""+ indexToScroll, {offsetTop: 90});
-		}
-		else{
-			//change code !!!!!!!!!!!!!
-			d3.selectAll( allListItems ).style("opacity", "0.2");
-			//d3.selectAll( allListItems ).style("opacity", "1");
+				$( contentList ).scrollTo( listItem +""+ indicesHighlighted[0], {offsetTop: 90});
+		} else {
+			d3.selectAll( allListItems ).style("opacity", "1");
 			if (scrollToFirst)
 				$( contentList ).scrollTo( "top" );
 		}
