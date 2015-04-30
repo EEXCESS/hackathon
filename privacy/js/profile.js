@@ -96,7 +96,7 @@ $('#topicInput').tagit({// tagit plugin for topics
 
 $(document).ready(function() {
     var xhr = $.ajax({
-        url: EEXCESS.config.FR_BASE_URI + 'getRegisteredPartners',
+        url: EEXCESS.config.PP_BASE_URI + 'getRegisteredPartners',
         type: 'GET',
         dataType: 'json'
     });
