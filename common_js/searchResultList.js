@@ -54,6 +54,7 @@ EEXCESS.searchResultList = function(divContainer, options) {
                             evt.preventDefault();
                             settings.previewHandler(this.href);
                         });
+                        console.log('lh: ' + l_h + ' rh: ' + r_h);
                         if (l_h > r_h) {
                             $('#result_gallery1').append(link);
                             r_h += img.height();
