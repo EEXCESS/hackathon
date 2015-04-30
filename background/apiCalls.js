@@ -125,6 +125,10 @@ EEXCESS.frCall_impl = function(queryData, start, numResults, success, error) {
                 profile['context']['value'] = 'disabled';
             }
         }
+        
+        if (queryData.hasOwnProperty('contextNamedEntities')) {
+            profile['contextNamedEntities'] = queryData.contextNamedEntities;
+        }
         if (EEXCESS.qXHR && EEXCESS.qXHR.readystate !== 4) {
             EEXCESS.qXHR.abort();
         }

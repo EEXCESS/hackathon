@@ -11,6 +11,41 @@ EEXCESS.sortTokens = function(corpus, sortFunc) {
     return sortedTokens;
 };
 
+EEXCESS.entitiesFromStatistic = function(statistic) {
+    var converter = function(el) {
+        var entity = {
+            text: el.key.text,
+            weight: el.value,
+            confidence: el.key.confidence,
+            uri: el.key.entityUri
+        };
+        return entity;
+    };
+    var entities = {
+        persons: [],
+        organizations: [],
+        locations: [],
+        misc: []
+    };
+    for (var i = 0; i < statistic.length; i++) {
+        switch (statistic[i].key.type) {
+            case 'Person':
+                entities.persons.push(converter(statistic[i]));
+                break;
+            case 'Organization':
+                entities.organizations.push(converter(statistic[i]));
+                break;
+            case 'Location':
+                entities.locations.push(converter(statistic[i]));
+                break;
+            default:
+                entities.misc.push(converter(statistic[i]));
+                break;
+        }
+    }
+    return entities;
+};
+
 EEXCESS.topKcorpus = function(corpus, k) {
     var orgK = k;
     var topK = [];
@@ -75,10 +110,14 @@ EEXCESS.topKcorpus = function(corpus, k) {
     return topK;
 };
 
-EEXCESS.triggerQuery = function(textElements, reason) {
+EEXCESS.triggerQuery = function(textElements, reason, entities) {
     EEXCESS.messaging.callBG({method: {parent: 'corpus', func: 'getCorpus'}, data: textElements}, function(result) {
         var query = EEXCESS.topKcorpus(result, 10);
-        EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: {reason: reason, terms: query}});
+        var queryData = {reason: reason, terms: query};
+        if (typeof entities !== 'undefined') {
+            queryData['contextNamedEntities'] = entities;
+        }
+        EEXCESS.messaging.callBG({method: {parent: 'model', func: 'query'}, data: queryData});
     });
 };
 
@@ -127,7 +166,24 @@ $(document).mouseup(function() {
             EEXCESS.selectedText = text;
             var elements = [];
             elements.push({text: text});
-            EEXCESS.triggerQuery(elements, {reason: 'selection', value: document.getSelection().toString()});
+            var parentPars = $(window.getSelection().getRangeAt(0).commonAncestorContainer).parents('.eexcess_detected_par');
+            var enrichedParagraphs = EEXCESS.queryParagraphs.enrichedParagraphs();
+            console.log(enrichedParagraphs);
+            console.log(EEXCESS.queryParagraphs);
+            if (typeof enrichedParagraphs !== 'undefined' && parentPars.length > 0) {
+                var parID = parentPars[0].id;
+                var idx;
+                if (parID.charAt(8) === 'c') {
+                    idx = EEXCESS.queryParagraphs.single.length + parseInt(parID.slice(9));
+                } else {
+                    idx = parseInt(parID.slice(9));
+                }
+                console.log(idx);
+                EEXCESS.triggerQuery(elements, {reason: 'selection', value: document.getSelection().toString()}, EEXCESS.entitiesFromStatistic(enrichedParagraphs.paragraphs[idx].statistic));
+            } else {
+                EEXCESS.triggerQuery(elements, {reason: 'selection', value: document.getSelection().toString()});
+            }
+//            EEXCESS.triggerQuery(elements, {reason: 'selection', value: document.getSelection().toString()});
             if ($('#eexcess_toggler').is(':visible')) {
                 $('#eexcess_sidebar').show('fast');
                 $('#eexcess_toggler').css('background-image', 'url(chrome-extension://' + EEXCESS.utils.extID + '/media/icons/hide.png)');
@@ -221,8 +277,10 @@ EEXCESS.queryFromTitle = function() {
 
 
 EEXCESS.queryParagraphs = function() {
+    var enrichedParagraphs;
     var corresponding = [];
     var single = [];
+
     var delayTimer = {
         setTimer: function(callback, delay) {
             if (typeof delay === 'undefined') {
@@ -353,7 +411,18 @@ EEXCESS.queryParagraphs = function() {
             } else {
                 EEXCESS.messaging.callBG({method: {parent: 'model', func: 'toggleVisibility'}, data: -1});
             }
-            EEXCESS.triggerQuery([{text: $(this).data('query')}], {reason: 'link'});
+            if (typeof enrichedParagraphs !== 'undefined') {
+                var parID = $(this).data('paragraphID');
+                var idx;
+                if (parID.charAt(8) === 'c') {
+                    idx = single.length + parseInt(parID.slice(9));
+                } else {
+                    idx = parseInt(parID.slice(9));
+                }
+                EEXCESS.triggerQuery([{text: $(this).data('query')}], {reason: 'link'}, EEXCESS.entitiesFromStatistic(enrichedParagraphs.paragraphs[idx].statistic));
+            } else {
+                EEXCESS.triggerQuery([{text: $(this).data('query')}], {reason: 'link'});
+            }
         })
                 .hover(function() {
             delayTimer.clearTimer();
@@ -369,27 +438,18 @@ EEXCESS.queryParagraphs = function() {
         $('body').append(img);
         var xOffset = 25;
         var yOffset = -2;
-//        paragraphs.css('background-color', '#eee');
-        paragraphs.find('a').each(function(idx) {
+        paragraphs.find('a').each(function() {
             var el = $(this);
             if (el.text().length > 3) {
-//                var offset = el.offset();
-//                var icon = $('<img src="chrome-extension://' + EEXCESS.utils.extID + '/media/icons/16.png" />')
-//                            .css('position', 'absolute')
-//                            .css('top', (offset.top - el.height() + yOffset) + 'px')
-//                            .css('left', (offset.left + el.width() + xOffset) + 'px')
-//                            .css('z-index', 9999);
-//                $('body').append(icon);
                 var wrapper = $('<div style="display:inline;"></div>');
                 wrapper.mouseenter(function(evt) {
                     delayTimer.clearTimer();
                     img.data('query', el.text());
+                    img.data('paragraphID', el.parents('.eexcess_detected_par')[0].id);
                     var el2 = $(this);
                     var offset = el2.offset();
                     img
                             .css('top', (offset.top - el2.height() + yOffset) + 'px')
-//                            .css('left', (offset.left - el2.width() + xOffset) + 'px')
-//                            .css('top', offset.top - yOffset + 'px')
                             .css('left', offset.left - xOffset + 'px')
                             .show();
                 });
@@ -433,6 +493,7 @@ EEXCESS.queryParagraphs = function() {
     };
 
     EEXCESS.messaging.callBG({method: {parent: 'NER', func: 'getParagraphEntityTypes'}, data: finalParagraphs}, function(result) {
+        enrichedParagraphs = result;
         var valueStr = function(val) {
             if (val === 1) {
                 return '';
@@ -509,4 +570,11 @@ EEXCESS.queryParagraphs = function() {
 //        }
         console.log(result);
     });
+    return {
+        single: single,
+        corresponding: corresponding,
+        enrichedParagraphs: function() {
+            return enrichedParagraphs;
+        }
+    };
 }();
