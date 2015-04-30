@@ -17,14 +17,18 @@ EEXCESS.widgetVisible = false;
 EEXCESS.handleWidgetVisibility = function(visible) {
     if (EEXCESS.widgetVisible !== visible) {
         if (visible) { // show widget
-            var width = $(window).width() - 333;
-            $('#eexcess_sidebar').show();
-            $('html').css('overflow', 'auto').css('position', 'absolute').css('height', '100%').css('width', width + 'px');
-            $('body').css('overflow-x', 'auto').css('position', 'relative').css('overflow-y', 'scroll').css('height', '100%');
+//            var width = $(window).width() - 333;
+            $('#eexcess_sidebar').show('fast');
+            $('#eexcess_toggler').css('background-image', 'url(chrome-extension://' + EEXCESS.utils.extID + '/media/icons/hide.png)').show();
+//            $('#eexcess_sidebar').show();
+//            $('html').css('overflow', 'auto').css('position', 'absolute').css('height', '100%').css('width', width + 'px');
+//            $('body').css('overflow-x', 'auto').css('position', 'relative').css('overflow-y', 'scroll').css('height', '100%');
         } else { // hide widget
-            $('#eexcess_sidebar').hide();
-            $('html').css('overflow', '').css('position', '').css('height', '').css('width', '');
-            $('body').css('overflow-x', '').css('position', '').css('overflow-y', '').css('height', '');
+            $('#eexcess_toggler').css('background-image', 'url(chrome-extension://' + EEXCESS.utils.extID + '/media/icons/show.png)').hide();
+            $('#eexcess_sidebar').hide('fast');
+//            $('#eexcess_sidebar').hide();
+//            $('html').css('overflow', '').css('position', '').css('height', '').css('width', '');
+//            $('body').css('overflow-x', '').css('position', '').css('overflow-y', '').css('height', '');
         }
         EEXCESS.widgetVisible = visible;
     }
@@ -36,8 +40,39 @@ EEXCESS.handleWidgetVisibility = function(visible) {
  * visibility in the background's model.
  */
 
-$('<iframe id="eexcess_sidebar" src="chrome-extension://' + EEXCESS.utils.extID + '/widget/widget.html"></iframe>').appendTo('body');
+$('<iframe id="eexcess_sidebar" src="chrome-extension://' + EEXCESS.utils.extID + '/widget/widget.html" style="border-left:1px solid gray"></iframe>').appendTo('body');
+
+$('<div id="eexcess_toggler"></div>').appendTo('body').click(function() {
+    if ($('#eexcess_sidebar').is(':visible')) {
+        $('#eexcess_sidebar').hide('fast');
+        $('#eexcess_toggler').css('background-image', 'url(chrome-extension://' + EEXCESS.utils.extID + '/media/icons/show.png)');
+    } else {
+        $('#eexcess_sidebar').show('fast');
+        $('#eexcess_toggler').css('background-image', 'url(chrome-extension://' + EEXCESS.utils.extID + '/media/icons/hide.png)');
+    }
+});
+
+//$('<div id="eexcess_button"><img src="chrome-extension://' + EEXCESS.utils.extID + '/media/icons/page_curl2.png" /></div>').mouseenter(function(){
+//   if($('#eexcess_sidebar').is(':visible')) {
+//       $('#eexcess_sidebar').hide('fast');
+//   } else {
+//       $('#eexcess_sidebar').show('fast');
+//   }
+//}).appendTo('body');
+
+//$('<div id="eexcess_invisible" style="position:fixed;width:5px;height:100%;top:20px;right:0px;background-color:red;z-index:10100"></div>').mouseenter(function(){
+////   if($('#eexcess_sidebar').is(':visible')) {
+////       $('#eexcess_sidebar').hide('fast');
+////   } else {
+////       $('#eexcess_sidebar').show('fast');
+////   }
+//   $('#eexcess_sidebar').hide('fast');
+//   $('#eexcess_button').show();
+//}).appendTo('body');
+
 EEXCESS.messaging.callBG({method: {parent: 'model', func: 'visibility'}}, EEXCESS.handleWidgetVisibility);
+
+
 
 // Listen to messages from the background script
 EEXCESS.messaging.listener(

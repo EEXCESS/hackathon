@@ -17,3 +17,16 @@ particular page */
  font-size:11pt;
  font-family:Helvetica;
 }
+
+#eexcess_toggler {
+    position: fixed;
+    display: none;
+    top:0px;
+    right:0px;
+    height:100%;
+    width:16px;
+    z-index:99999;
+    cursor:pointer;
+    background-repeat: no-repeat;
+    background-position: center;
+}
