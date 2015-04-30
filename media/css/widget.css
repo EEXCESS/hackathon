@@ -24,7 +24,7 @@ nav {
 .content_sidebar {
     margin-left:auto; margin-right:auto;
     height: 300px;
-    height:calc(100% - 35px - 37px);
+    height:calc(100% - 35px - 37px - 52px);
 }
 
 .footer_sidebar {
