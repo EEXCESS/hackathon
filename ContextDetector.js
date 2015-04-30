@@ -168,8 +168,6 @@ $(document).mouseup(function() {
             elements.push({text: text});
             var parentPars = $(window.getSelection().getRangeAt(0).commonAncestorContainer).parents('.eexcess_detected_par');
             var enrichedParagraphs = EEXCESS.queryParagraphs.enrichedParagraphs();
-            console.log(enrichedParagraphs);
-            console.log(EEXCESS.queryParagraphs);
             if (typeof enrichedParagraphs !== 'undefined' && parentPars.length > 0) {
                 var parID = parentPars[0].id;
                 var idx;
@@ -178,12 +176,10 @@ $(document).mouseup(function() {
                 } else {
                     idx = parseInt(parID.slice(9));
                 }
-                console.log(idx);
                 EEXCESS.triggerQuery(elements, {reason: 'selection', value: document.getSelection().toString()}, EEXCESS.entitiesFromStatistic(enrichedParagraphs.paragraphs[idx].statistic));
             } else {
                 EEXCESS.triggerQuery(elements, {reason: 'selection', value: document.getSelection().toString()});
             }
-//            EEXCESS.triggerQuery(elements, {reason: 'selection', value: document.getSelection().toString()});
             if ($('#eexcess_toggler').is(':visible')) {
                 $('#eexcess_sidebar').show('fast');
                 $('#eexcess_toggler').css('background-image', 'url(chrome-extension://' + EEXCESS.utils.extID + '/media/icons/hide.png)');

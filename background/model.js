@@ -108,7 +108,7 @@ EEXCESS.model = (function() {
                 results = res;
                 EEXCESS.messaging.sendMsgAllTabs({
                     method: 'newSearchTriggered',
-                    data: {query: results.query, results: results.data}
+                    data: {query: results.query, results: results.data, ne:results.NE}
                 });
             }
         };
@@ -270,14 +270,15 @@ EEXCESS.model = (function() {
             currentQuery['query'] = tmp['query'];
 
 
-            var success = function(data) { // success callback
+            var success = function(data2) { // success callback
                 // TODO: search may return no results (although successful)
-                tmp['data'] = data;
+                tmp['data'] = data2;
+                tmp['NE'] = data['contextNamedEntities'];
 //                if (data.totalResults !== 0) {
                 // create context
                 var context = {query: tmp['query']};
                 // log results
-                EEXCESS.logging.logRecommendations(data.results, context, _queryTimestamp);
+                EEXCESS.logging.logRecommendations(data2.results, context, _queryTimestamp);
                 _handleResult(tmp);
 //                }
 

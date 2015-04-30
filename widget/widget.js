@@ -16,6 +16,7 @@ EEXCESS.update = function(widget) {
 };
 
 EEXCESS.newSearchTriggered = function(data) {
+    console.log(data);
     $('#eexcess_query').val(data.query);
     $('#search_hover').text(data.query);
 };
