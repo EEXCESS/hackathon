@@ -347,9 +347,6 @@ EEXCESS.queryParagraphs = function() {
     var augmentLinks = function(paragraphs) {
         var img = $('<img src="chrome-extension://' + EEXCESS.utils.extID + '/media/icons/38.png" style="cursor:pointer;width:30px;" />');
         img.click(function() {
-            console.log('clicked');
-            console.log(this);
-            console.log($(this).data('query'));
             if ($('#eexcess_toggler').is(':visible')) {
                 $('#eexcess_sidebar').show('fast');
                 $('#eexcess_toggler').css('background-image', 'url(chrome-extension://' + EEXCESS.utils.extID + '/media/icons/hide.png)');
