@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>visualizations/Vis-Template/Barchart/barchart.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/EEXCESS.model.common.html">EEXCESS.model.common</a></li>
+                                <li><a href="../classes/EEXCESS.model.constants.html">EEXCESS.model.constants</a></li>
+                                <li><a href="../classes/EEXCESS.model.interests.html">EEXCESS.model.interests</a></li>
+                                <li><a href="../classes/EEXCESS.model.languages.html">EEXCESS.model.languages</a></li>
+                                <li><a href="../classes/EEXCESS.model.obfuscation.html">EEXCESS.model.obfuscation</a></li>
+                                <li><a href="../classes/EEXCESS.model.policy.html">EEXCESS.model.policy</a></li>
+                                <li><a href="../classes/EEXCESS.model.profile.html">EEXCESS.model.profile</a></li>
+                                <li><a href="../classes/EEXCESS.model.storage.html">EEXCESS.model.storage</a></li>
+                                <li><a href="../classes/EEXCESS.model.util-html.html">EEXCESS.model.util-html</a></li>
+                            </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: visualizations/Vis-Template/Barchart/barchart.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+
+function Barchart( domRoot, visTemplate ) {
+
+	var BARCHART = {};
+	
+    BARCHART.Settings = new Settings(&#x27;barchart&#x27;);
+	var Vis = visTemplate;
+	
+	var self = this;
+	var root = domRoot;
+	var width, height, margin, centerOffset, verticalOffset;
+	var x, y, color, xAxis, yAxis;
+	var svg, focus;
+	var data, recomList;
+	var xAxisChannel, yAxisChannel, colorChannel;
+	var bars;
+	var indexItemSelected = &#x27;undefined&#x27;;
+	
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	BARCHART.Evt = {};
+
+	/********************************************************************************************************************************
+	 * Bar event handlers
+	 * */
+	
+	BARCHART.Evt.onBarMouseClicked = function(d, i){
+		
+		BARCHART.Render.HighlightFilteredFacet( d[colorChannel], i, d.selected );
+	};
+	
+	
+	BARCHART.Evt.onBarMouseOvered = function(d){
+		
+		//d3.select(this).style(&quot;fill&quot;, &quot;yellow&quot;);
+		d3.select(this).style(&quot;stroke&quot;, function(d){ return color(d[colorChannel]); }).style(&quot;stroke-width&quot;, 2);
+		
+		// Get current x/y values, then augment for the tooltip
+		//var xPosition = parseFloat(d3.select(this).attr(&quot;x&quot;)) + 340;
+        var xPosition = x(d[xAxisChannel]) + x.rangeBand() * 1.5;
+        var yPosition = y(d[yAxisChannel]) + 100;
+
+		d3.select(&quot;#tooltip&quot;).remove();
+	
+		tooltip = d3.select( root ).append( &quot;div&quot; )
+					.attr( &quot;id&quot;, &quot;tooltip&quot; )
+					.style(&quot;width&quot;, &quot;auto&quot;);
+
+        var message;
+		if(d[yAxisChannel] &gt; 1)
+			message = d[yAxisChannel] + &#x27; recommendations for &#x27; + xAxisChannel + &#x27; = &#x27; + d[xAxisChannel];
+		else
+			message = d[yAxisChannel] + &#x27; recommendation for &#x27; + xAxisChannel + &#x27; = &#x27; + d[xAxisChannel];
+		
+		tooltip.append(&quot;p&quot;)
+			.attr(&quot;id&quot;, &quot;value&quot;)
+			.text(function(){ return message; });
+
+		// Show the toolxtip
+		tooltip
+			.style(&quot;left&quot;, xPosition + &quot;px&quot;)
+			.style(&quot;top&quot;, yPosition + &quot;px&quot;)
+			.style(&quot;opacity&quot;, 0.4)
+			.transition()	// With this line the circles have black borders
+			.style(&quot;opacity&quot;, 0.9)
+			.duration(1000);				
+		
+	};
+	
+	
+	BARCHART.Evt.onBarMouseOuted = function(d){
+		//d3.select(this).style(&quot;fill&quot;, function(d){ return color(d[colorChannel]); });
+		d3.select(this).style(&quot;stroke&quot;, &quot;none&quot;);
+		d3.select(&quot;#tooltip&quot;).remove();
+	};
+	
+	
+	
+	/********************************************************************************************************************************
+	 *	Legend events&#x27; handlers
+	 * */
+	BARCHART.Evt.legendClicked = function( legendDatum, legendIndex ){
+		
+		BARCHART.Render.HighlightFilteredFacet( legendDatum.item, legendIndex, legendDatum.selected );
+	};
+	
+	
+	BARCHART.Evt.legendMouseOvered = function(d, i){
+
+		d3.select(this).select(&quot;div&quot;)
+			.style(&quot;border&quot;, &quot;0.1em yellow solid&quot;)
+			.style(&quot;width&quot;, &quot;1.4em&quot;)
+			.style(&quot;height&quot;, &quot;1.4em&quot;);
+		
+		d3.select(this).select(&quot;text&quot;)
+			.style(&quot;font-size&quot;, &quot;0.9em&quot;);
+	};
+	
+	
+	BARCHART.Evt.legendMouseOuted = function(d, i){
+		
+		d3.select(this).select(&quot;div&quot;)
+			.style(&quot;border&quot;, function(){ if(d.selected) return &quot;0.1em lime solid&quot;; return &quot;none&quot;; })
+			.style(&quot;width&quot;,  function(){ if(d.selected) return &quot;1.4em&quot;; return &quot;1.5em&quot;; })
+			.style(&quot;height&quot;, function(){ if(d.selected) return &quot;1.4em&quot;; return &quot;1.5em&quot;; });
+		
+		d3.select(this).select(&quot;text&quot;)
+			.style(&quot;font-size&quot;, &quot;0.85em&quot;);	
+	};
+
+	
+		
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	BARCHART.Internal = {};
+
+	BARCHART.Internal.getLegendDomain = function(colorDomain){
+		
+		var legendDomain = [];
+		
+		colorDomain.forEach(function(c, i){
+			legendDomain[i] = { &#x27;item&#x27;: c, &#x27;selected&#x27;: false };
+		});
+		return legendDomain;
+	};
+	
+	
+	
+	
+	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	BARCHART.Render = {};	
+	
+	
+		
+	/******************************************************************************************************************
+	* 
+	*	Entry method. Sets canvas dimensions and initial input.
+	*	Draws main svg components (svg, focus &amp; context), defines scales and axis.
+	* 
+	* ***************************************************************************************************************/
+	BARCHART.Render.draw = function( receivedData, mappings, iWidth, iHeight ){
+		
+		
+		/******************************************************
+		*	Define canvas dimensions
+		******************************************************/
+		BARCHART.Dimensions = BARCHART.Settings.getDimensions(domRoot, iWidth, iHeight);
+		width          = BARCHART.Dimensions.width;
+		height         = BARCHART.Dimensions.height;
+		margin         = BARCHART.Dimensions.margin;
+		centerOffset   = BARCHART.Dimensions.centerOffset;
+		verticalOffset = BARCHART.Dimensions.verticalOffset;
+		
+		
+		/******************************************************
+		*	Define input variables
+		******************************************************/
+
+		BARCHART.Input = BARCHART.Settings.getInitData(receivedData, mappings);
+		data         = BARCHART.Input.data;
+        recomList    = BARCHART.Input.recomList;
+		xAxisChannel = BARCHART.Input.xAxisChannel;
+		yAxisChannel = BARCHART.Input.yAxisChannel;
+		colorChannel = BARCHART.Input.colorChannel;
+
+		
+		/******************************************************
+		*	Define scales
+		******************************************************/
+		x = d3.scale.ordinal()
+			.domain( data.map(function(d) {return d[xAxisChannel]; }))
+			//.rangeRoundBands([0, width], .1);
+			.rangeBands( [0, width], .1 );
+	 
+		y = d3.scale.linear()
+			.domain( [0, d3.max(data, function(d) { return d[yAxisChannel]; })] )
+			.range( [height, 0] );
+
+		color = d3.scale.category10();
+		
+		BARCHART.Ext.colorScale = color;
+		
+		/******************************************************
+		*	Define axis functions
+		******************************************************/
+		xAxis = d3.svg.axis().scale(x).orient(&quot;bottom&quot;);
+			
+		yAxis = d3.svg.axis().scale(y).orient(&quot;left&quot;).ticks(6);
+		
+			
+		/******************************************************
+		*	Draw main components
+		******************************************************/
+		var divChart = d3.select( root ).append(&quot;div&quot;)
+			.attr(&quot;id&quot;, &quot;div-chart&quot;)
+			.style(&quot;padding-top&quot;, verticalOffset);
+	
+		
+		svg = divChart.append(&quot;svg&quot;)
+			.attr(&quot;class&quot;, &quot;svg&quot;)
+			.attr(&quot;width&quot;, width + margin.left + margin.right)
+			.attr(&quot;height&quot;, height + margin.top + margin.bottom);
+	
+		
+		/******************************************************
+		*	Add focus and context g components
+		******************************************************/
+		focus = svg.append(&quot;g&quot;)
+			.attr(&quot;class&quot;, &quot;focus&quot;)
+			.attr(&quot;transform&quot;, &quot;translate(&quot; + margin.left + &quot;,&quot; + margin.top + &quot;)&quot;)
+			.attr(&quot;height&quot;, height);
+
+
+		/******************************************************
+		*	Draw elements in focus area
+		******************************************************/
+		focus.append(&quot;g&quot;)
+	    	.attr(&quot;class&quot;, &quot;x axis&quot;)
+	    	.attr(&quot;transform&quot;, &quot;translate(0,&quot; + height + &quot;)&quot;)
+	    	.call(xAxis)
+	    	.selectAll(&quot;text&quot;)
+	        	.style(&quot;text-anchor&quot;, &quot;end&quot;)
+	            .attr(&quot;dx&quot;, &quot;-.8em&quot;)
+	            .attr(&quot;dy&quot;, &quot;.15em&quot;)
+	            .attr(&quot;transform&quot;, function() { return &quot;rotate(-45)&quot;; });
+
+	 
+		focus.append(&quot;g&quot;)
+	    	.attr(&quot;class&quot;, &quot;y axis&quot;)
+	    	.call(yAxis)
+	    		.append(&quot;text&quot;)
+	    		.attr(&quot;transform&quot;, &quot;rotate(-90)&quot;)
+	    		.attr(&quot;y&quot;, 6)
+	    		.attr(&quot;dy&quot;, &quot;-4em&quot;)
+	    		.style(&quot;text-anchor&quot;, &quot;end&quot;)
+	    		.text(&quot;Score&quot;);
+    	
+		bars = focus.selectAll(&quot;.bar&quot;);	
+		BARCHART.Render.drawBars( &#x27;animate_bars&#x27; );
+		
+		
+		
+		/******************************************************
+		 *	Legends
+		 *****************************************************/	
+		
+		legendDomain = BARCHART.Internal.getLegendDomain(color.domain());
+		
+		
+		var legendWrapper = d3.select(&quot;#div-chart&quot;)
+						.append(&quot;div&quot;)
+						.attr(&quot;id&quot;, &quot;div-wrap-legends&quot;);
+		
+		legend = legendWrapper.selectAll(&quot;.legend&quot;)
+			.data(legendDomain)
+			.enter()
+			.append(&quot;div&quot;)
+				.attr(&quot;class&quot;, &quot;legend&quot;)
+				.attr(&quot;transform&quot;, function(d, i) { return &quot;translate(40,&quot; + (i+1)*20 + &quot;)&quot;; })
+				.on( &quot;click&quot;, BARCHART.Evt.legendClicked )
+				.on( &quot;mouseover&quot;, BARCHART.Evt.legendMouseOvered )
+				.on( &quot;mouseout&quot;, BARCHART.Evt.legendMouseOuted );
+		
+		legend.append(&quot;div&quot;)
+			.attr(&quot;x&quot;, width + 126)
+			.style(&quot;background&quot;, function(d, i){ return color(d.item); });
+		
+		legend.append(&quot;text&quot;)
+			.attr(&quot;x&quot;, width +120)
+			.attr(&quot;y&quot;, 9)
+			.attr(&quot;dy&quot;, &quot;.35em&quot;)
+			.style(&quot;text-anchor&quot;, &quot;end&quot;)
+			.text(function(d) { return d.item; });
+
+	};
+	
+
+	
+	
+	/******************************************************************************************************************
+	* 
+	*	Reusable function. Invoked either from &#x27;draw&#x27; or &#x27;redraw&#x27;
+	* 
+	* ***************************************************************************************************************/
+	BARCHART.Render.drawBars = function( action ){
+		
+		bars.remove();
+		
+		focus.selectAll(&quot;.bar&quot;)
+			.data( data )
+			.enter().append(&quot;rect&quot;)
+                .attr(&quot;class&quot;, &quot;bar&quot;)
+				.attr(&quot;x&quot;, function(d) { return x(d[xAxisChannel]); })
+				.attr(&quot;width&quot;, x.rangeBand())
+			    .style(&quot;fill&quot;, function(d){ return color(d[colorChannel]); });
+		
+        bars = focus.selectAll(&quot;.bar&quot;);	        
+        
+        if( action == &#x27;animate_bars&#x27; ){
+            
+            bars
+                .attr(&quot;y&quot;, function(d) { return y(0); })
+				.attr(&quot;height&quot;, function(d) { return  0; })
+                .transition()
+                    .delay(function (d,i){ return i * 10;})
+			        .duration(800)
+			        .attr(&quot;height&quot;, function(d) { return height - y(d[yAxisChannel]); })
+			        .attr(&quot;y&quot;, function(d) { return y(d[yAxisChannel]); });
+        }
+        else{
+            bars
+                .attr(&quot;height&quot;, function(d) { return height - y(d[yAxisChannel]); })
+			    .attr(&quot;y&quot;, function(d) { return y(d[yAxisChannel]); });
+        }
+
+		bars
+			.on(&quot;click&quot;, BARCHART.Evt.onBarMouseClicked)
+			.on(&quot;mouseover&quot;, BARCHART.Evt.onBarMouseOvered)
+			.on(&quot;mouseout&quot;, BARCHART.Evt.onBarMouseOuted);
+       
+	};
+		
+	
+	
+	
+	/******************************************************************************************************************
+	* 
+	*	Highlight bar and color legend selected
+	* 
+	* ***************************************************************************************************************/
+	BARCHART.Render.HighlightFilteredFacet = function( facetValue, facetIndex, isSelected ){
+		
+        
+		// retrieve indices to highlight in list panel (vis-template)
+		var indicesToHighlight = [];
+		
+		if( !isSelected ){		// it wasn&#x27;t selected and now will be marked as selected				
+			
+			recomList.forEach(function(d, i){
+				if(d.facets[colorChannel] == facetValue)
+					indicesToHighlight.push(i);
+			});
+		}
+        
+		Vis.selectItems( indicesToHighlight );
+		
+		// update legends&#x27; and bars&#x27; domains
+		legendDomain.forEach(function(l, i){
+			l.selected = (i == facetIndex &amp;&amp; !isSelected);
+		});
+		
+		data.forEach(function(d, i){
+			d.selected = (i == facetIndex &amp;&amp; !isSelected);
+		});
+		
+		
+		if(!isSelected){
+			// hide non-matching bars
+			bars.transition()
+				.style(&quot;opacity&quot;, function(d, i){ if(d.selected) return 1; return 0.2; })
+				.duration(500);			
+		}
+		else{
+			// restore bars&#x27; opacity
+			bars.transition()
+				.style(&quot;opacity&quot;, 1)
+				.duration(500);
+		}		
+
+		// highlight legend selected
+		var legends = d3.selectAll(&#x27;.legend&#x27;);
+		legends.select(&quot;text&quot;)
+			.style(&quot;font-weight&quot;, function(l, i){ if(l.selected) return &quot;bold&quot;; return &quot;normal&quot;; });
+		
+		legends.select(&quot;div&quot;)
+			.style(&quot;border&quot;, function(l, i){ if(l.selected) return &quot;0.1em lime solid&quot;; return &quot;none&quot;; });
+		
+	};
+	
+
+	
+	
+	
+	
+	/******************************************************************************************************************
+	* 
+	*	Reset barchart
+	* 
+	* ***************************************************************************************************************/
+	BARCHART.Render.reset = function( action ){
+
+        BARCHART.Render.clearLegends();
+		BARCHART.Render.drawBars( action );
+	};
+
+
+
+    /******************************************************************************************************************
+     *
+     *	Reset barchart
+     *
+     * ***************************************************************************************************************/
+    BARCHART.Render.clearLegends = function(){
+
+        legendDomain.forEach(function(l){
+            l.selected = false;
+        });
+
+        $(&#x27;.legend&#x27;).find(&#x27;text&#x27;).css(&#x27;font-weight&#x27;, &#x27;normal&#x27;);
+        d3.selectAll(&#x27;.legend&#x27;).select(&quot;div&quot;)
+            .style(&quot;border&quot;, &quot;none&quot;)
+            .style(&quot;width&quot;, &quot;1.5em&quot;)
+            .style(&quot;height&quot;, &quot;1.5em&quot;);
+    };
+    
+    
+    
+    /******************************************************************************************************************
+    *
+    *	Clear selected bar and legend when a list item is clickend on in vis-template
+    *
+    * ***************************************************************************************************************/
+    BARCHART.Render.clearSelection = function(){
+        BARCHART.Render.reset( &#x27;do_not_animate_bars&#x27; );
+    };
+
+	
+
+	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	BARCHART.Ext = {
+			
+		draw: function(recomData, mappings, iWidth, iHeight ){
+		  BARCHART.Render.draw( recomData, mappings, iWidth, iHeight );
+		},
+		
+		reset: function(){ BARCHART.Render.reset( &#x27;animate_bars&#x27; );	},
+        
+        clearSelection: function(){ BARCHART.Render.clearSelection(); }
+	};
+	
+	
+	return BARCHART.Ext;
+	
+}
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

@@ -30,9 +30,10 @@ function initTextInputs(){
 }
 
 /**
- * TODO
- * @param {Element} element  
- * @param {String} clas
+ * Display the new value of the element, and save it in the data store.
+ * The HTML is updated in case it has to be done (e.g., for select input field).  
+ * @param {Element} element Element which has just been modified. 
+ * @param {String} clas Class of the element. 
  * @method elementListener
  */
 function elementListener(element, clas){ 

@@ -1,5 +1,6 @@
 /**
- * Provides ... TODO
+ * This module is the main component of the profile management. 
+ * It imports all the necessary libraries (i.e., the other components). 
  * @class profile
  */
 
@@ -48,7 +49,9 @@ window.addEventListener("load", createListeners, false);
 //***************
 
 /**
- * TODO
+ * Initializes all the attributes of the form (demographics, languages and interests) using the values saved in the data store. 
+ * It also initializes the buttons that are used to handle the level of privacy for each attribute. 
+ * It is called when the window is loaded. 
  * @method init
  */
 function init(){
@@ -59,7 +62,9 @@ function init(){
 }
 
 /**
- * TODO
+ * Displays the values of the attributes. 
+ * The values displayed depends on the level of privacy assigned to each attribute. 
+ * It is called when the window is loaded. 
  * @method display
  */
 function display(){
@@ -69,7 +74,10 @@ function display(){
 }
 
 /**
- * TODO
+ * Create the listeners. Some of the listeners are assigned to form input fields (e.g., demographics, languages), 
+ * while others are assigned to links (e.g., links that allow the addition or the removal of languages). 
+ * The listeners of the interests are not created in the method, as they are related to TagIt. 
+ * It is called when the window is loaded. 
  * @method createListeners
  */
 function createListeners(){

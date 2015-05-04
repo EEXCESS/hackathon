@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>visualizations/Vis-Template/js/settings.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="icon" href="../assets/favicon.ico">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+                <h1><img src="../assets/css/logo.png" title="" width="117" height="52"></h1>
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+                    <h2 class="off-left">APIs</h2>
+                    <div id="api-tabview" class="tabview">
+                        <ul class="tabs">
+                            <li><a href="#api-classes">Classes</a></li>
+                            <li><a href="#api-modules">Modules</a></li>
+                        </ul>
+                
+                        <div id="api-tabview-filter">
+                            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+                        </div>
+                
+                        <div id="api-tabview-panel">
+                            <ul id="api-classes" class="apis classes">
+                                <li><a href="../classes/EEXCESS.model.common.html">EEXCESS.model.common</a></li>
+                                <li><a href="../classes/EEXCESS.model.constants.html">EEXCESS.model.constants</a></li>
+                                <li><a href="../classes/EEXCESS.model.interests.html">EEXCESS.model.interests</a></li>
+                                <li><a href="../classes/EEXCESS.model.languages.html">EEXCESS.model.languages</a></li>
+                                <li><a href="../classes/EEXCESS.model.obfuscation.html">EEXCESS.model.obfuscation</a></li>
+                                <li><a href="../classes/EEXCESS.model.policy.html">EEXCESS.model.policy</a></li>
+                                <li><a href="../classes/EEXCESS.model.profile.html">EEXCESS.model.profile</a></li>
+                                <li><a href="../classes/EEXCESS.model.storage.html">EEXCESS.model.storage</a></li>
+                                <li><a href="../classes/EEXCESS.model.util-html.html">EEXCESS.model.util-html</a></li>
+                            </ul>
+                
+                            <ul id="api-modules" class="apis modules">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+                    Show:
+                    <label for="api-show-inherited">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </div>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+<h1 class="file-heading">File: visualizations/Vis-Template/js/settings.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+function Settings (chartType){
+
+	this.chartType = chartType;
+}
+
+
+
+/************************************************************
+ * DIMENSIONS
+ *
+ * **/
+Settings.prototype.getDimensions = function( root, iWidth, iHeight ){
+
+		var rootWidth  = $(root).width() - 10;
+		var rootHeight = $(root).height() &gt;= 500 ? 500 : $(root).height();
+
+		switch( this.chartType ){
+			case &quot;timeline&quot;: return getTimelineDimensions( root, iWidth, rootWidth, rootHeight); break;
+			case &quot;barchart&quot;: return getBarchartDimensions( root, iWidth, rootWidth, rootHeight); break;
+            case &quot;geochart&quot;: return getGeochartDimensions(root, rootWidth, rootHeight); break;   /*  TO DO   */
+		}
+		
+	};
+	
+	
+/************************************************************
+ * DIMENSIONS processing
+ *
+ * **/
+
+
+function getTimelineDimensions( root, iWidth, rootWidth, rootHeight ){
+
+    var focusMargin = {top: 0, bottom: 100, left: 80, right: 20 };
+	var focusHeight = rootHeight - focusMargin.top - focusMargin.bottom;
+	var cTop = focusHeight + focusMargin.top + 30;
+	var contextMargin	= {top: cTop, bottom: 20, left: 80, right: 20 };
+	var cHeight = rootHeight - contextMargin.top - contextMargin.bottom;
+	var contextHeight	= cHeight &gt; 0 ? cHeight : 40;
+	//rootHeight - this.contextMargin.top - this.contextMargin.bottom;
+
+	var width = rootWidth - focusMargin.left - 140;//this.focusMargin.right;
+
+	var centerOffset = (iWidth/2) - ((width + focusMargin.left + focusMargin.right)/2);
+	var verticalOffset = (rootHeight &lt; 500) ? 20 : ($(root).height() - 500) / 2;
+		
+	return { &#x27;focusMargin&#x27;: focusMargin, &#x27;focusHeight&#x27;: focusHeight, &#x27;contextMargin&#x27;: contextMargin, &#x27;contextHeight&#x27;: contextHeight, &#x27;width&#x27;: width,
+            &#x27;centerOffset&#x27;: centerOffset, &#x27;verticalOffset&#x27;: verticalOffset };
+}
+	
+	
+function getBarchartDimensions( root, iWidth, rootWidth, rootHeight ){
+		
+	var margin = { top: 50, bottom: 50, left: 80, right: 20 };
+	var height = rootHeight - margin.top - margin.bottom;
+	var width = rootWidth - margin.left - 140;
+	var centerOffset = (iWidth/2) - ((width + margin.left + margin.right)/2);
+	var verticalOffset = (rootHeight &lt; 500) ? 20 : ($(root).height() - 500) / 2;
+	var delay = 400;
+		
+	return { &#x27;margin&#x27;: margin, &#x27;height&#x27;: height, &#x27;width&#x27;: width, &#x27;centerOffset&#x27;: centerOffset, &#x27;verticalOffset&#x27;: verticalOffset, &#x27;delay&#x27;: delay };
+}
+
+
+
+function getGeochartDimensions(root, rootWidth, rootHeight){
+
+
+    return {&#x27;width&#x27;: rootWidth, &#x27;height&#x27;: rootHeight };
+}
+
+
+
+
+
+
+
+
+/************************************************************
+ * INITDATA
+ *
+ * **/
+Settings.prototype.getInitData = function( data, mappings, arg ){
+    var preprocessedData = fixMissingAndMalformattedValues( data );
+
+	switch( this.chartType ){
+        case &quot;timeline&quot; : return getTimelineInitData(preprocessedData, mappings); break;
+		case &quot;barchart&quot; : return getBarchartInitData(preprocessedData, mappings, arg); break;
+        case &quot;geochart&quot; : return getGeochartInitData(preprocessedData, mappings); break;   /*TO DO*/
+	}
+};
+
+
+/************************************************************
+ * INITDATA processing
+ *
+ * **/
+
+function fixMissingAndMalformattedValues( data ){
+
+    var dataArray = [];
+    data.forEach(function(d){
+        var obj = {};
+        obj[&#x27;id&#x27;] = d.id;
+        obj[&#x27;title&#x27;] = d.title;
+        obj[&#x27;uri&#x27;] = d.uri;
+        obj[&#x27;facets&#x27;] = new Array();
+        obj[&#x27;facets&#x27;][&#x27;language&#x27;] = d.facets.language || &#x27;en&#x27;;
+        obj[&#x27;facets&#x27;][&#x27;provider&#x27;] = d.facets.provider;
+        obj[&#x27;facets&#x27;][&#x27;year&#x27;] = parseDate(String(d.facets.year));
+        obj[&#x27;facets&#x27;][&#x27;country&#x27;] = d.facets.country || &quot;&quot;;
+        obj[&#x27;facets&#x27;][&#x27;keywords&#x27;] = d.facets.keywords || [];
+        obj[&#x27;coordinate&#x27;] = d.coordinate || null;
+        dataArray.push(obj);
+    });
+
+    return dataArray;
+}
+
+
+
+function getTimelineInitData( processedData, initMapping ){
+
+    var mapping = [];
+
+    initMapping.forEach(function(m){
+        mapping[m.visualattribute] = m.facet;
+    });
+
+    var xAxisChannel = mapping[&#x27;x-axis&#x27;];
+    var yAxisChannel = mapping[&#x27;y-axis&#x27;];
+    var colorChannel = mapping[&#x27;color&#x27;];
+    var data = [];
+
+    processedData.forEach(function(d) {
+
+        var obj = {
+            id : d.id,
+            title : d.title,
+            uri : d.uri,
+            language : d.facets.language,
+            year : d.facets.year,
+            provider : d.facets.provider,
+            country : d.facets.country,
+            keywords : d.facets.keywords,
+            isHighlighted : d.isHighlighted
+        };
+        data.push(obj);
+    });
+
+    var keywords = [];
+
+    data.forEach(function(d){
+        d.keywords.forEach(function(k){
+            if(keywords.indexOf(k) == -1)
+                keywords.push(k);
+        });
+    });
+
+    return {&#x27;data&#x27;: data, &#x27;xAxisChannel&#x27;: xAxisChannel, &#x27;yAxisChannel&#x27;: yAxisChannel, &#x27;colorChannel&#x27;: colorChannel,
+            &#x27;keywords&#x27;: keywords};
+}
+
+
+
+
+function getBarchartInitData( processedData, mappings, yearRange ){
+
+	var xAxis, yAxis, color;
+
+	var i = 0;
+	while(i &lt; mappings.length &amp;&amp; mappings[i][&#x27;visualattribute&#x27;] != &#x27;x-axis&#x27;)
+		i++;
+		
+	// Visual channels
+	xAxis = mappings[i][&#x27;facet&#x27;];
+	color = xAxis;
+	yAxis = &#x27;count&#x27;;
+		
+	// domain and counter are parallel arrays
+	var domain = d3.set( processedData.map(function(d){ return d.facets[xAxis]; }) ).values();
+	var counter = Array();
+	domain.forEach(function(d, i){
+        counter.push( parseInt(0) );
+	});
+		
+	processedData.forEach(function(d){
+		var index = domain.indexOf( d.facets[xAxis] );
+		counter[index]++;
+	});
+		
+	var array = [];
+		
+	domain.forEach(function(d, i){
+		var obj = {};
+		obj[xAxis] = d;
+		obj[&#x27;count&#x27;] = counter[i];
+		obj[&#x27;selected&#x27;] = false;
+		array.push( obj );
+	});
+		
+	// INITDATA
+	return {&#x27;data&#x27;: array, &#x27;recomList&#x27;: processedData, &#x27;xAxisChannel&#x27;: xAxis, &#x27;yAxisChannel&#x27;: yAxis, &#x27;colorChannel&#x27;: color};
+}
+	
+
+
+function getGeochartInitData(processedData, mappings){
+    /*  TO DO   */
+
+    return { &#x27;data&#x27;: processedData };
+}
+
+    </pre>
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
