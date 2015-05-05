@@ -380,7 +380,8 @@ EEXCESS.queryParagraphs = function() {
         $(single[i]).wrap('<div id="eexcess_s' + i + '" class="eexcess_detected_par"></div>');
         finalParagraphs.push({
             headline: $(h).text(),
-            content: $(single[i]).text()
+            content: $(single[i]).text(),
+            id:'s'+i
         });
     }
     for (var i in corresponding) {
@@ -393,7 +394,8 @@ EEXCESS.queryParagraphs = function() {
         tmpCorr.wrapAll('<div id="eexcess_c' + i + '" class="eexcess_detected_par"></div>');
         finalParagraphs.push({
             headline: $(h).text(),
-            content: text
+            content: text,
+            id:'c'+i
         });
     }
 
@@ -564,7 +566,6 @@ EEXCESS.queryParagraphs = function() {
 //                addCategories(el, i, threshold);
 //            }
 //        }
-        console.log(result);
     });
     return {
         single: single,

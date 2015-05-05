@@ -405,7 +405,7 @@ EEXCESS.NER = (function() {
     };
     var _getParagraphEntityTypes = function(tabID, paragraphs, callback) {
         var xhr = $.ajax({
-            url: 'http://zaire.dimis.fim.uni-passau.de:8999/doser-disambiguationserver/webclassify/entityAndCategoryStatistic',
+            url: 'http://zaire.dimis.fim.uni-passau.de:8999/doser-disambiguationserverstable/webclassify/entityAndCategoryStatistic',
             data: JSON.stringify({paragraphs: paragraphs}),
             type: 'POST',
             contentType: 'application/json',
