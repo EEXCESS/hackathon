@@ -350,9 +350,7 @@ function Barchart( domRoot, visTemplate ) {
 					dataToHighlight.push(d);
 				}
 			});
-		}
-        
-		Vis.selectItems( indicesToHighlight );
+		}        		
 		
 		// update legends' and bars' domains
 		legendDomain.forEach(function(l, i){
