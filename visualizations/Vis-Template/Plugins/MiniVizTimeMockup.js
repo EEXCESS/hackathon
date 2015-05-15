@@ -15,7 +15,7 @@
 		}
 		
 		$vis.html('<div class="debug">Filter: ' + fromYear + " - " + toYear + '<br />Highlighted: ' + selectedData.length + '</div>');
-		$vis.prepend('<img src="Plugins/MiniVizTimeMockupScreenshot.png" />');
+		$vis.prepend('<img src="Plugins/MiniVizTimeMockupScreenshot.png" style="width:100%;"/>');
 	};
 
 	TestMiniViz.finalize = function(){

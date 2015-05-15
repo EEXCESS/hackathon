@@ -18,7 +18,7 @@
 			var src = '../../media/no-img.png';
 			if (item.data.previewImage)
 				src = item.data.previewImage;
-			previews += '<img title="' + item.data.title + '" src="' + src + '" class="" style="width:16px; height:16px; margin:1px;" />'; 
+			previews += '<img title="' + item.data.title + '" src="' + src + '" class="" style="width:24px; height:24px; margin:1px;" />'; 
 			items += '<span title="' + item.data.id + '">' + i + ' '+ item.selectionMode +' </span><br />';
 		});
 		$vis.html('<div class="listFilterImages" style="align:center; padding:5px;">' + previews + '</div><div class="debug">Selected Items: ' + selectedData.length + '<br />' + items + '</div>');
