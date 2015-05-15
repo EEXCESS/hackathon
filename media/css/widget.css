@@ -24,9 +24,7 @@ nav {
 .content_sidebar {
     margin-left:auto; margin-right:auto;
     height: 300px;
-	border-top: 1px solid #dbdbdb;
-    overflow-y: auto;
-    height:82%;
+    height:calc(100% - 35px - 37px - 52px);
 }
 
 .footer_sidebar {
@@ -44,4 +42,11 @@ nav {
     z-index: 9999;
     padding:0.5em;
 }
+
+  .ui-autocomplete-category {
+    font-weight: bold;
+    padding: .2em .4em;
+    margin: .8em 0 .2em;
+    line-height: 1.5;
+  }
 

@@ -452,9 +452,9 @@ function Visualization( EEXCESSobj ) {
 	
 	EVTHANDLER.listItemClicked = function(d, i, isSelectedFromOutside, x, y, z){
 		if (d3.event.ctrlKey){
-        	LIST.selectListItem( d, i, false, true, false);
+        	LIST.selectListItem( d, i, false, true);
 		} else {
-        	LIST.selectListItem( d, i, false, false, false);
+        	LIST.selectListItem( d, i, false, false);
     	}
 	};
 	
@@ -463,19 +463,16 @@ function Visualization( EEXCESSobj ) {
 	
 	////////	Reset Button Click	////////
 	
-	EVTHANDLER.btnResetClicked = function(){
-		indicesToHighlight = VISPANEL.getAllSelectListItems();
-	
-		LIST.highlightListItems(indicesToHighlight, true);
+	EVTHANDLER.btnResetClicked = function(){			
+		LIST.highlightListItems();
+		LIST.scrollToFirst();
 		//$(filterBookmarkDialogId+">div>span").text(STR_SHOWALLRESULTS);
 		//$(filterBookmarkDialogId+">div>div").css("background","inherit");
-		//$(deleteBookmark).prop("disabled",true);
-		
+		//$(deleteBookmark).prop("disabled",true);		
 		//FILTER.showStars();	
-		//FILTER.updateData();	
-		
+		//FILTER.updateData();			
 		VISPANEL.updateCurrentChart( "reset_chart" );
-        FilterHandler.clearCurrent();
+        FilterHandler.reset();
 	};
 
 
@@ -846,21 +843,17 @@ function Visualization( EEXCESSobj ) {
 	/**
 	 * Draws legend color icons in each content list item
 	 * */
-	LIST.selectListItem = function( d, i, flagSelectedOutside, addItemToCurrentSelection, scrollToFirst ){
+	LIST.selectListItem = function( d, i, flagSelectedOutside, addItemToCurrentSelection){
 
 		var addItemToCurrentSelection = addItemToCurrentSelection || false;
 		var isSelectedFromOutside = flagSelectedOutside || false;
 		var index = i;
 		var indicesToHighlight = [];
-		var wasFirstItemSelectedWithAddingKey = false;
 
 		var indexWasAlreadySelected = LIST.indicesSelected.indexOf(index) > -1;
 
 		if (addItemToCurrentSelection)
 			indicesToHighlight = LIST.indicesSelected;
-
-		if (addItemToCurrentSelection && LIST.indicesSelected.length == 0)
-			wasFirstItemSelectedWithAddingKey = true;
 
 		if (indexWasAlreadySelected)
 			indicesToHighlight.splice(indicesToHighlight.indexOf(index), 1);
@@ -872,10 +865,11 @@ function Visualization( EEXCESSobj ) {
 			indicesToHighlight = VISPANEL.getAllSelectListItems();
 
 		if( !flagSelectedOutside )
-			VISPANEL.updateCurrentChart( 'highlight_item_selected', indicesToHighlight );
+			VISPANEL.updateCurrentChart( 'highlight_item_selected', indicesToHighlight ); // todo: remove
 
-		var dataSelected = LIST.internal.getDataItemsFromIndices(data, LIST.indicesSelected);
-		FilterHandler.setCurrentFilterListItems(dataSelected, wasFirstItemSelectedWithAddingKey);
+		var dataItemSelected = LIST.internal.getDataItemsFromIndices(data, [index]);
+		var selectedWithAddingKey = addItemToCurrentSelection;
+		FilterHandler.singleItemSelected(dataItemSelected[0], selectedWithAddingKey);	
 	};
 	
 
@@ -887,16 +881,14 @@ function Visualization( EEXCESSobj ) {
 	 *	If no parameters are received, all the list items are restored to the default opacity 
 	 *
 	 * */
-	LIST.highlightListItems = function(dummy, scrollToFirst){ // todo: scrollToFirst handling needs to be triggered differently
+	LIST.highlightListItems = function(){ // todo: rename: highlightItems
 
-		scrollToFirst = scrollToFirst == undefined ? true : scrollToFirst;
 		var dataToHighlightIds = FilterHandler.mergeFilteredDataIds();
+		d3.selectAll(allListItems).classed("highlighted", false);
 		if (dataToHighlightIds == null){
 			d3.selectAll( allListItems ).style("opacity", "1");
 			return;
 		}
-
-		indicesHighlighted = []; // todo: really needed?
 		
 		if(dataToHighlightIds.length > 0){
 			
@@ -905,18 +897,24 @@ function Visualization( EEXCESSobj ) {
 				
 				if(_.contains(dataToHighlightIds, data[i].id)){
 					item.style("opacity", "1");
-					indicesHighlighted.push(i);
+					item.classed("highlighted", true);
 				} else {
 					item.style("opacity", "0.2");
 				}
 			}
-
-			if (scrollToFirst)
-				$( contentList ).scrollTo( listItem +""+ indicesHighlighted[0], {offsetTop: 90});
 		} else {
 			d3.selectAll( allListItems ).style("opacity", "1");
-			if (scrollToFirst)
-				$( contentList ).scrollTo( "top" );
+		}
+		
+		VISPANEL.updateCurrentChart( 'highlight_item_selected', null,  dataToHighlightIds); // todo: remove
+	};
+	
+	LIST.scrollToFirst = function(){
+		var $highlighted = $(contentList).find('.highlighted');
+		if ($highlighted.length > 0){
+			$( contentList ).scrollTo("#" + $highlighted.attr('id'), {offsetTop: 90});	
+		} else {
+			$( contentList ).scrollTo( "top" ); // is this needed???
 		}
 	};
 	
@@ -1089,7 +1087,7 @@ function Visualization( EEXCESSobj ) {
 		}
 
 		LIST.setColorIcon();
-		LIST.highlightListItems(VISPANEL.getAllSelectListItems(), false);//(indicesToHighlight); //changecode
+		LIST.highlightListItems();
 	};
 	
 	
@@ -1111,7 +1109,7 @@ function Visualization( EEXCESSobj ) {
 		return array;
 	};
 	
-	VISPANEL.updateCurrentChart = function( action, arg ){
+	VISPANEL.updateCurrentChart = function( action, arg, arg2 ){
 		
 		var plugin = PluginHandler.getByDisplayName(VISPANEL.chartName);
 		switch( action ){
@@ -1132,14 +1130,19 @@ function Visualization( EEXCESSobj ) {
 
 			case "highlight_item_selected":
 				var arrayIndices = arg;
+				var dataToHighlightIds = arg2;
 				if (plugin != null){
 					if (plugin.Object.highlightItems != undefined)
 						plugin.Object.highlightItems(arrayIndices);
+				} else if (dataToHighlightIds != null) {
+					switch(VISPANEL.chartName){
+	                    case "geochart": geoVis.highlightItems(arrayIndices, dataToHighlightIds); break;
+					}
 				} else {
 					switch(VISPANEL.chartName){
 						case "timeline": timeVis.selectNodes(arrayIndices, self); break;
 	                    case "barchart": barVis.clearSelection(); break;
-	                    case "geochart": geoVis.highlightItems(arrayIndices); break;
+	                    //case "geochart": geoVis.highlightItems(arrayIndices); break;
                     	case "urank": urankVis.highlightItems(arrayIndices); break;
 					}
 				}
@@ -1650,13 +1653,16 @@ function Visualization( EEXCESSobj ) {
     var EXT = {};
 	
 		
-	EXT.ListItemSelected = function(datum, index, scrollToFirst){
-		LIST.selectListItem( datum, index, true, false, scrollToFirst );
+	EXT.ListItemSelected = function(datum, index){
+		LIST.selectListItem( datum, index, true, false);
 	};
 	
+	EXT.scrollToFirst = function(){
+		LIST.scrollToFirst();
+	};
 	
-	EXT.selectItems = function( itemIndicesArray, scrollToFirst ){
-		LIST.highlightListItems( itemIndicesArray, scrollToFirst );
+	EXT.selectItems = function(){
+		LIST.highlightListItems();
 	};
 
 	EXT.getAllSelectListItems = function(){

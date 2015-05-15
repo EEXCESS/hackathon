@@ -45,7 +45,6 @@
         "background",
         "storage"
     ],
-    "options_page": "options/options.html",
     "icons": {"16": "media/icons/16.png",
         "48": "media/icons/48.png",
         "128": "media/icons/128.png"}

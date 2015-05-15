@@ -108,7 +108,7 @@ EEXCESS.model = (function() {
                 results = res;
                 EEXCESS.messaging.sendMsgAllTabs({
                     method: 'newSearchTriggered',
-                    data: {query: results.query, results: results.data}
+                    data: {query: results.query, results: results.data, ne:results.NE}
                 });
             }
         };
@@ -270,14 +270,15 @@ EEXCESS.model = (function() {
             currentQuery['query'] = tmp['query'];
 
 
-            var success = function(data) { // success callback
+            var success = function(data2) { // success callback
                 // TODO: search may return no results (although successful)
-                tmp['data'] = data;
+                tmp['data'] = data2;
+                tmp['NE'] = data['contextNamedEntities'];
 //                if (data.totalResults !== 0) {
                 // create context
                 var context = {query: tmp['query']};
                 // log results
-                EEXCESS.logging.logRecommendations(data.results, context, _queryTimestamp);
+                EEXCESS.logging.logRecommendations(data2.results, context, _queryTimestamp);
                 _handleResult(tmp);
 //                }
 
@@ -391,3 +392,29 @@ EEXCESS.model = (function() {
     };
 }());
 
+EEXCESS.NER = (function() {
+    var _getParagraphEntities = function(tabID, paragraphs, callback) {
+        var xhr = $.ajax({
+            url: 'http://mics.fim.uni-passau.de/serverREL/RELEVANTICO/api/entities',
+            data: JSON.stringify({paragraphs: paragraphs}),
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json'
+        });
+        xhr.done(callback);
+    };
+    var _getParagraphEntityTypes = function(tabID, paragraphs, callback) {
+        var xhr = $.ajax({
+            url: 'http://zaire.dimis.fim.uni-passau.de:8999/doser-disambiguationserverstable/webclassify/entityAndCategoryStatistic',
+            data: JSON.stringify({paragraphs: paragraphs}),
+            type: 'POST',
+            contentType: 'application/json',
+            dataType: 'json'
+        });
+        xhr.done(callback);
+    };
+    return {
+        getParagraphEntities: _getParagraphEntities,
+        getParagraphEntityTypes: _getParagraphEntityTypes
+    };
+}());

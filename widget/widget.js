@@ -15,9 +15,41 @@ EEXCESS.update = function(widget) {
     }
 };
 
+EEXCESS.tmpEntities = [];
+
 EEXCESS.newSearchTriggered = function(data) {
+    if (typeof data.ne !== 'undefined') {
+        EEXCESS.tmpEntities = [];
+        for (var cat in data.ne) {
+            if (data.ne.hasOwnProperty(cat)) {
+                for (var i = 0; i < data.ne[cat].length; i++) {
+                    EEXCESS.tmpEntities.push({label: data.ne[cat][i].text, category: cat});
+                }
+            }
+        }
+    }
+
+    $("#eexcess_query").catcomplete({
+        delay: 0,
+        source: EEXCESS.tmpEntities,
+        minLength: 0,
+        select: function(event, ui) {
+            if (ui.item) {
+                $('#eexcess_query').val(ui.item.value);
+                $('#eexcess_searchForm').submit();
+            }
+        }
+    });
     $('#eexcess_query').val(data.query);
     $('#search_hover').text(data.query);
+    $('#eexcess_query').focus(function() {
+        $("#eexcess_query").catcomplete("search", "");
+        this.select();
+    }).click(function(){
+        $("#eexcess_query").catcomplete("search","");
+        $('#search_hover').hide();
+        this.select();
+    });
 };
 
 

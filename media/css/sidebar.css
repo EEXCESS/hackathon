@@ -9,11 +9,24 @@ particular page */
  margin:0;
  padding:0;
  right:0px;
- width:348px;
+ width:364px;
  height:100%;
  border:0px; 
  z-index:999;
  background-color:white;
  font-size:11pt;
  font-family:Helvetica;
+}
+
+#eexcess_toggler {
+    position: fixed;
+    display: none;
+    top:0px;
+    right:0px;
+    height:100%;
+    width:16px;
+    z-index:99999;
+    cursor:pointer;
+    background-repeat: no-repeat;
+    background-position: center;
 }

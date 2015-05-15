@@ -9,6 +9,7 @@ function Geochart(root, visTemplate) {
     var colorScale;
     var width, height;
     var colorChannel;
+    var currentlyHighlightedIds = [];
     GEO.$root = $(root);
     GEO.ClusterSettings = {
         minSize:32,
@@ -250,11 +251,15 @@ function Geochart(root, visTemplate) {
             marker.bindPopup(GEO.Input.data[i].title);
             marker.on('click', function(e){
                 if (e && e.target && e.target.options && e.target.options.dataObject){
+                    currentlyHighlightedIds = [];
 					GEO.Render.deleteCurrentSelect();
-                    FilterHandler.setCurrentFilterListItems([e.target.options.dataObject]);
+                    FilterHandler.singleItemSelected(e.target.options.dataObject);                    
+                    if (FilterHandler.listFilter != null){ // is it the popup-open click, or popup-close click?
+                        Vis.scrollToFirst();
+                        currentlyHighlightedIds = [e.target.options.dataObject.id];
+                    }
                 }
-            }).on('popupclose', function(){
-                    FilterHandler.setCurrentFilterListItems([]);
+            }).on('popupclose', function(e){
             });
             GEO.markersGroup.addLayer(marker);
             GEO.Input.data[i].geoMarker = marker;
@@ -349,7 +354,19 @@ function Geochart(root, visTemplate) {
     *   @param indexArray: array with items' indices to highlight. They match items in receivedData (parameter in Render.draw)
 	*
 	* ***************************************************************************************************************/
-	GEO.Render.highlightItems = function(indexArray){
+	GEO.Render.highlightItems = function(indexArray, dataToHighlightIds){
+        if (indexArray == null){
+            GEO.map.closePopup();
+            dataToHighlightIds.forEach(function(id) {
+                var item = _.find(GEO.Input.data, function(d){return d.id == id;});
+                GEO.markersGroup.zoomToShowLayer(item.geoMarker, function() {
+                    item.geoMarker.openPopup();
+                });
+            });
+    		GEO.Render.deleteCurrentSelect();
+            return;
+        }
+        // obsolete?
         GEO.map.closePopup();
         indexArray.forEach(function(i) {
             GEO.markersGroup.zoomToShowLayer(GEO.Input.data[i].geoMarker, function() {

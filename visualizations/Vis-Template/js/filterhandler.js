@@ -20,18 +20,19 @@ var FilterHandler = {
 		});
 	},
 
-	addEmptyFilter: function(){		
+	addEmptyFilter: function(doIncludeControls){		
 		FilterHandler.currentFilter = { type: null, from: null, to: null, Object: null, dataWithinFilter: [], $container: $('<div class="filter-container"></div>')};
-		var $filter = $('<div class="filter-container-outer current"><div class="filter-controls"><a href="#" class="filter-keep"><span class="batch-sm-add"></span></a> <a href="#" class="filter-remove"><span class="batch-sm-delete"></span></a></div></div>').append(FilterHandler.currentFilter.$container);
+		var $filter = $('<div class="filter-container-outer current"></div>').append(FilterHandler.currentFilter.$container);
+		if (doIncludeControls)
+			$filter.prepend($('<div class="filter-controls"><a href="#" class="filter-keep"><span class="batch-sm-add"></span></a> <a href="#" class="filter-remove"><span class="batch-sm-delete"></span></a></div>'));
 		FilterHandler.$filterRoot.prepend($filter);
 	},
 
 	addEmptyListFilter: function(){
 		var currentFilterTemp = FilterHandler.currentFilter;
-		FilterHandler.addEmptyFilter();
+		FilterHandler.addEmptyFilter(false);
 		FilterHandler.listFilter = FilterHandler.currentFilter;
-		FilterHandler.listFilter.mergeMode = 'union';
-		FilterHandler.makeCurrentPermanent ();
+		FilterHandler.listFilter.itemsClicked = []; // { data: object, selectionMode: single/add/remove }		
 		FilterHandler.currentFilter = currentFilterTemp;
 		// move sort order
 		if (FilterHandler.currentFilter != null)
@@ -54,7 +55,7 @@ var FilterHandler = {
 
 	setCurrentFilter: function(type, selectedData, category, categoryValues, from, to){
 		if (FilterHandler.currentFilter == null)
-			FilterHandler.addEmptyFilter();
+			FilterHandler.addEmptyFilter(true);
 
 		FilterHandler.currentFilter.type = type;
 		FilterHandler.currentFilter.categoryValues = categoryValues;
@@ -65,22 +66,36 @@ var FilterHandler = {
 
 		FilterHandler.refreshCurrent();
 	},
-
-	setCurrentFilterListItems: function(selectedData, wasFirstItemSelectedWithAddingKey){		
+	
+	singleItemSelected: function(dataItemSelected, selectedWithAddingKey){
+		selectedWithAddingKey = selectedWithAddingKey || false;		
 		if (FilterHandler.listFilter == null)
 			FilterHandler.addEmptyListFilter();
-
-		if (selectedData == null || selectedData.length == 0){
-			FilterHandler.removeFilter(FilterHandler.listFilter.$container.parents('.filter-container-outer'));
-			FilterHandler.listFilter = null;
-			return;
+			
+		if (selectedWithAddingKey){
+			// look if already selected before.
+			var existingItemIndex = _.findIndex(FilterHandler.listFilter.itemsClicked, function(d){ return d.data.id == dataItemSelected.id; });
+			if (existingItemIndex >= 0){
+				FilterHandler.listFilter.itemsClicked.splice(existingItemIndex, 1);
+			} else {
+				// look if item is already included in other filters:
+				var selectionMode = "add";
+				var rangeFilteredDataIds = FilterHandler.mergeRangeFiltersDataIds();
+				if (rangeFilteredDataIds.indexOf(dataItemSelected.id) >= 0)
+					selectionMode = "remove";
+				
+				FilterHandler.listFilter.itemsClicked.push({data: dataItemSelected, selectionMode: selectionMode});
+			}
+		} else {
+			if (FilterHandler.listFilter.itemsClicked.length == 1 && FilterHandler.listFilter.itemsClicked[0].data.id == dataItemSelected.id)
+				FilterHandler.listFilter.itemsClicked = [];
+			else 
+				FilterHandler.listFilter.itemsClicked = [{data: dataItemSelected, selectionMode: "single"}];
 		}
-
-		if (wasFirstItemSelectedWithAddingKey)
-			FilterHandler.listFilter.mergeMode = 'symetricDifference'; // rename to xor?
-
-		FilterHandler.listFilter.dataWithinFilter = selectedData;
-		FilterHandler.refreshListFilter();
+			
+		FilterHandler.listFilter.dataWithinFilter = _.map(FilterHandler.listFilter.itemsClicked, function(d){ return d.data;});		
+				
+		FilterHandler.refreshListFilter(); 				
 	},
 
 	refreshCurrent: function(){
@@ -102,27 +117,53 @@ var FilterHandler = {
 	},
 
 	refreshListFilter: function(){
-		if (FilterHandler.listFilter.Object == null){
-			FilterHandler.listFilter.Object = PluginHandler.getFilterPluginForType('list').Object;
-			FilterHandler.listFilter.Object.initialize();
+		
+		if (FilterHandler.listFilter != null && FilterHandler.listFilter.itemsClicked.length == 0){
+			FilterHandler.clearList();
 		}
-
-		FilterHandler.listFilter.Object.draw(
-			FilterHandler.listFilter.$container,
-			FilterHandler.listFilter.dataWithinFilter,
-			FilterHandler.listFilter.mergeMode);
+		
+		if (FilterHandler.listFilter != null){
+			if (FilterHandler.listFilter.Object == null){
+				FilterHandler.listFilter.Object = PluginHandler.getFilterPluginForType('list').Object;
+				FilterHandler.listFilter.Object.initialize();
+			}
+	
+			FilterHandler.listFilter.Object.draw(
+				FilterHandler.listFilter.$container,
+				FilterHandler.listFilter.itemsClicked);
+				//FilterHandler.listFilter.dataWithinFilter);
+		}
+			
+		FilterHandler.ext.selectItems();
 	},
 
 	clearCurrent: function(){
 		if (FilterHandler.currentFilter == null)
 			return;
-
-		if (FilterHandler.currentFilter.Object != null){
-			FilterHandler.currentFilter.Object.finalize();
-			FilterHandler.currentFilter.Object = null;
-		}
-		FilterHandler.currentFilter.$container.parents('.filter-container-outer').empty();
+			
+		FilterHandler.clear(FilterHandler.currentFilter);
 		FilterHandler.currentFilter = null;
+	},
+
+	clearList: function(){
+		if (FilterHandler.listFilter == null)
+			return;
+			
+		FilterHandler.clear(FilterHandler.listFilter);
+		FilterHandler.listFilter = null;
+	},
+
+	clear: function(filterToClear){
+		if (filterToClear.Object != null){
+			filterToClear.Object.finalize();
+			filterToClear.Object = null;
+		}
+		filterToClear.$container.parents('.filter-container-outer').empty();
+	},
+
+	reset: function(){
+		FilterHandler.clearCurrent();
+		FilterHandler.clearList();
 		FilterHandler.ext.selectItems();
 	},
 
@@ -156,13 +197,13 @@ var FilterHandler = {
 			filter.$container.data('filter-index', i);
 		}
 	},
-
-	mergeFilteredDataIds: function(){
+	
+	mergeRangeFiltersDataIds: function(){
 		var mapId = function(d){ return d.id; };
-		var dataToHighlightIds = []
+		var dataToHighlightIds = [];
 
-		if (FilterHandler.currentFilter == null && FilterHandler.filters.length == 0 && FilterHandler.listFilter == null)
-			return null;
+		if (FilterHandler.currentFilter == null && FilterHandler.filters.length == 0)
+			return dataToHighlightIds;
 
 		// Combining filters by AND (different type) and OR (same type)
 		var filters = FilterHandler.filters.slice(); // clone
@@ -182,21 +223,36 @@ var FilterHandler = {
 		if (filterGroupsDataIds.length > 0){
 			dataToHighlightIds = filterGroupsDataIds[0];
 			for (var i=1; i<filterGroupsDataIds.length; i++){
-				currentList = filterGroupsDataIds[i];
+				var currentList = filterGroupsDataIds[i];
 				dataToHighlightIds = _.filter(dataToHighlightIds, function(id){ return _.contains(currentList, id); });
 			}
 		}
+		
+		return dataToHighlightIds;
+	},
 
-		if (FilterHandler.listFilter != null){
-			var listFilterDataIds = _.map(FilterHandler.listFilter.dataWithinFilter, mapId);
-			if (FilterHandler.listFilter.mergeMode == 'union'){
-				dataToHighlightIds = _.union(dataToHighlightIds, listFilterDataIds);
-			} else if (FilterHandler.listFilter.mergeMode == 'symetricDifference') {
-				dataToHighlightIds = _.xor(dataToHighlightIds, listFilterDataIds);
-			}
+	mergeFilteredDataIds: function(){
+		
+		if (FilterHandler.currentFilter == null && FilterHandler.filters.length == 0 && FilterHandler.listFilter == null)
+			return null;
+			
+		var dataToHighlightIds = FilterHandler.mergeRangeFiltersDataIds();
+
+		// Adding ListFilter
+		if (FilterHandler.listFilter != null && FilterHandler.listFilter.itemsClicked.length > 0){
+			
+			if (FilterHandler.listFilter.itemsClicked.length == 1 && FilterHandler.listFilter.itemsClicked[0].selectionMode == "single")
+				return [FilterHandler.listFilter.itemsClicked[0].data.id];
+				
+			var idsToRemove = _.map(_.filter(FilterHandler.listFilter.itemsClicked, function(item){ return item.selectionMode == "remove"; }), function(d){return d.data.id; });
+			var idsToAdd = _.map(_.filter(FilterHandler.listFilter.itemsClicked, function(item){ return item.selectionMode == "single" || item.selectionMode == "add"; }), function(d){return d.data.id; });
+			
+			dataToHighlightIds = _.difference(dataToHighlightIds, idsToRemove); 
+			dataToHighlightIds = _.union(dataToHighlightIds, idsToAdd);
+			
 		}
 
-		console.log('mergeFilteredData: ' + dataToHighlightIds.length);
+		//console.log('mergeFilteredData: ' + dataToHighlightIds.length);
 		return dataToHighlightIds;
 	}
 }

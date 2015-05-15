@@ -767,7 +767,7 @@ function facetScape(domElem, iwidth, iheight, ifacets, queryResultItems, term) {
     }
 
     function FSResultLayout() {
-        root.append("div").attr("id", "RS_ResultList").attr("class", "resultList").style("max-height", svgHeight - 40 + "px");//.style("width", svgWidth-2+"px");
+        root.append("div").attr("id", "RS_ResultList").attr("class", "resultList").style("height", svgHeight - 40 + "px");//.style("width", svgWidth-2+"px");
         var rList = EEXCESS.searchResultList($('#RS_ResultList'), {itemsShown: 9999, pathToMedia: '../../../media/', pathToLibs: '../../../libs/'});
         RENDERING.drawResultList();
     }

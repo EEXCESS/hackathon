@@ -1,18 +1,3 @@
-/**
- * Extend the String object with a 'startsWith' method
- */
-if (typeof String.prototype.startsWith !== 'function') {
-    /**
-     * Checks, if a string-object starts with the provided term
-     * @global
-     * @param {String} str the term to check
-     * @returns {Boolean} true, if the string starts with the provided term, otherwise false
-     */
-    String.prototype.startsWith = function(str) {
-        return this.slice(0, str.length) === str;
-    };
-}
-
 var EEXCESS = EEXCESS || {};
 
 EEXCESS.qXHR;
@@ -140,11 +125,15 @@ EEXCESS.frCall_impl = function(queryData, start, numResults, success, error) {
                 profile['context']['value'] = 'disabled';
             }
         }
+        
+        if (queryData.hasOwnProperty('contextNamedEntities')) {
+            profile['contextNamedEntities'] = queryData.contextNamedEntities;
+        }
         if (EEXCESS.qXHR && EEXCESS.qXHR.readystate !== 4) {
             EEXCESS.qXHR.abort();
         }
         EEXCESS.qXHR = $.ajax({
-            url: EEXCESS.backend.getURL(),
+            url: 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/recommend',
             data: JSON.stringify(profile),
             type: 'POST',
             contentType: 'application/json; charset=UTF-8',
@@ -172,67 +161,10 @@ EEXCESS.frCall_impl = function(queryData, start, numResults, success, error) {
 // set provider call function and url according to the provided value 
 // if an inappropriate value is given, set it to fr-stable
 EEXCESS.backend = (function() {
-    var call = EEXCESS.frCall_impl;
-    var url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
-    var fr_url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
-    var backend = 'fr-stable';
-
     return {
-        setProvider: function(tabID, provider) {
-            backend = provider;
-            EEXCESS.storage.local('backend', provider);
-            switch (provider) {
-                case 'eu':
-                    console.log('eu');
-                    call = EEXCESS.euCall;
-                    url = 'http://europeana.eu/api//v2/search.json?wskey=HT6JwVWha';
-                    break;
-                case 'fr-devel':
-                    console.log('fr-devel');
-                    call = EEXCESS.frCall_impl;
-                    url = 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
-                    break;
-                case 'fr-stable':
-                    console.log('fr-stable');
-                    call = EEXCESS.frCall_impl;
-                    url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
-                    break;
-                case 'self':
-                    console.log('self');
-                    call = EEXCESS.frCall_impl;
-                    url = 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend';
-                    fr_url = url;
-                    var local_url = EEXCESS.storage.local('local_url');
-                    if (typeof local_url !== 'undefined' && local_url !== null) {
-                        url = local_url;
-                    }
-                    var local_fr_url = EEXCESS.storage.local('federated_url');
-                    if (typeof local_fr_url !== 'undefined' && local_fr_url !== null) {
-                        fr_url = local_fr_url;
-                    }
-            }
-        },
-        setURL: function(tabID, urls) {
-            EEXCESS.storage.local('local_url', urls.pp);
-            EEXCESS.storage.local('federated_url', urls.fr);
-            url = urls.pp;
-            fr_url = urls.fr;
-        },
-        getURL: function() {
-            if (backend === 'self') {
-                return (url + '?fr_url=' + fr_url);
-            }
-            return url;
-        },
         getCall: function() {
-            return call;
+            return EEXCESS.frCall_impl;
         }
     };
 }());
 
-// retrieve provider from local storage or set it to 'fr-stable'
-if (typeof EEXCESS.storage.local('backend') !== 'undefined') {
-    EEXCESS.backend.setProvider(-1, EEXCESS.storage.local('backend'));
-} else {
-    EEXCESS.backend.setProvider(-1, 'fr-stable');
-}
