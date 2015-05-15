@@ -235,6 +235,7 @@ function Visualization( EEXCESSobj ) {
         $( 'html' ).click(function(){ if(isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
         $( '#demo-button-university' ).click(function(e){ $(this).addClass('checked'); $('#demo-button-historicalbuildings').removeClass('checked'); onDataReceived(getDemoResultsUniversity()); });
         $( '#demo-button-historicalbuildings' ).click(function(e){ $(this).addClass('checked'); $('#demo-button-university').removeClass('checked'); onDataReceived(getDemoResultsHistoricBuildings()); });
+		$('#globalsettings').on('click', function(e){ e.preventDefault(); alert('Einstellungen noch nicht verfügbar.'); });
 	};
 	
 

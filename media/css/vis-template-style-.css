@@ -501,6 +501,7 @@ input[type="button"]:hover{
 #eexcess_fixed_controls{    
     border:1px solid #e4e4e4;
     padding: 7px 0;
+    position: relative;
 }
 
 
@@ -557,6 +558,12 @@ input[type="button"]:hover{
         font-size: 1em;
         border-bottom: 1px solid #e4e4e4;
     }
+#globalsettings{
+    right:3px;
+    bottom:2px;
+    position:absolute;
+    font-family: Georgia;
+}
 
 /*
     All <select> elements
@@ -1122,6 +1129,12 @@ p.eexcess_ritem_short {
             }
     .filter-container-outer.current .filter-container {
         border: 1px solid black;
+    }
+    .filter-container-outer .debug{
+        padding: 6px 0;
+        color: rgb(148, 148, 148);
+        font-style: italic; 
+        font-size: 8px;
     }
 
 .batch-sm-add,
