@@ -1,6 +1,6 @@
 PluginHandler.registerPluginScripts([
 		'TestPlugin.js', 
-		'TestMiniViz.js' , 
+		'MiniVizTimeMockup.js' , 
 		'TestMiniVizGeo.js' , 
 		'TestMiniVizList.js' , 
 		'TestMiniVizCategory.js' 

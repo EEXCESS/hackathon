@@ -10,12 +10,11 @@
 	TestMiniViz.draw = function(data, selectedData, $container, category, categoryValues, fromYear, toYear){
 		var $vis = $container.find('.TestMiniViz');
 		if ($vis.length == 0){
-			$vis = $('<div class="TestMiniViz">Hallo</div>').css('background-color', 'lightgrey').css('padding-bottom', '7px')
-				.css('color', 'rgb(148, 148, 148)').css('font-style', 'italic').css('font-size', '8px');
+			$vis = $('<div class="TestMiniViz">Hallo</div>').css('background-color', 'lightgrey');
 			$container.append($vis);
 		}
 		
-		$vis.html('Filter: ' + fromYear + " - " + toYear + '<br />Highlighted: ' + selectedData.length);
+		$vis.html('<div class="debug">Filter: ' + fromYear + " - " + toYear + '<br />Highlighted: ' + selectedData.length + '</div>');
 		$vis.prepend('<img src="Plugins/MiniVizTimeMockupScreenshot.png" />');
 	};
 

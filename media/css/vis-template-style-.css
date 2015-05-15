@@ -1123,6 +1123,12 @@ p.eexcess_ritem_short {
     .filter-container-outer.current .filter-container {
         border: 1px solid black;
     }
+    .filter-container-outer .debug{
+        padding: 6px 0;
+        color: rgb(148, 148, 148);
+        font-style: italic; 
+        font-size: 8px;
+    }
 
 .batch-sm-add,
 .batch-sm-delete {
