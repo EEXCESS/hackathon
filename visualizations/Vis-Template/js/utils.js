@@ -148,6 +148,8 @@ $.fn.scrollTo = function( target, options, callback ){
 			}
 			else{
 				scrollTarget = $(settings.scrollTarget);
+				if (scrollTarget.length == 0)
+					scrollTarget = 0;
 			}
 		}
 			
