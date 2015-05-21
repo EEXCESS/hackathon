@@ -242,7 +242,11 @@ EEXCESS.model = (function() {
             }
             tmp['query'] = '';
             for (var i = 0, len = tmp['weightedTerms'].length; i < len; i++) {
-                tmp['query'] += tmp['weightedTerms'][i].text;
+                if(tmp['weightedTerms'][i].text.indexOf(' ') !== - 1) {
+                    tmp['query'] += '"' + tmp['weightedTerms'][i].text + '"';
+                } else {
+                    tmp['query'] += tmp['weightedTerms'][i].text;
+                }
                 if (i < len - 1) {
                     tmp['query'] += ' ';
                 }
