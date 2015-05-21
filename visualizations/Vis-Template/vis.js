@@ -122,6 +122,7 @@ function Visualization( EEXCESSobj ) {
 
     var START = {};
     START.plugins = [];
+    START.inputData = [];
 
 	/**
 	 * 	Initizialization function called from starter.js
@@ -1787,6 +1788,7 @@ function Visualization( EEXCESSobj ) {
 	
 	    BOOKMARKS.destroyBookmarkDialog();
 		inputData=data;
+		START.inputData = data;
 
 		FILTER.changeDropDownList();
 		

@@ -101,7 +101,7 @@ var FilterHandler = {
 	refreshCurrent: function(){
 		if (FilterHandler.currentFilter.Object == null){
 			FilterHandler.currentFilter.Object = PluginHandler.getFilterPluginForType(FilterHandler.currentFilter.type).Object;
-			FilterHandler.currentFilter.Object.initialize();
+			FilterHandler.currentFilter.Object.initialize(FilterHandler.vis);
 		}
 		
 		FilterHandler.currentFilter.Object.draw(
@@ -125,7 +125,7 @@ var FilterHandler = {
 		if (FilterHandler.listFilter != null){
 			if (FilterHandler.listFilter.Object == null){
 				FilterHandler.listFilter.Object = PluginHandler.getFilterPluginForType('list').Object;
-				FilterHandler.listFilter.Object.initialize();
+				FilterHandler.listFilter.Object.initialize(FilterHandler.vis);
 			}
 	
 			FilterHandler.listFilter.Object.draw(
