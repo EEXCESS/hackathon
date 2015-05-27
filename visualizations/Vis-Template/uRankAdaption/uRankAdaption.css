@@ -2,6 +2,18 @@
 }
 
 
+
+#tagCloudCooserContainer {
+	border: 1px solid #e4e4e4;	
+	padding: 7px 0;
+	text-align: left; 
+}
+
+#tagCloudCooserContainer input[type="radio"] {
+    margin-top: 0;
+    vertical-align: middle;
+}
+
 .urank #eexcess_ranking_controls {
 	display: inline-block;
 	float:left;

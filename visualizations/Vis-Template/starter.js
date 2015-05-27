@@ -172,8 +172,19 @@ function getMappings(){
                 ]
             ]
         },
-        {
+    	{
             "chart" : "urank",
+            "combinations": [
+                [
+                    {"facet": "language", "visualattribute": "color"}
+                ],
+                [
+                    {"facet": "provider", "visualattribute": "color"}
+                ]
+            ]
+        },
+        {
+            "chart" : "landscape",
             "combinations": [
                 [
                     {"facet": "language", "visualattribute": "color"}

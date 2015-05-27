@@ -7,129 +7,161 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 
 	var Vis = visTemplate;
 	var data;
-  var urankCtrl;
+	var urankCtrl;
+	var receivedData_, mappingCombination_, iWidth_, iHeight_,  reAppendDiv= 0; 
+	var exxcessControlsContainer = "#eexcess_controls";
+	var exxcessFixedControls="#eexcess_fixed_controls";
 
-
-  var options = {
-    tagCloudRoot: '#eexcess_keywords_container',
-    tagBoxRoot: '#eexcess_keywords_box',
-    contentListRoot: '.urank .eexcess_result_list_outer',
-    visCanvasRoot: '#urank_canvas_inner',
-    docViewerRoot: '',
-    style: 'custom'
-  };
-  var init = function(urankController){
-    $('#btn_reset').click(urankController.reset);
-    $('#btn_sort_by_overall_score').click(urankController.rankByOverallScore);
-    $('#btn_sort_by_max_score').click(urankController.rankByMaximumScore);
-    urankCtrl = urankController;
-  };
-  Urank(init, options, 'urank/');
+	var options = {
+		tagCloudRoot : '#eexcess_keywords_container',
+		tagBoxRoot : '#eexcess_keywords_box',
+		contentListRoot : '.urank .eexcess_result_list_outer',
+		visCanvasRoot : '#urank_canvas_inner',
+		docViewerRoot : '',
+		style : 'custom',
+		tagCloudModule : "landscape"
+	};
 
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	/* Event handlers  */
+    var defaultLoadOptions = {
+        tagCloud : {
+            module: 'default',      // default || landscape
+        }
+    };
+
+
+	var init = function(urankController) {
+		$('#btn_reset').click(urankController.reset);
+		$('#btn_sort_by_overall_score').click(urankController.rankByOverallScore);
+		$('#btn_sort_by_max_score').click(urankController.rankByMaximumScore);
+		urankCtrl = urankController;
+	};
+	UrankLoader(init, options, 'urank/');
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/* Event handlers */
 
 	URANK.Evt = {};
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /*  Additional methods, if necessary*/
+	/*  Additional methods, if necessary*/
 
 	URANK.Internal = {
 
-    };
+		buildTagCloudChooserControll : function() {
+			var wordTagCloudOption = '<div><input type="radio" name="tagcloud" value="word-tagcloud" checked>word-tagcloud</Input></div>';
+			var landscapeTagCloudOption = '<div><input type="radio" name="tagcloud" value="landscape-tagcloud">landscape-tagcloud</input></div>';
+			var $tagCloudChooserContainer = $("<div id=\"tagCloudCooserContainer\"></div>").insertAfter(exxcessFixedControls);
+			$tagCloudChooserContainer.append((wordTagCloudOption + landscapeTagCloudOption)).hide(); 
+			$('#tagCloudCooserContainer input:radio').change(function() {
+				defaultLoadOptions.tagCloud.module = $(this).val() == "word-tagcloud" ? "default" : "landscape"; 
+				reAppendDiv = 1; 
+				URANK.Render.draw(receivedData_, mappingCombination_, iWidth_, iHeight_);
+			});
+		},
+		adaptUrankList : function() {
 
+		},
 
+		updateController : function() {
+			options.tagCloud = landscapeTagCloud;
+			if (drawUrankTagCloud) {
+				options.tagCloud = wordTagCloud;
+			}
+			urankCtrl = new UrankController(options);
+		}
+	};
+	URANK.Internal.buildTagCloudChooserControll();
 
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	URANK.Render = {};
 
+	/******************************************************************************************************************
+	 *
+	 *	Draw URANK vis
+	 *
+	 * ***************************************************************************************************************/
+	URANK.Render.draw = function(receivedData, mappingCombination, iWidth, iHeight) {
+		// receivedData = urankDemoData.data;
+		receivedData_ = JSON.parse(JSON.stringify(receivedData));
+		mappingCombination_ = mappingCombination;  
+		iWidth_ = iWidth;
+		iHeight_ = iHeight; 
+		var indexCounter = 0;
+		receivedData.forEach(function(d) {
+			d.id = d.id.replace(/([^A-Za-z0-9[\]{}_.:-])\s?/g, '_');
+			if (d.description == null || d.description == 'undefined') {
+				d.description = "";
+			}
+			d.description = d.description.clean();
+			d.index = indexCounter++;
+		});
+		$("#tagCloudCooserContainer").show(); 	
+		if(reAppendDiv == 0) {
+			$('#eexcess_select_chart').on('change', function() {
+			    if ($(this).val() != 'urank'){
+			    	$('#tagCloudCooserContainer').hide();
+					// $("#eexcess_content").append(urank_result_list);
+			    }
+			});
+			//$('#eexcess_fixed_controls').hide();
+			$('#eexcess_main_panel').addClass('urank');
+			$('.eexcess_result_list').empty();
+			$('#eexcess_vis_panel').prepend('<div id="eexcess_vis_panel_controls" class="clearfix">' + '    <div id="eexcess_ranking_controls">' + '        <button id="eexcess_btnreset">' + '            <img src="../../../media/batchmaster/refresh.png" title="Reset">' + '        </button>' + '        <button id="eexcess_btn_sort_by_overall_score" title="Sort by overall score" sort-by="overall_score">' + '            <img src="uRank/media/sort-down.png">' + '        </button>' + '        <button id="eexcess_btn_sort_by_max_score" title="Sort by maximum score" sort-by="max_score">' + '            <img src="uRank/media/sort-down.png">' + '        </button>' + '    </div>' + '    <div id="eexcess_keywords_box" class="ui-droppable"></div>' + '</div>', '');
+			$('#eexcess_canvas').append('<div class="eexcess_result_list_outer"></div><div id="urank_canvas_inner"></div>');
+			$('#eexcess_vis_panel').append('<div id="eexcess_keywords_container"></div>');
+			
+		
+		}
+		$("#eexcess_keywords_box").empty(); 
+		reAppendDiv = 0;
 
+		urankCtrl.loadData(JSON.stringify(receivedData), defaultLoadOptions);
+
+	};
+
+	URANK.Render.deleteCurrentSelect = function() {
+	};
+
+	var currentOneLayer = null;
 
 	/******************************************************************************************************************
-	*
-	*	Draw URANK vis
-	*
-	* ***************************************************************************************************************/
-	URANK.Render.draw = function( receivedData, mappingCombination, iWidth, iHeight ){
-        
-
-    //$('#eexcess_fixed_controls').hide();        
-    $('#eexcess_main_panel').addClass('urank');
-    $('.eexcess_result_list').empty();
-    $('#eexcess_vis_panel').prepend(
-           '<div id="eexcess_vis_panel_controls" class="clearfix">'+
-           '    <div id="eexcess_ranking_controls">'+
-           '        <button id="eexcess_btnreset">'+
-           '            <img src="../../../media/batchmaster/refresh.png" title="Reset">'+
-           '        </button>'+
-           '        <button id="eexcess_btn_sort_by_overall_score" title="Sort by overall score" sort-by="overall_score">'+
-           '            <img src="uRank/media/sort-down.png">'+
-           '        </button>'+
-           '        <button id="eexcess_btn_sort_by_max_score" title="Sort by maximum score" sort-by="max_score">'+
-           '            <img src="uRank/media/sort-down.png">'+
-           '        </button>'+
-           '    </div>'+
-           '    <div id="eexcess_keywords_box" class="ui-droppable"></div>'+
-           '</div>',
-           ''
-        );
-    $('#eexcess_canvas').append('<div class="eexcess_result_list_outer"></div><div id="urank_canvas_inner"></div>');
-    $('#eexcess_vis_panel').append('<div id="eexcess_keywords_container"></div>');
-
-    urankCtrl.loadData(JSON.stringify(urankDemoData.data));
-
+	 *
+	 *	Reset URANK  vis
+	 *
+	 * ***************************************************************************************************************/
+	URANK.Render.reset = function() {
 	};
-
-	URANK.Render.deleteCurrentSelect = function(){
-	};
-	
-  var currentOneLayer = null;
-	
 
 	/******************************************************************************************************************
-	*
-	*	Reset URANK  vis
-	*
-	* ***************************************************************************************************************/
-	URANK.Render.reset = function(  ){
+	 *
+	 *	Highlight items
+	 *   @param indexArray: array with items' indices to highlight. They match items in receivedData (parameter in Render.draw)
+	 *
+	 * ***************************************************************************************************************/
+	URANK.Render.highlightItems = function(indexArray) {
 	};
 
-
-
-    /******************************************************************************************************************
-	*
-	*	Highlight items
-    *   @param indexArray: array with items' indices to highlight. They match items in receivedData (parameter in Render.draw)
-	*
-	* ***************************************************************************************************************/
-	URANK.Render.highlightItems = function(indexArray){
-    };
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	URANK.Ext = {
-		draw: function( receivedData, mappingCombination, iWidth, iHeight ){ URANK.Render.draw(receivedData, mappingCombination, iWidth, iHeight); },
-		reset: function(){ URANK.Render.reset();	},
-        highlightItems: function(indexArray){ URANK.Render.highlightItems(indexArray); }
+		draw : function(receivedData, mappingCombination, iWidth, iHeight) {
+			URANK.Render.draw(receivedData, mappingCombination, iWidth, iHeight);
+		},
+		reset : function() {
+			URANK.Render.reset();
+		},
+		highlightItems : function(indexArray) {
+			URANK.Render.highlightItems(indexArray);
+		}
 	};
-
 
 	return URANK.Ext;
 

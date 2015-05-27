@@ -19,6 +19,7 @@ Settings.prototype.getDimensions = function( root, iWidth, iHeight ){
 			case "barchart": return getBarchartDimensions( root, iWidth, rootWidth, rootHeight); break;
             case "geochart": return getGeochartDimensions(root, rootWidth, rootHeight); break;   /*  TO DO   */
             case "urank": return getUrankDimensions(root, rootWidth, rootHeight); break;   /*  TO DO   */
+            case "landscape": return getLandscapeDimensions(root, iWidth, rootWidth, rootHeight); break; 
 		}
 		
 	};
@@ -69,7 +70,23 @@ function getGeochartDimensions(root, rootWidth, rootHeight){
 }
 
 function getUrankDimensions(root, rootWidth, rootHeight){
-    return {'width': rootWidth, 'height': rootHeight };
+	var rootHeight = $(root).height();
+    return {'rootHeight': rootHeight,'width': rootWidth, 'height': rootHeight };
+}
+
+function getLandscapeDimensions(root, iWidth, rootWidth, rootHeight){
+	var rootHeight = $(root).height();
+	var margin = { top: 50, bottom: 50, left: 80, right: 20 };
+	var height = rootHeight - margin.top - margin.bottom;
+	var width = rootWidth - margin.left - 140;
+    var centerOffset = (iWidth/2) - ((width + margin.left + margin.right)/2);
+	var verticalOffset = (rootHeight < 500) ? 20 : ($(root).height() - 500) / 2;
+	return {
+			'centerOffset': centerOffset, 'verticalOffset': verticalOffset, 
+			"width":width,
+			"height":height,		
+			"landscape" : {'width': width, 'height': height/3*2 }, 
+			"tagCloud" : {'width': width, 'height': height/3}};
 }
 
 
@@ -91,6 +108,7 @@ Settings.prototype.getInitData = function( data, mappings, arg ){
 		case "barchart" : return getBarchartInitData(preprocessedData, mappings, arg); break;
         case "geochart" : return getGeochartInitData(preprocessedData, mappings); break;   /*TO DO*/
         case "urank" : return getUrankInitData(preprocessedData, mappings); break;   /*TO DO*/
+        case "landscape" : return getLandscapeInitData(preprocessedData, mappings); break;   /*TO DO*/
 	}
 };
 
@@ -216,3 +234,45 @@ function getGeochartInitData(processedData, mappings){
 function getUrankInitData(processedData, mappings){
     return { 'data': processedData };
 }
+
+function getLandscapeInitData(processedData, initMapping){
+	
+    var mapping = [];
+
+    initMapping.forEach(function(m){
+        mapping[m.visualattribute] = m.facet;
+    });
+
+    var colorChannel = mapping['color'];
+    var data = [];
+
+    processedData.forEach(function(d) {
+
+        var obj = {
+            id : d.id,
+            title : d.title,
+            uri : d.uri,
+            language : d.facets.language,
+            year : d.facets.year,
+            provider : d.facets.provider,
+            country : d.facets.country,
+            keywords : d.facets.keywords,
+            isHighlighted : d.isHighlighted
+        };
+        data.push(obj);
+    });
+
+    var keywords = [];
+
+    data.forEach(function(d){
+        d.keywords.forEach(function(k){
+            if(keywords.indexOf(k) == -1)
+                keywords.push(k);
+        });
+    });
+
+    return {'data': processedData, 'colorChannel': colorChannel,
+            'keywords': keywords};
+    // return { 'data': processedData };
+}
+

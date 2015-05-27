@@ -616,7 +616,7 @@ Visualization Panel (center of screen)
 */
 #eexcess_vis_panel {
 	width:60%;
-    width:calc(100% - 400px);
+    width:calc(100% - 550px);
 	height: 100%;
     float:left;
 }
@@ -700,7 +700,7 @@ Visualization Panel (center of screen)
 	float: left;
 	display:inline-block;
 	vertical-align: top;
-  	width:230px;
+  	width:370px;
   	height: 100%;
 }
 
@@ -739,7 +739,7 @@ Visualization Panel (center of screen)
 	margin-top: 1px;
 	margin-right: 4px;
 	background-color: rgba(241, 241, 230, 0.9);
-	min-height: 60px;
+	height: 60px;
 	border: 1px solid rgba(119, 136, 153, 0.8);
 	-webkit-box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
 	box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
@@ -813,6 +813,20 @@ Visualization Panel (center of screen)
     width: 70%;
     overflow: hidden;
 }
+
+.eexcess_list_table_elem {
+    display: table;
+}
+.eexcess_list_row_elem {
+    display: table-cell;
+    width: 100px;
+    border: 0px solid gray;
+    vertical-align: middle;
+    text-align: center;
+    display:inline-table;
+}
+
+
 
 
 /*
