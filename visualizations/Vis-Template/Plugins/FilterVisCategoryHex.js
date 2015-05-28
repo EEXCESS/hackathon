@@ -23,7 +23,7 @@
 
     MiniBarchart.draw = function(allData, selectedData, inputData, $container, category, categoryValues, from, to){
         var data = inputData.data;    
-        require(['../js/pointspolygon'], function(){
+        require(['pointspolygon'], function(){
 
         var $vis = $container.find('.MiniBarChart');
         var points = null;
