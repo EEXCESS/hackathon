@@ -2,9 +2,9 @@ PluginHandler.registerPluginScripts([
 		'TestPlugin.js', 
 		'MiniVizTimeMockup.js' , 
 		'TestMiniVizGeo.js' , 
-		'TestMiniVizList.js' , 
-		//'TestMiniVizCategory.js'
-		'MiniVizCategoryMockup.js' 
+		'TestMiniVizList.js' , 	 
+		'FilterVisCategoryHex.js'
+		//'MiniVizCategoryMockup.js' 
 	]);
 
 
