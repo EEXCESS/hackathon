@@ -4,6 +4,7 @@ var FilterHandler = {
 	listFilter: null,
 	registeredFilterVisualisations : [],
 	filters : [],
+	inputData: {},
 	$filterRoot: null,
 	vis: null,
 	ext: null,
@@ -18,6 +19,10 @@ var FilterHandler = {
 		FilterHandler.$filterRoot.on('click', '.filter-keep', function(){
 			FilterHandler.makeCurrentPermanent();			
 		});
+	},
+	
+	setInputData: function(type, inputData){
+		FilterHandler.inputData[type] = inputData;
 	},
 
 	addEmptyFilter: function(doIncludeControls){		
@@ -104,10 +109,11 @@ var FilterHandler = {
 			FilterHandler.currentFilter.Object = PluginHandler.getFilterPluginForType(FilterHandler.currentFilter.type).Object;
 			FilterHandler.currentFilter.Object.initialize(FilterHandler.vis);
 		}
-		
+			
 		FilterHandler.currentFilter.Object.draw(
 			FilterHandler.vis.getData(), 
 			FilterHandler.currentFilter.dataWithinFilter,
+			FilterHandler.inputData[FilterHandler.currentFilter.type],
 			FilterHandler.currentFilter.$container,
 			FilterHandler.currentFilter.category, 
 			FilterHandler.currentFilter.categoryValues, 
@@ -152,6 +158,11 @@ var FilterHandler = {
 			
 		FilterHandler.clear(FilterHandler.listFilter);
 		FilterHandler.listFilter = null;
+	},
+	
+	clearListAndRefresh: function(){		
+		FilterHandler.clearList();
+		FilterHandler.ext.selectItems();
 	},
 
 	clear: function(filterToClear){

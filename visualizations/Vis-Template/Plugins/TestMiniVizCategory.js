@@ -7,7 +7,7 @@
 		// load other needed scripts (require.js is available)
 	};
 
-	TestMiniViz.draw = function(data, selectedData, $container, category, categoryValues, from, to){
+	TestMiniViz.draw = function(allData, selectedData, inputData, $container, category, categoryValues, from, to){
 		var $vis = $container.find('.TestMiniVizCategory');
 		if ($vis.length == 0){
 			$vis = $('<div class="TestMiniVizCategory">Hallo</div>').css('background-color', 'lightgrey').css('padding-top', '10px').css('padding-bottom', '10px');		
