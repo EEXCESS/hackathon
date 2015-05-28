@@ -67,6 +67,7 @@ var FilterHandler = {
 		FilterHandler.refreshCurrent();
 	},
 	
+	// rename dataItemSelected --> selectedDataItem
 	singleItemSelected: function(dataItemSelected, selectedWithAddingKey){
 		selectedWithAddingKey = selectedWithAddingKey || false;		
 		if (FilterHandler.listFilter == null)
