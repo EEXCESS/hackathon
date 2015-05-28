@@ -170,12 +170,15 @@ var FilterHandler = {
 			filterToClear.Object.finalize();
 			filterToClear.Object = null;
 		}
-		filterToClear.$container.parents('.filter-container-outer').empty();
+		filterToClear.$container.parents('.filter-container-outer').remove();
 	},
 
 	reset: function(){
 		FilterHandler.clearCurrent();
 		FilterHandler.clearList();
+		for (var i=0; i<FilterHandler.filters.length; i++){
+			FilterHandler.clear(FilterHandler.filters[i]);
+		}
 		FilterHandler.ext.selectItems();
 	},
 

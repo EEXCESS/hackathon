@@ -908,7 +908,7 @@ function Visualization( EEXCESSobj ) {
 			d3.selectAll( allListItems ).style("opacity", "1");
 		}
 		
-		VISPANEL.updateCurrentChart( 'highlight_item_selected', null,  dataToHighlightIds); // todo: remove
+		//VISPANEL.updateCurrentChart( 'highlight_item_selected', null,  dataToHighlightIds); // todo: remove
 	};
 	
 	LIST.scrollToFirst = function(){
