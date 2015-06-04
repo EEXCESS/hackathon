@@ -191,7 +191,7 @@ var LANGUAGE_SKILL_INPUT = LANGUAGE_SKILL + INPUT_SUFFIX;
 /** 
  * @attribute INTEREST_INPUT
  */
-var INTEREST_INPUT =INTERESTS + INPUT_SUFFIX;
+var INTEREST_INPUT = INTERESTS + INPUT_SUFFIX;
 
 // Display elements ends with "Display"
 /** 
