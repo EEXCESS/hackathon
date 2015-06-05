@@ -77,9 +77,9 @@ var CITY = "city";
  */
 var LOCATION = "location";
 /** 
- * @attribute BIRTHDATE
+ * @attribute AGE_RANGE
  */
-var BIRTHDATE ="birthdate";
+var AGE_RANGE ="ageRange";
 /** 
  * @attribute LANGUAGE
  */
@@ -92,7 +92,6 @@ var LANGUAGES = LANGUAGE + "s";
  * @attribute LANGUAGE_LABEL
  */
 var LANGUAGE_LABEL = LANGUAGE + "Label";
-
 /** 
  * @attribute LANGUAGE_SKILL
  */
@@ -111,9 +110,9 @@ var INTERESTS =INTEREST + "s";
  */
 var CLASS_TEXT = "eexcess-text";
 /** 
- * @attribute CLASS_DATE
+ * @attribute CLASS_AGE_RANGE
  */
-var CLASS_DATE = "eexcess-date";
+var CLASS_SELECT = "eexcess-select";
 /** 
  * @attribute CLASS_LANGUAGE
  */
@@ -144,6 +143,11 @@ var TAB_LANGUAGE_LABELS = ["Bulgarian", "Czech", "Danish", "Dutch", "English", "
  */
 var TAB_LANGUAGE_SKILLS = ["Fluent", "Intermediate", "Basic knowledge"];
 
+/**
+ * The default age range value is 2, i.e., Adult
+ * @attribute DEFAULT_AGE_RANGE_INDEX
+ */
+var DEFAULT_AGE_RANGE_INDEX = 2; // 2 = Adult
 /** 
  * The default language is English (TAB_LANGUAGE_LABELS[4]). 
  * @attribute DEFAULT_LANGUAGE_LABEL_INDEX
@@ -177,9 +181,9 @@ var COUNTRY_INPUT = COUNTRY + INPUT_SUFFIX;
  */
 var CITY_INPUT = CITY + INPUT_SUFFIX;
 /** 
- * @attribute BIRTHDATE_INPUT
+ * @attribute AGE_RANGE_INPUT
  */
-var BIRTHDATE_INPUT = BIRTHDATE + INPUT_SUFFIX;
+var AGE_RANGE_INPUT = AGE_RANGE + INPUT_SUFFIX;
 /** 
  * @attribute LANGUAGE_LABEL_INPUT
  */
@@ -207,9 +211,9 @@ var COUNTRY_DISPLAY = COUNTRY + DISPLAY_SUFFIX;
  */
 var CITY_DISPLAY = CITY + DISPLAY_SUFFIX;
 /** 
- * @attribute BIRTHDATE_DISPLAY
+ * @attribute AGE_RANGE_DISPLAY
  */
-var BIRTHDATE_DISPLAY = BIRTHDATE + DISPLAY_SUFFIX;
+var AGE_RANGE_DISPLAY = AGE_RANGE + DISPLAY_SUFFIX;
 /** 
  * @attribute LANGUAGE_LABEL_DISPLAY
  */
@@ -233,9 +237,9 @@ var NAME_POLICY = NAME + POLICY_SUFFIX;
  */
 var LOCATION_POLICY= LOCATION + POLICY_SUFFIX;
 /** 
- * @attribute BIRTHDATE_POLICY
+ * @attribute AGE_RANGE_POLICY
  */
-var BIRTHDATE_POLICY = BIRTHDATE + POLICY_SUFFIX;
+var AGE_RANGE_POLICY = AGE_RANGE + POLICY_SUFFIX;
 /** 
  * @attribute LANGUAGE_POLICY
  */
@@ -250,16 +254,16 @@ var INTEREST_POLICY = INTERESTS + POLICY_SUFFIX;
  * List of all the input elements (e.g., birthDateInput). 
  * @attribute INPUTS
  */
-var INPUTS = [NAME_INPUT, COUNTRY_INPUT, CITY_INPUT, BIRTHDATE_INPUT, LANGUAGE_LABEL_INPUT, LANGUAGE_SKILL_INPUT, INTEREST_INPUT];
+var INPUTS = [NAME_INPUT, COUNTRY_INPUT, CITY_INPUT, AGE_RANGE_INPUT, LANGUAGE_LABEL_INPUT, LANGUAGE_SKILL_INPUT, INTEREST_INPUT];
 /** 
  * List of all the display element (e.g., birthDateDisplay). 
  * A value can be null if the corresponding input is never displayed (e.g., nameInput). 
  * @attribute DISPLAYS
  */
-var DISPLAYS = [null, COUNTRY_DISPLAY, CITY_DISPLAY, BIRTHDATE_DISPLAY, LANGUAGE_LABEL_DISPLAY, LANGUAGE_SKILL_DISPLAY, INTEREST_DISPLAY];
+var DISPLAYS = [null, COUNTRY_DISPLAY, CITY_DISPLAY, AGE_RANGE_DISPLAY, LANGUAGE_LABEL_DISPLAY, LANGUAGE_SKILL_DISPLAY, INTEREST_DISPLAY];
 /** 
  * List of all the policy elements (e.g., birthDatePolicy). 
  * A value can appear multiple times when several input values depend on the same button (e.g., countryInput and cityInput). 
  * @attribute POLICIES
  */
-var POLICIES = [NAME_POLICY, LOCATION_POLICY, LOCATION_POLICY, BIRTHDATE_POLICY, LANGUAGE_POLICY, LANGUAGE_POLICY, INTEREST_POLICY];
+var POLICIES = [NAME_POLICY, LOCATION_POLICY, LOCATION_POLICY, AGE_RANGE_POLICY, LANGUAGE_POLICY, LANGUAGE_POLICY, INTEREST_POLICY];

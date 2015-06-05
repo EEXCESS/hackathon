@@ -13,6 +13,15 @@ function getTextInputs(){
 }
 
 /**
+ * Returns all the select input elements of class CLASS_SELECT. 
+* @method getSelectInputs
+* @return {NodeList} list of elements. 
+*/
+function getSelectInputs(){
+	return document.getElementsByClassName(CLASS_SELECT);
+}
+
+/**
 * Initializes the text input elements of the form. 
 * Values are taken from the data store. 
 * @method initTextInputs
@@ -30,6 +39,24 @@ function initTextInputs(){
 }
 
 /**
+ * Initializes the select input elements of the form. 
+ * Values are taken from the data store. 
+ * @method initSelectInputs
+ */
+function initSelectInputs(){
+	var selectInputs = getSelectInputs();
+	for (var i = 0 ; i < selectInputs.length ; i++) {
+		var input = selectInputs[i];
+		var inputId = input.getAttribute("id");
+		var value = getStoredValue(inputId);
+		if (value == null){
+			value = DEFAULT_AGE_RANGE_INDEX;
+		}
+		input.value = value;
+	}
+}
+
+/**
  * Display the new value of the element, and save it in the data store.
  * The HTML is updated in case it has to be done (e.g., for select input field).  
  * @param {Element} element Element which has just been modified. 
@@ -41,9 +68,9 @@ function elementListener(element, clas){
 	displayElement(element);
 	if (clas == CLASS_LANGUAGE){
 		saveLanguages();
-	} else if (clas == CLASS_TEXT){
-		saveInput(input);
-	}
+	} else if ((clas == CLASS_TEXT) || (clas == CLASS_SELECT)){
+		saveInput(element);
+	} 
 }
 
 /**

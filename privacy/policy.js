@@ -4,8 +4,8 @@
  */
 
 /**
- * TODO
- * @returns {NodeList}
+ * Retrieves all the button groups contained in the page. 
+ * @returns {NodeList} List of button groups. 
  * @method getButtonGroups
  */
 function getButtonGroups(){
@@ -13,9 +13,8 @@ function getButtonGroups(){
 }
 
 /**
- * 
- * TODO
- * @returns {NodeList}
+ * Retrieves all the buttons contained in the page. 
+ * @returns {NodeList} List of buttons. 
  * @method getButtons
  */
 function getButtons(){
@@ -23,7 +22,7 @@ function getButtons(){
 }
 
 /**
- * TODO
+ * Initializes all the buttons contained in the page. 
  * @method initButtons
  */
 function initButtons(){
@@ -34,8 +33,8 @@ function initButtons(){
 }
 
 /**
- * TODO
- * @param {Element} buttonGroup
+ * Initializes all the buttons of a given button group. 
+ * @param {Element} buttonGroup Button group element containing the buttons that must be initialized. 
  * @method initButtonGroup
  */
 function initButtonGroup(buttonGroup){
@@ -73,8 +72,9 @@ function initButtonGroup(buttonGroup){
 }
 
 /**
- * TODO
- * @param button
+ * Updates a given button: changes the appearance according to a user's action, 
+ * triggers the display of the value (depending on the level of privacy). 
+ * @param {Element} button Element corresponding to the button to be updated. 
  * @method updateButton
  */
 function updateButton(button){
@@ -108,9 +108,9 @@ function updateButton(button){
 }
 
 /**
- * TODO
- * @param {Element} buttonGroup
- * @returns {Integer}
+ * Retrieves the level of privacy of a given button group (i.e., attribute). 
+ * @param {Element} buttonGroup Element corresponding to the button group. 
+ * @returns {Integer} The level of privacy. 
  * @method getPolicyLevel
  */
 function getPolicyLevel(buttonGroup) {
@@ -126,8 +126,10 @@ function getPolicyLevel(buttonGroup) {
 }
 
 /**
- * TODO
- * @param {Element} button
+ * Listener invoked when a given policy button is clicked. 
+ * It update the button, save the value of the button (i.e., the level of privacy), 
+ * and triggers the display of the value corresponding to the attribute. 
+ * @param {Element} button Element corresponding to the button. 
  * @method policyButtonListener
  */
 function policyButtonListener(button){ 
@@ -143,10 +145,11 @@ function policyButtonListener(button){
 }
 
 /**
- * TODO
- * @param {Element} element
- * @param {String} typePolicy
- * @param {Integer} defaultPolicyLevel
+ * Resets the value of the privacy level of a given attribute. 
+ * It is invoked when an attribute is removed (e.g., a language or an interest). 
+ * @param {Element} element Element corresponding to the attribute. 
+ * @param {String} typePolicy Type of attribute considered (i.e., language LANGUAGE_POLICY or interest INTEREST_POLICY). 
+ * @param {Integer} defaultPolicyLevel The default level of privacy for the considered attribute.  
  * @method resetElementPolicy
  */
 function resetElementPolicy(element, typePolicy, defaultPolicyLevel){

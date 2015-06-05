@@ -4,8 +4,9 @@
  */
 
 /**
+ * Returns all the nodes embedding a fields related to the topics of interest. 
+ * @returns {ListNode} List of interest inputs.
  * @method getInterestInputs
- * @returns {ListNode} list of interest inputs.
  */
 function getInterestInputs(){
 	return document.getElementsByClassName(CLASS_INTEREST);
@@ -13,7 +14,7 @@ function getInterestInputs(){
 
 /**
  * Initializes the interests with the values from the data store. 
- * It generates the HTML code, initializes the TagIt fields, adds the listeners and initializes the buttons.  
+ * It generates the HTML code, initializes the TagIt fields, adds the listeners and initializes the buttons. 
  * @method initInterests
  */
 function initInterests(){ 
@@ -132,7 +133,7 @@ function updateInterestListeners(){
 
 /**
  * Generate the HTML code to insert a new interest. 
- * @param {Integer} index Index of the interest to add.  
+ * @param {Integer} index Index of the interest to add. 
  * @returns {String} HTML code. 
  * @method generateCodeInterest
  */
@@ -230,10 +231,10 @@ function removeTopic(interests, interestId, label){
 }
 
 /**
- * Removes the listener assigned to a link. 
+ * Removes the listener assigned to a link element. 
  * This method is used when an interest is removed to make sure the removal is done properly. 
  * It resets the policy level, remove the HTML code, and save the interests. 
- * @param link
+ * @param {Element} link Element corresponding to the link. 
  * @method removeInterestListener
  */
 function removeInterestListener(link){

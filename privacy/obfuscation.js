@@ -4,9 +4,9 @@
  */
 
 /**
- * TODO
- * @param {Element} field
- * @returns {String}
+ * Blurs a specific field according to the level of privacy assigned by the user. 
+ * @param {Element} field The field to be blurred.  
+ * @returns {String} The blurred value.   
  * @method blurField
  */
 function blurField(field){
@@ -14,67 +14,44 @@ function blurField(field){
 	var fieldId = field.getAttribute("id");
 	var policyElement = getPolicyElementFromElement(field);
 	var level = getPolicyLevel(policyElement); 
-	if (fieldId == BIRTHDATE_INPUT){		
-		result = blurBirthdate(field.value, level);
-	} else {
-		var value = "";
-		var threshold = MAX_POLICY_THRESHOLD; 
-		if (fieldId == COUNTRY_INPUT){
-			threshold = 1;
-			value = field.value;
-		} else if (fieldId == CITY_INPUT){
-			threshold = 2;
-			value = field.value;
-		} else if (fieldId.startsWith(LANGUAGE_LABEL_INPUT) || fieldId.startsWith(LANGUAGE_SKILL_INPUT)){
-			threshold = 1;
-			value = field.options[field.selectedIndex].value;
-		} else if (fieldId.startsWith(INTEREST_INPUT)){
-			threshold = 1;
-			var topics = $("#" + fieldId).tagit("assignedTags");
-			value = "";
-			if (topics != null){
-				for (var i = 0 ; i < topics.length ; i++){
-					value += topics[i];
-					if (i != (topics.length - 1)){
-						value += ", ";
-					}
-				}
+	var value = "";
+	var threshold = MAX_POLICY_THRESHOLD; 
+	if (fieldId == COUNTRY_INPUT){
+		threshold = 1;
+		value = field.value;
+	} else if (fieldId == CITY_INPUT){
+		threshold = 2;
+		value = field.value;
+	} else if (fieldId == AGE_RANGE_INPUT){
+		threshold = 1;
+		value = field.options[field.selectedIndex].textContent;
+	} else if (fieldId.startsWith(LANGUAGE_LABEL_INPUT) || fieldId.startsWith(LANGUAGE_SKILL_INPUT)){
+		threshold = 1;
+		value = field.options[field.selectedIndex].value;
+	} else if (fieldId.startsWith(INTEREST_INPUT)){
+		threshold = 1;
+		var topics = $("#" + fieldId).tagit("assignedTags");
+		value = "";
+		if (topics != null){
+			for (var i = 0 ; i < topics.length ; i++){
+				value += topics[i];
+				if (i != (topics.length - 1)){
+					value += ", ";
+				}				
 			}
-		} 
-		result = blurValue(value, level, threshold);
-	}
-	return result;
-}
-
-/**
- * TODO
- * @param {String} birthdate
- * @param {Integer} level
- * @returns {String}
- * @method blurBirthdate
- */
-function blurBirthdate(birthdate, level){
-	var result = "";
-	if ((level != 0) && (birthdate != "")){
-		var strBirthdate = birthdate.toString();
-		var yearBirth = strBirthdate.substring(0, 4);
-		if (level == 1){
-			var lowerBound = yearBirth - (yearBirth%10);
-			var upperBound = lowerBound + 10;
-			result = "[" + lowerBound + ", " + upperBound + "]";
-		} else if (level == 2){
-			result = yearBirth;
 		}
-	}
+	} 
+	result = blurValue(value, level, threshold);
 	return result;
 }
 
 /**
- * TODO
- * @param {String} value
- * @param {Integer} level
- * @param {Integer} threshold
- * @returns {String}
+ * Blurs a specific value according to the policy level and the threshold for this value. 
+ * The value is blurred if and only if the level is lower than the threshold. 
+ * @param {String} value Value to be blurred. 
+ * @param {Integer} level Level of privacy assigned the user. 
+ * @param {Integer} threshold Threshold used to decide if a value must be blurred. 
+ * @returns {String} The blurred value. 
  * @method blurValue
  */
 function blurValue(value, level, threshold){

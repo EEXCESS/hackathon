@@ -4,8 +4,8 @@
  */
 
 /**
- * TODO
- * @returns
+ * Retrieves all the nodes embedding a fields related to the languages. 
+ * @returns {ListNode} List of languages inputs.
  * @method getLanguageSelects
  */
 function getLanguageSelects(){
@@ -13,7 +13,8 @@ function getLanguageSelects(){
 }
 
 /**
- * TODO
+ * Initializes the languages with the values from the data store. 
+ * It generates the HTML code, initializes the fields, adds the listeners and initializes the buttons. 
  * @method initLanguages
  */
 function initLanguages(){
@@ -29,7 +30,7 @@ function initLanguages(){
 }
 
 /**
- * TODO
+ * Adds a language: generates the HTML code, adds the listeners, initializes the buttons, saves the interests and update the listeners.
  * @method addNewLanguage
  */
 function addNewLanguage(){
@@ -47,7 +48,8 @@ function addNewLanguage(){
 }
 
 /**
- * TODO
+ * Updates the listeners for all the languages: 
+ * field listeners, listener for the removal of a language, and buttons listeners. 
  * @method updateLanguageListeners
  */
 function updateLanguageListeners(){
@@ -72,11 +74,11 @@ function updateLanguageListeners(){
 }
 
 /**
- * TODO
- * @param index
- * @param label
- * @param skill
- * @returns {String}
+ * Generate the HTML code to insert a new language. 
+ * @param {Integer} index Index of the interest to add. 
+ * @param {String} label Label of the language (e.g., English, French). 
+ * @param {String} skill Level of skill for the aforementioned languages (e.g., Fluent, Intermediate). 
+ * @returns {String} HTML code. 
  * @method generateCodeLanguage
  */
 function generateCodeLanguage(index, label, skill){
@@ -141,7 +143,7 @@ function generateCodeLanguage(index, label, skill){
 }
 
 /**
- * TODO
+ * Saves all the languages: extract the values from the form and store it in the data store. 
  * @method saveLanguages
  */
 function saveLanguages(){
@@ -168,8 +170,10 @@ function saveLanguages(){
 }
 
 /**
- * TODO
- * @param link
+ * Removes the listener assigned to a link element. 
+ * This method is used when a language is removed to make sure the removal is done properly. 
+ * It resets the policy level, remove the HTML code, and save the languages. 
+ * @param {Element} link Element corresponding to the link. 
  * @method removeLanguageListener
  */
 function removeLanguageListener(link){
@@ -179,7 +183,7 @@ function removeLanguageListener(link){
 }
 
 /**
- * TODO
+ * Listener invoked when a language must be added. 
  * @method addLanguageListener
  */
 function addLanguageListener(){ 

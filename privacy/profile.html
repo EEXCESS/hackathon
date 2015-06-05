@@ -66,23 +66,26 @@
 								</div>
 							</div>
 						</div>
-						<!-- Birth date -->
+						<!-- Age range -->
 						<div class="row">
 							<div class="panel-body">
 								<div class="col-md-3">
 									<div class="input-group">
 										<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-										<input id="birthdateInput" type="text" class="form-control datepicker eexcess-text eexcess-date" data-date-format="yyyy-mm-dd" placeholder="Enter your birth date" />
+										<select id="ageRangeInput" class="form-control eexcess-select">
+											<option value="0">Child</option>
+											<option value="1">Young adult</option>
+											<option value="2">Adult</option>
+										</select>
 									</div>
 								</div>
 								<div class="col-md-3"></div>
-								<div id="birthdatePolicy" class="btn-group col-md-2" role="group">
+								<div id="ageRangePolicy" class="btn-group col-md-2" role="group">
 									<button type="button" class="btn btn-default eexcess-button">Hidden</button>
-									<button type="button" class="btn btn-default eexcess-button">Range</button>
-									<button type="button" class="btn btn-default eexcess-button">Year</button>
+									<button type="button" class="btn btn-default eexcess-button">Disclosed</button>
 								</div>
 								<div class="col-md-4">
-									Value shared with the system: <span id="birthdateDisplay"></span>
+									Value shared with the system: <span id="ageRangeDisplay"></span>
 								</div>
 							</div>
 						</div>
@@ -131,53 +134,6 @@
 					</form>
 				</div>
 			</div>
-			
-			<!--<div class="panel-body">
-				<div class="panel panel-info">
-					<div class="panel-heading">
-						<h3 class="panel-title">
-							Interests <span class="badge pull-right setting"></span>
-						</h3>
-					</div>
-					<form class="form-horizontal">
-						<div id="interests" class="row">
-							<div id="interest0" class="row">
-								<div class="panel-body">
-									<div class="col-md-6">
-										<div class="row">
-											<div class="col-md-1">
-												<div class="panel-body">
-													<a id="removeInterest0" class="removeInterest" style="color: red;" href="#x"><span class="glyphicon glyphicon-remove"></span></a>
-												</div>
-											</div>
-											<div class="col-md-11 row">
-												<div class="input-group">
-													<ul id="myTags"></ul>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div id="interestsPolicy0" class="btn-group col-md-2" role="group">
-										<button type="button"  class="btn btn-default eexcess-button" ParentId="interestsPolicy0">Hidden</button>
-										<button type="button"  class="btn btn-default eexcess-button" ParentId="interestsPolicy0">Disclosed</button>
-									</div>
-									<div class="col-md-4">Value shared with the system: 
-										<span id="interestsDisplay0"></span>
-									</div>
-								</div>
-							</div>
-						
-						</div>
-						<div class="row">
-							<div class="panel-body">
-								<div class="col-md-12">
-									<a id="addInterest" href="#x"><span class="glyphicon glyphicon-plus"></span> Add interests</a>
-								</div>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div> -->
 			
 		</div>
 		

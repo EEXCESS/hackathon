@@ -56,6 +56,7 @@ window.addEventListener("load", createListeners, false);
  */
 function init(){
 	initTextInputs();
+	initSelectInputs();
 	initLanguages();
 	initInterests();
 	initButtons();
@@ -69,6 +70,7 @@ function init(){
  */
 function display(){
 	displayElements(getTextInputs());
+	displayElements(getSelectInputs());
 	displayElements(getLanguageSelects());
 	displayElements(getInterestInputs());
 }
@@ -92,6 +94,12 @@ function createListeners(){
 	for (var i = 0 ; i < textInputs.length ; i++) {
 		var textInput = textInputs[i];
 		textInput.addEventListener("change", function(){ elementListener(this, CLASS_TEXT); });
+	}
+	// Select inputs
+	var selectInputs = getSelectInputs();
+	for (var i = 0 ; i < selectInputs.length ; i++) {
+		var selectInput = selectInputs[i];
+		selectInput.addEventListener("change", function(){ elementListener(this, CLASS_SELECT); });
 	}
 	// Languages
 	var selects = getLanguageSelects();

@@ -46,11 +46,12 @@ function getPolicyElementFromElement(element){
 }
 
 /**
- * 
- * TODO
- * @param {Element} inputElement
- * @param {Array} array
- * @returns
+ * Retrieves an element given an input element and an array of identifiers. 
+ * The array looks like ["aPolicy", "bPolicy", ..., "zPolicy"]. INPUTS, DISPLAYS and POLICIES (in constants.js) are such arrays. 
+ * For instance, getElementFromElement(anAttributeInputElement, POLICIES) returns anAttributePolicyElement. 
+ * @param {Element} inputElement The input element. 
+ * @param {Array} array Array of identifiers. 
+ * @returns {Element} The element corresponding to the input element. 
  * @method getElementFromElement
  */
 function getElementFromElement(inputElement, array){
@@ -63,6 +64,7 @@ function getElementFromElement(inputElement, array){
 		inputElementIdRoot = inputElementId.replace(inputElementIdNum, "");
 	}
 	var outputElementIdRoot = getElementIdFromId(inputElementIdRoot, array);
+	
 	if (outputElementIdRoot != null){
 		outputElement = document.getElementById(outputElementIdRoot + inputElementIdNum);
 	}
@@ -99,7 +101,7 @@ function getElementIdFromId(id, array){
 /**
  * Determines if a string ends with a number. 
  * @param {String} str String to be analyzed. 
- * @returns {Boolean} True if the "str" ends with a number; False otherwise. 
+ * @returns {Boolean} True if the input string ends with a number; False otherwise. 
  * @method endsWithNumber
  */
 function endsWithNumber(str){
@@ -117,9 +119,11 @@ function extractEndingNumber(str){
 }
 
 /**
- * TODO
- * @param policyElement
- * @returns {Array}
+ * Retrieves all the elements corresponding to a policy element. 
+ * There is more than one element for a policy element, as several attributes may depend on it. 
+ * For instance, "countryInput" and "cityInput" both depends on "locationPolicy".  
+ * @param {Element} policyElement Policy element.
+ * @returns {Array} Array containing all the elements corresponding to the policy element. 
  * @method getInputElementsFromPolicyElement
  */
 function getInputElementsFromPolicyElement(policyElement){
@@ -143,9 +147,10 @@ function getInputElementsFromPolicyElement(policyElement){
 }
 
 /**
- * TODO
- * @param element
- * @param className
+ * Removes a class from an element. 
+ * For instance removeClass(<anElement class="a b c"/>, "b") returns <anElement class="a c"/>. 
+ * @param {Element} element Element to be altered. 
+ * @param {String} className Name of the class to be removed.  
  * @method removeClass
  */
 function removeClass(element, className){
@@ -154,9 +159,10 @@ function removeClass(element, className){
 }
 
 /**
- * TODO
- * @param element
- * @param className
+ * Adds a class to an element. 
+ * For instance addClass(<anElement class="a c"/>, "b") modifies the element to become: <anElement class="a b c"/>. 
+ * @param {Element} element Element to be altered. 
+ * @param {String} className Name of the class to be removed.  
  * @method addClass
  */
 function addClass(element, className){
@@ -167,9 +173,10 @@ function addClass(element, className){
 }
 
 /**
- * TODO
- * @param removeElement
- * @param type
+ * Removes an element (e.g., language and interest) from the page. 
+ * For instance removeElement(<a id="removeInterest3" .../>, INTEREST) removes the element "interest3" from the list of interests. 
+ * @param {Element} removeElement Element to b
+ * @param {String} type Type of the element to be removed. 
  * @method removeElement
  */
 function removeElement(removeElement, type){
@@ -180,9 +187,9 @@ function removeElement(removeElement, type){
 }
 
 /**
- * TODO
- * @param element
- * @param type
+ * Updates a given element (of a certain type). It is needed when a select menu has been modified. 
+ * @param element Element to be updated. 
+ * @param type Type of the element (i.e., language CLASS_LANGUAGE or interest CLASS_INTEREST). 
  * @method updateHtml
  */
 function updateHtml(element, type){
