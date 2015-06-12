@@ -843,11 +843,11 @@ eexcess_list.hovered
 
 
 .eexcess-urank-li-light-background {
-    background: #efefef;
+    /* background: #efefef; */
 }
 
 .eexcess-urank-li-dark-background {
-    background: #dadada;
+   /* background: #dadada; */
 }
 
 
