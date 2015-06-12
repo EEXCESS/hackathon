@@ -133,7 +133,8 @@ EEXCESS.frCall_impl = function(queryData, start, numResults, success, error) {
             EEXCESS.qXHR.abort();
         }
         EEXCESS.qXHR = $.ajax({
-            url: 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/recommend',
+            // url: 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/recommend',
+            url: 'http://eexcess.joanneum.at/eexcess-privacy-proxy/api/v1/recommend',
             data: JSON.stringify(profile),
             type: 'POST',
             contentType: 'application/json; charset=UTF-8',

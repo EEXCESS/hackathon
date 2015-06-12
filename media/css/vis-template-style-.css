@@ -616,7 +616,7 @@ Visualization Panel (center of screen)
 */
 #eexcess_vis_panel {
 	width:60%;
-    width:calc(100% - 550px);
+    width:calc(100% - 480px);
 	height: 100%;
     float:left;
 }
@@ -700,15 +700,15 @@ Visualization Panel (center of screen)
 	float: left;
 	display:inline-block;
 	vertical-align: top;
-  	width:370px;
+  	width:300px;
   	height: 100%;
 }
 
 #eexcess_collections{
     height:50px;
     text-align: left;
-    border-bottom: 1px solid #e4e4e4;
-    margin-bottom:4px;
+  /*  border-bottom: 1px solid #e4e4e4;
+    margin-bottom:4px; */
 }
 
 
@@ -739,7 +739,7 @@ Visualization Panel (center of screen)
 	margin-top: 1px;
 	margin-right: 4px;
 	background-color: rgba(241, 241, 230, 0.9);
-	height: 60px;
+	height: 45px;
 	border: 1px solid rgba(119, 136, 153, 0.8);
 	-webkit-box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
 	box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
@@ -749,7 +749,7 @@ Visualization Panel (center of screen)
 /*
     <li> itmes' hover style
 */
-.eexcess_list:hover {
+.eexcess_list:hover, .eexcess_list.hovered  {
 	background: rgba(250, 250, 205, 0.7);
 }
 
@@ -823,9 +823,55 @@ Visualization Panel (center of screen)
     border: 0px solid gray;
     vertical-align: middle;
     text-align: center;
+    padding-left: 3px;
     display:inline-table;
 }
 
+/******************************** CUSTOM URANK LIST *******************************************************/
+/*
+eexcess_result_list
+*/
+
+/*
+eexcess_list
+*/
+
+
+/*
+eexcess_list.hovered
+*/
+
+
+.eexcess-urank-li-light-background {
+    background: #efefef;
+}
+
+.eexcess-urank-li-dark-background {
+    background: #dadada;
+}
+
+
+.eexcess-urank-li-ranking-container {
+
+}
+
+.eexcess-urank-li-title-container {
+
+}
+
+.eexcess-urank-li-title {
+
+}
+
+.eexcess-urank-list-buttons-container {
+
+}
+
+.eexcess-urank-favicon {
+
+}
+
+/******************************** URANK LIST *******************************************************/
 
 
 

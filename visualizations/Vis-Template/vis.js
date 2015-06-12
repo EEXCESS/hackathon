@@ -740,8 +740,22 @@ function Visualization( EEXCESSobj ) {
 			var favContainerWidth = listContentWidth/100 * 10 + "px";;
 	
 			var eexcessVisPanelWidth = "eexcess_vis_panel_width";  */
-					var listElemAsRowElem = "eexcess_list_row_elem";
+			var listElemAsRowElem = "eexcess_list_row_elem";
 			var listHeaderAsTableElem = "eexcess_list_table_elem";
+			
+			var eexcessResultList = "eexcess_result_list"; 
+			var eexcessList = "eexcess_list"; 
+			var eexcessListHovered = "eexcess_list.hovered";
+			var eexcessUrankLiRankingContainer = "eexcess-urank-li-ranking-container";
+			var eexcessUrankLiTitleContainer = "eexcess-urank-li-title-container";
+			var eexcessUrankLiTitle = "eexcess-urank-li-title";
+			var eexcessUrankLiLightBg = "eexcess-urank-li-light-background";
+			var eexcessUrankLiDarkBg = "eexcess-urank-li-dark-background";
+
+
+			var eexcessUrankLiButtonsContainer = "eexcess-urank-list-buttons-container"; 
+			var eexcessUrankLiFavIcon = "eexcess-urank-favicon"; 
+						
 			
 			var rankingContainer = "0%";
 			var prevImgWidth = "12%";
@@ -757,15 +771,15 @@ function Visualization( EEXCESSobj ) {
 	
 			var aListItem = listData.enter()
 				.append("li")
-				.attr("class", "eexcess_list")
+				.attr("class", eexcessList)
 				.attr("id", function(d, i){ return "data-pos-"+i; })
 				.on("click", EVTHANDLER.listItemClicked);
 	
 			rankingContainer = aListItem.append("div")
-				.attr("class", listElemAsRowElem)
+				.attr("class", listElemAsRowElem + " " + eexcessUrankLiRankingContainer)
 				.attr("name", "rankingCongainer")
 				.style("width",rankingContainer)
-				.style("height","60px")
+	
 	
 			// div 1 groups the preview image, partner icon and link icon
 			iconsDiv = aListItem.append("div")
@@ -774,11 +788,12 @@ function Visualization( EEXCESSobj ) {
 	
 			iconsDiv.append("a")
 				.attr("href", "#")
+				.attr('target','_blank')
 				.append("img")
 				.attr("class", "eexcess_preview")
 				.attr("src", function(d){ return d.previewImage || NO_IMG ; })
-				.style("width","45px")
-				.style("height","45px")
+				.style("width","40px")
+				.style("height","40px")
 	;
 	
 	
@@ -786,14 +801,15 @@ function Visualization( EEXCESSobj ) {
 	
 			// div 2 wraps the recommendation title (as a link), a short description and a large description (not used yet)
 			var contentDiv = aListItem.append("div")
-				.attr("class", listElemAsRowElem)
+				.attr("class", listElemAsRowElem + " " + eexcessUrankLiTitleContainer)
 				.style("width",contentWidth)
 	
 	
 			contentDiv.append("h1")
 				.append("a")
-				.attr("class", "eexcess_ritem_title eexcess_list_title_text")
+				.attr("class", eexcessUrankLiTitle)
 				.attr("href", function(d){return d.uri;})
+				.attr('target','_blank')
 				.on("click", function(d){
 					d3.event.preventDefault();
 					d3.event.stopPropagation();
@@ -804,8 +820,8 @@ function Visualization( EEXCESSobj ) {
 				})
 				.text(function(d){ 
 					if (d.title.length > 60) {
-					    var words =  d.title.substr(0,60);
-					    if (/^\S/.test(d.title.substr(60))) {
+					    var words =  d.title.substr(0,45);
+					    if (/^\S/.test(d.title.substr(45))) {
 				            return words.replace(/\s+\S*$/, "") + "...";
 				        }
 				        return words + "...";
@@ -840,7 +856,7 @@ function Visualization( EEXCESSobj ) {
 				.attr("src", function(d){ return d['provider-icon']; });
 	
 			var bookmarkDiv = aListItem.append('div')
-				.attr('class', listElemAsRowElem)
+				.attr('class', listElemAsRowElem + " " + eexcessUrankLiButtonsContainer)
 				.style("width",iconsContainerWidth)
 	
 	
@@ -911,6 +927,39 @@ function Visualization( EEXCESSobj ) {
 			}
 		}
 	};
+	
+	/**
+	 * Draws legend color icons in each content list item
+	 * */
+	LIST.selectListItem = function( d, i, flagSelectedOutside, addItemToCurrentSelection){
+
+		var addItemToCurrentSelection = addItemToCurrentSelection || false;
+		var isSelectedFromOutside = flagSelectedOutside || false;
+		var index = i;
+		var indicesToHighlight = [];
+
+		var indexWasAlreadySelected = LIST.indicesSelected.indexOf(index) > -1;
+
+		if (addItemToCurrentSelection)
+			indicesToHighlight = LIST.indicesSelected;
+
+		if (indexWasAlreadySelected)
+			indicesToHighlight.splice(indicesToHighlight.indexOf(index), 1);
+		else
+			indicesToHighlight.push(index);
+
+		LIST.indicesSelected = indicesToHighlight;
+		if (indicesToHighlight.length == 0)
+			indicesToHighlight = VISPANEL.getAllSelectListItems();
+
+		if( !flagSelectedOutside )
+			VISPANEL.updateCurrentChart( 'highlight_item_selected', indicesToHighlight ); // todo: remove
+
+		var dataItemSelected = LIST.internal.getDataItemsFromIndices(data, [index]);
+		var selectedWithAddingKey = addItemToCurrentSelection;
+		FilterHandler.singleItemSelected(dataItemSelected[0], selectedWithAddingKey);	
+	};
+	
 
 	
 	/**

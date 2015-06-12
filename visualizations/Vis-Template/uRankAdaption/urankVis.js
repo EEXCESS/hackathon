@@ -11,6 +11,20 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 	var receivedData_, mappingCombination_, iWidth_, iHeight_,  reAppendDiv= 0; 
 	var exxcessControlsContainer = "#eexcess_controls";
 	var exxcessFixedControls="#eexcess_fixed_controls";
+	
+
+	var eexcessResultList = ".eexcess_result_list";
+	var eexcessList = ".eexcess_list";
+	var eexcessListHovered = ".eexcess_list.hovered";
+	var eexcessUrankLiRankingContainer = ".eexcess-urank-li-ranking-container";
+	var eexcessUrankLiTitleContainer = ".eexcess-urank-li-title-container";
+	var eexcessUrankLiTitle = ".eexcess-urank-li-title";
+	var eexcessUrankLiLightBg = "eexcess-urank-li-light-background";
+	var eexcessUrankLiDarkBg = "eexcess-urank-li-dark-background";
+
+	var eexcessUrankLiButtonsContainer = "eexcess-urank-list-buttons-container";
+	var eexcessUrankLiFavIcon = "eexcess-urank-favicon";
+
 
 	var options = {
 		tagCloudRoot : '#eexcess_keywords_container',
@@ -23,12 +37,53 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 	};
 
 
-
+/*
     var defaultLoadOptions = {
         tagCloud : {
             module: 'default',      // default || landscape
         }
     };
+*/
+   
+  
+   var defaultLoadOptions = {
+   	    tagCloud : {
+            module: 'landscape',      // default || landscape
+            misc: {
+                defaultBlockStyle: false,
+                customScrollBars: false
+            }
+        },
+        contentList: {
+            custom: true,
+            customOptions: {     //  only used when contentListType.custom = true
+                selectors: {
+                	root: "#eexcess_content",
+                    ul: eexcessResultList,
+                    liClass: eexcessList,
+                    liTitle: eexcessUrankLiTitle,
+                    liRankingContainer: eexcessUrankLiRankingContainer,
+          
+                },
+                classes: {
+                    liHoverClass: '',
+                    liLightBackgroundClass: eexcessUrankLiLightBg,
+                    liDarkBackgroundClass: eexcessUrankLiDarkBg
+                },
+                misc: {
+                    hideScrollbar: false
+                }
+            },
+        },
+        visCanvas : {
+            customOptions: {               // use only if contentList.custom = true and background in the ranking should match different light and dark background colors
+                lightBackgroundColor: eexcessUrankLiLightBg,
+                darkBackgroundColor: eexcessUrankLiDarkBg
+            },
+        }
+   };
+
+    
 
 
 	var init = function(urankController) {
@@ -108,21 +163,28 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 			    if ($(this).val() != 'urank'){
 			    	$('#tagCloudCooserContainer').hide();
 					// $("#eexcess_content").append(urank_result_list);
+										$("#eexcess_content").width(370); 
+					$("#eexcess_vis_panel").css('width', '100%').css('width', '-=550px');
 			    }
 			});
 			//$('#eexcess_fixed_controls').hide();
 			$('#eexcess_main_panel').addClass('urank');
-			$('.eexcess_result_list').empty();
+			// $('.eexcess_result_list').empty();
 			$('#eexcess_vis_panel').prepend('<div id="eexcess_vis_panel_controls" class="clearfix">' + '    <div id="eexcess_ranking_controls">' + '        <button id="eexcess_btnreset">' + '            <img src="../../../media/batchmaster/refresh.png" title="Reset">' + '        </button>' + '        <button id="eexcess_btn_sort_by_overall_score" title="Sort by overall score" sort-by="overall_score">' + '            <img src="uRank/media/sort-down.png">' + '        </button>' + '        <button id="eexcess_btn_sort_by_max_score" title="Sort by maximum score" sort-by="max_score">' + '            <img src="uRank/media/sort-down.png">' + '        </button>' + '    </div>' + '    <div id="eexcess_keywords_box" class="ui-droppable"></div>' + '</div>', '');
 			$('#eexcess_canvas').append('<div class="eexcess_result_list_outer"></div><div id="urank_canvas_inner"></div>');
 			$('#eexcess_vis_panel').append('<div id="eexcess_keywords_container"></div>');
 			
 		
 		}
-		$("#eexcess_keywords_box").empty(); 
+		 $("#eexcess_keywords_box").empty(); 
 		reAppendDiv = 0;
+		 $("#eexcess_content").width(351); 
+		
+		$("#eexcess_vis_panel").css('width', '100%').css('width', '-=550px');
+
 
 		urankCtrl.loadData(JSON.stringify(receivedData), defaultLoadOptions);
+	
 
 	};
 

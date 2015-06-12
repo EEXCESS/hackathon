@@ -75,18 +75,25 @@ function getUrankDimensions(root, rootWidth, rootHeight){
 }
 
 function getLandscapeDimensions(root, iWidth, rootWidth, rootHeight){
+
 	var rootHeight = $(root).height();
+	var legendWidth = 80; 
+
 	var margin = { top: 50, bottom: 50, left: 80, right: 20 };
 	var height = rootHeight - margin.top - margin.bottom;
 	var width = rootWidth - margin.left - 140;
     var centerOffset = (iWidth/2) - ((width + margin.left + margin.right)/2);
 	var verticalOffset = (rootHeight < 500) ? 20 : ($(root).height() - 500) / 2;
+	var tagCloudWidth = 300; 
+	var landscapesWidth = rootWidth - legendWidth - tagCloudWidth -  margin.right;  
+	var landscapesHeight = rootHeight - margin.top  - margin.bottom; 
+	var tagCloudheight = rootHeight - margin.top - margin.bottom; 
 	return {
 			'centerOffset': centerOffset, 'verticalOffset': verticalOffset, 
 			"width":width,
 			"height":height,		
-			"landscape" : {'width': width, 'height': height/3*2 }, 
-			"tagCloud" : {'width': width, 'height': height/3}};
+			"landscape" : {'width': landscapesWidth, 'height': landscapesHeight }, 
+			"tagCloud" : {'width': tagCloudWidth, 'height': tagCloudheight}};
 }
 
 
