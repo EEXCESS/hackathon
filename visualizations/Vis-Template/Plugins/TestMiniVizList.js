@@ -8,7 +8,7 @@
 	TestMiniViz.draw = function($container, selectedData){
 		var $vis = $container.find('.TestMiniVizList');
 		if ($vis.length == 0){
-			$vis = $('<div class="TestMiniVizList">Hallo</div>').css('background-color', 'lightgrey');
+			$vis = $('<div class="TestMiniVizList">Hallo</div>');
 			$container.append($vis);
 		}
 

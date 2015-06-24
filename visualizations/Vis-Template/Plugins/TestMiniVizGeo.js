@@ -7,10 +7,10 @@
 		// load other needed scripts (require.js is available)
 	};
 
-	TestMiniViz.draw = function(data, selectedData, $container, category, categoryValues, northEast, southWest){
+	TestMiniViz.draw = function(allData, selectedData, inputData, $container, category, categoryValues, northEast, southWest){
 		var $vis = $container.find('.TestMiniVizGeo');
 		if ($vis.length == 0){
-			$vis = $('<div class="TestMiniVizGeo">Hallo</div>').css('background-color', 'lightgrey').css('padding-top', '10px').css('padding-bottom', '10px');		
+			$vis = $('<div class="TestMiniVizGeo">Hallo</div>').css('padding-top', '10px').css('padding-bottom', '10px');		
 			$container.append($vis);
 		}
 

@@ -164,6 +164,7 @@ function Barchart( domRoot, visTemplate ) {
 		******************************************************/
 
 		BARCHART.Input = BARCHART.Settings.getInitData(receivedData, mappings);
+		FilterHandler.setInputData('category', BARCHART.Input);
 		data         = BARCHART.Input.data;
         recomList    = BARCHART.Input.recomList;
 		xAxisChannel = BARCHART.Input.xAxisChannel;

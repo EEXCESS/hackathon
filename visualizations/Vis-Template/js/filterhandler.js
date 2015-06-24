@@ -4,6 +4,7 @@ var FilterHandler = {
 	listFilter: null,
 	registeredFilterVisualisations : [],
 	filters : [],
+	inputData: {},
 	$filterRoot: null,
 	vis: null,
 	ext: null,
@@ -18,6 +19,10 @@ var FilterHandler = {
 		FilterHandler.$filterRoot.on('click', '.filter-keep', function(){
 			FilterHandler.makeCurrentPermanent();			
 		});
+	},
+	
+	setInputData: function(type, inputData){
+		FilterHandler.inputData[type] = inputData;
 	},
 
 	addEmptyFilter: function(doIncludeControls){		
@@ -67,6 +72,7 @@ var FilterHandler = {
 		FilterHandler.refreshCurrent();
 	},
 	
+	// rename dataItemSelected --> selectedDataItem
 	singleItemSelected: function(dataItemSelected, selectedWithAddingKey){
 		selectedWithAddingKey = selectedWithAddingKey || false;		
 		if (FilterHandler.listFilter == null)
@@ -101,12 +107,13 @@ var FilterHandler = {
 	refreshCurrent: function(){
 		if (FilterHandler.currentFilter.Object == null){
 			FilterHandler.currentFilter.Object = PluginHandler.getFilterPluginForType(FilterHandler.currentFilter.type).Object;
-			FilterHandler.currentFilter.Object.initialize();
+			FilterHandler.currentFilter.Object.initialize(FilterHandler.vis);
 		}
-		
+			
 		FilterHandler.currentFilter.Object.draw(
 			FilterHandler.vis.getData(), 
 			FilterHandler.currentFilter.dataWithinFilter,
+			FilterHandler.inputData[FilterHandler.currentFilter.type],
 			FilterHandler.currentFilter.$container,
 			FilterHandler.currentFilter.category, 
 			FilterHandler.currentFilter.categoryValues, 
@@ -125,7 +132,7 @@ var FilterHandler = {
 		if (FilterHandler.listFilter != null){
 			if (FilterHandler.listFilter.Object == null){
 				FilterHandler.listFilter.Object = PluginHandler.getFilterPluginForType('list').Object;
-				FilterHandler.listFilter.Object.initialize();
+				FilterHandler.listFilter.Object.initialize(FilterHandler.vis);
 			}
 	
 			FilterHandler.listFilter.Object.draw(
@@ -152,18 +159,26 @@ var FilterHandler = {
 		FilterHandler.clear(FilterHandler.listFilter);
 		FilterHandler.listFilter = null;
 	},
+	
+	clearListAndRefresh: function(){		
+		FilterHandler.clearList();
+		FilterHandler.ext.selectItems();
+	},
 
 	clear: function(filterToClear){
 		if (filterToClear.Object != null){
 			filterToClear.Object.finalize();
 			filterToClear.Object = null;
 		}
-		filterToClear.$container.parents('.filter-container-outer').empty();
+		filterToClear.$container.parents('.filter-container-outer').remove();
 	},
 
 	reset: function(){
 		FilterHandler.clearCurrent();
 		FilterHandler.clearList();
+		for (var i=0; i<FilterHandler.filters.length; i++){
+			FilterHandler.clear(FilterHandler.filters[i]);
+		}
 		FilterHandler.ext.selectItems();
 	},
 

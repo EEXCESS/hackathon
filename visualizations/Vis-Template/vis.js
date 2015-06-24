@@ -122,6 +122,7 @@ function Visualization( EEXCESSobj ) {
 
     var START = {};
     START.plugins = [];
+    START.inputData = [];
 
 	/**
 	 * 	Initizialization function called from starter.js
@@ -907,7 +908,7 @@ function Visualization( EEXCESSobj ) {
 			d3.selectAll( allListItems ).style("opacity", "1");
 		}
 		
-		VISPANEL.updateCurrentChart( 'highlight_item_selected', null,  dataToHighlightIds); // todo: remove
+		//VISPANEL.updateCurrentChart( 'highlight_item_selected', null,  dataToHighlightIds); // todo: remove
 	};
 	
 	LIST.scrollToFirst = function(){
@@ -1787,6 +1788,7 @@ function Visualization( EEXCESSobj ) {
 	
 	    BOOKMARKS.destroyBookmarkDialog();
 		inputData=data;
+		START.inputData = data;
 
 		FILTER.changeDropDownList();
 		
