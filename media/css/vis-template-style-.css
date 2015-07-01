@@ -711,21 +711,39 @@ Visualization Panel (center of screen)
     margin-bottom:4px; */
 }
 
+#eexcess_content_list {
+	float: left;
+	width: 100%;
+	height: calc(100% - 5em);
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+
 
 /*
     List body in "#eexcess_content"
 */
 #eexcess_content ul.eexcess_result_list{
-    overflow: auto;
+  /*  overflow: auto;
     height:80%;
     height: calc(100% - 55px); /* size of collections div*/
-	clear:both;
+/*	clear:both;
     margin: 0;
     padding: 0;
     list-style: none;
     display:block;
     padding-top: 1px;
-    padding-bottom: 1px;
+    padding-bottom: 1px; */
+    clear: both;
+	/*width: 100%; */
+
+	margin: 0;
+	margin-left: 1px;
+	padding: 0;
+		padding-right: 1px;
+	list-style: none;
+	display: block;
 }
 
 
@@ -733,16 +751,21 @@ Visualization Panel (center of screen)
     <li> items in "#eexcess_content ul". Each <li> wraps 2 container <div>s: ".eexcess_item_ctl" and ".eexcess_ritem_container"
 */
 .eexcess_list {
-	position: relative;
+	/*position: relative;
 	padding-left: 5px;
 	padding-top: 2px;
 	margin-top: 1px;
-	margin-right: 4px;
+	margin-right: 4px; */
 	background-color: rgba(241, 241, 230, 0.9);
-	height: 45px;
 	border: 1px solid rgba(119, 136, 153, 0.8);
 	-webkit-box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
 	box-shadow: 0.2em 0.1em 0.5em rgba(119, 136, 153, 0.7);
+	position: relative;
+height: 45px;
+vertical-align: top;
+-webkit-transition: box-shadow 4s ease-in/* linear*/;
+cursor: pointer;
+
 }
 
 

@@ -58,7 +58,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
             custom: true,
             customOptions: {     //  only used when contentListType.custom = true
                 selectors: {
-                	root: "#eexcess_content",
+                	root: "#eexcess_content_list",
                     ul: eexcessResultList,
                     liClass: eexcessList,
                     liTitle: eexcessUrankLiTitle,
@@ -71,7 +71,7 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
                     liDarkBackgroundClass: eexcessUrankLiDarkBg
                 },
                 misc: {
-                    hideScrollbar: false
+                    hideScrollbar: true
                 }
             },
         },
@@ -128,6 +128,9 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 				options.tagCloud = wordTagCloud;
 			}
 			urankCtrl = new UrankController(options);
+		}, 
+		adaptContentListEvents: function() {
+			
 		}
 	};
 	URANK.Internal.buildTagCloudChooserControll();
@@ -163,8 +166,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 			    if ($(this).val() != 'urank'){
 			    	$('#tagCloudCooserContainer').hide();
 					// $("#eexcess_content").append(urank_result_list);
-										$("#eexcess_content").width(370); 
-					$("#eexcess_vis_panel").css('width', '100%').css('width', '-=550px');
+					$("#eexcess_content").width(300); 
+					$("#eexcess_vis_panel").css('width', '100%').css('width', '-=499px');
 			    }
 			});
 			//$('#eexcess_fixed_controls').hide();
@@ -184,6 +187,64 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 
 
 		urankCtrl.loadData(JSON.stringify(receivedData), defaultLoadOptions);
+		$(eexcessList).each(function(i, li){
+		 		var $li = $( li ); 
+		 		$li.addClass("test"); 
+		 		var id =$li.attr("id");  
+		 		var urankId = $li.attr("urank-id");
+		 		var index = id.split("data-pos-")[1];
+		 		var test = Vis; 
+		 		var object = receivedData[index]; 
+		 		var stackedChartPrefix = "#urank-ranking-stackedbar-"; 
+		 		var stackedChartId = stackedChartPrefix + urankId; 
+	
+	
+		 		$li.on("click", function(event) { 
+ 
+		 			if(event.ctrlKey) {
+		 				//d3.select(stackedChartId).style("opacity", 1);
+		 				FilterHandler.singleItemSelected(object, true); 
+		 			}
+		 			else {
+		 				FilterHandler.singleItemSelected(object, false); 
+		 			} 
+		 			var stackedChartIds = [];
+		 			var indexList = [];
+					$(eexcessList).each(function() {
+					    if ($(this).css('opacity') == '1') {
+					    	var urId = $(this).attr("urank-id");
+					    	var scId = stackedChartPrefix +  urId; 
+					        stackedChartIds.push(scId);
+					        indexList.push($(this).attr("id").split("data-pos-")[1]); 
+					    }
+					}); 
+					for(var scIndex=0; scIndex < stackedChartIds.length; scIndex++) {
+						d3.select(stackedChartIds[scIndex]).style("opacity", 1);
+					}
+				/*	for(var ind=0; ind < indexList.length; ind++) {
+						FilterHandler.clearList();
+						var obj = receivedData[indexList[ind]]; 
+						console.log("obj", obj)
+						if(event.ctrlKey) {
+			 				//d3.select(stackedChartId).style("opacity", 1);
+			 				FilterHandler.singleItemSelected(obj, true); 
+			 			}
+			 			else {
+			 				FilterHandler.singleItemSelected(object, true); 
+		 				}
+			
+				} */
+		 			
+		 		});
+		 		
+		 		var favIconsList =  $li.find(".eexcess_fav_icon"); 
+		 		if(favIconsList.length> 0) {
+		 			d3.select(favIconsList[0]).on("click", function(event) { 
+		 				Vis.faviconClicked(object, index); 
+		 			})
+		 		}
+		
+			}) 
 	
 
 	};

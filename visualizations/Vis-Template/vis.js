@@ -788,7 +788,7 @@ function Visualization( EEXCESSobj ) {
 	
 			iconsDiv.append("a")
 				.attr("href", "#")
-				.attr('target','_blank')
+				//.attr('target','_blank')
 				.append("img")
 				.attr("class", "eexcess_preview")
 				.attr("src", function(d){ return d.previewImage || NO_IMG ; })
@@ -867,7 +867,9 @@ function Visualization( EEXCESSobj ) {
 				.attr("src", function(d){ if(d.bookmarked) return FAV_ICON_ON; return FAV_ICON_OFF; })
 				.style("width", "20px")
 				.style("height", "20px")
-				.on("click", EVTHANDLER.faviconClicked);
+				.on("click", function(d,i) {
+					EVTHANDLER.faviconClicked(d,i); 
+				});
 	
 	
 			//bookmarkDiv.append("img")
@@ -877,7 +879,13 @@ function Visualization( EEXCESSobj ) {
 			//    .style("display", function(d){ if(d.bookmarked) return 'inline-block'; return 'none'; })
 			//    .on("click", EVTHANDLER.bookmarkDetailsIconClicked);
 	
+			var parentId = $(contentList).parent().parent().attr('id')
+			if(!(parentId=="eexcess_content_list")) {
+			 $(contentList).wrap("<div id='eexcess_content_list' class='urank-list urank-hidden-scrollbar'></div>").wrap("<div class='urank-hidden-scrollbar-inner'>"); 
+			
 	
+			} 
+
 			$( contentList ).scrollTo( "top" );
 			
 	};
