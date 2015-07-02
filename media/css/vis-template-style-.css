@@ -485,13 +485,13 @@ input[type="button"]:hover{
 #eexcess_controls {
 	float: left;
 	vertical-align: middle;
-	width: 170px;
+	width: 190px;
+    padding: 0 5px;
 	height:100%;	
 	background-color: white;
 	z-index: 2;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
-
 
 /*
     div on the upper side of #eexcess_controls.
@@ -616,7 +616,7 @@ Visualization Panel (center of screen)
 */
 #eexcess_vis_panel {
 	width:60%;
-    width:calc(100% - 480px);
+    width:calc(100% - 230px - 200px);
 	height: 100%;
     float:left;
 }
@@ -1188,6 +1188,7 @@ p.eexcess_ritem_short {
 /***** Filter Visualisations ****/
 .filter-container-outer {
     margin-top:10px;
+    position: relative;
 }
     .filter-container-outer .filter-controls {
         position: absolute;
@@ -1210,10 +1211,14 @@ p.eexcess_ritem_short {
             .filter-container-outer.current .filter-controls a.filter-keep {
                 display: inline;
             }
+    .filter-container-outer .filter-container {
+        border: 1px solid #e4e4e4;
+    }
     .filter-container-outer.current .filter-container {
-        border: 1px solid black;
+        border-color: black;
     }
     .filter-container-outer .debug{
+        display: none;
         padding: 6px 0;
         color: rgb(148, 148, 148);
         font-style: italic; 
@@ -1245,9 +1250,11 @@ p.eexcess_ritem_short {
 
 
 
+
 @media screen and (max-width: 825px){ /* is related to the iframe, that is 155px smaller */
     #eexcess_controls{
-        width:130px;
+        width:150px;
+        padding: 0;
     }
     #eexcess_content{
         width:170px;
@@ -1256,7 +1263,7 @@ p.eexcess_ritem_short {
         display:none;
     }
     #eexcess_vis_panel{
-        width:calc(100% - 170px - 130px - 1px);
+        width:calc(100% - 170px - 160px - 1px);
     }
 }
 

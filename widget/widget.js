@@ -34,8 +34,9 @@ EEXCESS.newSearchTriggered = function(data) {
         source: EEXCESS.tmpEntities,
         minLength: 0,
         select: function(event, ui) {
+            event.preventDefault();
             if (ui.item) {
-                $('#eexcess_query').val(ui.item.value);
+                $('#eexcess_query').val('"' + ui.item.value + '"');
                 $('#eexcess_searchForm').submit();
             }
         }
@@ -100,12 +101,12 @@ EEXCESS.init = function(widget) {
         var query_string = $('#eexcess_query').val();
         if (query_string) {
             EEXCESS.searchResults.loading();
-            var query_terms = query_string.split(' ');
+            var query_terms = query_string.match(/"([^"]*)"|[^\s]*/gi);//query_string.split(' ');
             var query = [];
             for (var i = 0; i < query_terms.length; i++) {
                 var tmp = {
                     weight: 1,
-                    text: query_terms[i]
+                    text: query_terms[i].replace(/["]+/g, '')
                 };
                 if (query_terms[i].length > 0) {
                     query.push(tmp);

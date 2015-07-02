@@ -356,13 +356,15 @@ function Geochart(root, visTemplate) {
 	* ***************************************************************************************************************/
 	GEO.Render.highlightItems = function(indexArray, dataToHighlightIds){
         if (indexArray == null){
-            GEO.map.closePopup();
-            dataToHighlightIds.forEach(function(id) {
-                var item = _.find(GEO.Input.data, function(d){return d.id == id;});
-                GEO.markersGroup.zoomToShowLayer(item.geoMarker, function() {
-                    item.geoMarker.openPopup();
+            if (GEO.map)
+                GEO.map.closePopup();
+            if (dataToHighlightIds)
+                dataToHighlightIds.forEach(function(id) {
+                    var item = _.find(GEO.Input.data, function(d){return d.id == id;});
+                    GEO.markersGroup.zoomToShowLayer(item.geoMarker, function() {
+                        item.geoMarker.openPopup();
+                    });
                 });
-            });
     		GEO.Render.deleteCurrentSelect();
             return;
         }
