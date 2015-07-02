@@ -24,7 +24,7 @@ var onDataReceived = function(dataReceived, status) {
 
     globals["data"] = dataReceived.results.results;
     if (determineDataFormatVersion(dataReceived.results.results) == "v2"){
-        loadDetails(dataReceived.results.results, function(mergedData){ 
+        loadEexcessDetails(dataReceived.results.results, function(mergedData){ 
             globals["data"] = mapRecommenderV1toV2(mergedData);
             visTemplate.refresh(globals);
         });
@@ -224,11 +224,21 @@ function requestPlugin() {
             "detailsV2": v2DataItem.details,
             "bookmarked": false,
             "provider-icon": "", //"../../media/icons/Europeana-favicon.ico",
-            "coordinate": null //[50.0596696, 14.4656239]
+            "coordinate": null, //[50.0596696, 14.4656239]
+            "v2DataItem": v2DataItem
         };
         
-        if (v2DataItem.details && v2DataItem.details.eexcessProxy && v2DataItem.details.eexcessProxy.wgs84lat)
-            v1DataItem.coordinate = [v2DataItem.details.eexcessProxy.wgs84lat, v2DataItem.details.eexcessProxy.wgs84long];
+        if (v2DataItem.details){ 
+            if (v2DataItem.details.eexcessProxy && v2DataItem.details.eexcessProxy.wgs84lat){
+                v1DataItem.coordinate = [v2DataItem.details.eexcessProxy.wgs84lat, v2DataItem.details.eexcessProxy.wgs84long];
+            } else if (v2DataItem.details.eexcessProxyEnriched && v2DataItem.details.eexcessProxyEnriched.wgs84Point){
+                var listOfPoints = v2DataItem.details.eexcessProxyEnriched.wgs84Point;
+                if (listOfPoints.length > 0){
+                    v1DataItem.coordinate = [listOfPoints[0].wgs84lat, listOfPoints[0].wgs84long];
+                    v1DataItem.coordinateLabel = listOfPoints[0].rdfslabel;
+                }
+            }
+        }
             
         v1data.push(v1DataItem);
     }
@@ -236,7 +246,7 @@ function requestPlugin() {
     return v1data;
  }
  
- function loadDetails(data, callback){
+ function loadEexcessDetails(data, callback){
     // Detail Call:
     // {
     //     "documentBadge": [
@@ -250,7 +260,6 @@ function requestPlugin() {
     var detailCallBadges = _.map(data, 'documentBadge');
 
     var detailscall = $.ajax({
-        async: false,
         url: 'http://eexcess-dev.joanneum.at/eexcess-privacy-proxy-1.0-SNAPSHOT/api/v1/getDetails',
         data: JSON.stringify({ "documentBadge" : detailCallBadges }),
         type: 'POST',
