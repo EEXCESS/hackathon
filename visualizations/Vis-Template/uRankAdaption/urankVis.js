@@ -166,8 +166,8 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 			    if ($(this).val() != 'urank'){
 			    	$('#tagCloudCooserContainer').hide();
 					// $("#eexcess_content").append(urank_result_list);
-					$("#eexcess_content").width(300); 
-					$("#eexcess_vis_panel").css('width', '100%').css('width', '-=499px');
+					//$("#eexcess_content").width(300); 
+					//$("#eexcess_vis_panel").css('width', '100%').css('width', '-=499px');
 			    }
 			});
 			//$('#eexcess_fixed_controls').hide();
@@ -181,9 +181,9 @@ function UrankVis(root, visTemplate, EEXCESSobj) {
 		}
 		 $("#eexcess_keywords_box").empty(); 
 		reAppendDiv = 0;
-		 $("#eexcess_content").width(351); 
+		 //$("#eexcess_content").width(351); 
 		
-		$("#eexcess_vis_panel").css('width', '100%').css('width', '-=550px');
+		//$("#eexcess_vis_panel").css('width', '100%').css('width', '-=550px');
 
 
 		urankCtrl.loadData(JSON.stringify(receivedData), defaultLoadOptions);

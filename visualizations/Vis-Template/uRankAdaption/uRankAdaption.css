@@ -1,7 +1,9 @@
-.urank #eexcess_vis_panel_controls{
+.urank #eexcess_vis_panel {
+    width:calc(100% - 351px - 200px);
 }
-
-
+.urank #eexcess_content{
+  	width:351px;
+}
 
 #tagCloudCooserContainer {
 	border: 1px solid #e4e4e4;	
