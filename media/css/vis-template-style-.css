@@ -616,7 +616,7 @@ Visualization Panel (center of screen)
 */
 #eexcess_vis_panel {
 	width:60%;
-    width:calc(100% - 230px - 200px);
+    width:calc(100% - 300px - 200px); /* 200 = width of configuration box (190) +  padding */
 	height: 100%;
     float:left;
 }
