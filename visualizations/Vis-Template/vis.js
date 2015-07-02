@@ -87,7 +87,7 @@ function Visualization( EEXCESSobj ) {
     var bookmarkedItems;
 
 	// Chart objects
-	var timeVis, barVis, geoVis, urankVis;
+	var timeVis, barVis, geoVis, urankVis, landscapeVis;
 
 
 	requirejs.config({
@@ -135,7 +135,8 @@ function Visualization( EEXCESSobj ) {
 		timeVis = new Timeline(root, EXT);
 		barVis = new Barchart(root, EXT);
         geoVis = new Geochart(root, EXT);
-        urankVis = new Urank(root, EXT, EEXCESS);
+        urankVis = new UrankVis(root, EXT, EEXCESS);
+        landscapeVis = new LandscapeVis(root, EXT, EEXCESS);
 
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();
@@ -592,7 +593,7 @@ function Visualization( EEXCESSobj ) {
 		
 		visChannelKeys = [];
 
-        if(mappings[chartIndex].combinations.length > 0){
+        if(chartIndex > -1 && mappings[chartIndex].combinations.length > 0){
 
             initialMapping = mappings[chartIndex].combinations[0];
 		
@@ -731,86 +732,163 @@ function Visualization( EEXCESSobj ) {
 	 *
 	 * */	
 	LIST.buildContentList = function(){
+
+		/*	var listContentWidth = $("#eexcess_collections").width();
+			var rankingContainer = 0 + "px";
+			var prevImgWidth = listContentWidth/100 * 12 + "px";;
+			var contentWidth = listContentWidth/100 * 50 + "px";;
+			var iconsContainerWidth = 30 + "px";;
+			var favContainerWidth = listContentWidth/100 * 10 + "px";;
 	
-		//d3.selectAll(".eexcess_ritem").remove();
-		d3.selectAll( allListItems ).remove();
-		
-		var listData = d3.select(contentList).selectAll("li").data(data);
-		
-		var aListItem = listData.enter()
-							.append("li")
-								.attr("class", "eexcess_list")
-								.attr("id", function(d, i){ return "data-pos-"+i; })
-								.on("click", EVTHANDLER.listItemClicked);
-		
-		// div 1 groups the preview image, partner icon and link icon
-		iconsDiv = aListItem.append("div")
-					.attr("class", "eexcess_item_ctl");
-		
-		iconsDiv.append("a")
+			var eexcessVisPanelWidth = "eexcess_vis_panel_width";  */
+			var listElemAsRowElem = "eexcess_list_row_elem";
+			var listHeaderAsTableElem = "eexcess_list_table_elem";
+			
+			var eexcessResultList = "eexcess_result_list"; 
+			var eexcessList = "eexcess_list"; 
+			var eexcessListHovered = "eexcess_list.hovered";
+			var eexcessUrankLiRankingContainer = "eexcess-urank-li-ranking-container";
+			var eexcessUrankLiTitleContainer = "eexcess-urank-li-title-container";
+			var eexcessUrankLiTitle = "eexcess-urank-li-title";
+			var eexcessUrankLiLightBg = "eexcess-urank-li-light-background";
+			var eexcessUrankLiDarkBg = "eexcess-urank-li-dark-background";
+
+
+			var eexcessUrankLiButtonsContainer = "eexcess-urank-list-buttons-container"; 
+			var eexcessUrankLiFavIcon = "eexcess-urank-favicon"; 
+						
+			
+			var rankingContainer = "0%";
+			var prevImgWidth = "12%";
+			var contentWidth ="50%";
+			var iconsContainerWidth = "8%";
+			var favContainerWidth ="10%";
+			
+			
+			//d3.selectAll(".eexcess_ritem").remove();
+			d3.selectAll( allListItems ).remove();
+	
+			var listData = d3.select(contentList).selectAll("li").data(data);
+	
+			var aListItem = listData.enter()
+				.append("li")
+				.attr("class", eexcessList)
+				.attr("id", function(d, i){ return "data-pos-"+i; })
+				.on("click", EVTHANDLER.listItemClicked);
+	
+			rankingContainer = aListItem.append("div")
+				.attr("class", listElemAsRowElem + " " + eexcessUrankLiRankingContainer)
+				.attr("name", "rankingCongainer")
+				.style("width",rankingContainer)
+	
+	
+			// div 1 groups the preview image, partner icon and link icon
+			iconsDiv = aListItem.append("div")
+				.attr("class", listElemAsRowElem)
+				.style("width",prevImgWidth)
+	
+			iconsDiv.append("a")
 				.attr("href", "#")
+				//.attr('target','_blank')
 				.append("img")
-					.attr("class", "eexcess_preview")
-					.attr("src", function(d){ return d.previewImage || NO_IMG ; });
-		
-		iconsDiv.append("img")
+				.attr("class", "eexcess_preview")
+				.attr("src", function(d){ return d.previewImage || NO_IMG ; })
+				.style("width","40px")
+				.style("height","40px")
+	;
+	
+	
+	
+	
+			// div 2 wraps the recommendation title (as a link), a short description and a large description (not used yet)
+			var contentDiv = aListItem.append("div")
+				.attr("class", listElemAsRowElem + " " + eexcessUrankLiTitleContainer)
+				.style("width",contentWidth)
+	
+	
+			contentDiv.append("h1")
+				.append("a")
+				.attr("class", eexcessUrankLiTitle)
+				.attr("href", function(d){return d.uri;})
+				.attr('target','_blank')
+				.on("click", function(d){
+					d3.event.preventDefault();
+					d3.event.stopPropagation();
+					window.open(d.uri, '_blank');
+					EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:d.uri}); })
+				.on("click", function(d){
+					
+				})
+				.text(function(d){ 
+					if (d.title.length > 60) {
+					    var words =  d.title.substr(0,45);
+					    if (/^\S/.test(d.title.substr(45))) {
+				            return words.replace(/\s+\S*$/, "") + "...";
+				        }
+				        return words + "...";
+					}
+					return d.title; 
+				})
+			    .attr("title", function(d){ return d.title; }); 
+	
+	
+			/*contentDiv.append("p")
+			 .attr("class", "eexcess_ritem_short")
+			 .html(function(d){
+			 var facetKeys = Object.keys(d.facets);
+			 var string = "";
+	
+			 facetKeys.forEach(function(facetKey){
+			 if( !Array.isArray(d.facets[facetKey]) )
+			 string += d.facets[facetKey] + ", ";
+			 });
+			 return string.substring(0, string.length - 2);
+			 }); */
+	
+			// bookmark section contains fav icon and details icon
+	
+			var facetPartnerIconsDiv = aListItem.append("div")
+				.attr("class", listElemAsRowElem + " eexcess_ritem_icons_container")
+				.style("width",iconsContainerWidth)
+	
+			facetPartnerIconsDiv.append("img")
 				.attr("class", "eexcess_partner_icon")
 				.attr("title", function(d){ return d.facets.provider; })
 				.attr("src", function(d){ return d['provider-icon']; });
-
-
-		// div 2 wraps the recommendation title (as a link), a short description and a large description (not used yet)
-		var contentDiv = aListItem.append("div")
-			.attr("class", "eexcess_ritem_container");
-		
-
-        contentDiv.append("h1")
-				.append("a")
-					.attr("class", "eexcess_ritem_title")
-					.attr("href", function(d){return d.uri;})
-                    .on("click", function(d){
-                        d3.event.preventDefault();
-                        d3.event.stopPropagation();
-                        window.open(d.uri, '_blank');
-                        EEXCESS.messaging.callBG({method:{parent:'model',func:'resultOpened'},data:d.uri}); })
-					.text(function(d){ return d.title; });
-
-
-		contentDiv.append("p")
-			.attr("class", "eexcess_ritem_short")
-			.html(function(d){
-				var facetKeys = Object.keys(d.facets);
-				var string = "";
-				
-				facetKeys.forEach(function(facetKey){
-					if( !Array.isArray(d.facets[facetKey]) )
-						string += d.facets[facetKey] + ", ";
+	
+			var bookmarkDiv = aListItem.append('div')
+				.attr('class', listElemAsRowElem + " " + eexcessUrankLiButtonsContainer)
+				.style("width",iconsContainerWidth)
+	
+	
+	
+			bookmarkDiv.append("img")
+				.attr("class", "eexcess_fav_icon")
+				.attr('title', 'Bookmark this item')
+				.attr("src", function(d){ if(d.bookmarked) return FAV_ICON_ON; return FAV_ICON_OFF; })
+				.style("width", "20px")
+				.style("height", "20px")
+				.on("click", function(d,i) {
+					EVTHANDLER.faviconClicked(d,i); 
 				});
-				return string.substring(0, string.length - 2); 
-			});
+	
+	
+			//bookmarkDiv.append("img")
+			//    .attr("class", "eexcess_details_icon")
+			//    .attr('title', 'View and delete item\'s bookmarks')
+			//    .attr("src", BOOKMARK_DETAILS_ICON)
+			//    .style("display", function(d){ if(d.bookmarked) return 'inline-block'; return 'none'; })
+			//    .on("click", EVTHANDLER.bookmarkDetailsIconClicked);
+	
+			var parentId = $(contentList).parent().parent().attr('id')
+			if(!(parentId=="eexcess_content_list")) {
+			 $(contentList).wrap("<div id='eexcess_content_list' class='urank-list urank-hidden-scrollbar'></div>").wrap("<div class='urank-hidden-scrollbar-inner'>"); 
+			
+	
+			} 
 
-        // bookmark section contains fav icon and details icon
-
-        var bookmarkDiv = aListItem.append('div')
-            .attr('class', 'eexcess_bookmark_section');
-
-
-        bookmarkDiv.append("img")
-            .attr("class", "eexcess_fav_icon")
-            .attr('title', 'Bookmark this item')
-            .attr("src", function(d){ if(d.bookmarked) return FAV_ICON_ON; return FAV_ICON_OFF; })
-            .on("click", EVTHANDLER.faviconClicked);
-
-
-        //bookmarkDiv.append("img")
-        //    .attr("class", "eexcess_details_icon")
-        //    .attr('title', 'View and delete item\'s bookmarks')
-        //    .attr("src", BOOKMARK_DETAILS_ICON)
-        //    .style("display", function(d){ if(d.bookmarked) return 'inline-block'; return 'none'; })
-        //    .on("click", EVTHANDLER.bookmarkDetailsIconClicked);
-
-
-		$( contentList ).scrollTo( "top" );
+			$( contentList ).scrollTo( "top" );
+			
 	};
 	
 	
@@ -822,7 +900,24 @@ function Visualization( EEXCESSobj ) {
 		
 		$( colorIcon ).remove();
 		
-		var iconColorScale = (VISPANEL.chartName == 'timeline') ?  timeVis.colorScale : (VISPANEL.chartName == 'barchart') ?  barVis.colorScale : 'undefined'; 
+		var iconColorScale = 'undefined'; 
+			
+		if(VISPANEL.chartName == 'timeline') {
+			iconColorScale =  timeVis.colorScale; 
+		}
+		else if(VISPANEL.chartName == 'barchart') {
+			iconColorScale = barVis.colorScale; 
+		}
+		else if(VISPANEL.chartName == 'geochart') {
+			// iconColorScale =  geoVis.colorScale; 
+		}
+		else if(VISPANEL.chartName == 'landscape') {
+			iconColorScale = landscapeVis.colorScale; 
+		}
+		else if(VISPANEL.chartName == 'urank') {
+			 //landscapeVis.colorScale; 
+		}
+		
 		
 		if( iconColorScale != 'undefined' ){
 			
@@ -833,14 +928,14 @@ function Visualization( EEXCESSobj ) {
 			}
 			
 			for(var i = 0; i < data.length; i++){	
-				var item = $(listItem +""+ i + " .eexcess_item_ctl");
+				// var item = $(listItem +""+ i + " .eexcess_item_ctl");
+				var item = $(listItem +""+ i + " .eexcess_ritem_icons_container");
 				var title = data[i].facets[facet] || 'en';
 				item.append( "<div class=\"color_icon\" title=\""+ title +"\" ></div>" );	
 				item.find( colorIcon ).css( 'background', iconColorScale(data[i].facets[facet] || 'en') );
 			}
 		}
 	};
-	
 	
 	/**
 	 * Draws legend color icons in each content list item
@@ -874,7 +969,6 @@ function Visualization( EEXCESSobj ) {
 		FilterHandler.singleItemSelected(dataItemSelected[0], selectedWithAddingKey);	
 	};
 	
-
 
 	
 	/**
@@ -1084,6 +1178,7 @@ function Visualization( EEXCESSobj ) {
 				case "barchart":  barVis.draw(data, selectedMapping, width, height); break;
 	            case "geochart":  geoVis.draw(data, selectedMapping, width, height); break;
                 case "urank":  urankVis.draw(data, selectedMapping, width, height); break;
+                case "landscape":  landscapeVis.draw(data, selectedMapping, width, height); break;
 				default : d3.select(root).text("No Visualization");	
 			}
 		}
@@ -1126,6 +1221,7 @@ function Visualization( EEXCESSobj ) {
 						case "barchart": barVis.reset(); break;
 	                    case "geochart": geoVis.reset(); break;
                     	case "urank": urankVis.reset(); break;
+                    	case "landscape": landscapeVis.reset(); break;
 					}
 				}
 				break;
@@ -1146,6 +1242,7 @@ function Visualization( EEXCESSobj ) {
 	                    case "barchart": barVis.clearSelection(); break;
 	                    //case "geochart": geoVis.highlightItems(arrayIndices); break;
                     	case "urank": urankVis.highlightItems(arrayIndices); break;
+                    	case "landscape": landscapeVis.highlightItems(arrayIndices); break;
 					}
 				}
 				break;
