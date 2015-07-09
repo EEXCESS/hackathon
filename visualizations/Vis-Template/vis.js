@@ -135,8 +135,16 @@ function Visualization( EEXCESSobj ) {
 		timeVis = new Timeline(root, EXT);
 		barVis = new Barchart(root, EXT);
         geoVis = new Geochart(root, EXT);
-        urankVis = new UrankVis(root, EXT, EEXCESS);
-        landscapeVis = new LandscapeVis(root, EXT, EEXCESS);
+		try {
+        	urankVis = new UrankVis(root, EXT, EEXCESS);
+		} catch(ex){
+			console.log('uRank couldnt be loaded.');
+		}
+		try {
+        	landscapeVis = new LandscapeVis(root, EXT, EEXCESS);
+		} catch(ex){
+			console.log('LandscapeVis couldnt be loaded.');
+		}		
 
         BookmarkingAPI = new Bookmarking();
         BookmarkingAPI.init();
