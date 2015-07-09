@@ -237,7 +237,7 @@ function Visualization( EEXCESSobj ) {
         $( 'html' ).click(function(){ if(isBookmarkDialogOpen) BOOKMARKS.destroyBookmarkDialog(); });
         $( '#demo-button-university' ).click(function(e){ $(this).addClass('checked'); $('#demo-button-historicalbuildings').removeClass('checked'); onDataReceived(getDemoResultsUniversity()); });
         $( '#demo-button-historicalbuildings' ).click(function(e){ $(this).addClass('checked'); $('#demo-button-university').removeClass('checked'); onDataReceived(getDemoResultsHistoricBuildings()); });
-		$('#globalsettings').on('click', function(e){ e.preventDefault(); alert('Einstellungen noch nicht verfügbar.'); });
+		$('#globalsettings').on('click', function(e){ e.preventDefault();  EVTHANDLER.globalSettingsButtonClicked(e) });
 	};
 	
 
@@ -550,6 +550,69 @@ function Visualization( EEXCESSobj ) {
         BOOKMARKS.deleteBookmarkAndRefreshDetailsDialog(this, bookmark, bookmarkIndex);
     }
 
+    
+    EVTHANDLER.globalSettingsButtonClicked = function(e) {
+    	var xPos =  e.clientX - 250;
+	    var yPos = e.clientY - 50;
+		if ($("#global-setttings-dialog").length){
+			$("#global-setttings-dialog").css('visibility', 'visible');
+			return; 
+		}
+        var topOffset = $(contentPanel).offset().top;
+        var dialogGlobalSettings = d3.select("body").append("div")
+            .attr("id", "global-setttings-dialog")
+            .attr("class", "eexcess-bookmark-dialog")
+            .style("top", yPos + "px" )
+            .style("left", xPos + "px" )
+            
+            
+        dialogGlobalSettings.on('click', function(){ d3.event.stopPropagation(); });
+
+        dialogGlobalSettings.append("div")
+            .attr("class", "eexcess-bookmark-dialog-title")
+            .text("Global Settings");
+		
+        // Append details section
+   		var tagCloudChooserContainer = dialogGlobalSettings.append('div')
+   		    .attr("id", "excess-tag-cloud-chooser")
+
+        tagCloudChooserContainer.append("p").text("select a tag-cloud for urank:");
+        
+		var tagCloudOptions =  '<fieldset>'
+							  	+ '<div id ="excess-tag-cloud-chooser">'
+								+ '    <p><input type="radio" name="urank-tagcloud" id="word-tagcloud" value="word-tagcloud" checked/>'
+								+ '    <label for="word-tagcloud">word-tagcloud</label></p>'
+								+ '    <p><input type="radio" name="urank-tagcloud" id="landscape-tagcloud" value="landscape-tagcloud" />'
+								+ '    <label for="landscape-tagcloud">landscape-tagcloud</label></p>'
+								+ '  </div>'
+								+ '</fieldset>'
+								
+        
+            
+		var wordTagCloudOption = '<div><input type="radio" name="tagcloud" value="word-tagcloud" checked>word-tagcloud</Input></div>';
+		var landscapeTagCloudOption = '<div><input type="radio" name="tagcloud" value="landscape-tagcloud">landscape-tagcloud</input></div>';
+
+		
+       $("#global-setttings-dialog").append(tagCloudOptions); 
+       
+       dialogGlobalSettings.append("div").style("text-align", "center" )       
+       		.append("input")
+            .attr("type", "button")
+            .attr("class", "eexcess-bookmark-button")
+            .attr("value", "Close")
+            .on('click', function() {
+            		$("#global-setttings-dialog").css('visibility', 'hidden');
+             });
+       
+       $('input[name=urank-tagcloud]:radio').change(function() {
+       		if($( "#eexcess_select_chart" ).val() == "urank") {
+       			alert("vissss");
+       			VISPANEL.drawChart();
+       		}
+	       	
+		});
+    
+    }
 
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
