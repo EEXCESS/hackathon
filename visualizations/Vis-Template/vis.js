@@ -560,7 +560,7 @@ function Visualization( EEXCESSobj ) {
 
     
     EVTHANDLER.globalSettingsButtonClicked = function(e) {
-    	var xPos =  e.clientX - 250;
+		var xPos =  e.clientX - 250;
 	    var yPos = e.clientY - 50;
 		if ($("#global-setttings-dialog").length){
 			$("#global-setttings-dialog").css('visibility', 'visible');
@@ -612,14 +612,12 @@ function Visualization( EEXCESSobj ) {
             		$("#global-setttings-dialog").css('visibility', 'hidden');
              });
        
-       $('input[name=urank-tagcloud]:radio').change(function() {
-       		if($( "#eexcess_select_chart" ).val() == "urank") {
-       			alert("vissss");
+ 		$('input[name=urank-tagcloud]:radio').change(function() {
+      		if($( "#eexcess_select_chart" ).val() == "urank") {
        			VISPANEL.drawChart();
        		}
 	       	
 		});
-    
     }
 
 	
@@ -1841,6 +1839,10 @@ function Visualization( EEXCESSobj ) {
 	
     EXT.faviconClicked = function(d, i){
     	EVTHANDLER.faviconClicked(d, i);
+    },
+    
+    EXT.redrawChart = function(d, i){
+    	VISPANEL.drawChart();
     }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

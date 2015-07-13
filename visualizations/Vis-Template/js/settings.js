@@ -84,8 +84,8 @@ function getLandscapeDimensions(root, iWidth, rootWidth, rootHeight){
 	var width = rootWidth - margin.left - 140;
     var centerOffset = (iWidth/2) - ((width + margin.left + margin.right)/2);
 	var verticalOffset = (rootHeight < 500) ? 20 : ($(root).height() - 500) / 2;
-	var tagCloudWidth = 300; 
-	var landscapesWidth = rootWidth - legendWidth - tagCloudWidth -  margin.right;  
+	var tagCloudWidth = (rootWidth-legendWidth) * 0.3 - 10;  
+	var landscapesWidth = rootWidth - legendWidth - tagCloudWidth -  margin.right -10;  
 	var landscapesHeight = rootHeight - margin.top  - margin.bottom; 
 	var tagCloudheight = rootHeight - margin.top - margin.bottom; 
 	return {
@@ -93,8 +93,7 @@ function getLandscapeDimensions(root, iWidth, rootWidth, rootHeight){
 			"width":width,
 			"height":height,		
 			"landscape" : {'width': landscapesWidth, 'height': landscapesHeight }, 
-			"tagCloud" : {'width': tagCloudWidth, 'height': tagCloudheight}};
-}
+			"tagCloud" : {'width': tagCloudWidth, 'height': tagCloudheight}};}
 
 
 
